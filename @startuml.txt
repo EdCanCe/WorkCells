@@ -1,0 +1,22 @@
+@startuml
+|Colaborador|
+start
+:Accede a la gestión de KPI'S.;
+|#AntiqueWhite|Sistema|
+:Obtiene los KPIs de la base de datos.;
+:Muestra los KPIs del colaborador.;
+|Colaborador|
+:Selecciona el KPI al cual se quiere añadir la evidencia.;
+:El colaborador carga evidencia (archivo de texto o escrito ahí mismo).;
+
+  if (Es válida?) then (si)
+    :registra la evidencia para su registro.;
+  else (no)
+    :pide que corrija el formato.;
+  endif
+|Sistema|
+: Valida la evidencia enviada.;
+: Guarda la evidencia en la base de datos.;
+: confirma el registro de la evidencia.;
+stop
+@enduml
