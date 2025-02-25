@@ -1,0 +1,43 @@
+@startuml
+|#fffcf6|__Empleado__|
+start
+:Seleccionar opción de registrar ausencia;
+
+|#f3fbd4|__Sistema__|
+:Obtener los datos de la sesión del empleado;
+
+if(verifica si la sesión está activa) then (sesión activa)
+    :Presentar la interfaz de\n registrar ausencias al empleado;
+else (sesión inactiva)
+    -[#red]->
+    |#f3fbd4|__Sistema__|
+    :Redirigir al empleado a la\n página de autenticación;
+    stop
+endif
+
+|#fffcf6|__Empleado__|
+:Ingresar la fecha de inicio y finalización de su ausencia;
+
+|#f3fbd4|__Sistema__|
+if(verifica que la duración total de la ausencia sea menor a 3 días) then (Es menor a 3 días)
+    :registrar como opcional el registro\n del motivo de la ausencia y la\n carga de archivos adjuntos;
+else (es igual o mayor a 3 días)
+    -[#red]->
+    :registrar como obligatorio registrar\n el motivo de la ausencia y\n adjuntar al menos un archivo multimedia;
+endif
+
+|#fffcf6|__Empleado__|
+:Registrar el motivo de su ausencia;
+:Adjuntar uno o más archivos multimedia como evidencia;
+:Seleccionar la opción de guardar información;
+
+|#f3fbd4|__Sistema__|
+:El sistema recopila la información ingresada, incluyendo:\n- Fecha de inicio y fin de la ausencia.\n- Motivo (si fue ingresado).\n- Información del colaborador (ID, nombre, etc.);
+:Crear un registro de ausencia en la tabla\n de ausencias con la información recabada;
+:recopilar los archivos multimedia que ingresó el usuario;
+:crea un registro en la tabla\n AusenciaMultimedia con el id\n de la ausencia previamente creada;
+
+|#fffcf6|__Empleado__|
+:Seleccionar la opción de cerrar el registro de ausencias;
+stop
+@enduml
