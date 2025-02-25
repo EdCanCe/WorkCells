@@ -1,43 +1,35 @@
 @startuml
-|#fffcf6|__Empleado__|
+|#fffcf6|__Colaborador__|
 start
 :Seleccionar opción de registrar ausencia;
 
-|#f3fbd4|__Sistema__|
-:Obtener los datos de la sesión del empleado;
 
-if(verifica si la sesión está activa) then (sesión activa)
-    :Presentar la interfaz de\n registrar ausencias al empleado;
-else (sesión inactiva)
-    -[#red]->
-    |#f3fbd4|__Sistema__|
-    :Redirigir al empleado a la\n página de autenticación;
-    stop
-endif
-
-|#fffcf6|__Empleado__|
+|#fffcf6|__Colaborador__|
 :Ingresar la fecha de inicio y finalización de su ausencia;
 
 |#f3fbd4|__Sistema__|
-if(verifica que la duración total de la ausencia sea menor a 3 días) then (Es menor a 3 días)
-    :registrar como opcional el registro\n del motivo de la ausencia y la\n carga de archivos adjuntos;
-else (es igual o mayor a 3 días)
+if(Verificar que la duración total de la ausencia sea menor a 3 días) then (Es menor a 3 días)
+    :Registrar como opcional el registro\n del motivo de la ausencia y la\n carga de archivos adjuntos;
+else (Es igual o mayor a 3 días)
     -[#red]->
-    :registrar como obligatorio registrar\n el motivo de la ausencia y\n adjuntar al menos un archivo multimedia;
+    :Registrar como obligatorio registrar\n el motivo de la ausencia y\n adjuntar al menos un archivo multimedia;
 endif
 
-|#fffcf6|__Empleado__|
+|#fffcf6|__Colaborador__|
 :Registrar el motivo de su ausencia;
 :Adjuntar uno o más archivos multimedia como evidencia;
 :Seleccionar la opción de guardar información;
 
 |#f3fbd4|__Sistema__|
 :El sistema recopila la información ingresada, incluyendo:\n- Fecha de inicio y fin de la ausencia.\n- Motivo (si fue ingresado).\n- Información del colaborador (ID, nombre, etc.);
-:Crear un registro de ausencia en la tabla\n de ausencias con la información recabada;
-:recopilar los archivos multimedia que ingresó el usuario;
-:crea un registro en la tabla\n AusenciaMultimedia con el id\n de la ausencia previamente creada;
+:Crear un registro de ausencia en la tabla\n de Absences con la información recabada;
+:Recopilar los archivos multimedia que ingresó el usuario;
+:Crear un registro en la tabla\n AusenciaMultimedia con el id\n de la ausencia previamente creada;
+:Mostrar un pop-up diciendo que el registro fue exitoso;
 
-|#fffcf6|__Empleado__|
+|#fffcf6|__Colaborador__|
 :Seleccionar la opción de cerrar el registro de ausencias;
+|#f3fbd4|__Sistema__|
+:Mostrar la interfaz de inicio al colaborador;
 stop
 @enduml
