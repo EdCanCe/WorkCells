@@ -1,4 +1,4 @@
-@startuml
+@startuml CU04 - Colaborador registra evidencia de KPI
 |Colaborador|
 start
 :Accede a la gestión de KPI'S.;

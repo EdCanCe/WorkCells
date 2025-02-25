@@ -1,4 +1,4 @@
-@startuml
+@startuml CU03 - Colaborador registra ausencia
 |#fffcf6|__Colaborador__|
 start
 :Seleccionar opción de registrar ausencia;
