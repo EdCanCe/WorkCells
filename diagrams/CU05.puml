@@ -21,4 +21,6 @@ endif
 |__Líder__|
 :Presiona el botón de cerrar;
 
+stop
+
 @enduml
