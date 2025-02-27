@@ -1,0 +1,156 @@
+@startuml
+
+hide circle
+skinparam linetype ortho
+
+entity "USERS" as users{
+  *id_user: number
+  id_rol : number
+  --
+  name : text
+  surname: text
+  mail: e-mail
+  password: text
+  password_flag: bool
+  address : text
+  work_modality: text
+  work_status : bool
+}
+
+
+entity "ROLES" as roles{
+  *id_rol : number
+  --
+  name : text
+}
+
+entity "PRIVILEGEROLES" as pr{
+  *id_rol : number
+  *id_privilege : number
+  --
+  
+}
+
+entity "PRIVILEGES" as priv{
+  *id_privilege: number
+  --
+  name : text
+}
+
+entity "WORKSTATUS" as ws{
+  *id_workstatus: number 
+  --
+  status: bool
+}
+
+entity "USERWORKSTATUS" as uw{
+  *id_workstatus: number
+  *id_user : number
+  --
+  change_date : date
+}
+
+entity "DEPARTMENTS" as dep{
+  *id_department: number 
+  --
+  name : text
+}
+
+entity "USERDEPARTMENTS" as udep{
+  *id_department: number 
+  *id_user : number
+  --
+}
+
+entity "VACATIONS" as vac{
+  *id_vacation: number
+  id_user: number
+  --
+  start_date : date
+  end_date : date
+  reason : text
+  leader_status: bool
+  hr_status : bool
+}
+
+
+entity "ABSENCES" as abs{
+  *id_absence: number 
+  id_user: number
+  --
+  start_date: date
+  end_date : date
+  reason: text
+}
+
+entity "ABSENCEMEDIAS" as absm{
+  *id_absence : number
+  --
+  media_link : text
+}
+
+entity "KPIS" as kpis{
+  *id_kpi: number
+  id_user: number
+  --
+  name : text
+  creation_date: date
+  current_value : number
+  goal : text
+  mont_duration : number
+}
+
+entity "EVIDENCES" as evi{
+  *id_evidence: number
+  *id_kpi : number
+  --
+  description : text
+  upload_date : date
+}
+
+entity "EVIDENCEMEDIAS" as evim{
+  *id_evidence : number
+  --
+  media_link : text
+}
+
+entity "ONEONONE" as one{
+  *id_oneonone: number
+  id_user : number
+  --
+  expected_time : number
+  meeting_date : date
+}
+
+entity "ONEONONEANSWERS" as oneans{
+  *id_oneonone : number
+  --
+  question : text
+  answer : text
+  value : number
+}
+
+entity "HOLIDAYS" as holy{
+  *holiday_date: date
+  --
+  name : text
+}
+
+' muchos a muchos
+users }|-- roles
+roles --|{ pr
+pr }|-- priv
+users --|{ uw
+uw }|-- ws
+users --|{ udep
+udep }|-- dep
+vac }|.. users
+absm }|.. abs
+abs }|.. users
+evim }|.. evi
+evi }|.. kpis
+kpis }|.. users
+oneans }|.. one
+one }|.. users
+
+@enduml
