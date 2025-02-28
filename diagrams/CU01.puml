@@ -1,0 +1,55 @@
+@startuml CU01 - Colaborador registra solicitud de vacaciones:
+|#fffcf6|__Colaborador__|
+start
+:Seleccionar opción de solicitar vacaciones;
+
+|#f3fbd4|__Sistema__|
+:Calcula la cantidad de días totales
+de vacaciones que el colaborador podría
+llegar a tener en dicho año.;
+
+:Calcula la cantidad de días de vacaciones
+que ha tomado el colaborador en el año;
+
+|#f3fbd4|__Sistema__|
+if(Verifica si el colaborador tiene días de
+vacaciones disponibles) then (No tiene días disponibles)
+    :Continúa su ejecución
+    normalmente;
+else (NO tiene días disponibles)
+    :Muestra un aviso que el colaborador no
+    puede solicitar vacaciones;
+    :Regirige al colaborador a la página del
+    calendario;
+    stop
+endif
+
+|#fffcf6|__Colaborador__|
+:Ingresa la fecha de inicio y fecha de finalización
+de sus vacaciones;
+
+:Registra el motivo de sus vacaciones;
+
+:Selecciona la opción de guardar información;
+
+|#f3fbd4|__Sistema__|
+:Recopila la información ingresada, incluyendo:
+ - Fecha de inicio y fin de la vacación.
+ - Motivo.
+ - Información del colaborador (ID, nombre, etc.);
+
+:Crea un registro de vacaciones en la tabla
+"Vacations" con la información recabada;
+
+:Muestra un pop-up diciendo que el registro
+fue exitoso;
+
+|#fffcf6|__Colaborador__|
+:Selecciona la opción de cerrar registro de
+solicitud de vacaciones;
+
+|#f3fbd4|__Sistema__|
+:Redirige al colaborador a la página
+del calendario;
+stop
+@enduml
