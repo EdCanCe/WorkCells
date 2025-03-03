@@ -1,4 +1,4 @@
-@startuml
+@startuml MR
 
 hide circle
 skinparam linetype ortho
@@ -58,8 +58,8 @@ entity enterprise {
     title : VARCHAR(60)
 }
 
-entity departament {
-    * departamentID : TINYINT [PK]
+entity department {
+    * departmentID : TINYINT [PK]
     --
     title : VARCHAR(60)
     enterpriseIDFK : TINYINT [FK]
@@ -67,7 +67,7 @@ entity departament {
 
 entity userDepartment {
     * userIDFK : MEDIUMINT [FK]
-    * departamentIDFK : TINYINT [FK]
+    * departmentIDFK : TINYINT [FK]
 }
 
 entity kpi {
@@ -78,7 +78,7 @@ entity kpi {
     progress : TINYINT
     goal : VARCHAR(300)
     monthDuration : TINYINT
-    KpiDepartamentIDFK : TINYINT [FK]
+    KpiDepartmentIDFK : TINYINT [FK]
     kpiUserIDFK : MEDIUMINT [FK]
 }
 
@@ -150,10 +150,10 @@ role ||--|{ rolePrivilages
 privileges ||--|{ rolePrivilages
 user }|--|| role
 workStatus }|--|| user 
-departament }|--|| enterprise
+department }|--|| enterprise
 user ||--|{ userDepartment
 department ||--|{ userDepartment
-kpi }|--|| departament
+kpi }|--|| department
 kpi }o--|| user
 evidence }o--|| kpi
 evidenceMedia }o--|| evidence

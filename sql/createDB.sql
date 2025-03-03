@@ -52,8 +52,8 @@ CREATE TABLE enterprise (
     title VARCHAR(60) NOT NULL
 );
 
-CREATE TABLE departament (
-    departamentID TINYINT NOT NULL PRIMARY KEY,
+CREATE TABLE department (
+    departmentID TINYINT NOT NULL PRIMARY KEY,
     title VARCHAR(60) NOT NULL,
     enterpriseIDFK TINYINT NOT NULL,
     CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
@@ -62,8 +62,8 @@ CREATE TABLE departament (
 CREATE TABLE userDepartment (
     userIDFK MEDIUMINT NOT NULL,
     CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID),
-    departamentIDFK TINYINT NOT NULL,
-    CONSTRAINT departamentIDFK FOREIGN KEY (departamentIDFK) REFERENCES departament(departamentID)
+    departmentIDFK TINYINT NOT NULL,
+    CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID)
 );
 
 CREATE TABLE kpi (
@@ -73,8 +73,8 @@ CREATE TABLE kpi (
     progress TINYINT NOT NULL,
     goal VARCHAR(300) NOT NULL,
     monthDuration TINYINT NOT NULL,
-    KpiDepartamentIDFK TINYINT NOT NULL,
-    CONSTRAINT KpiDepartamentIDFK FOREIGN KEY (KpiDepartamentIDFK) REFERENCES departament(departamentID),
+    KpiDepartmentIDFK TINYINT NOT NULL,
+    CONSTRAINT KpiDepartmentIDFK FOREIGN KEY (KpiDepartmentIDFK) REFERENCES department(departmentID),
     kpiUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT kpiUserIDFK FOREIGN KEY (kpiUserIDFK) REFERENCES user(userID)
 );
