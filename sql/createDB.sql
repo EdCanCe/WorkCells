@@ -4,8 +4,8 @@ CREATE TABLE holiday (
     title VARCHAR(100)
 );
 
-CREATE TABLE privileges (
-    privilegesID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE privilege (
+    privilegeID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(60) NOT NULL,
     summary VARCHAR(300)
 );
@@ -15,11 +15,11 @@ CREATE TABLE role (
     title VARCHAR(60) NOT NULL
 );
 
-CREATE TABLE rolePrivilages (
+CREATE TABLE rolePrivilege (
     roleIDFK TINYINT NOT NULL,
     CONSTRAINT roleIDFK FOREIGN KEY (roleIDFK) REFERENCES role(roleID),
-    privilegesIDFK TINYINT NOT NULL,
-    CONSTRAINT privilegesIDFK FOREIGN KEY (privilegesIDFK) REFERENCES privileges(privilegesID)
+    privilegeIDFK TINYINT NOT NULL,
+    CONSTRAINT privilegeIDFK FOREIGN KEY (privilegeIDFK) REFERENCES privilege(privilegeID)
 );
 
 CREATE TABLE user (
@@ -73,8 +73,8 @@ CREATE TABLE kpi (
     progress TINYINT NOT NULL,
     goal VARCHAR(300) NOT NULL,
     monthDuration TINYINT NOT NULL,
-    KpiDepartmentIDFK TINYINT NOT NULL,
-    CONSTRAINT KpiDepartmentIDFK FOREIGN KEY (KpiDepartmentIDFK) REFERENCES department(departmentID),
+    kpiDepartmentIDFK TINYINT NOT NULL,
+    CONSTRAINT kpiDepartmentIDFK FOREIGN KEY (kpiDepartmentIDFK) REFERENCES department(departmentID),
     kpiUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT kpiUserIDFK FOREIGN KEY (kpiUserIDFK) REFERENCES user(userID)
 );
@@ -94,11 +94,11 @@ CREATE TABLE evidenceMedia (
     CONSTRAINT evidenceIDFK FOREIGN KEY (evidenceIDFK) REFERENCES evidence(evidenceID)
 );
 
-CREATE TABLE vacations (
-    vacationsID INT NOT NULL PRIMARY KEY,
+CREATE TABLE vacation (
+    vacationID INT NOT NULL PRIMARY KEY,
     leaderStatus BOOLEAN NOT NULL,
     reason VARCHAR(300),
-    HRStatus BOOLEAN NOT NULL,
+    hrStatus BOOLEAN NOT NULL,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     vacationUserIDFK MEDIUMINT NOT NULL,
@@ -126,8 +126,8 @@ CREATE TABLE oneOnOne (
     oneOnOneID INT NOT NULL PRIMARY KEY,
     meetingDate TIMESTAMP NOT NULL,
     expectedTime TINYINT NOT NULL,
-    oneOnOneuserIDFK MEDIUMINT NOT NULL,
-    CONSTRAINT oneOnOneuserIDFK FOREIGN KEY (oneOnOneuserIDFK) REFERENCES user(userID)
+    oneOnOneUserIDFK MEDIUMINT NOT NULL,
+    CONSTRAINT oneOnOneUserIDFK FOREIGN KEY (oneOnOneUserIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE oneOnOneQuestion (
