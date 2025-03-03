@@ -1,4 +1,4 @@
-@startuml
+@startuml MR
 
 hide circle
 skinparam linetype ortho
@@ -9,8 +9,8 @@ entity holiday {
     title : VARCHAR(100)
 }
 
-entity privileges {
-    * privilegesID : TINYINT [PK]
+entity privilege {
+    * privilegeID : TINYINT [PK]
     --
     title : VARCHAR(60)
     summary : VARCHAR(300)
@@ -22,9 +22,9 @@ entity role {
     title : VARCHAR(60)
 }
 
-entity rolePrivilages {
+entity rolePrivilege {
     * roleIDFK : TINYINT [FK]
-    * privilegesIDFK : TINYINT [FK]
+    * privilegeIDFK : TINYINT [FK]
 }
 
 entity user {
@@ -58,8 +58,8 @@ entity enterprise {
     title : VARCHAR(60)
 }
 
-entity departament {
-    * departamentID : TINYINT [PK]
+entity department {
+    * departmentID : TINYINT [PK]
     --
     title : VARCHAR(60)
     enterpriseIDFK : TINYINT [FK]
@@ -67,7 +67,7 @@ entity departament {
 
 entity userDepartment {
     * userIDFK : MEDIUMINT [FK]
-    * departamentIDFK : TINYINT [FK]
+    * departmentIDFK : TINYINT [FK]
 }
 
 entity kpi {
@@ -78,7 +78,7 @@ entity kpi {
     progress : TINYINT
     goal : VARCHAR(300)
     monthDuration : TINYINT
-    KpiDepartamentIDFK : TINYINT [FK]
+    kpiDepartmentIDFK : TINYINT [FK]
     kpiUserIDFK : MEDIUMINT [FK]
 }
 
@@ -97,12 +97,12 @@ entity evidenceMedia {
     evidenceIDFK : INT [FK]
 }
 
-entity vacations {
-    * vacationsID : INT [PK]
+entity vacation {
+    * vacationID : INT [PK]
     --
     leaderStatus : BOOLEAN
     reason : VARCHAR(300)
-    HRStatus : BOOLEAN
+    hrStatus : BOOLEAN
     startDate : DATE
     endDate : DATE
     vacationUserIDFK : MEDIUMINT [FK]
@@ -130,7 +130,7 @@ entity oneOnOne {
     --
     meetingDate : TIMESTAMP
     expectedTime : TINYINT
-    oneOnOneuserIDFK : MEDIUMINT [FK]
+    oneOnOneUserIDFK : MEDIUMINT [FK]
 }
 
 entity oneOnOneQuestion {
@@ -146,18 +146,18 @@ entity oneOnOneAnswer {
     answer : VARCHAR(300)
 }
 
-role ||--|{ rolePrivilages
-privileges ||--|{ rolePrivilages
+role ||--|{ rolePrivilege
+privilege ||--|{ rolePrivilege
 user }|--|| role
 workStatus }|--|| user 
-departament }|--|| enterprise
+department }|--|| enterprise
 user ||--|{ userDepartment
 department ||--|{ userDepartment
-kpi }|--|| departament
+kpi }|--|| department
 kpi }o--|| user
 evidence }o--|| kpi
 evidenceMedia }o--|| evidence
-vacations }o--|| user
+vacation }o--|| user
 absence }o--|| user
 absenceMedia }o--|| absence
 oneOnOne }o--|| user
