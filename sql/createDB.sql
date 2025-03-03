@@ -1,6 +1,6 @@
 
 CREATE TABLE holiday (
-    holidayDate TINYINT NOT NULL PRIMARY KEY,
+    holidayDate DATE NOT NULL PRIMARY KEY,
     title VARCHAR(100)
 );
 
@@ -24,15 +24,15 @@ CREATE TABLE rolePrivilege (
 
 CREATE TABLE user (
     userID MEDIUMINT NOT NULL PRIMARY KEY,
+    birthName VARCHAR(50) NOT NULL,
+    fSurname VARCHAR(50) NOT NULL,
+    mSurname VARCHAR(50),
+    mail VARCHAR(70) NOT NULL,
+    passwd VARCHAR(70) NOT NULL,
+    passwdFlag BOOLEAN NOT NULL,
     zipCode TINYINT NOT NULL,
     houseNumber TINYINT NOT NULL,
     streetName VARCHAR(100),
-    passwd VARCHAR(70) NOT NULL,
-    passwdFlag BOOLEAN NOT NULL,
-    mail VARCHAR(70) NOT NULL,
-    fSurname VARCHAR(50) NOT NULL,
-    mSurname VARCHAR(50),
-    birthName VARCHAR(50) NOT NULL,
     workModality TINYINT NOT NULL,
     workStatus BOOLEAN NOT NULL,
     userRoleIDFK TINYINT NOT NULL,
@@ -60,10 +60,10 @@ CREATE TABLE department (
 );
 
 CREATE TABLE userDepartment (
-    userIDFK MEDIUMINT NOT NULL,
-    CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID),
     departmentIDFK TINYINT NOT NULL,
-    CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID)
+    CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
+    userIDFK MEDIUMINT NOT NULL,
+    CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE kpi (
@@ -96,20 +96,20 @@ CREATE TABLE evidenceMedia (
 
 CREATE TABLE vacation (
     vacationID INT NOT NULL PRIMARY KEY,
-    leaderStatus BOOLEAN NOT NULL,
-    reason VARCHAR(300),
-    hrStatus BOOLEAN NOT NULL,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
+    reason VARCHAR(300),
+    leaderStatus BOOLEAN NOT NULL,
+    hrStatus BOOLEAN NOT NULL,
     vacationUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT vacationUserIDFK FOREIGN KEY (vacationUserIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE absence (
     absenceID INT NOT NULL PRIMARY KEY,
-    reason VARCHAR(300),
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
+    reason VARCHAR(300),
     justified BOOLEAN NOT NULL,
     absenceUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT absenceUserIDFK FOREIGN KEY (absenceUserIDFK) REFERENCES user(userID)
@@ -117,15 +117,15 @@ CREATE TABLE absence (
 
 CREATE TABLE absenceMedia (
     absenceMediaID INT NOT NULL PRIMARY KEY,
-    mediaLink VARCHAR(255) NOT NULL,
+    mediaLink VARCHAR(300) NOT NULL,
     absenceIDFK INT NOT NULL,
     CONSTRAINT absenceIDFK FOREIGN KEY (absenceIDFK) REFERENCES absence(absenceID)
 );
 
 CREATE TABLE oneOnOne (
     oneOnOneID INT NOT NULL PRIMARY KEY,
-    meetingDate TIMESTAMP NOT NULL,
     expectedTime TINYINT NOT NULL,
+    meetingDate TIMESTAMP NOT NULL,
     oneOnOneUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT oneOnOneUserIDFK FOREIGN KEY (oneOnOneUserIDFK) REFERENCES user(userID)
 );
@@ -136,7 +136,7 @@ CREATE TABLE oneOnOneQuestion (
 );
 
 CREATE TABLE oneOnOneAnswer (
-    answer VARCHAR(300) NOT NULL,
+    answer VARCHAR(400) NOT NULL,
     oneOnOneIDFK INT NOT NULL,
     CONSTRAINT oneOnOneIDFK FOREIGN KEY (oneOnOneIDFK) REFERENCES oneOnOne(oneOnOneID),
     questionIDFK TINYINT NOT NULL,

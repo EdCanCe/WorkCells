@@ -30,15 +30,15 @@ entity rolePrivilege {
 entity user {
     * userID : MEDIUMINT [PK]
     --
+    birthName : VARCHAR(50)
+    fSurname : VARCHAR(50)
+    mSurname : VARCHAR(50)
+    mail : VARCHAR(70)
+    passwd : VARCHAR(70)
+    passwdFlag : BOOLEAN
     zipCode : TINYINT
     houseNumber : TINYINT
     streetName : VARCHAR(100)
-    passwd : VARCHAR(70)
-    passwdFlag : BOOLEAN
-    mail : VARCHAR(70)
-    fSurname : VARCHAR(50)
-    mSurname : VARCHAR(50)
-    birthName : VARCHAR(50)
     workModality : TINYINT
     workStatus : BOOLEAN
     userRoleIDFK : TINYINT [FK]
@@ -66,8 +66,8 @@ entity department {
 }
 
 entity userDepartment {
-    * userIDFK : MEDIUMINT [FK]
     * departmentIDFK : TINYINT [FK]
+    * userIDFK : MEDIUMINT [FK]
 }
 
 entity kpi {
@@ -100,20 +100,20 @@ entity evidenceMedia {
 entity vacation {
     * vacationID : INT [PK]
     --
-    leaderStatus : BOOLEAN
-    reason : VARCHAR(300)
-    hrStatus : BOOLEAN
     startDate : DATE
     endDate : DATE
+    reason : VARCHAR(300)
+    leaderStatus : BOOLEAN
+    hrStatus : BOOLEAN
     vacationUserIDFK : MEDIUMINT [FK]
 }
 
 entity absence {
     * absenceID : INT [PK]
     --
-    reason : VARCHAR(300)
     startDate : DATE
     endDate : DATE
+    reason : VARCHAR(300)
     justified : BOOLEAN
     absenceUserIDFK : MEDIUMINT [FK]
 }
@@ -121,15 +121,15 @@ entity absence {
 entity absenceMedia {
     * absenceMediaID : INT [PK]
     --
-    mediaLink : VARCHAR(255)
+    mediaLink : VARCHAR(300)
     absenceIDFK : INT [FK]
 }
 
 entity oneOnOne {
     * oneOnOneID : INT [PK]
     --
-    meetingDate : TIMESTAMP
     expectedTime : TINYINT
+    meetingDate : TIMESTAMP
     oneOnOneUserIDFK : MEDIUMINT [FK]
 }
 
@@ -143,7 +143,7 @@ entity oneOnOneAnswer {
     * oneOnOneIDFK : INT [FK]
     * questionIDFK : TINYINT [FK]
     --
-    answer : VARCHAR(300)
+    answer : VARCHAR(400)
 }
 
 role ||--|{ rolePrivilege
