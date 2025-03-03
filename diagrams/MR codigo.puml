@@ -1,0 +1,167 @@
+@startuml
+
+hide circle
+skinparam linetype ortho
+
+entity holiday {
+    * holidayDate : TINYINT [PK]
+    --
+    title : VARCHAR(100)
+}
+
+entity privileges {
+    * privilegesID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
+    summary : VARCHAR(300)
+}
+
+entity role {
+    * roleID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
+}
+
+entity rolePrivilages {
+    * roleIDFK : TINYINT [FK]
+    * privilegesIDFK : TINYINT [FK]
+}
+
+entity user {
+    * userID : MEDIUMINT [PK]
+    --
+    zipCode : TINYINT
+    houseNumber : TINYINT
+    streetName : VARCHAR(100)
+    passwd : VARCHAR(70)
+    passwdFlag : BOOLEAN
+    mail : VARCHAR(70)
+    fSurname : VARCHAR(50)
+    mSurname : VARCHAR(50)
+    birthName : VARCHAR(50)
+    workModality : TINYINT
+    workStatus : BOOLEAN
+    userRoleIDFK : TINYINT [FK]
+}
+
+entity workStatus {
+    * workStatusID : MEDIUMINT [PK]
+    --
+    startDate : DATE
+    endDate : DATE
+    userStatusIDFK : MEDIUMINT [FK]
+}
+
+entity enterprise {
+    * enterpriseID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
+}
+
+entity departament {
+    * departamentID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
+    enterpriseIDFK : TINYINT [FK]
+}
+
+entity userDepartment {
+    * userIDFK : MEDIUMINT [FK]
+    * departamentIDFK : TINYINT [FK]
+}
+
+entity kpi {
+    * kpiID : INT [PK]
+    --
+    title : VARCHAR(100)
+    creationDate : DATE
+    progress : TINYINT
+    goal : VARCHAR(300)
+    monthDuration : TINYINT
+    KpiDepartamentIDFK : TINYINT [FK]
+    kpiUserIDFK : MEDIUMINT [FK]
+}
+
+entity evidence {
+    * evidenceID : INT [PK]
+    --
+    summary : VARCHAR(300)
+    uploadDate : TIMESTAMP
+    evidenceKpiIDFK : INT [FK]
+}
+
+entity evidenceMedia {
+    * evidenceMediaID : INT [PK]
+    --
+    mediaLink : VARCHAR(255)
+    evidenceIDFK : INT [FK]
+}
+
+entity vacations {
+    * vacationsID : INT [PK]
+    --
+    leaderStatus : BOOLEAN
+    reason : VARCHAR(300)
+    HRStatus : BOOLEAN
+    startDate : DATE
+    endDate : DATE
+    vacationUserIDFK : MEDIUMINT [FK]
+}
+
+entity absence {
+    * absenceID : INT [PK]
+    --
+    reason : VARCHAR(300)
+    startDate : DATE
+    endDate : DATE
+    justified : BOOLEAN
+    absenceUserIDFK : MEDIUMINT [FK]
+}
+
+entity absenceMedia {
+    * absenceMediaID : INT [PK]
+    --
+    mediaLink : VARCHAR(255)
+    absenceIDFK : INT [FK]
+}
+
+entity oneOnOne {
+    * oneOnOneID : INT [PK]
+    --
+    meetingDate : TIMESTAMP
+    expectedTime : TINYINT
+    oneOnOneuserIDFK : MEDIUMINT [FK]
+}
+
+entity oneOnOneQuestion {
+    * questionID : TINYINT [PK]
+    --
+    question : VARCHAR(300)
+}
+
+entity oneOnOneAnswer {
+    * oneOnOneIDFK : INT [FK]
+    * questionIDFK : TINYINT [FK]
+    --
+    answer : VARCHAR(300)
+}
+
+role ||--|{ rolePrivilages
+privileges ||--|{ rolePrivilages
+user }|--|| role
+workStatus }|--|| user 
+departament }|--|| enterprise
+user ||--|{ userDepartment
+department ||--|{ userDepartment
+kpi }|--|| departament
+kpi }o--|| user
+evidence }o--|| kpi
+evidenceMedia }o--|| evidence
+vacations }o--|| user
+absence }o--|| user
+absenceMedia }o--|| absence
+oneOnOne }o--|| user
+oneOnOne ||--o{ oneOnOneAnswer
+oneOnOneQuestion ||--o{ oneOnOneAnswer
+
+@enduml
