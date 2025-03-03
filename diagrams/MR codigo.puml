@@ -3,154 +3,165 @@
 hide circle
 skinparam linetype ortho
 
-entity "USERS" as users{
-  *id_user: number
-  id_rol : number
-  --
-  name : text
-  surname: text
-  mail: e-mail
-  password: text
-  password_flag: bool
-  address : text
-  work_modality: text
-  work_status : bool
+entity holiday {
+    * holidayDate : TINYINT [PK]
+    --
+    title : VARCHAR(100)
 }
 
-
-entity "ROLES" as roles{
-  *id_rol : number
-  --
-  name : text
+entity privileges {
+    * privilegesID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
+    summary : VARCHAR(300)
 }
 
-entity "PRIVILEGEROLES" as pr{
-  *id_rol : number
-  *id_privilege : number
-  --
-  
+entity role {
+    * roleID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
 }
 
-entity "PRIVILEGES" as priv{
-  *id_privilege: number
-  --
-  name : text
+entity rolePrivilages {
+    * roleIDFK : TINYINT [FK]
+    * privilegesIDFK : TINYINT [FK]
 }
 
-entity "WORKSTATUS" as ws{
-  *id_workstatus: number 
-  --
-  status: bool
+entity user {
+    * userID : MEDIUMINT [PK]
+    --
+    zipCode : TINYINT
+    houseNumber : TINYINT
+    streetName : VARCHAR(100)
+    passwd : VARCHAR(70)
+    passwdFlag : BOOLEAN
+    mail : VARCHAR(70)
+    fSurname : VARCHAR(50)
+    mSurname : VARCHAR(50)
+    birthName : VARCHAR(50)
+    workModality : TINYINT
+    workStatus : BOOLEAN
+    userRoleIDFK : TINYINT [FK]
 }
 
-entity "USERWORKSTATUS" as uw{
-  *id_workstatus: number
-  *id_user : number
-  --
-  change_date : date
+entity workStatus {
+    * workStatusID : MEDIUMINT [PK]
+    --
+    startDate : DATE
+    endDate : DATE
+    userStatusIDFK : MEDIUMINT [FK]
 }
 
-entity "DEPARTMENTS" as dep{
-  *id_department: number 
-  --
-  name : text
+entity enterprise {
+    * enterpriseID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
 }
 
-entity "USERDEPARTMENTS" as udep{
-  *id_department: number 
-  *id_user : number
-  --
+entity departament {
+    * departamentID : TINYINT [PK]
+    --
+    title : VARCHAR(60)
+    enterpriseIDFK : TINYINT [FK]
 }
 
-entity "VACATIONS" as vac{
-  *id_vacation: number
-  id_user: number
-  --
-  start_date : date
-  end_date : date
-  reason : text
-  leader_status: bool
-  hr_status : bool
+entity userDepartment {
+    * userIDFK : MEDIUMINT [FK]
+    * departamentIDFK : TINYINT [FK]
 }
 
-
-entity "ABSENCES" as abs{
-  *id_absence: number 
-  id_user: number
-  --
-  start_date: date
-  end_date : date
-  reason: text
+entity kpi {
+    * kpiID : INT [PK]
+    --
+    title : VARCHAR(100)
+    creationDate : DATE
+    progress : TINYINT
+    goal : VARCHAR(300)
+    monthDuration : TINYINT
+    KpiDepartamentIDFK : TINYINT [FK]
+    kpiUserIDFK : MEDIUMINT [FK]
 }
 
-entity "ABSENCEMEDIAS" as absm{
-  *id_absence : number
-  --
-  media_link : text
+entity evidence {
+    * evidenceID : INT [PK]
+    --
+    summary : VARCHAR(300)
+    uploadDate : TIMESTAMP
+    evidenceKpiIDFK : INT [FK]
 }
 
-entity "KPIS" as kpis{
-  *id_kpi: number
-  id_user: number
-  --
-  name : text
-  creation_date: date
-  current_value : number
-  goal : text
-  mont_duration : number
+entity evidenceMedia {
+    * evidenceMediaID : INT [PK]
+    --
+    mediaLink : VARCHAR(255)
+    evidenceIDFK : INT [FK]
 }
 
-entity "EVIDENCES" as evi{
-  *id_evidence: number
-  *id_kpi : number
-  --
-  description : text
-  upload_date : date
+entity vacations {
+    * vacationsID : INT [PK]
+    --
+    leaderStatus : BOOLEAN
+    reason : VARCHAR(300)
+    HRStatus : BOOLEAN
+    startDate : DATE
+    endDate : DATE
+    vacationUserIDFK : MEDIUMINT [FK]
 }
 
-entity "EVIDENCEMEDIAS" as evim{
-  *id_evidence : number
-  --
-  media_link : text
+entity absence {
+    * absenceID : INT [PK]
+    --
+    reason : VARCHAR(300)
+    startDate : DATE
+    endDate : DATE
+    justified : BOOLEAN
+    absenceUserIDFK : MEDIUMINT [FK]
 }
 
-entity "ONEONONE" as one{
-  *id_oneonone: number
-  id_user : number
-  --
-  expected_time : number
-  meeting_date : date
+entity absenceMedia {
+    * absenceMediaID : INT [PK]
+    --
+    mediaLink : VARCHAR(255)
+    absenceIDFK : INT [FK]
 }
 
-entity "ONEONONEANSWERS" as oneans{
-  *id_oneonone : number
-  --
-  question : text
-  answer : text
-  value : number
+entity oneOnOne {
+    * oneOnOneID : INT [PK]
+    --
+    meetingDate : TIMESTAMP
+    expectedTime : TINYINT
+    oneOnOneuserIDFK : MEDIUMINT [FK]
 }
 
-entity "HOLIDAYS" as holy{
-  *holiday_date: date
-  --
-  name : text
+entity oneOnOneQuestion {
+    * questionID : TINYINT [PK]
+    --
+    question : VARCHAR(300)
 }
 
-' muchos a muchos
-users }|-- roles
-roles --|{ pr
-pr }|-- priv
-users --|{ uw
-uw }|-- ws
-users --|{ udep
-udep }|-- dep
-vac }|.. users
-absm }|.. abs
-abs }|.. users
-evim }|.. evi
-evi }|.. kpis
-kpis }|.. users
-oneans }|.. one
-one }|.. users
+entity oneOnOneAnswer {
+    * oneOnOneIDFK : INT [FK]
+    * questionIDFK : TINYINT [FK]
+    --
+    answer : VARCHAR(300)
+}
+
+role ||--|{ rolePrivilages
+privileges ||--|{ rolePrivilages
+user }|--|| role
+workStatus }|--|| user 
+departament }|--|| enterprise
+user ||--|{ userDepartment
+department ||--|{ userDepartment
+kpi }|--|| departament
+kpi }o--|| user
+evidence }o--|| kpi
+evidenceMedia }o--|| evidence
+vacations }o--|| user
+absence }o--|| user
+absenceMedia }o--|| absence
+oneOnOne }o--|| user
+oneOnOne ||--o{ oneOnOneAnswer
+oneOnOneQuestion ||--o{ oneOnOneAnswer
 
 @enduml

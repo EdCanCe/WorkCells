@@ -94,7 +94,7 @@ CREATE TABLE evidenceMedia (
     CONSTRAINT evidenceIDFK FOREIGN KEY (evidenceIDFK) REFERENCES evidence(evidenceID)
 );
 
-CREATE TABLE vactions (
+CREATE TABLE vacations (
     vacationsID INT NOT NULL PRIMARY KEY,
     leaderStatus BOOLEAN NOT NULL,
     reason VARCHAR(300),
