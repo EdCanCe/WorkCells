@@ -15,7 +15,7 @@ exports.get_onetoOne = (require, response, next) => {
 };
 
 exports.get_calendar = (request, response, next) => {
-  response.send("calendario");
+  response.render("calendario");
 };
 
 exports.get_myprofile = (require, response, next) => {
