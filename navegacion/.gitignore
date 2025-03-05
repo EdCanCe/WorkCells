@@ -1,0 +1,6 @@
+#para carpeta de un tercero que vamos a utilizar.
+node_modules/
+#para ignorar en windows
+Thumbs.db
+#para ignorar videos
+*.mp4

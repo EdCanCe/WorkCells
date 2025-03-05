@@ -1,0 +1,18 @@
+const express = require("express");
+const { request } = require("http");
+const router = express.Router();
+
+const colaborador_controllers = require("../controllers/colaborador.controllers");
+
+router.get("/myprofile/kpis", colaborador_controllers.get_kpis);
+
+router.get("/calendar/absence", colaborador_controllers.get_absence);
+
+router.get("/calendar/vacation", colaborador_controllers.get_vacation);
+
+router.get("/calendar/onetoOne", colaborador_controllers.get_onetoOne);
+
+router.get("/calendar", colaborador_controllers.get_calendar);
+
+router.get("/myprofile", colaborador_controllers.get_myprofile);
+module.exports = router;
