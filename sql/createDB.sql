@@ -43,7 +43,7 @@ CREATE TABLE user (
     mail VARCHAR(70) NOT NULL,
     passwd VARCHAR(70) NOT NULL,
     passwdFlag BOOLEAN NOT NULL,
-    zipCode TINYINT NOT NULL,
+    zipCode MEDIUMINT NOT NULL,
     houseNumber VARCHAR(13) NOT NULL,
     streetName VARCHAR(100),
     colony VARCHAR(100),
