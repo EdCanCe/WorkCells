@@ -39,7 +39,7 @@ Randomizer<Entity> entities;
 
 // Constructor de una tupla
 Entity::Entity(string Name, string FLastName, string MLastName) {
-    id = entities.size();
+    id = entities.size() + 1;
     name = Name;
     fLastName = FLastName;
     mLastName = MLastName;

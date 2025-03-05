@@ -36,9 +36,14 @@ Randomizer<Privilege> privileges;
 
 // Constructor de una tupla
 Privilege::Privilege(string Title, string Summary) {
-    id = privileges.size();
+    id = privileges.size() + 1;
     title = Title;
     summary = Summary;
+}
+
+// Obtengo su Id
+int Privilege::getId(){
+    return id;
 }
 
 // Impresión / Código en SQL

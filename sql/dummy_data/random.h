@@ -6,11 +6,14 @@
 #include <ctime>
 using namespace std;
 
+int getRandom(int x) {
+    return rand() % x;
+}
+
 template <class T>
 class Randomizer {
     private:
         vector<T> v;
-        int getRandom(int);
         
     public:
         Randomizer();
@@ -28,11 +31,6 @@ Randomizer<T>::Randomizer() {
 template <class T>
 Randomizer<T>::Randomizer(initializer_list<T> x) {
     v = x;
-}
-
-template <class T>
-int Randomizer<T>::getRandom(int x) {
-    return rand() % x;
 }
 
 template <class T>

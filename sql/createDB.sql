@@ -14,7 +14,8 @@ CREATE TABLE usedHoliday (
 
 CREATE TABLE privilege (
     privilegeID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL
+    title VARCHAR(60) NOT NULL,
+    summary VARCHAR(150)
 );
 
 CREATE TABLE role (
@@ -43,7 +44,7 @@ CREATE TABLE user (
     passwd VARCHAR(70) NOT NULL,
     passwdFlag BOOLEAN NOT NULL,
     zipCode TINYINT NOT NULL,
-    houseNumber TINYINT NOT NULL,
+    houseNumber VARCHAR(13) NOT NULL,
     streetName VARCHAR(100),
     colony VARCHAR(100),
     workModality TINYINT NOT NULL,
@@ -173,7 +174,7 @@ CREATE TABLE oneOnOneMeasure (
 );
 
 CREATE TABLE fault (
-    faultID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    faultID SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     doneDate DATE NOT NULL,
     summary VARCHAR(300),
     faultUserIDFK MEDIUMINT NOT NULL,
