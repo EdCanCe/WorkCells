@@ -38,8 +38,7 @@ CREATE TABLE country (
 CREATE TABLE user (
     userID MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     birthName VARCHAR(50) NOT NULL,
-    fSurname VARCHAR(50) NOT NULL,
-    mSurname VARCHAR(50),
+    surname VARCHAR(100) NOT NULL,
     mail VARCHAR(70) NOT NULL,
     passwd VARCHAR(70) NOT NULL,
     passwdFlag BOOLEAN NOT NULL,
@@ -51,8 +50,8 @@ CREATE TABLE user (
     workStatus BOOLEAN NOT NULL,
     userRoleIDFK TINYINT NOT NULL,
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
-    countryRoleIDFK TINYINT NOT NULL,
-    CONSTRAINT countryRoleIDFK FOREIGN KEY (countryRoleIDFK) REFERENCES country(countryID)
+    countryUserIDFK TINYINT NOT NULL,
+    CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID)
 );
 
 CREATE TABLE workStatus (

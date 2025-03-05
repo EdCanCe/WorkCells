@@ -132,8 +132,7 @@ class User {
     private:
         int id;
         string birthName;
-        string fSurname;
-        string mSurname;
+        string surname;
         string mail;
         string passwd;
         bool passwdFlag;
@@ -144,10 +143,10 @@ class User {
         int workModality;
         bool workStatus;
         int userRoleIDFK;
-        int countryRoleIDFK;
+        int countryUserIDFK;
 
     public:
-        User(string, string, string, string, string, bool, int, string, string, string, int, bool, int, int);
+        User(string, string, string, string, bool, int, string, string, string, int, bool, int, int);
         int getId();
         void print();
 };
@@ -156,11 +155,10 @@ class User {
 Randomizer<User> users;
 
 // Constructor de una tupla
-User::User(string BirthName, string FSurname, string MSurname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryRoleIDFK) {
+User::User(string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryRoleIDFK) {
     id = users.size() + 1;
     birthName = BirthName;
-    fSurname = FSurname;
-    mSurname = MSurname;
+    surname = Surname;
     mail = Mail;
     passwd = Passwd;
     passwdFlag = PasswdFlag;
@@ -171,7 +169,7 @@ User::User(string BirthName, string FSurname, string MSurname, string Mail, stri
     workModality = WorkModality;
     workStatus = WorkStatus;
     userRoleIDFK = UserRoleIDFK;
-    countryRoleIDFK = CountryRoleIDFK;
+    countryUserIDFK = countryUserIDFK;
 }
 
 // Obtengo su Id
@@ -181,7 +179,7 @@ int User::getId(){
 
 // Impresión / Código en SQL
 void User::print() {
-    cout << "INSERT INTO user(birthName, fSurname, mSurname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryRoleIDFK) VALUES('" << birthName << "', '" << fSurname << "', '" << mSurname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", " << userRoleIDFK << ", " << countryRoleIDFK << ");\n";
+    cout << "INSERT INTO user(birthName, fSurname, mSurname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES('" << birthName << "', '" << surname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", " << userRoleIDFK << ", " << countryUserIDFK << ");\n";
 }
 
 string createString(){
@@ -210,7 +208,7 @@ string createHouseNumber() {
 // Función para crear la tabla con X registros
 void createUsers(int x){
     for(int i=0; i<x; i++){
-        users.add(User(name.random(), lastName.random(), lastName.random(), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), roles.random().getId(), countries.random().getId()));
+        users.add(User(name.random(), lastName.random(), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), roles.random().getId(), countries.random().getId()));
     }
 }
 
