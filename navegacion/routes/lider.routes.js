@@ -15,3 +15,4 @@ router.get("/absenceColaborator", lider_controllers.get_absenceC);
 router.get("/vacationRequest", lider_controllers.get_requestV);
 
 module.exports = router;
+    

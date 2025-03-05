@@ -19,5 +19,5 @@ exports.get_calendar = (request, response, next) => {
 };
 
 exports.get_myprofile = (require, response, next) => {
-  response.send("mi perfil");
+  response.render("myprofile");
 };
