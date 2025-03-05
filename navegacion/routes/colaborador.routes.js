@@ -2,28 +2,17 @@ const express = require("express");
 const { request } = require("http");
 const router = express.Router();
 
-router.get("/Calendario", (request, response, next) => {
-  response.send("calendario");
-});
+const colaborador_controllers = require("../controllers/colaborador.controllers");
 
-router.get("/miperfil", (require, response, next) => {
-  response.send("mi perfil");
-});
+router.get("/myprofile/kpis", colaborador_controllers.get_kpis);
 
-router.get("/miperfil/kpis", (require, response, next) => {
-  response.send("kpis");
-});
+router.get("/calendar/absence", colaborador_controllers.get_absence);
 
-router.get("/Calendario/ausencias", (require, response, next) => {
-  response.send("Ausencias");
-});
+router.get("/calendar/vacation", colaborador_controllers.get_vacation);
 
-router.get("/Calendario/vacaciones", (require, response, next) => {
-  response.send("Ausencias");
-});
+router.get("/calendar/onetoOne", colaborador_controllers.get_onetoOne);
 
-router.get("/Calendario/oneonOne", (require, response, next) => {
-  response.send("Ausencias");
-});
+router.get("/calendar", colaborador_controllers.get_calendar);
 
+router.get("/myprofile", colaborador_controllers.get_myprofile);
 module.exports = router;

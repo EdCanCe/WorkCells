@@ -2,25 +2,16 @@ const express = require("express");
 const { request } = require("http");
 const router = express.Router();
 
-router.get("/Consultar", (request, response, next) => {
-  response.send("consulta");
-});
+const lider_controllers = require("../controllers/lider.controllers");
 
-router.get("/AusenciaColaborador", (require, response, next) => {
-  response.send("Ausencia de colaborador");
-});
+router.get("/check/checkprofileE", lider_controllers.get_equipo);
 
-router.get("/Consultar/ConsultarPerfil", (require, response, next) => {
-  response.send("Equipo");
-});
+router.get("/Check/CheckProfileC/kpis", lider_controllers.get_kpisC);
 
-router.get("/Consultar/ConsultarPerfil/kpis", (require, response, next) => {
-  response.send("Kpi de colaborador");
-});
+router.get("/check", lider_controllers.get_check);
 
-router.get("/Solicitudvacaciones", (require, response, next) => {
-  response.send("Respuesta");
-});
+router.get("/absenceColaborator", lider_controllers.get_absenceC);
 
+router.get("/vacationRequest", lider_controllers.get_requestV);
 
 module.exports = router;
