@@ -194,7 +194,7 @@ string createString(){
 }
 
 string createMail(){
-    return createString() + mailEnd.random();
+    return createString() + '@' + mailEnd.random();
 }
 
 int createZipCode(){
