@@ -64,8 +64,8 @@ CREATE TABLE user (
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
     countryUserIDFK TINYINT NOT NULL,
     CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
-    prioritaryDepartment TINYINT,
-    CONSTRAINT prioritaryDepartment FOREIGN KEY (prioritaryDepartment) REFERENCES department(departmentID)
+    prioritaryDepartmentFK TINYINT,
+    CONSTRAINT prioritaryDepartmentFK FOREIGN KEY (prioritaryDepartmentFK) REFERENCES department(departmentID)
 );
 
 CREATE TABLE workStatus (
@@ -77,7 +77,6 @@ CREATE TABLE workStatus (
 );
 
 CREATE TABLE userDepartment (
-    isPriority BOOL NOT NULL,
     departmentIDFK TINYINT NOT NULL,
     CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
     userIDFK MEDIUMINT NOT NULL,

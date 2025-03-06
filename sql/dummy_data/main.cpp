@@ -4,6 +4,9 @@
 #include "rolePrivileges.h"
 #include "countries.h"
 #include "users.h"
+#include "enterprise.h"
+#include "department.h"
+#include "userDepartment.h"
 
 using namespace std;
 
@@ -24,8 +27,18 @@ int main() {
 
     createCountries();
     countries.print();
+    
+    createEnterprise(20);
+    enterprise.print();
+
+    createDepartment(20);
+    department.print();
 
     createUsers(100);
     users.print();
 
+    createUserDepartment(160);
+    userDepartment.print();
+    selectUserPriorityDepartment();
+    
 }
