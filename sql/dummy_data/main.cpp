@@ -7,6 +7,7 @@
 #include "enterprise.h"
 #include "department.h"
 #include "userDepartment.h"
+#include "vacations.h"
 
 using namespace std;
 
@@ -40,5 +41,8 @@ int main() {
     createUserDepartment(160);
     userDepartment.print();
     selectUserPriorityDepartment();
+
+    createVacations(20);
+    vacations.print();
     
 }

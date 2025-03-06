@@ -5,3 +5,5 @@
 *.png
 *.out
 *.exe
+
+.vscode/
