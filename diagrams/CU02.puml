@@ -10,12 +10,13 @@ if(¿Existe coincidencia en base de datos?) then
 repeat:Registra datos requeridos por el sistema;
 :Registra:
     - Nombre    
-    - Apellido Paterno
-    - Apellido Materno
+    - Apellido
     - Correo electrónico
+    - RFC
+    - CURP
     - Contraseña
     - Bandera de contraseña
-    - Ciudad de trabajo
+    - Dirección
     - Modalidad de trabajo
     - Estado de trabajo;
 :El Super Admin guarda los datos registrados;
