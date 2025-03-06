@@ -4,7 +4,14 @@ const router = express.Router();
 
 const colaborador_controllers = require("../controllers/colaborador.controllers");
 
-router.get("/myprofile/kpis", colaborador_controllers.get_kpis);
+router.get(
+  "/myprofile/moreinfo/administrativeoffenses",
+  colaborador_controllers.get_administrativeoffenses
+);
+
+router.get("/myprofile/moreinfo/kpis", colaborador_controllers.get_kpis);
+
+router.get("/myprofile/moreinfo", colaborador_controllers.get_moreinformation);
 
 router.get("/calendar/absence", colaborador_controllers.get_absence);
 
