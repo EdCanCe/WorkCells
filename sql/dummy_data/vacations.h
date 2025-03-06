@@ -180,7 +180,7 @@ Randomizer<string> startDate {
     "27/12/2033"
 };
 
-string createEndDate(const std::string& fecha) {
+string createEndDate(string& fecha) {
     std::string dia = fecha.substr(0, 2);
     std::string mes = fecha.substr(3, 2);
     std::string anio = fecha.substr(6, 4);
