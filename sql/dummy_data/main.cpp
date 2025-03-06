@@ -9,6 +9,7 @@
 #include "oneonone.h"
 #include "answer.h"
 #include "measure.h"
+#include "fault.h"
 
 using namespace std;
 
@@ -47,4 +48,7 @@ int main() {
 
     createMesures(50);
     measures.print();
+
+    createFaults(20);
+    faults.print();
 }
