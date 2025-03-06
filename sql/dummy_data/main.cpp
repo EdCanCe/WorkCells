@@ -5,6 +5,7 @@
 #include "countries.h"
 #include "users.h"
 #include "question.h"
+#include "mesurable.h"
 
 using namespace std;
 
@@ -30,5 +31,8 @@ int main() {
     users.print();
 
     createQuestions(10);
-    question.print();
+    questions.print();
+
+    createMesurables(20);
+    mesurables.print();
 }
