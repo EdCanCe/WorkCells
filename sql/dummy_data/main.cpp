@@ -4,6 +4,7 @@
 #include "rolePrivileges.h"
 #include "countries.h"
 #include "users.h"
+#include "question.h"
 
 using namespace std;
 
@@ -28,4 +29,6 @@ int main() {
     createUsers(100);
     users.print();
 
+    createQuestions(10);
+    question.print();
 }
