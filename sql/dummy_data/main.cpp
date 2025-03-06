@@ -4,6 +4,7 @@
 #include "rolePrivileges.h"
 #include "countries.h"
 #include "users.h"
+#include "templateHoliday.h"
 
 using namespace std;
 
@@ -27,5 +28,8 @@ int main() {
 
     createUsers(100);
     users.print();
+
+    createTemplateHolidays(5);
+    templateHolidays.print();
 
 }
