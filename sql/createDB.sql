@@ -14,8 +14,8 @@ CREATE TABLE usedHoliday (
 
 CREATE TABLE privilege (
     privilegeID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL,
-    summary VARCHAR(150)
+    title VARCHAR(90) NOT NULL,
+    summary VARCHAR(200)
 );
 
 CREATE TABLE role (
@@ -35,6 +35,18 @@ CREATE TABLE country (
     title CHAR(50)
 );
 
+CREATE TABLE enterprise (
+    enterpriseID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE department (
+    departmentID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(60) NOT NULL,
+    enterpriseIDFK TINYINT NOT NULL,
+    CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
+);
+
 CREATE TABLE user (
     userID MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     birthName VARCHAR(50) NOT NULL,
@@ -50,8 +62,10 @@ CREATE TABLE user (
     workStatus BOOLEAN NOT NULL,
     userRoleIDFK TINYINT NOT NULL,
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
-    countryRoleIDFK TINYINT NOT NULL,
-    CONSTRAINT countryRoleIDFK FOREIGN KEY (countryRoleIDFK) REFERENCES country(countryID)
+    countryUserIDFK TINYINT NOT NULL,
+    CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
+    prioritaryDepartmentFK TINYINT,
+    CONSTRAINT prioritaryDepartmentFK FOREIGN KEY (prioritaryDepartmentFK) REFERENCES department(departmentID)
 );
 
 CREATE TABLE workStatus (
@@ -62,20 +76,7 @@ CREATE TABLE workStatus (
     CONSTRAINT userStatusIDFK FOREIGN KEY (userStatusIDFK) REFERENCES user(userID)
 );
 
-CREATE TABLE enterprise (
-    enterpriseID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL
-);
-
-CREATE TABLE department (
-    departmentID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL,
-    enterpriseIDFK TINYINT NOT NULL,
-    CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
-);
-
 CREATE TABLE userDepartment (
-    isPriority BOOL NOT NULL,
     departmentIDFK TINYINT NOT NULL,
     CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
     userIDFK MEDIUMINT NOT NULL,

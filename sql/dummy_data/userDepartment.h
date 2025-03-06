@@ -9,16 +9,43 @@ using namespace std;
 
 class UserDepartment {
     private:
-        bool isPriority;
         int idDepartment;
         int idUser;
     
     public:
-        UserDepartment(bool, int, int);
+        UserDepartment(int, int);
         int getID();
         void print();
+        
 };
 
+map<int, Randomizer<int>> auxLink;
+        
+Randomizer<UserDepartment> userDepartment;
 
+UserDepartment::UserDepartment(int idDepartment, int idUser) {
+    this->idDepartment = idDepartment;
+    this->idUser = idUser;
+
+    auxLink[idUser].add(idDepartment);
+}
+
+void UserDepartment::print() {
+    cout << "INSERT INTO userDepartment(departmentIDFK, userIDFK) values (" << idDepartment << ", " << idUser << "); \n";
+}
+
+void createUserDepartment(int x) {
+    for (int i = 0; i < x; i++) {
+        userDepartment.add(UserDepartment(department.random().getID(), users.random().getId()));
+    }
+}
+
+void selectUserPriorityDepartment(){
+    for(int i = 0; i < users.size(); i++){
+        if(!auxLink[i].size() == 0){
+            cout << "UPDATE user SET prioritaryDepartmentFK = " << auxLink[i].random() << " WHERE userID = " << i+1 << "; \n";
+        }
+    }
+}
 
 #endif

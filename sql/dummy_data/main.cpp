@@ -6,6 +6,7 @@
 #include "users.h"
 #include "enterprise.h"
 #include "department.h"
+#include "userDepartment.h"
 
 using namespace std;
 
@@ -36,5 +37,8 @@ int main() {
     createUsers(100);
     users.print();
 
-
+    createUserDepartment(160);
+    userDepartment.print();
+    selectUserPriorityDepartment();
+    
 }
