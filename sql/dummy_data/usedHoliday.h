@@ -50,6 +50,9 @@ public:
     void print();
 };
 
+// Randomizador de días festivos utilizados
+Randomizer<UsedHoliday> usedHolidays;
+
 UsedHoliday::UsedHoliday(string _usedDate, int _usedTemplateHolidayID){
     templateHolidayID = usedHolidays.size() + 1;
     usedDate = _usedDate;
@@ -61,17 +64,16 @@ int UsedHoliday::getId() {
 }
 
 void UsedHoliday:: print() {
-    cout << "INSERT INTO usedHoliday(usedDate, usedTemplateHolidayID) VALUES("
+    cout << "INSERT INTO usedHoliday(usedDate, usedTemplateHolidayID) VALUES('"
         << usedDate << "', " << usedTemplateHolidayID << "); \n";
 }
 
-// Randomizador de días festivos utilizados
-Randomizer<UsedHoliday> usedHolidays;
+
 
 // Función para crear registros de días festivos utilizados
 void createUsedHolidays(int x) {
     for (int i = 0; i < x; i++) {
-        usedHolidays.add(UsedHoliday(used_date.random(), usedHolidays.random().getId()));
+        usedHolidays.add(UsedHoliday(used_date.random(), templateHolidays.random().getId()));
     }
 }
 
