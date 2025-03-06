@@ -14,8 +14,8 @@ CREATE TABLE usedHoliday (
 
 CREATE TABLE privilege (
     privilegeID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(90) NOT NULL,
-    summary VARCHAR(200)
+    title VARCHAR(140) NOT NULL,
+    summary VARCHAR(250)
 );
 
 CREATE TABLE role (
@@ -116,8 +116,8 @@ CREATE TABLE vacation (
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
-    leaderStatus BOOLEAN NOT NULL,
-    hrStatus BOOLEAN NOT NULL,
+    leaderStatus TINYINT NOT NULL,
+    hrStatus TINYINT NOT NULL,
     vacationUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT vacationUserIDFK FOREIGN KEY (vacationUserIDFK) REFERENCES user(userID)
 );
@@ -127,7 +127,7 @@ CREATE TABLE absence (
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
-    justified BOOLEAN NOT NULL,
+    justified TINYINT NOT NULL,
     absenceUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT absenceUserIDFK FOREIGN KEY (absenceUserIDFK) REFERENCES user(userID)
 );

@@ -8,18 +8,18 @@ using namespace std;
 class Vacations {
     private:
         int id;
-        bool leaderStatus;
-        bool hrStatus;
+        int leaderStatus;
+        int hrStatus;
         string reason;
         string startDate;
         string endDate;
     public:
         Vacations(
-            bool leaderStatus,
-            string reason,
-            bool hrStatus,
-            string startDate,
-            string endDate
+            int,
+            string,
+            int,
+            string,
+            string
         );
         int getId();
         void print();
@@ -27,7 +27,7 @@ class Vacations {
 
 Randomizer<Vacations> vacations;
 
-Vacations::Vacations(bool LeaderStatus, string Reason, bool HrStatus, string StartDate, string EndDate) {
+Vacations::Vacations(int LeaderStatus, string Reason, int HrStatus, string StartDate, string EndDate) {
     id = vacations.size() + 1;
     leaderStatus = LeaderStatus;
     reason = Reason;
@@ -45,9 +45,10 @@ void Vacations::print() {
     cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << startDate << "', '" << endDate << "', '" << reason << "', " << leaderStatus << ", " <<  hrStatus << ", " << users.random().getId() << ");\n";
 };
 
-Randomizer<bool> leaderStatus = {
-    true,
-    false
+Randomizer<int> leaderStatus = {
+    0,
+    1,
+    2
 };
 
 Randomizer<string> reason = {
@@ -73,9 +74,10 @@ Randomizer<string> reason = {
     "Tomar fotos y crear recuerdos"
 };
 
-Randomizer<bool> hrStatus {
-    true,
-    false
+Randomizer<int> hrStatus {
+    0,
+    1,
+    2
 };
 
 Randomizer<string> startDate {
