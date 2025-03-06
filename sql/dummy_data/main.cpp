@@ -7,6 +7,9 @@
 #include "enterprise.h"
 #include "department.h"
 #include "userDepartment.h"
+#include "templateHoliday.h"
+#include "usedHoliday.h"
+#include "workstatus.h"
 
 using namespace std;
 
@@ -41,4 +44,12 @@ int main() {
     userDepartment.print();
     selectUserPriorityDepartment();
     
+    createTemplateHolidays(20);
+    templateHolidays.print();
+
+    createUsedHolidays(50);
+    usedHolidays.print();
+
+    createUsedWorkStatus(50);
+    WorkStatus1.print();
 }
