@@ -42,7 +42,7 @@ int Vacations::getId(){
 };
 
 void Vacations::print() {
-    cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << startDate << "','" << endDate << "','" << reason << "'," << leaderStatus << "," <<  hrStatus << "," << users.random().getId() << ");\n";
+    cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << startDate << "', '" << endDate << "', '" << reason << "', " << leaderStatus << ", " <<  hrStatus << ", " << users.random().getId() << ");\n";
 };
 
 Randomizer<bool> leaderStatus = {
@@ -198,9 +198,18 @@ string createEndDate(string& fecha) {
     return anio + "/" + mes + "/" + dia;
 }
 
+string xd(string& fecha) {
+    string dia = fecha.substr(0, 2);
+    string mes = fecha.substr(3, 2);
+    string anio = fecha.substr(6, 2);
+    
+    return anio + "/" + mes + "/" + dia;
+}
+
 void createVacations(int x){
     for(int i=0; i<x; i++){
         string start_date = startDate.random();
+        start_date = xd(start_date);
         vacations.add(Vacations(leaderStatus.random(), reason.random(), hrStatus.random(), start_date, createEndDate(start_date)));
     }
 }
