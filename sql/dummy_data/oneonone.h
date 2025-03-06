@@ -61,7 +61,7 @@ int OneOnOne::getId(){
 
 // Impresión / Código en SQL
 void OneOnOne::print() {
-    cout << "INSERT INTO oneOnOne(expectedTime, meetingDate, oneOnOneUserIDFK) VALUES('" << expectedTime << "', '" << meetingDate << "', " << oneOnOneUserIDFK << ");\n";
+    cout << "INSERT INTO oneOnOne(expectedTime, meetingDate, oneOnOneUserIDFK) VALUES(" << expectedTime << ", '" << meetingDate << "', " << oneOnOneUserIDFK << ");\n";
 }
 
 // Función para crear la tabla con X registros

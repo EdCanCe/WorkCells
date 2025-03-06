@@ -7,6 +7,7 @@
 #include "question.h"
 #include "mesurable.h"
 #include "oneonone.h"
+#include "answer.h"
 
 using namespace std;
 
@@ -39,4 +40,7 @@ int main() {
 
     createOneOnOnes(50);
     oneonones.print();
+
+    createAnswer(50);
+    answers_1.print();
 }
