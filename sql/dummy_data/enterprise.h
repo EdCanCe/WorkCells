@@ -1,5 +1,5 @@
-#ifndef ENTERPRISE.H
-#define ENTERPRISE.H
+#ifndef ENTERPRISE_H
+#define ENTERPRISE_H
 
 #include "random.h"
 
