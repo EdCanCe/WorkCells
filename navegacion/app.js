@@ -7,7 +7,7 @@ app.set("views", "views");
 const colaborador = require("./routes/colaborador.routes");
 const lider = require("./routes/lider.routes");
 
-app.use("/Inicio", colaborador);
-app.use("/Inicio", lider);
+app.use("/inicio", colaborador);
+app.use("/inicio", lider);
 
 app.listen(3000);

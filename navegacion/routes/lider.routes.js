@@ -4,15 +4,16 @@ const router = express.Router();
 
 const lider_controllers = require("../controllers/lider.controllers");
 
-router.get("/check/checkprofileE", lider_controllers.get_equipo);
+router.get(
+  "/checkdepartment/checkprofile/kpis",
+  lider_controllers.get_check_kpis
+);
 
-router.get("/Check/CheckProfileC/kpis", lider_controllers.get_kpisC);
+router.get(
+  "/checkdepartment/checkprofile",
+  lider_controllers.get_check_profile
+);
 
-router.get("/check", lider_controllers.get_check);
-
-router.get("/absenceColaborator", lider_controllers.get_absenceC);
-
-router.get("/vacationRequest", lider_controllers.get_requestV);
+router.get("/checkdepartment", lider_controllers.get_check_department);
 
 module.exports = router;
-    
