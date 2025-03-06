@@ -35,6 +35,18 @@ CREATE TABLE country (
     title CHAR(50)
 );
 
+CREATE TABLE enterprise (
+    enterpriseID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE department (
+    departmentID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(60) NOT NULL,
+    enterpriseIDFK TINYINT NOT NULL,
+    CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
+);
+
 CREATE TABLE user (
     userID MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     birthName VARCHAR(50) NOT NULL,
@@ -51,7 +63,9 @@ CREATE TABLE user (
     userRoleIDFK TINYINT NOT NULL,
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
     countryUserIDFK TINYINT NOT NULL,
-    CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID)
+    CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
+    prioritaryDepartment TINYINT,
+    CONSTRAINT prioritaryDepartment FOREIGN KEY (prioritaryDepartment) REFERENCES department(departmentID)
 );
 
 CREATE TABLE workStatus (
@@ -60,18 +74,6 @@ CREATE TABLE workStatus (
     endDate DATE,
     userStatusIDFK MEDIUMINT NOT NULL,
     CONSTRAINT userStatusIDFK FOREIGN KEY (userStatusIDFK) REFERENCES user(userID)
-);
-
-CREATE TABLE enterprise (
-    enterpriseID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL
-);
-
-CREATE TABLE department (
-    departmentID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL,
-    enterpriseIDFK TINYINT NOT NULL,
-    CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
 );
 
 CREATE TABLE userDepartment (
