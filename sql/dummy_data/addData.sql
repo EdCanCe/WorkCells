@@ -341,3 +341,25 @@ INSERT INTO fault (doneDate, summary, faultUserIDFK) VALUES ('2025-03-17', 'Lleg
 INSERT INTO fault (doneDate, summary, faultUserIDFK) VALUES ('2025-03-18', 'El empleado no se presenta al trabajo sin avisar o sin una razón válida, afectando la continuidad de las labores del equipo.', 30);
 INSERT INTO fault (doneDate, summary, faultUserIDFK) VALUES ('2025-03-19', 'No sigue las políticas o procedimientos establecidos por la empresa', 41);
 INSERT INTO fault (doneDate, summary, faultUserIDFK) VALUES ('2025-03-20', 'El empleado no se presenta al trabajo sin avisar o sin una razón válida, afectando la continuidad de las labores del equipo.', 51);
+
+-- query para conocer los usuarios que les toco responder una pregunta en especifico.
+SELECT u.birthName, u.surname 
+FROM user AS u, oneOnOne AS one, oneOnOneAnswer AS oneA, oneOnOneQuestion AS oneQ
+WHERE oneQ.questionID = oneA.questionIDFK
+AND oneA.answerOneOnOneIDFK = one.oneOnOneID
+AND one.oneOnOneID = u.userID
+AND oneQ.questionID = 6;
+
+-- query para conocer los usuarios que les toco asistir en un día especifico a un one on one
+SELECT u.birthName, u.surname, one.meetingDate
+FROM user AS u, oneOnOne AS one
+WHERE one.oneOnOneUserIDFK = u.userID
+AND one.meetingDate BETWEEN '2025-03-20 00:00:00' AND '2025-03-20 23:59:59';
+
+-- query para conocer los valores que tuvo un usuario en especifico en su One on One
+SELECT u.userID, u.birthName, u.surname, v.evaluation, des.summary
+FROM user AS u, oneOnOne AS one, oneOnOneMeasure AS v, oneOnOneMeasurable AS des
+WHERE u.userID = one.oneOnOneUserIDFK
+AND one.oneOnOneID = v.measurableIDFK
+AND des.measurableID = v.measureOneOnOneIDFK
+AND u.userID = 30
