@@ -6,6 +6,7 @@
 #include "countries.h"
 #include "users.h"
 #include "enterprise.h"
+#include "department.h"
 
 using namespace std;
 
@@ -32,5 +33,8 @@ int main() {
 
     createEnterprise(20);
     enterprise.print();
+
+    createDepartment(20);
+    department.print();
 
 }

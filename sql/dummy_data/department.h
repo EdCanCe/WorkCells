@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Randomizer<string> title {
+Randomizer<string> Dtitle {
     "RRHH",
     "Finanzas",
     "Ventas",
@@ -16,7 +16,7 @@ Randomizer<string> title {
     "Atencion al cliene",
     "Legal",
     "TI"
-}
+};
 
 class Department {
     private:
@@ -25,25 +25,30 @@ class Department {
         string title;
 
     public:
-        Department(int, int, string);
+        Department(int, string);
+        int getID();
         void print();
 };
 
 Randomizer<Department> department;
 
-Department::department(int idDepartment, int idEnterprise, string title) {
-    this->idDepartment = idDepartment;
+int Department::getID(){
+    return idDepartment;
+}
+
+Department::Department(int idEnterprise, string title) {
+    this->idDepartment = department.size() + 1;
     this->idEnterprise = idEnterprise;
     this->title = title;
 }
 
 void Department::print() {
-    cout << "INSERT INTO department(departmentIDFK, tittle) values(" << idDepartment << "," << idEnterprise << "); \n"
+    cout << "INSERT INTO department(departmentIDFK, tittle) values(" << idDepartment << "," << idEnterprise << "); \n";
 }
 
 void createDepartment(int x) {
     for (int i = 0; i < x; i++) {
-        department.add(Department(enterprise.random().getID(), ))
+        department.add(Department(enterprise.random().getID(), title.random()));
     }
     
 }
