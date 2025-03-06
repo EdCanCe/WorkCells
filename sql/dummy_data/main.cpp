@@ -9,6 +9,7 @@
 #include "department.h"
 #include "kpi.h"
 #include "evidence.h"
+#include "evidenceMedia.h"
 
 using namespace std;
 
@@ -47,4 +48,7 @@ int main() {
 
     createEvidence(10);
     evidence.print();
+
+    createEvidenceMedia(10);
+    evidenceMedia.print();
 }

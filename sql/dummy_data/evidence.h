@@ -48,7 +48,7 @@ int Evidence::getID(){
 }
 
 void Evidence::print(){
-    cout << "INSERT INTO evidence(summary, uploadDate, idKpi) values('" << summary << "', '" << uploadDate << "', " << idKpi << ") \n";
+    cout << "INSERT INTO evidence(summary, uploadDate, evidenceKpiIDFK) values('" << summary << "', '" << uploadDate << "', " << idKpi << "); \n";
 };
 
 void createEvidence(int x) {
