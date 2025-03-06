@@ -58,7 +58,7 @@ class Kpi {
 Randomizer<Kpi> kpi;
 
 Kpi::Kpi(string title, string creationDate, int progress, string goal, int monthDuration, int idDepartment,  int idUser) {
-    id = enterprise.size() + 1;
+    id = kpi.size() + 1;
     this->title = title;
     this->creationDate = creationDate;
     this->progress = progress;

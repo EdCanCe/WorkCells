@@ -8,6 +8,7 @@
 #include "enterprise.h"
 #include "department.h"
 #include "kpi.h"
+#include "evidence.h"
 
 using namespace std;
 
@@ -43,4 +44,7 @@ int main() {
 
     createKpi(10);
     kpi.print();
+
+    createEvidence(10);
+    evidence.print();
 }
