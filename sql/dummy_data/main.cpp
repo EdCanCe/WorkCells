@@ -6,6 +6,7 @@
 #include "users.h"
 #include "templateHoliday.h"
 #include "usedHoliday.h"
+#include "workstatus.h"
 
 using namespace std;
 
@@ -35,4 +36,7 @@ int main() {
 
     createUsedHolidays(5);
     usedHolidays.print();
+
+    createUsedWorkStatus(5);
+    WorkStatus1.print();
 }
