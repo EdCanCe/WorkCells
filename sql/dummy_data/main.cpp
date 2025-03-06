@@ -8,6 +8,8 @@
 #include "department.h"
 #include "userDepartment.h"
 #include "vacations.h"
+#include "absence.h"
+#include "absenceMedia.h"
 
 using namespace std;
 
@@ -45,4 +47,9 @@ int main() {
     createVacations(20);
     vacations.print();
     
+    createAbsence(20);
+    absence.print();
+    
+    createAbsenceMedia(20);
+    absenceMedia.print();
 }
