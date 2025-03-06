@@ -195,7 +195,7 @@ string createEndDate(string& fecha) {
         dia = to_string(diaInt);
     }
     
-    return dia + "/" + mes + "/" + anio;
+    return anio + "/" + mes + "/" + dia;
 }
 
 void createVacations(int x){
