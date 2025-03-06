@@ -1,5 +1,4 @@
 const express = require("express");
-const { request } = require("http");
 const router = express.Router();
 
 const colaborador_controllers = require("../controllers/colaborador.controllers");
