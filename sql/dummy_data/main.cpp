@@ -5,6 +5,7 @@
 #include "countries.h"
 #include "users.h"
 #include "templateHoliday.h"
+#include "usedHoliday.h"
 
 using namespace std;
 
@@ -32,4 +33,6 @@ int main() {
     createTemplateHolidays(5);
     templateHolidays.print();
 
+    createUsedHolidays(10);
+    usedHolidays.print();
 }
