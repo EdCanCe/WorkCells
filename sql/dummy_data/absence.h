@@ -78,7 +78,7 @@ Randomizer<bool> justified{
 void createAbsence(int x) {
     for (int i = 0; i < x; i++){
         string start_date = startDate.random();
-        absence.add(Absence(reasonA.random(), start_date, changeFormat(start_date), justified.random()));
+        absence.add(Absence(reasonA.random(), changeFormat(start_date), createEndDate(start_date), justified.random()));
     }
 }
 
