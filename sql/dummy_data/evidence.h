@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Randomizer<string> summary {
+Randomizer<string> summaryEv {
     "Tasa de Crecimiento Mensual (TCM): Medir el aumento porcentual de ingresos o usuarios mes a mes para evaluar el ritmo de expansión.",
     "Retorno sobre la Inversión (ROI): Evaluar la rentabilidad de las inversiones realizadas.",
     "Nivel de Satisfacción del Cliente (CSAT): Medir la satisfacción del cliente mediante encuestas para mejorar servicios.",
@@ -53,7 +53,7 @@ void Evidence::print(){
 
 void createEvidence(int x) {
     for (int i = 0; i < x; i++){
-        evidence.add(Evidence(summary.random(), uploadDate.random(), kpi.random().getID()));
+        evidence.add(Evidence(summaryEv.random(), uploadDate.random(), kpi.random().getID()));
     }
 }
 
