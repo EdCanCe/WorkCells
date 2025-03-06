@@ -181,18 +181,18 @@ Randomizer<string> startDate {
 };
 
 string createEndDate(string& fecha) {
-    std::string dia = fecha.substr(0, 2);
-    std::string mes = fecha.substr(3, 2);
-    std::string anio = fecha.substr(6, 4);
+    string dia = fecha.substr(0, 2);
+    string mes = fecha.substr(3, 2);
+    string anio = fecha.substr(6, 4);
     
-    int diaInt = std::stoi(dia);
+    int diaInt = stoi(dia);
     diaInt++; // Sumar 1 al día
     
     // Formatear el nuevo día con dos dígitos
     if (diaInt < 10) {
-        dia = "0" + std::to_string(diaInt);
+        dia = "0" + to_string(diaInt);
     } else {
-        dia = std::to_string(diaInt);
+        dia = to_string(diaInt);
     }
     
     return dia + "/" + mes + "/" + anio;
