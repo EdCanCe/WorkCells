@@ -28,10 +28,17 @@ void RolePrivilege::print() {
     cout << "INSERT INTO rolePrivilege(roleIDFK, privilegeIDFK) values(" << idRole << ", " << idPrivilege << "); \n";
 }
 
-// Función para crear la tabla con X registros
-void createRolePrivileges(int x){
-    for(int i=0; i<x; i++){
-        rolePrivileges.add(RolePrivilege(roles.random().getId(), privileges.random().getId()));
+void createRolePrivileges() {
+    for(int i=0; i<15; i++) {
+        rolePrivileges.add(RolePrivilege(1, i+1));
+    }
+
+    for(int i=0; i<25; i++) {
+        rolePrivileges.add(RolePrivilege(2, i+1));
+    }
+
+    for(int i=0; i<50; i++) {
+        rolePrivileges.add(RolePrivilege(3, i+1));
     }
 }
 

@@ -14,8 +14,8 @@ CREATE TABLE usedHoliday (
 
 CREATE TABLE privilege (
     privilegeID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(60) NOT NULL,
-    summary VARCHAR(150)
+    title VARCHAR(90) NOT NULL,
+    summary VARCHAR(200)
 );
 
 CREATE TABLE role (
