@@ -18,15 +18,14 @@ Randomizer<string> title {
     "Meta"
 };
 
-class Enterprise
-{
-private:
-    int id;
-    string title;
-public:
-    Enterprise(string);
-    int getID();
-    void print();
+class Enterprise {
+    private:
+        int id;
+        string title;
+    public:
+        Enterprise(string);
+        int getID();
+        void print();
 };
 
 Randomizer<Enterprise> enterprise;
