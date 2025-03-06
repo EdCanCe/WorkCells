@@ -73,8 +73,8 @@ int Kpi::getID(){
 }
 
 void Kpi::print() {
-    cout << "INSERT INTO kpi(title, creationDate, progress, goal, monthDuration, kpiDepartmentIDFK, kpiUserIDFK) values(" << 
-    title << ", " << creationDate << ", " << progress << ", " << goal << ", " << monthDuration << ", " << idDepartment << ", " << 
+    cout << "INSERT INTO kpi(title, creationDate, progress, goal, monthDuration, kpiDepartmentIDFK, kpiUserIDFK) values('"<< 
+    title << "', '" << creationDate << "', " << progress << ", '" << goal << "', " << monthDuration << ", " << idDepartment << ", " << 
     idUser << ");  \n";
 };
 
