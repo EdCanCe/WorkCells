@@ -33,6 +33,6 @@ int main() {
     createTemplateHolidays(5);
     templateHolidays.print();
 
-    createUsedHolidays(10);
+    createUsedHolidays(5);
     usedHolidays.print();
 }

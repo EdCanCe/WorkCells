@@ -1,5 +1,5 @@
-#ifndef TEMPLATEHOLIDAY_H
-#define TEMPLATEHOLIDAY_H
+#ifndef USEDHOLIDAY_H
+#define USEDHOLIDAY_H
 
 #include "random.h"
 #include "templateHoliday.h"
@@ -45,26 +45,33 @@ private:
     int usedTemplateHolidayID;
 
 public:
-    UsedHoliday(int _templateHolidayID, string _usedDate, int _usedTemplateHolidayID)
-        : templateHolidayID(_templateHolidayID), usedDate(_usedDate), usedTemplateHolidayID(_usedTemplateHolidayID) {}
-
-    int getId() {
-        return templateHolidayID;
-    }
-
-    void print() {
-        cout << "INSERT INTO usedHoliday(templateHolidayID, usedDate, usedTemplateHolidayID) VALUES("
-             << templateHolidayID << ", '" << usedDate << "', " << usedTemplateHolidayID << "); \n";
-    }
+    UsedHoliday(string _usedDate, int _usedTemplateHolidayID);
+    int getId();
+    void print();
 };
 
+UsedHoliday::UsedHoliday(string _usedDate, int _usedTemplateHolidayID){
+    templateHolidayID = usedHolidays.size() + 1;
+    usedDate = _usedDate;
+    usedTemplateHolidayID = _usedTemplateHolidayID;
+}
+
+int UsedHoliday::getId() {
+    return templateHolidayID;
+}
+
+void UsedHoliday:: print() {
+    cout << "INSERT INTO usedHoliday(usedDate, usedTemplateHolidayID) VALUES("
+        << usedDate << "', " << usedTemplateHolidayID << "); \n";
+}
+
 // Randomizador de días festivos utilizados
-Randomizer<UsedHoliday> UsedHolidays;
+Randomizer<UsedHoliday> usedHolidays;
 
 // Función para crear registros de días festivos utilizados
 void createUsedHolidays(int x) {
     for (int i = 0; i < x; i++) {
-        UsedHolidays.add(UsedHoliday(templateHolidays.random().getId(), used_date.random(), UsedHolidays.random().getId()));
+        usedHolidays.add(UsedHoliday(used_date.random(), usedHolidays.random().getId()));
     }
 }
 
