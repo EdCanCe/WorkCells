@@ -9,8 +9,8 @@ class Vacations {
     private:
         int id;
         bool leaderStatus;
-        string reason;
         bool hrStatus;
+        string reason;
         string startDate;
         string endDate;
     public:
@@ -42,7 +42,7 @@ int Vacations::getId(){
 };
 
 void Vacations::print() {
-    cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << "','" << startDate << "','" << endDate << "','" << reason << "','" << leaderStatus << "','" <<  hrStatus << "','" << users.random().getId() << "');\n";
+    cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << startDate << "','" << endDate << "','" << reason << "'," << leaderStatus << "," <<  hrStatus << "," << users.random().getId() << ");\n";
 };
 
 Randomizer<bool> leaderStatus = {
