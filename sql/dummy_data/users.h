@@ -155,7 +155,7 @@ class User {
 Randomizer<User> users;
 
 // Constructor de una tupla
-User::User(string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryRoleIDFK) {
+User::User(string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryUserIDFK) {
     id = users.size() + 1;
     birthName = BirthName;
     surname = Surname;
@@ -169,7 +169,7 @@ User::User(string BirthName, string Surname, string Mail, string Passwd, bool Pa
     workModality = WorkModality;
     workStatus = WorkStatus;
     userRoleIDFK = UserRoleIDFK;
-    countryUserIDFK = countryUserIDFK;
+    countryUserIDFK = CountryUserIDFK;
 }
 
 // Obtengo su Id
