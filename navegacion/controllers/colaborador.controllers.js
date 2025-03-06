@@ -21,3 +21,11 @@ exports.get_calendar = (request, response, next) => {
 exports.get_myprofile = (require, response, next) => {
   response.render("myprofile");
 };
+
+exports.get_moreinformation = (require, response, next) =>{
+  response.render("moreinfoc");
+}
+
+exports.get_administrativeoffenses = (require, response, next) =>{
+  response.send("administrativeoffenses");
+}
