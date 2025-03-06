@@ -18,14 +18,14 @@ class Absence {
         Absence( string reason,
             string startDate,
             string endDate,
-            bool justified);
+            int justified);
         int getID();
         void print();
 };
 
 Randomizer<Absence> absence;
 
-Absence::Absence(string reason, string startDate, string endDate, bool justified) {
+Absence::Absence(string reason, string startDate, string endDate, int justified) {
     id = absence.size() + 1;
     this->reason = reason;
     this->startDate = startDate;
@@ -69,9 +69,10 @@ Randomizer<string> reasonA {
 // Randomizer<string> endDate{};
 
 
-Randomizer<bool> justified{
-    true,
-    false
+Randomizer<int> justified{
+    0,
+    1,
+    2
 };
 
 
