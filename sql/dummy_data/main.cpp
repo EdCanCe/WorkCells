@@ -7,6 +7,9 @@
 #include "enterprise.h"
 #include "department.h"
 #include "userDepartment.h"
+#include "vacations.h"
+#include "absence.h"
+#include "absenceMedia.h"
 #include "templateHoliday.h"
 #include "usedHoliday.h"
 #include "workstatus.h"
@@ -40,10 +43,10 @@ int main() {
     createCountries();
     countries.print();
     
-    createEnterprise(20);
+    createEnterprise(7);
     enterprise.print();
 
-    createDepartment(20);
+    createDepartment(25);
     department.print();
 
     createUsers(100);
@@ -52,39 +55,49 @@ int main() {
     createUserDepartment(160);
     userDepartment.print();
     selectUserPriorityDepartment();
-    
+
     createTemplateHolidays(20);
     templateHolidays.print();
 
     createUsedHolidays(50);
     usedHolidays.print();
 
-    createUsedWorkStatus(50);
+    createUsedWorkStatus(60);
     WorkStatus1.print();
-    createQuestions(10);
+
+    createQuestions(4);
     questions.print();
 
-    createMesurables(20);
+    createMesurables(5);
     mesurables.print();
 
-    createOneOnOnes(50);
+    createOneOnOnes(70);
     oneonones.print();
 
-    createAnswer(50);
+    createAnswer(150);
     answers_1.print();
 
-    createMesures(50);
+    createMesures(150);
     measures.print();
 
-    createFaults(20);
+    createFaults(50);
     faults.print();
 
-    createKpi(10);
+    createKpi(50);
     kpi.print();
 
-    createEvidence(10);
+    createEvidence(50);
     evidence.print();
 
-    createEvidenceMedia(10);
+    createEvidenceMedia(70);
     evidenceMedia.print();
+
+    createVacations(60);
+    vacations.print();
+    
+    createAbsence(70);
+    absence.print();
+    
+    createAbsenceMedia(50);
+    absenceMedia.print();
 }

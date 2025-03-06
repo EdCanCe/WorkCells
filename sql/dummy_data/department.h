@@ -43,12 +43,12 @@ Department::Department(int idEnterprise, string title) {
 }
 
 void Department::print() {
-    cout << "INSERT INTO department(enterpriseIDFK, title) values(" << idDepartment << "," << idEnterprise << "); \n";
+    cout << "INSERT INTO department(enterpriseIDFK, title) values(" << idEnterprise << ", '" << title << "'); \n";
 }
 
 void createDepartment(int x) {
     for (int i = 0; i < x; i++) {
-        department.add(Department(enterprise.random().getID(), title.random()));
+        department.add(Department(enterprise.random().getID(), Dtitle.random()));
     }
     
 }
