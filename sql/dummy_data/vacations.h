@@ -199,9 +199,9 @@ string createEndDate(string& fecha) {
 }
 
 string changeFormat(string& fecha) {
-    string dia = fecha.substr(0, 2);
+    string anio = fecha.substr(0, 2);
     string mes = fecha.substr(3, 2);
-    string anio = fecha.substr(6, 2);
+    string dia = fecha.substr(6, 2);
     
     return anio + "/" + mes + "/" + dia;
 }
