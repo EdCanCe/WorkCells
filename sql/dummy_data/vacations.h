@@ -42,7 +42,7 @@ int Vacations::getId(){
 };
 
 void Vacations::print() {
-    cout << "INSERT INTO vacation(vacationID, startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << id << "','" << startDate << "','" << endDate << "','" << reason << "','" << leaderStatus << "','" <<  hrStatus << "','" << users.random().getId() << "');\n";
+    cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << "','" << startDate << "','" << endDate << "','" << reason << "','" << leaderStatus << "','" <<  hrStatus << "','" << users.random().getId() << "');\n";
 };
 
 Randomizer<bool> leaderStatus = {
