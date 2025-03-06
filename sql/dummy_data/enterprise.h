@@ -24,15 +24,15 @@ private:
     int id;
     string title;
 public:
-    Enterprise(int, string);
+    Enterprise(string);
     int getID();
     void print();
 };
 
-Randomizer<Enterprise> Enterprise;
+Randomizer<Enterprise> enterprise;
 
 Enterprise::Enterprise(string title) {
-    id = Enterprise.size() + 1;
+    id = enterprise.size() + 1;
     this->title = title;
 }
 
@@ -46,6 +46,8 @@ void Enterprise::print() {
 
 void createEnterprise(int x) {
     for (int i = 0; i < x; i++) {
-        Enterprise.add(Enterprise(title.random()));
+        enterprise.add(Enterprise(title.random()));
     }
 }
+
+#endif
