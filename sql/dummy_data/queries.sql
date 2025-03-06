@@ -1,4 +1,4 @@
--- query para conocer los usuarios que sean colaboradores
+-- query para conocer los usuarios que sean de un role específico
 SELECT user.birthName, user.surname
 FROM user, role
 WHERE user.userRoleIDFK = role.roleID AND role.title = "Colaborator";
