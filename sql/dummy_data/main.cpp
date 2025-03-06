@@ -6,6 +6,7 @@
 #include "users.h"
 #include "question.h"
 #include "mesurable.h"
+#include "oneonone.h"
 
 using namespace std;
 
@@ -35,4 +36,7 @@ int main() {
 
     createMesurables(20);
     mesurables.print();
+
+    createOneOnOnes(50);
+    oneonones.print();
 }
