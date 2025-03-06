@@ -8,6 +8,7 @@
 #include "mesurable.h"
 #include "oneonone.h"
 #include "answer.h"
+#include "measure.h"
 
 using namespace std;
 
@@ -43,4 +44,7 @@ int main() {
 
     createAnswer(50);
     answers_1.print();
+
+    createMesures(50);
+    measures.print();
 }

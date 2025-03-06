@@ -31,8 +31,8 @@ Randomizer<string> answers = {
 class Answer {
     private:
         string answer;
-        int answerOneOnOneIDFK;
-        int questionIDFK;
+        int answerOneOnOneIDFK; // ID del One On One
+        int questionIDFK; // ID de la pregunta
 
     public:
         Answer(string, int, int);
