@@ -1,5 +1,4 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 #include "privileges.h"
 #include "roles.h"
 #include "rolePrivileges.h"
@@ -27,14 +26,15 @@ int main() {
 
     createCountries();
     countries.print();
-
-    createUsers(100);
-    users.print();
-
+    
     createEnterprise(20);
     enterprise.print();
 
     createDepartment(20);
     department.print();
+
+    createUsers(100);
+    users.print();
+
 
 }

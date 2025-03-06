@@ -50,8 +50,8 @@ CREATE TABLE user (
     workStatus BOOLEAN NOT NULL,
     userRoleIDFK TINYINT NOT NULL,
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
-    countryUserIDFK TINYINT NOT NULL,
-    CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID)
+    countryRoleIDFK TINYINT NOT NULL,
+    CONSTRAINT countryRoleIDFK FOREIGN KEY (countryRoleIDFK) REFERENCES country(countryID)
 );
 
 CREATE TABLE workStatus (
