@@ -13,13 +13,13 @@ int main() {
 
     freopen("addData.sql", "w", stdout);  // Pasa el output a un archivo
 
-    createPrivileges(10); // Manda a llamar el archivo privileges.h para crear privilegios
+    createPrivileges();
     privileges.print();
 
-    createRoles(); // Como siempre serán los mismos roles, no especifiqué número
+    createRoles();
     roles.print();
 
-    createRolePrivileges(10);
+    createRolePrivileges();
     rolePrivileges.print();
 
     createCountries();
