@@ -28,4 +28,7 @@ int main() {
     createUsers(100);
     users.print();
 
+    createEnterprise(20);
+    enterprise.print();
+
 }
