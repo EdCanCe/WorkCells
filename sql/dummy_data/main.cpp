@@ -7,6 +7,9 @@
 #include "enterprise.h"
 #include "department.h"
 #include "userDepartment.h"
+#include "vacations.h"
+#include "absence.h"
+#include "absenceMedia.h"
 #include "templateHoliday.h"
 #include "usedHoliday.h"
 #include "workstatus.h"
@@ -43,7 +46,7 @@ int main() {
     createUserDepartment(160);
     userDepartment.print();
     selectUserPriorityDepartment();
-    
+
     createTemplateHolidays(20);
     templateHolidays.print();
 
@@ -52,4 +55,12 @@ int main() {
 
     createUsedWorkStatus(50);
     WorkStatus1.print();
+    createVacations(20);
+    vacations.print();
+    
+    createAbsence(20);
+    absence.print();
+    
+    createAbsenceMedia(20);
+    absenceMedia.print();
 }
