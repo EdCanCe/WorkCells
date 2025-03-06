@@ -38,7 +38,7 @@ int Absence::getID(){
 }
 
 void Absence::print(){
-    cout << "INSERT INTO absence(reason, startDate, endDate, justified, absenceUserIDFK) values('" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", " << users.random() << "); \n";
+    cout << "INSERT INTO absence(reason, startDate, endDate, justified, absenceUserIDFK) values('" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", " << users.random().getId() << "); \n";
 };
 
 
