@@ -43,7 +43,7 @@ Department::Department(int idEnterprise, string title) {
 }
 
 void Department::print() {
-    cout << "INSERT INTO department(departmentIDFK, tittle) values(" << idDepartment << "," << idEnterprise << "); \n";
+    cout << "INSERT INTO department(enterpriseIDFK, title) values(" << idDepartment << "," << idEnterprise << "); \n";
 }
 
 void createDepartment(int x) {

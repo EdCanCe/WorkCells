@@ -40,7 +40,7 @@ int Enterprise::getID() {
 }
 
 void Enterprise::print() {
-    cout << "INSERT INTO enterprise(tittle) values('" << title << "'); \n";
+    cout << "INSERT INTO enterprise(title) values('" << title << "'); \n";
 }
 
 void createEnterprise(int x) {

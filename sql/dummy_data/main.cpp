@@ -7,6 +7,7 @@
 #include "users.h"
 #include "enterprise.h"
 #include "department.h"
+#include "kpi.h"
 
 using namespace std;
 
@@ -37,4 +38,9 @@ int main() {
     createDepartment(20);
     department.print();
 
+    //createUserDepartment(?);
+    //userDepartment.print();
+
+    createKpi(10);
+    kpi.print();
 }
