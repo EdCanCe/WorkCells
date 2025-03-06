@@ -183,7 +183,7 @@ Randomizer<string> startDate {
 string createEndDate(string& fecha) {
     string dia = fecha.substr(0, 2);
     string mes = fecha.substr(3, 2);
-    string anio = fecha.substr(6, 2);
+    string anio = fecha.substr(6, 8);
     
     int diaInt = stoi(dia);
     diaInt++; // Sumar 1 al día
