@@ -43,10 +43,10 @@ int main() {
     createCountries();
     countries.print();
     
-    createEnterprise(20);
+    createEnterprise(7);
     enterprise.print();
 
-    createDepartment(20);
+    createDepartment(25);
     department.print();
 
     createUsers(100);
@@ -62,40 +62,42 @@ int main() {
     createUsedHolidays(50);
     usedHolidays.print();
 
-    createUsedWorkStatus(50);
+    createUsedWorkStatus(60);
     WorkStatus1.print();
-    createQuestions(10);
+
+    createQuestions(4);
     questions.print();
 
-    createMesurables(20);
+    createMesurables(5);
     mesurables.print();
 
-    createOneOnOnes(50);
+    createOneOnOnes(70);
     oneonones.print();
 
-    createAnswer(50);
+    createAnswer(150);
     answers_1.print();
 
-    createMesures(50);
+    createMesures(150);
     measures.print();
 
-    createFaults(20);
+    createFaults(50);
     faults.print();
 
-    createKpi(10);
+    createKpi(50);
     kpi.print();
 
-    createEvidence(10);
+    createEvidence(50);
     evidence.print();
 
-    createEvidenceMedia(10);
+    createEvidenceMedia(70);
     evidenceMedia.print();
-    createVacations(20);
+
+    createVacations(60);
     vacations.print();
     
-    createAbsence(20);
+    createAbsence(70);
     absence.print();
     
-    createAbsenceMedia(20);
+    createAbsenceMedia(50);
     absenceMedia.print();
 }
