@@ -16,6 +16,9 @@
 #include "answer.h"
 #include "measure.h"
 #include "fault.h"
+#include "kpi.h"
+#include "evidence.h"
+#include "evidenceMedia.h"
 
 using namespace std;
 
@@ -75,4 +78,13 @@ int main() {
 
     createFaults(20);
     faults.print();
+
+    createKpi(10);
+    kpi.print();
+
+    createEvidence(10);
+    evidence.print();
+
+    createEvidenceMedia(10);
+    evidenceMedia.print();
 }
