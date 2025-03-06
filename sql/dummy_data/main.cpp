@@ -13,6 +13,15 @@
 #include "templateHoliday.h"
 #include "usedHoliday.h"
 #include "workstatus.h"
+#include "question.h"
+#include "mesurable.h"
+#include "oneonone.h"
+#include "answer.h"
+#include "measure.h"
+#include "fault.h"
+#include "kpi.h"
+#include "evidence.h"
+#include "evidenceMedia.h"
 
 using namespace std;
 
@@ -55,6 +64,32 @@ int main() {
 
     createUsedWorkStatus(50);
     WorkStatus1.print();
+    createQuestions(10);
+    questions.print();
+
+    createMesurables(20);
+    mesurables.print();
+
+    createOneOnOnes(50);
+    oneonones.print();
+
+    createAnswer(50);
+    answers_1.print();
+
+    createMesures(50);
+    measures.print();
+
+    createFaults(20);
+    faults.print();
+
+    createKpi(10);
+    kpi.print();
+
+    createEvidence(10);
+    evidence.print();
+
+    createEvidenceMedia(10);
+    evidenceMedia.print();
     createVacations(20);
     vacations.print();
     
