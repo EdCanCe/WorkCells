@@ -1,3 +1,8 @@
+-- query para conocer los usuarios que sean colaboradores
+SELECT user.birthName, user.surname
+FROM user, role
+WHERE user.userRoleIDFK = role.roleID AND role.title = "Colaborator";
+
 -- query para conocer los usuarios que les toco responder una pregunta en especifico.
 SELECT u.birthName, u.surname 
 FROM user AS u, oneOnOne AS one, oneOnOneAnswer AS oneA, oneOnOneQuestion AS oneQ
