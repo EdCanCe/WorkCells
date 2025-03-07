@@ -17,4 +17,6 @@ router.get("/checkdepartment", lider_controllers.get_check_department);
 
 router.get('/colababsences', lider_controllers.get_colab_absences)
 
+router.get('/colabvacations', lider_controllers.get_colab_vacations);
+
 module.exports = router;
