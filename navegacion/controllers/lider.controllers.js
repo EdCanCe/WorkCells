@@ -7,7 +7,7 @@ exports.get_check_profile = (request, response, next) => {
 };
 
 exports.get_check_kpis = (request, response, next) => {
-  response.send('kpis');
+  response.render('checkkpis');
 };
 
 exports.get_colab_absences = (request, response, next) => {
