@@ -4,3 +4,7 @@ node_modules/
 Thumbs.db
 #para ignorar videos
 *.mp4
+#ignorar cosas de visual studio
+.vscode/
+#ignorar cosas de mac
+.DS_Store 
