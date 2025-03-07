@@ -13,3 +13,15 @@ exports.get_profile = (request, response, next) => {
 exports.get_faults = (request, response, next) => {
   response.render('faults');
 };
+
+exports.get_colab_absences = (request, response, next) => {
+  response.render('colabAbsences.ejs');
+};
+
+exports.get_employees = (request, response, next) => {
+  response.render('employees.ejs');
+}
+
+exports.get_oneOneOne = (request, response, next) => {
+  response.render('oneOnOne.ejs');
+}
