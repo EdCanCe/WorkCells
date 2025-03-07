@@ -39,14 +39,8 @@ Randomizer<string> name = {
 Randomizer<string> lastName = {
 "González",
 "Rodríguez",
-"Pérez",
-"López",
-"Sánchez",
 "Martínez",
-"Gómez",
 "Fernández",
-"Díaz",
-"Vázquez",
 "Moreno",
 "Jiménez",
 "Ruiz",
@@ -126,11 +120,19 @@ Randomizer<string> colonies = {
 "Colonia Jardines de Querétaro"
 };
 
+Randomizer<string> states = {
+    "AS", "BC", "BS", "CM", "CS", "CH", "CL", "CM", "DG", 
+    "GT", "GR", "HG", "JC", "MC", "MN", "MS", "NT", "NL", 
+    "OC", "PL", "QT", "QR", "SL", "SL", "SR", "TC", "TL", 
+    "TL", "VZ", "YN", "ZS"
+};
 
 // Defino la clase que voy a usar
 class User {
     private:
         int id;
+        string curp;
+        string rfc;
         string birthName;
         string surname;
         string mail;
@@ -146,17 +148,21 @@ class User {
         int countryUserIDFK;
 
     public:
-        User(string, string, string, string, bool, int, string, string, string, int, bool, int, int);
+        User(int, string, string, string, string, string, string, bool, int, string, string, string, int, bool, int, int);
         int getId();
         void print();
 };
 
 // Creo un randomizador de dicha clase para usarla en un futuro
 Randomizer<User> users;
+map<int, bool> userIds;
 
 // Constructor de una tupla
-User::User(string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryUserIDFK) {
-    id = users.size() + 1;
+User::User(int Id, string CURP, string RFC, string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryUserIDFK) {
+    id = Id;
+    userIds[id] = true;
+    curp = CURP;
+    rfc = RFC;
     birthName = BirthName;
     surname = Surname;
     mail = Mail;
@@ -179,7 +185,13 @@ int User::getId(){
 
 // Impresión / Código en SQL
 void User::print() {
-    cout << "INSERT INTO user(birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES('" << birthName << "', '" << surname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", " << userRoleIDFK << ", " << countryUserIDFK << ");\n";
+    cout << "INSERT INTO user(userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES(" << id << ", '" << curp << "', '" << rfc << "', '" << birthName << "', '" << surname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", " << userRoleIDFK << ", " << countryUserIDFK << ");\n";
+}
+
+int createUserID(){
+    int x = getRandom(8388607);
+    while(userIds[x]) getRandom(8388607);
+    return x;
 }
 
 string createString(){
@@ -189,6 +201,35 @@ string createString(){
         s = s + char('a' + getRandom('z' - 'a'));
     }
     return s;
+}
+
+string upperString(string s) {
+    std::locale loc;
+    for (int i = 0; i < s.size(); i++) {
+        s[i] = std::toupper(s[i], loc);  // Convert to uppercase using the current locale
+    }
+    return s;
+}
+
+string createCurp(string Name,string FLname,string MLname) {
+    string nameInitial = Name.substr(0, 1);
+    string paternalInitial = FLname.substr(0, 2);
+    string maternalInitial = MLname.substr(0, 1);
+    
+    string birthDate = to_string(getRandom(5)) + to_string(getRandom(12)) + to_string(getRandom(30));
+
+    char gender = (getRandom(2) == 0) ? 'H' : 'M'; 
+    
+    string state = states.random();
+
+    string randomString = createString().substr(0, 3) + to_string(10 + getRandom(90));
+
+    return upperString(paternalInitial + maternalInitial + nameInitial + birthDate + gender + state + randomString);
+}
+
+string createRfc(string Curp) {
+    string base = Curp.substr(0, 10);
+    return base + char('A' + getRandom('z' - 'a')) + to_string(getRandom(10));
 }
 
 string createMail(){
@@ -208,7 +249,11 @@ string createHouseNumber() {
 // Función para crear la tabla con X registros
 void createUsers(int x){
     for(int i=0; i<x; i++){
-        users.add(User(name.random(), lastName.random(), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), roles.random().getId(), countries.random().getId()));
+        string Name = name.random();
+        string FLname = lastName.random();
+        string MLname = lastName.random();
+        string Curp = createCurp(Name, FLname, MLname);
+        users.add(User(createUserID(), Curp, createRfc(Curp), Name, (FLname + " " + MLname), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), roles.random().getId(), countries.random().getId()));
     }
 }
 
