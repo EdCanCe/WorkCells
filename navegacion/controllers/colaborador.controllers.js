@@ -1,5 +1,3 @@
-const e = require("express");
-
 exports.get_kpis = (require, response, next) => {
   response.send("kpis");
 };
