@@ -4,13 +4,11 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-const colaboradorRoutes = require("./routes/colaborador.routes");
-const liderRoutes = require("./routes/lider.routes");
-const superAdminRoutes = require("./routes/superAdmin.routes");
+const faults_routers = require("./routes/faults.routes");
+const absences_routers = require("./routes/absences.routes");
 
-app.use("/home", colaboradorRoutes);
-app.use("/home", liderRoutes);
-app.use("/home", superAdminRoutes);
+app.use("/fault", faults_routers);
+app.use("/absence", absences_routers);
 
 app.use((request, response, next) => {
   //Manda la respuesta

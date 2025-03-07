@@ -1,13 +1,66 @@
-<%- include('includes/_header') %>
-<%- include('includes/_navbar') %>
+<%- include('includes/_header') %> <%- include('includes/_navbar') %>
 <div class="content">
-    <div class="card">
-        <div class="card-content">
-            <h2>SuperAdmin Registra falta administrativa</h2>
-            <p>En esta ruta aparecerá un formulario con los campos necesarios para registrar una falta administrativa que haya cometido un colaborador, así como brindarle la posibilidad de ver a aquellos que ya tengan una falta administrativa con el fin de modificarla o eliminarla</p>
-        </div>
-        <a class="button" href="">Colaborador: José de Jesus Rodriguez</a>
-        <p>Modificar Eliminar</p>
+  <div class="card">
+    <div class="card-content">
+      <h2>Falta administrativa</h2>
+      <p>
+        En este apartado el superadmin podrá ver, añadir y filtrar faltas
+        administrativas y el colaborador podrá ver sus faltas
+      </p>
     </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th><abbr title="id">id</abbr></th>
+          <th><abbr title="nombre">nombre</abbr></th>
+          <th>puesto</th>
+          <th><abbr title="num">núm de falta</abbr></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>2</th>
+          <td>
+            <a href="/fault/check" title="Luis Lopez">Luis Lopez</a>
+          </td>
+          <td>Lider de departamento</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>
+            <a href="/check" title="Andres Juarez">Andres Juarez</a>
+          </td>
+          <td>colaborador</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <th>7</th>
+          <td>
+            <a href="fault/check" title="Leo Cervantes">Leo Cervantes</a>
+          </td>
+          <td>Lider de departamento</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>
+            <a href="fault/check" title="Emilio Guzman">Emilio Guzman</a>
+          </td>
+          <td>colaborador</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <th>9</th>
+          <td>
+            <a href="fault/check" title="Juan Rivera">Juan Rivera</a>
+          </td>
+          <td>colaborador</td>
+          <td>1</td>
+        </tr>
+      </tbody>
+    </table>
+    <a class="button" href="/fault/add">Añadir falta administrativa</a>
+  </div>
 </div>
 <%- include('includes/_footer') %>
