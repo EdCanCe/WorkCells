@@ -9,3 +9,7 @@ exports.get_check_profile = (require, response, next) => {
 exports.get_check_kpis = (require, response, next) => {
   response.send("kpis");
 };
+
+exports.get_colab_absences = (require, response, next) => {
+  
+};
