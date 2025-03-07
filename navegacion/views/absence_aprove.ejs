@@ -1,0 +1,53 @@
+<%- include('includes/_header') %> <%- include('includes/_navbar') %>
+<div class="content">
+  <div class="card">
+    <div class="card-content">
+      <h2>Ausencias</h2>
+      <p>
+        Aquí el super admin haciendo click en alguna de las casillas de estados
+        le va aparecer una popup para poder responder/cambiar el estado de
+        solicitud de ausencia.
+      </p>
+      <div class="is-flex is-justify-content-center">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><abbr title="id">id</abbr></th>
+              <th><abbr title="colaborador">Colaborador</abbr></th>
+              <th><abbr title="razon">Ausencia</abbr></th>
+              <th><abbr title="estado">Estado</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>1</th>
+              <th>Juan Lopez</th>
+              <th>Me enferme de covid y el doctor me dió 3 días de reposo</th>
+              <td>Aprobada</td>
+            </tr>
+            <tr>
+              <th>2</th>
+              <th>Carlos Gómez</th>
+              <th>Va a ser el cumpleaños de mi madre y cumple 90 años.</th>
+              <td>Negada</td>
+            </tr>
+            <tr>
+              <th>3</th>
+              <th>Carlos Ruiz</th>
+              <th>Problemas de transporte, se descompuso el autobus.</th>
+              <td>Aprobada</td>
+            </tr>
+            <tr>
+              <th>4</th>
+              <th>Imanol Gómez</th>
+              <th>Emergencia con tu mascota.</th>
+              <td>Falta de responder</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="is-flex is-justify-content-center"></div>
+    <%- include('includes/_footer') %>
+  </div>
+</div>
