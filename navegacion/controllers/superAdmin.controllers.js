@@ -2,10 +2,6 @@ exports.get_dia_feriado = (request, response, next) => {
   response.send('diaferiado');
 };
 
-exports.get_solicitud_vacaciones = (request, response, next) => {
-  response.send('solicitudvacaciones');
-};
-
 exports.get_departments = (request, response, next) => {
   response.render('addDepartment');
 };

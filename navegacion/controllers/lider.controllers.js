@@ -13,3 +13,7 @@ exports.get_check_kpis = (request, response, next) => {
 exports.get_colab_absences = (request, response, next) => {
   response.render('colabAbsences.ejs')
 };
+
+exports.get_colab_vacations = (request, response, next) => {
+  response.render('solicitudvacaciones');
+};
