@@ -22,4 +22,7 @@ router.get("/calendar/onetoOne", colaborador_controllers.get_onetoOne);
 router.get("/calendar", colaborador_controllers.get_calendar);
 
 router.get("/myprofile", colaborador_controllers.get_myprofile);
+
+router.get("/", colaborador_controllers.get_root);
+
 module.exports = router;

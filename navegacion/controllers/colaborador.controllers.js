@@ -1,3 +1,5 @@
+const e = require("express");
+
 exports.get_kpis = (require, response, next) => {
   response.send("kpis");
 };
@@ -28,4 +30,8 @@ exports.get_moreinformation = (require, response, next) =>{
 
 exports.get_administrativeoffenses = (require, response, next) =>{
   response.send("administrativeoffenses");
+}
+
+exports.get_root =  (require, response, next) =>{
+  response.render("inicio");
 }
