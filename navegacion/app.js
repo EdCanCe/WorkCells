@@ -23,7 +23,7 @@ app.use('/', homeRouter);
 app.use((request, response, next) => {
   //Manda la respuesta
   response.statusCode = 404;
-  response.send("No se encontró la ruta");
+  response.render('notFound');
 });
 
 app.listen(3000);
