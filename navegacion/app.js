@@ -4,17 +4,20 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-const departmentRouter = require('./routes/department.routes');
-app.use('/department', departmentRouter);
+const departmentRouter = require("./routes/department.routes");
+app.use("/department", departmentRouter);
 
-const homeRouter = require('./routes/home.routes');
-app.use('/home', homeRouter);
-app.use('/', homeRouter);
+const homeRouter = require("./routes/home.routes");
+app.use("/home", homeRouter);
+app.use("/", homeRouter);
 const faults_routers = require("./routes/faults.routes");
 const absences_routers = require("./routes/absences.routes");
 
 app.use("/fault", faults_routers);
 app.use("/absence", absences_routers);
+
+const vacationRouter = require("./routes/vacation.routes");
+app.use("/vacation", vacationRouter);
 
 app.use((request, response, next) => {
   //Manda la respuesta
