@@ -83,15 +83,6 @@ int main() {
     createFaults(50);
     faults.print();
 
-    createKpi(50);
-    kpi.print();
-
-    createEvidence(50);
-    evidence.print();
-
-    createEvidenceMedia(70);
-    evidenceMedia.print();
-
     createVacations(60);
     vacations.print();
     
@@ -100,4 +91,15 @@ int main() {
     
     createAbsenceMedia(50);
     absenceMedia.print();
+
+    /*
+    createKpi(50);
+    kpi.print();
+
+    createEvidence(50);
+    evidence.print();
+
+    createEvidenceMedia(70);
+    evidenceMedia.print(); 
+    */
 }

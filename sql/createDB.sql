@@ -85,34 +85,6 @@ CREATE TABLE userDepartment (
     CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID)
 );
 
-CREATE TABLE kpi (
-    kpiID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(100) NOT NULL,
-    creationDate DATE NOT NULL,
-    progress TINYINT NOT NULL,
-    goal VARCHAR(300) NOT NULL,
-    monthDuration TINYINT NOT NULL,
-    kpiDepartmentIDFK TINYINT NOT NULL,
-    CONSTRAINT kpiDepartmentIDFK FOREIGN KEY (kpiDepartmentIDFK) REFERENCES department(departmentID),
-    kpiUserIDFK MEDIUMINT NOT NULL,
-    CONSTRAINT kpiUserIDFK FOREIGN KEY (kpiUserIDFK) REFERENCES user(userID)
-);
-
-CREATE TABLE evidence (
-    evidenceID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    summary VARCHAR(300) NOT NULL,
-    uploadDate TIMESTAMP NOT NULL,
-    evidenceKpiIDFK INT NOT NULL,
-    CONSTRAINT evidenceKpiIDFK FOREIGN KEY (evidenceKpiIDFK) REFERENCES kpi(kpiID)
-);
-
-CREATE TABLE evidenceMedia (
-    evidenceMediaID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    mediaLink VARCHAR(255) NOT NULL,
-    evidenceIDFK INT NOT NULL,
-    CONSTRAINT evidenceIDFK FOREIGN KEY (evidenceIDFK) REFERENCES evidence(evidenceID)
-);
-
 CREATE TABLE vacation (
     vacationID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     startDate DATE NOT NULL,
@@ -182,3 +154,36 @@ CREATE TABLE fault (
     faultUserIDFK MEDIUMINT NOT NULL,
     CONSTRAINT faultUserIDFK FOREIGN KEY (faultUserIDFK) REFERENCES user(userID)
 );
+
+/* 
+Tablas de KPI
+
+En caso de tener tiempo, agregar.
+
+CREATE TABLE kpi (
+    kpiID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    creationDate DATE NOT NULL,
+    progress TINYINT NOT NULL,
+    goal VARCHAR(300) NOT NULL,
+    monthDuration TINYINT NOT NULL,
+    kpiDepartmentIDFK TINYINT NOT NULL,
+    CONSTRAINT kpiDepartmentIDFK FOREIGN KEY (kpiDepartmentIDFK) REFERENCES department(departmentID),
+    kpiUserIDFK MEDIUMINT NOT NULL,
+    CONSTRAINT kpiUserIDFK FOREIGN KEY (kpiUserIDFK) REFERENCES user(userID)
+);
+
+CREATE TABLE evidence (
+    evidenceID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    summary VARCHAR(300) NOT NULL,
+    uploadDate TIMESTAMP NOT NULL,
+    evidenceKpiIDFK INT NOT NULL,
+    CONSTRAINT evidenceKpiIDFK FOREIGN KEY (evidenceKpiIDFK) REFERENCES kpi(kpiID)
+);
+
+CREATE TABLE evidenceMedia (
+    evidenceMediaID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    mediaLink VARCHAR(255) NOT NULL,
+    evidenceIDFK INT NOT NULL,
+    CONSTRAINT evidenceIDFK FOREIGN KEY (evidenceIDFK) REFERENCES evidence(evidenceID)
+); */

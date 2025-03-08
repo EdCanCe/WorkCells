@@ -3,6 +3,5 @@
 *.jpeg
 *.jpg
 *.out
-*.exe
 .vscode/*
 node_modules/
