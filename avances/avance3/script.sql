@@ -1417,7 +1417,7 @@ SELECT u.userID, u.birthName, w.startDate , w.endDate
 FROM workStatus w, user u
 WHERE w.userStatusIDFK = u.userID;
 
---query para mostrar las fechas del día festivo y el nombre del día festivo
+-- query para mostrar las fechas del día festivo y el nombre del día festivo
 SELECT usedDate, title 
 FROM usedHoliday u, templateHoliday t
 WHERE u.usedTemplateHolidayID = t.templateHolidayID;
