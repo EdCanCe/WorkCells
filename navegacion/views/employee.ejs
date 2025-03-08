@@ -1,0 +1,30 @@
+<%- include('includes/_header.ejs') %>
+<%- include('includes/_navbar.ejs') %>
+
+<div class="content">
+    <div class="card">
+        <div class="card-content">
+            <h1>Empleados</h1>
+            <p>
+                En esta vista, se le mostrará al super admin una lista con todos los empleados. 
+                <a href="/employee/me" class="button is-pulled-right is-info">Mi prefil</a>
+            </p>
+            <br>
+            <div class="list">
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-title">
+                            Empleado 1
+                            <a href="/employee/add" class="button is-pulled-right">Add</a>
+                            <a href="/employee/check" class="button is-pulled-right">Check</a>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('includes/_footer.ejs') %>
