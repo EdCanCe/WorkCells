@@ -1,54 +1,54 @@
 
 CREATE TABLE templateHoliday (
-    templateHolidayID SMALLINT AUTO_INCREMENT PRIMARY KEY,
+    templateHolidayID VARCHAR(40) NOT NULL PRIMARY KEY,
     holidayDate DATE NOT NULL,
     title VARCHAR(100)
 );
 
 CREATE TABLE usedHoliday (
-    templateHolidayID SMALLINT AUTO_INCREMENT PRIMARY KEY,
+    templateHolidayID VARCHAR(40) NOT NULL PRIMARY KEY,
     usedDate DATE NOT NULL,
-    usedTemplateHolidayID SMALLINT NOT NULL,
+    usedTemplateHolidayID VARCHAR(40),
     CONSTRAINT usedTemplateHolidayID FOREIGN KEY (usedTemplateHolidayID) REFERENCES templateHoliday(templateHolidayID)
 );
 
 CREATE TABLE privilege (
-    privilegeID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    privilegeID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(140) NOT NULL,
     summary VARCHAR(250)
 );
 
 CREATE TABLE role (
-    roleID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    roleID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE rolePrivilege (
-    roleIDFK TINYINT NOT NULL,
+    roleIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT roleIDFK FOREIGN KEY (roleIDFK) REFERENCES role(roleID),
-    privilegeIDFK TINYINT NOT NULL,
+    privilegeIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT privilegeIDFK FOREIGN KEY (privilegeIDFK) REFERENCES privilege(privilegeID)
 );
 
 CREATE TABLE country (
-    countryID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    countryID VARCHAR(40) NOT NULL PRIMARY KEY,
     title CHAR(50)
 );
 
 CREATE TABLE enterprise (
-    enterpriseID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    enterpriseID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE department (
-    departmentID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    departmentID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(60) NOT NULL,
-    enterpriseIDFK TINYINT NOT NULL,
+    enterpriseIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
 );
 
 CREATE TABLE user (
-    userID MEDIUMINT NOT NULL PRIMARY KEY,
+    userID VARCHAR(40) NOT NULL PRIMARY KEY,
     curp CHAR(18) NOT NULL,
     rfc VARCHAR(13) NOT NULL,
     birthName VARCHAR(50) NOT NULL,
@@ -62,96 +62,96 @@ CREATE TABLE user (
     colony VARCHAR(100),
     workModality TINYINT NOT NULL,
     workStatus BOOLEAN NOT NULL,
-    userRoleIDFK TINYINT NOT NULL,
+    userRoleIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
-    countryUserIDFK TINYINT NOT NULL,
+    countryUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
-    prioritaryDepartmentFK TINYINT,
+    prioritaryDepartmentFK VARCHAR(40),
     CONSTRAINT prioritaryDepartmentFK FOREIGN KEY (prioritaryDepartmentFK) REFERENCES department(departmentID)
 );
 
 CREATE TABLE workStatus (
-    workStatusID MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    workStatusID VARCHAR(40) NOT NULL PRIMARY KEY,
     startDate DATE NOT NULL,
     endDate DATE,
-    userStatusIDFK MEDIUMINT NOT NULL,
+    userStatusIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT userStatusIDFK FOREIGN KEY (userStatusIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE userDepartment (
-    departmentIDFK TINYINT NOT NULL,
+    departmentIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
-    userIDFK MEDIUMINT NOT NULL,
+    userIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE vacation (
-    vacationID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    vacationID VARCHAR(40) NOT NULL PRIMARY KEY,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
     leaderStatus TINYINT NOT NULL,
     hrStatus TINYINT NOT NULL,
-    vacationUserIDFK MEDIUMINT NOT NULL,
+    vacationUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT vacationUserIDFK FOREIGN KEY (vacationUserIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE absence (
-    absenceID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    absenceID VARCHAR(40) NOT NULL PRIMARY KEY,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
     justified TINYINT NOT NULL,
-    absenceUserIDFK MEDIUMINT NOT NULL,
+    absenceUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT absenceUserIDFK FOREIGN KEY (absenceUserIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE absenceMedia (
-    absenceMediaID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    absenceMediaID VARCHAR(40) NOT NULL PRIMARY KEY,
     mediaLink VARCHAR(300) NOT NULL,
-    absenceIDFK INT NOT NULL,
+    absenceIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT absenceIDFK FOREIGN KEY (absenceIDFK) REFERENCES absence(absenceID)
 );
 
 CREATE TABLE oneOnOne (
-    oneOnOneID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    oneOnOneID VARCHAR(40) NOT NULL PRIMARY KEY,
     expectedTime TINYINT NOT NULL,
     meetingDate TIMESTAMP NOT NULL,
-    oneOnOneUserIDFK MEDIUMINT NOT NULL,
+    oneOnOneUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT oneOnOneUserIDFK FOREIGN KEY (oneOnOneUserIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE oneOnOneQuestion (
-    questionID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    questionID VARCHAR(40) NOT NULL PRIMARY KEY,
     question VARCHAR(300) NOT NULL
 );
 
 CREATE TABLE oneOnOneAnswer (
     answer VARCHAR(400) NOT NULL,
-    answerOneOnOneIDFK INT NOT NULL,
+    answerOneOnOneIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT answerOneOnOneIDFK FOREIGN KEY (answerOneOnOneIDFK) REFERENCES oneOnOne(oneOnOneID),
-    questionIDFK TINYINT NOT NULL,
+    questionIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT questionIDFK FOREIGN KEY (questionIDFK) REFERENCES oneOnOneQuestion(questionID)
 );
 
 CREATE TABLE oneOnOneMeasurable (
-    measurableID TINYINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    measurableID VARCHAR(40) NOT NULL PRIMARY KEY,
     summary VARCHAR(300) NOT NULL
 );
 
 CREATE TABLE oneOnOneMeasure (
-    evaluation TINYINT NOT NULL,
-    measureOneOnOneIDFK INT NOT NULL,
+    evaluation VARCHAR(40) NOT NULL,
+    measureOneOnOneIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT measureOneOnOneIDFK FOREIGN KEY (measureOneOnOneIDFK) REFERENCES oneOnOne(oneOnOneID),
-    measurableIDFK TINYINT NOT NULL,
+    measurableIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT measurableIDFK FOREIGN KEY (measurableIDFK) REFERENCES oneOnOneMeasurable(measurableID)
 );
 
 CREATE TABLE fault (
-    faultID SMALLINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    faultID VARCHAR(40) NOT NULL PRIMARY KEY,
     doneDate DATE NOT NULL,
     summary VARCHAR(300),
-    faultUserIDFK MEDIUMINT NOT NULL,
+    faultUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT faultUserIDFK FOREIGN KEY (faultUserIDFK) REFERENCES user(userID)
 );
 
@@ -161,29 +161,29 @@ Tablas de KPI
 En caso de tener tiempo, agregar.
 
 CREATE TABLE kpi (
-    kpiID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    kpiID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     creationDate DATE NOT NULL,
     progress TINYINT NOT NULL,
     goal VARCHAR(300) NOT NULL,
     monthDuration TINYINT NOT NULL,
-    kpiDepartmentIDFK TINYINT NOT NULL,
+    kpiDepartmentIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT kpiDepartmentIDFK FOREIGN KEY (kpiDepartmentIDFK) REFERENCES department(departmentID),
-    kpiUserIDFK MEDIUMINT NOT NULL,
+    kpiUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT kpiUserIDFK FOREIGN KEY (kpiUserIDFK) REFERENCES user(userID)
 );
 
 CREATE TABLE evidence (
-    evidenceID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    evidenceID VARCHAR(40) NOT NULL PRIMARY KEY,
     summary VARCHAR(300) NOT NULL,
     uploadDate TIMESTAMP NOT NULL,
-    evidenceKpiIDFK INT NOT NULL,
+    evidenceKpiIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT evidenceKpiIDFK FOREIGN KEY (evidenceKpiIDFK) REFERENCES kpi(kpiID)
 );
 
 CREATE TABLE evidenceMedia (
-    evidenceMediaID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    evidenceMediaID VARCHAR(40) NOT NULL PRIMARY KEY,
     mediaLink VARCHAR(255) NOT NULL,
-    evidenceIDFK INT NOT NULL,
+    evidenceIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT evidenceIDFK FOREIGN KEY (evidenceIDFK) REFERENCES evidence(evidenceID)
 ); */
