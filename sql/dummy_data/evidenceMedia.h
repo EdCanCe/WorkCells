@@ -31,12 +31,12 @@ Randomizer<string> mediaLink {
 
 class EvidenceMedia {
     private:
-        int id;
+        string id;
         string mediaLink;
         int idEvidence;
     public:
         EvidenceMedia(string, int);
-        int getID();
+        string getId();
         void print();
 };
 

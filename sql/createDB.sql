@@ -155,6 +155,13 @@ CREATE TABLE fault (
     CONSTRAINT faultUserIDFK FOREIGN KEY (faultUserIDFK) REFERENCES user(userID)
 );
 
+CREATE TABLE faultMedia (
+    faultMediaID VARCHAR(40) NOT NULL PRIMARY KEY,
+    mediaLink VARCHAR(300) NOT NULL,
+    faultIDFK VARCHAR(40) NOT NULL,
+    CONSTRAINT faultIDFK FOREIGN KEY (faultIDFK) REFERENCES fault(faultID)
+);
+
 /* 
 Tablas de KPI
 

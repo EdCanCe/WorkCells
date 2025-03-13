@@ -18,7 +18,7 @@ class Measure {
 
     public:
         Measure(int, int, int);
-        int getId();
+        string getId();
         void print();
 };
 

@@ -20,12 +20,12 @@ Randomizer<string> question = {
 // Defino la clase que voy a usar
 class Question {
     private:
-        int id;
+        string id;
         string question;
 
     public:
         Question(string);
-        int getId();
+        string getId();
         void print();
 };
 

@@ -24,13 +24,13 @@ Randomizer<string> uploadDate {
 
 class Evidence {
     private:
-        int id;
+        string id;
         string summary;
         string uploadDate;
         int idKpi;
     public:
         Evidence(string, string, int);
-        int getID();
+        string getId();
         void print();
 };
 

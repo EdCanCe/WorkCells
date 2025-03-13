@@ -36,7 +36,7 @@ class Answer {
 
     public:
         Answer(string, int, int);
-        int getId();
+        string getId();
         void print();
 };
 

@@ -9,12 +9,12 @@ using namespace std;
 
 class AbsenceMedia {
     private:
-        int id;
+        string id;
         string mediaLink;
         int idAbsence;
     public:
         AbsenceMedia(string, int);
-        int getID();
+        string getId();
         void print();
 };
 

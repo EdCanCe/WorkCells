@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#include "templateHoliday.h"
+#include "usedHoliday.h"
 #include "privileges.h"
 #include "roles.h"
 #include "rolePrivileges.h"
@@ -6,12 +8,10 @@
 #include "users.h"
 #include "enterprise.h"
 #include "department.h"
-#include "userDepartment.h"
+/*#include "userDepartment.h"
 #include "vacations.h"
 #include "absence.h"
 #include "absenceMedia.h"
-#include "templateHoliday.h"
-#include "usedHoliday.h"
 #include "workstatus.h"
 #include "question.h"
 #include "mesurable.h"
@@ -21,7 +21,7 @@
 #include "fault.h"
 #include "kpi.h"
 #include "evidence.h"
-#include "evidenceMedia.h"
+#include "evidenceMedia.h"*/
 
 using namespace std;
 
@@ -30,12 +30,18 @@ int main() {
     srand (time(NULL));
 
     freopen("addData.sql", "w", stdout);  // Pasa el output a un archivo
+    
+    createTemplateHolidays(20);
+    templateHolidays.print();
+
+    createUsedHolidays(50);
+    usedHolidays.print();
 
     createPrivileges();
-    privileges.print();
+    for(auto i:privileges) i.print();
 
     createRoles();
-    roles.print();
+    for(auto i:roles) i.print();
 
     createRolePrivileges();
     rolePrivileges.print();
@@ -52,15 +58,9 @@ int main() {
     createUsers(100);
     users.print();
 
-    createUserDepartment(160);
+    /*createUserDepartment(160);
     userDepartment.print();
     selectUserPriorityDepartment();
-
-    createTemplateHolidays(20);
-    templateHolidays.print();
-
-    createUsedHolidays(50);
-    usedHolidays.print();
 
     createUsedWorkStatus(60);
     WorkStatus1.print();
@@ -90,7 +90,7 @@ int main() {
     absence.print();
     
     createAbsenceMedia(50);
-    absenceMedia.print();
+    absenceMedia.print(); */
 
     /*
     createKpi(50);

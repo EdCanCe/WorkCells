@@ -32,14 +32,14 @@ Randomizer<string> meetingDate = {
 // Defino la clase que voy a usar
 class OneOnOne {
     private:
-        int id;
+        string id;
         int expectedTime;
         string meetingDate;
         int oneOnOneUserIDFK;
 
     public:
         OneOnOne(int, string, int);
-        int getId();
+        string getId();
         void print();
 };
 

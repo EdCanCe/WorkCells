@@ -79,7 +79,7 @@ private:
 
 public:
     WorkStatus(string,string,int);
-    int getId();
+    string getId();
     void print();
 };
 

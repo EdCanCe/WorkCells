@@ -31,12 +31,12 @@ Randomizer<string> summary = {
 // Defino la clase que voy a usar
 class Mesurable {
     private:
-        int id;
+        string id;
         string summary;
 
     public:
         Mesurable(string);
-        int getId();
+        string getId();
         void print();
 };
 

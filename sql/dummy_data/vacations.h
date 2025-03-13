@@ -7,7 +7,7 @@ using namespace std;
 
 class Vacations {
     private:
-        int id;
+        string id;
         int leaderStatus;
         int hrStatus;
         string reason;
@@ -21,7 +21,7 @@ class Vacations {
             string,
             string
         );
-        int getId();
+        string getId();
         void print();
 };
 

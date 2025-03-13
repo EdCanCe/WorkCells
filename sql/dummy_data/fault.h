@@ -37,14 +37,14 @@ Randomizer<string> summary_data = {
 // Defino la clase que voy a usar
 class Fault {
     private:
-        int id;
+        string id;
         string doneDate; 
         string summary;
         int faultUserIDFK;
 
     public:
         Fault(string, string, int);
-        int getId();
+        string getId();
         void print();
 };
 

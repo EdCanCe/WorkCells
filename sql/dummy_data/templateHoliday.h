@@ -73,13 +73,13 @@ Randomizer<string> date = {
 // Defino la clase que voy a usar
 class templateHoliday {
     private:
-        int id;
+        string id;
         string holidayDate;
         string title;
 
     public:
         templateHoliday(string, string);
-        int getId();
+        string getId();
         void print();
 };
 
@@ -87,19 +87,19 @@ Randomizer<templateHoliday> templateHolidays;
 
 // Constructor de la clase
 templateHoliday::templateHoliday(string holiday_date, string title_) {
-    id = templateHolidays.size() + 1;
+    id = generateUUID();
     holidayDate = holiday_date;
     title = title_;
 }
 
 // Obtengo su Id
-int templateHoliday::getId() {
+string templateHoliday::getId() {
     return id;
 }
 
 // Impresión / Código en SQL
 void templateHoliday::print() {
-    cout << "INSERT INTO templateHoliday(holidayDate, title) VALUES('" << holidayDate << "', '" << title << "');\n";
+    cout << "INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) VALUES('" << id << "', '" << holidayDate << "', '" << title << "');\n";
 }
 
 // Función para crear la tabla con X registros

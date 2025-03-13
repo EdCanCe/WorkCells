@@ -9,7 +9,7 @@ using namespace std;
 
 class Absence {
     private:
-        int id;
+        string id;
         string reason;
         string startDate;
         string endDate;
@@ -19,7 +19,7 @@ class Absence {
             string startDate,
             string endDate,
             int justified);
-        int getID();
+        string getId();
         void print();
 };
 

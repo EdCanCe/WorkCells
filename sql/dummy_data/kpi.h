@@ -40,7 +40,7 @@ Randomizer<string> goal {
 
 class Kpi {
     private:
-        int id;
+        string id;
         string title;
         string creationDate;
         int progress;
@@ -51,7 +51,7 @@ class Kpi {
 
     public:
         Kpi(string, string, int, string, int, int, int);
-        int getID();
+        string getId();
         void print();
 };
 

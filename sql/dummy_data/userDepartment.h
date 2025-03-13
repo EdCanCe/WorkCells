@@ -14,7 +14,7 @@ class UserDepartment {
     
     public:
         UserDepartment(int, int);
-        int getID();
+        string getId();
         void print();
         
 };
