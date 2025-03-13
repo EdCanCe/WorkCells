@@ -8,20 +8,21 @@
 #include "users.h"
 #include "enterprise.h"
 #include "department.h"
-/*#include "userDepartment.h"
-#include "vacations.h"
-#include "absence.h"
-#include "absenceMedia.h"
+#include "userDepartment.h"
 #include "workstatus.h"
 #include "question.h"
 #include "mesurable.h"
 #include "oneonone.h"
 #include "answer.h"
 #include "measure.h"
+#include "vacations.h"
+#include "absence.h"
+#include "absenceMedia.h"
 #include "fault.h"
-#include "kpi.h"
-#include "evidence.h"
-#include "evidenceMedia.h"*/
+#include "faultMedia.h"
+//#include "kpi.h"
+//#include "evidence.h"
+//#include "evidenceMedia.h"
 
 using namespace std;
 
@@ -58,7 +59,7 @@ int main() {
     createUsers(100);
     users.print();
 
-    /*createUserDepartment(160);
+    createUserDepartment(160);
     userDepartment.print();
     selectUserPriorityDepartment();
 
@@ -80,9 +81,6 @@ int main() {
     createMesures(150);
     measures.print();
 
-    createFaults(50);
-    faults.print();
-
     createVacations(60);
     vacations.print();
     
@@ -90,7 +88,13 @@ int main() {
     absence.print();
     
     createAbsenceMedia(50);
-    absenceMedia.print(); */
+    absenceMedia.print();
+
+    createFaults(50);
+    faults.print();
+
+    createFaultMedia(50);
+    faultMedia.print();
 
     /*
     createKpi(50);

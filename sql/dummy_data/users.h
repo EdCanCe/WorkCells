@@ -155,12 +155,12 @@ class User {
 
 // Creo un randomizador de dicha clase para usarla en un futuro
 Randomizer<User> users;
-map<string, bool> userIds;
+vector<string> userIds;
 
 // Constructor de una tupla
 User::User(string Id, string CURP, string RFC, string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, string UserRoleIDFK, string CountryUserIDFK) {
     id = Id;
-    userIds[id] = true;
+    userIds.push_back(id);
     curp = CURP;
     rfc = RFC;
     birthName = BirthName;

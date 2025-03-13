@@ -26,19 +26,19 @@ class Absence {
 Randomizer<Absence> absence;
 
 Absence::Absence(string reason, string startDate, string endDate, int justified) {
-    id = absence.size() + 1;
+    id = generateUUID();
     this->reason = reason;
     this->startDate = startDate;
     this->endDate = endDate;
     this->justified = justified;
 }
 
-int Absence::getID(){
+string Absence::getId(){
     return id;
 }
 
 void Absence::print(){
-    cout << "INSERT INTO absence(reason, startDate, endDate, justified, absenceUserIDFK) values('" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", " << users.random().getId() << "); \n";
+    cout << "INSERT INTO absence(absenceID, reason, startDate, endDate, justified, absenceUserIDFK) values('" << id << "', '" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", '" << users.random().getId() << "'); \n";
 };
 
 

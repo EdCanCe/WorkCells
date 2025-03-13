@@ -43,7 +43,7 @@ Evidence::Evidence(string summary, string uploadDate, int idKpi) {
     this->idKpi = idKpi;
 }
 
-int Evidence::getID(){
+int Evidence::getId(){
     return id;
 }
 
@@ -53,7 +53,7 @@ void Evidence::print(){
 
 void createEvidence(int x) {
     for (int i = 0; i < x; i++){
-        evidence.add(Evidence(summaryEv.random(), uploadDate.random(), kpi.random().getID()));
+        evidence.add(Evidence(summaryEv.random(), uploadDate.random(), kpi.random().getId()));
     }
 }
 

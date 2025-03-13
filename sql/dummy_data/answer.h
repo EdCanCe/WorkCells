@@ -31,11 +31,11 @@ Randomizer<string> answers = {
 class Answer {
     private:
         string answer;
-        int answerOneOnOneIDFK; // ID del One On One
-        int questionIDFK; // ID de la pregunta
+        string answerOneOnOneIDFK; // ID del One On One
+        string questionIDFK; // ID de la pregunta
 
     public:
-        Answer(string, int, int);
+        Answer(string, string, string);
         string getId();
         void print();
 };
@@ -44,7 +44,7 @@ class Answer {
 Randomizer<Answer> answers_1;
 
 // Constructor de una tupla
-Answer::Answer(string answer_, int answerOneOnOneIDFK_, int questionIDFK_) {
+Answer::Answer(string answer_, string answerOneOnOneIDFK_, string questionIDFK_) {
     answer = answer_;
     answerOneOnOneIDFK = answerOneOnOneIDFK_;
     questionIDFK = questionIDFK_;
@@ -52,7 +52,7 @@ Answer::Answer(string answer_, int answerOneOnOneIDFK_, int questionIDFK_) {
 
 // Impresión / Código en SQL
 void Answer::print() {
-    cout << "INSERT INTO oneOnOneAnswer(answer, answerOneOnOneIDFK, questionIDFK) VALUES('" << answer << "', " << answerOneOnOneIDFK << ", " << questionIDFK << ");\n";
+    cout << "INSERT INTO oneOnOneAnswer(answer, answerOneOnOneIDFK, questionIDFK) VALUES('" << answer << "', '" << answerOneOnOneIDFK << "', '" << questionIDFK << "');\n";
 }
 
 // Función para crear la tabla con X registros

@@ -34,18 +34,18 @@ Randomizer<Question> questions;
 
 // Constructor de una tupla
 Question::Question(string question_) {
-    id = questions.size() + 1;
+    id = generateUUID();
     question = question_;
 }
 
 // Obtengo su Id
-int Question::getId(){
+string Question::getId(){
     return id;
 }
 
 // Impresión / Código en SQL
 void Question::print() {
-    cout << "INSERT INTO oneOnOneQuestion(question) VALUES('" << question << "'); \n";
+    cout << "INSERT INTO oneOnOneQuestion(questionID, question) VALUES('" << id << "', '" << question << "'); \n";
 }
 
 // Función para crear la tabla con X registros
