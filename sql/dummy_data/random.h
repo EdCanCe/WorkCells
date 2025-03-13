@@ -10,6 +10,30 @@ int getRandom(int x) {
     return rand() % x;
 }
 
+string generateUUID() {
+    unsigned char uuid[16];
+
+    for (int i = 0; i < 16; ++i) {
+        uuid[i] = getRandom(256);
+    }
+
+    uuid[6] = (uuid[6] & 0x0f) | 0x40;
+
+    uuid[8] = (uuid[8] & 0x3f) | 0x80;
+
+    stringstream ss;
+    ss << hex << setfill('0');
+
+    for (int i = 0; i < 16; ++i) {
+        ss << setw(2) << (int)uuid[i];
+        if (i == 3 || i == 5 || i == 7 || i == 9) {
+            ss << '-';
+        }
+    }
+
+    return ss.str();
+}
+
 template <class T>
 class Randomizer {
     private:
