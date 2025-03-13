@@ -31,12 +31,12 @@ Randomizer<string> summary = {
 // Defino la clase que voy a usar
 class Mesurable {
     private:
-        int id;
+        string id;
         string summary;
 
     public:
         Mesurable(string);
-        int getId();
+        string getId();
         void print();
 };
 
@@ -45,18 +45,18 @@ Randomizer<Mesurable> mesurables;
 
 // Constructor de una tupla
 Mesurable::Mesurable(string summary_) {
-    id = mesurables.size() + 1;
+    id = generateUUID();
     summary = summary_;
 }
 
 // Obtengo su Id
-int Mesurable::getId(){
+string Mesurable::getId(){
     return id;
 }
 
 // Impresión / Código en SQL
 void Mesurable::print() {
-    cout << "INSERT INTO oneOnOneMeasurable(summary) VALUES('" << summary << "'); \n";
+    cout << "INSERT INTO oneOnOneMeasurable(measurableID, summary) VALUES('" << id << "', '" << summary << "'); \n";
 }
 
 // Función para crear la tabla con X registros

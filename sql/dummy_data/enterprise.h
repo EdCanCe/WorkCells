@@ -20,27 +20,27 @@ Randomizer<string> title {
 
 class Enterprise {
     private:
-        int id;
+        string id;
         string title;
     public:
         Enterprise(string);
-        int getID();
+        string getId();
         void print();
 };
 
 Randomizer<Enterprise> enterprise;
 
 Enterprise::Enterprise(string title) {
-    id = enterprise.size() + 1;
+    id = generateUUID();
     this->title = title;
 }
 
-int Enterprise::getID() {
+string Enterprise::getId() {
     return id;
 }
 
 void Enterprise::print() {
-    cout << "INSERT INTO enterprise(title) values('" << title << "'); \n";
+    cout << "INSERT INTO enterprise(enterpriseID, title) values('" << id << "', '" << title << "'); \n";
 }
 
 void createEnterprise(int x) {
