@@ -1,0 +1,73 @@
+@startuml
+actor Navegador
+boundary calendar.ejs
+boundary calendar.routes
+control calendar.controller
+entity CalendarModel
+database mysql
+
+
+autonumber
+' Inicio del flujo
+activate Navegador
+Navegador -> calendar.routes : GET /calendar
+deactivate Navegador
+activate calendar.routes
+
+calendar.routes -> calendar.controller : get_calendar(req, res)
+activate calendar.controller
+
+
+' Se utiliza la instancia para obtener los datos
+calendar.controller ->> CalendarModel : get_usedHoliday()
+activate CalendarModel
+
+CalendarModel ->> mysql : SELECT * FROM usedHoliday
+activate mysql
+mysql -->> CalendarModel : Datos obtenidos
+deactivate mysql
+
+CalendarModel -->> calendar.controller : Retorna datos de días feriados
+deactivate CalendarModel
+
+calendar.controller -> calendar.ejs : render(calendar)
+activate calendar.ejs
+calendar.ejs -> Navegador : Mostrar calendario con días feriados
+activate Navegador
+deactivate calendar.ejs
+deactivate calendar.controller
+deactivate calendar.routes
+
+' Filtrar por días feriados
+Navegador -> calendar.routes : POST /calendar/filterHolidays
+deactivate Navegador
+activate calendar.routes
+
+calendar.routes -> calendar.controller : (req, res)
+activate calendar.controller
+
+calendar.controller -> calendar.ejs : render(calendar)
+activate calendar.ejs
+calendar.ejs -> Navegador : Muestra solo días feriados
+activate Navegador
+deactivate calendar.ejs
+deactivate calendar.controller
+deactivate calendar.routes
+
+' Cambiar la vista (semana)
+Navegador -> calendar.routes : POST /calendar/weekend
+deactivate Navegador
+activate calendar.routes
+
+calendar.routes -> calendar.controller : change_view(req, res)
+activate calendar.controller
+
+calendar.controller -> calendar.ejs : render(calendar)
+activate calendar.ejs
+activate Navegador
+calendar.ejs -> Navegador : Muestra la vista semanal
+deactivate Navegador
+deactivate calendar.ejs
+deactivate calendar.controller
+deactivate calendar.routes
+@enduml
