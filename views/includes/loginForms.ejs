@@ -1,9 +1,9 @@
 <section>
-  <% } %> <% if (warning != '') { %>
+  <% if (warning != '') { %>
   <div class="notification is-warning"><%= warning %></div>
   <% } %>
 
-  <form class="login" action="method" method="POST">
+  <form class="login" action="/login" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <label for="email" class="label">email</label>
     <input
