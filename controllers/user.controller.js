@@ -27,20 +27,32 @@ exports.post_login = (req, res, next) => {
 
       const user = rows[0];
       // Compara contraseñas
+      /* Comentado hasta que este Superadmin registra alta de empleados
       bcrypt.compare(password, user.password).then((doMatch) => {
         if (doMatch) {
           req.session.isLoggedIn = true;
-          return req.session.save(() => res.redirect("//home"));
+          return req.session.save(() => res.redirect("/home"));
         } else {
           req.session.warning = "Usuario y/o contraseña incorrectos";
           res.redirect("/login");
         }
-      });
+      });*/
+      // borrar esta comparación cuando este encriptada la contraseña
+      if(password == user.password)
+      {
+        req.session.isLoggedIn = true;
+        return req.session.save(() => res.redirect('/home'));
+      }else
+      {
+        req.session.warning = "Usuario y/o contraseña incorrectos";
+        res.redirect('/login');
+      }
     })
     .catch((error) => {
       console.error("Error al buscar el usuario:", error);
       res.redirect("/login");
     });
+
 };
 
 // Cierra sesión
