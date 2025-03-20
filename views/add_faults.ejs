@@ -1,6 +1,7 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
 <h1 class="title">Escribe los datos del colaborador y una Descripción</h1>
 <div class="field">
+  <form  action="method" method="post">
   <p class="control has-icons-left has-icons-right">
     <input
       class="input"
@@ -25,7 +26,7 @@
 </div>
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" type="id" placeholder="id del colaborador" />
+    <input class="input" type="email" placeholder="email" />
     <span class="icon is-small is-left">
       <i class="fas fa-lock"></i>
     </span>
@@ -36,5 +37,6 @@
     <button class="button is-success">Summit</button>
     <a href="/fault" class="button">Regresar</a>
   </p>
+</form>
 </div>
 <%- include('includes/_footer') %>
