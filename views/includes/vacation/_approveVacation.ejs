@@ -16,16 +16,19 @@
             </tr>
           </thead>
           <tbody>
+            <!-- Iterar sobre las solicitudes de vacaciones -->
+            <% vacations.forEach(vacation => { %>
             <tr>
-              <th>01</th>
-              <th>Ir a la playa con mi familia</th>
-              <th>10/08/2024</th>
-              <th>20/08/2024</th>
-              <th>
-                <a href="" class="button">Aprobar</a>
-                <a href="" class="button">Rechazar</a>
-              </th>
+              <td><%= vacation.id %></td>
+              <td><%= vacation.reason %></td>
+              <td><%= vacation.startDate %></td>
+              <td><%= vacation.endDate %></td>
+              <td>
+                <a href="/approve/<%= vacation.id %>" class="button">Aprobar</a>
+                <a href="/reject/<%= vacation.id %>" class="button">Rechazar</a>
+              </td>
             </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
