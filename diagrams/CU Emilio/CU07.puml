@@ -1,0 +1,16 @@
+@startuml CU07 - Superadmin Registra dia feriado
+|Super Admin|
+start
+:Seleccionar agregar asueto;
+repeat:Registra datos requeridos por el sistema;
+:Modificar:
+    - Fecha del día oficial
+    - Fecha del dia que se va a celebrar
+    - Nombre de la festividad;
+:Guarda los datos del nuevo asueto;
+|Sistema|
+repeat while (¿Los campos estan completos?) is (NO)
+->SI;
+:Registra el nuevo asueto en la base de datos;
+stop
+@enduml
