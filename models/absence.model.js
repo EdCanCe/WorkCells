@@ -1,4 +1,5 @@
 const db = require('../util/database');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Absence {
     constructor(startDate, endDate, reason, absenceUserID){
@@ -10,8 +11,9 @@ module.exports = class Absence {
     }
 
     save(){
-        return db.execute('INSERT INTO absence VALUES(?,?,?,?,?)', 
-            [this.startDate, this.endDate, this.reason, 0, this.absenceUserID]);
+        const absenceID = uuidv4();
+        return db.execute('INSERT INTO absence(absenceID, startDate, endDate, reason, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?)', 
+            [absenceID, this.startDate, this.endDate, this.reason, 0, this.absenceUserID]);
     }
 
     static fetchAll(){
@@ -19,11 +21,11 @@ module.exports = class Absence {
     }
 
     static fetchAllByID(id){
-        return db.execute('SELECT * FROM absence WHERE absenceUserIDFK = ?', id);
+        return db.execute('SELECT * FROM absence WHERE absenceUserIDFK = ?', [id]);
     }
 
     static fetchOne(id){
-        return db.execute('SELECT * FROM absence WHERE absenceID = ?', id);
+        return db.execute('SELECT * FROM absence WHERE absenceID = ?', [id]);
     }
 
     static fetch(id){
@@ -34,5 +36,9 @@ module.exports = class Absence {
         {
             return this.fetchAll();
         }
+    }
+
+    static getID(email){
+        return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email])
     }
 };

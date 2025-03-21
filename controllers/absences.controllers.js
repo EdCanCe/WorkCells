@@ -24,7 +24,23 @@ exports.get_add = (request, response, next) => {
 };
 
 exports.post_add = (req, res, next) => {
-  
+  console.log(req.body);
+  Absence.getID(req.session.mail)
+    .then(([rows]) => {
+      if(rows.length == 0)
+      {
+        res.send(500);
+      }
+      const userID = rows[0].userID;
+      const absence = new Absence(req.body.startDate, req.body.endDate, req.body.reason, userID);
+      absence.save()
+        .then(() => {
+          res.redirect('/absence');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      });
 };
 
 exports.get_root = (request, response, next) => {

@@ -43,6 +43,7 @@ exports.post_login = (req, res, next) => {
       // Comparación insegura (solo temporal hasta que uses bcrypt)
       if (password === user.passwd) {
         req.session.isLoggedIn = true;
+        req.session.mail = email;
         return req.session.save(() => res.redirect("/home"));
       } else {
         req.session.warning = "Usuario y/o contraseña incorrectos";
