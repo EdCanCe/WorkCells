@@ -1,42 +1,58 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
 <h1 class="title">Escribe los datos del colaborador y una Descripción</h1>
-<div class="field">
-  <form  action="method" method="post">
-  <p class="control has-icons-left has-icons-right">
-    <input
-      class="input"
-      type="nombre_colaborador"
-      placeholder="nombre colaborador"
-    />
-    <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-    <span class="icon is-small is-right">
-      <i class="fas fa-check"></i>
-    </span>
-  </p>
-</div>
-<div class="field">
-  <p class="control has-icons-left">
-    <input class="input" type="razon" placeholder="razon de la falta" />
-    <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
-    </span>
-  </p>
-</div>
-<div class="field">
-  <p class="control has-icons-left">
-    <input class="input" type="email" placeholder="email" />
-    <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
-    </span>
-  </p>
-</div>
-<div class="field">
-  <p class="control">
-    <button class="button is-success">Summit</button>
-    <a href="/fault" class="button">Regresar</a>
-  </p>
+<form action="/fault" method="post">
+  <div class="field">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <p class="control has-icons-left has-icons-right">
+      <input
+        class="input"
+        type="text"
+        name="doneDate"
+        placeholder="yyyy-mm-dd"
+        required
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-calendar-day"></i>
+      </span>
+      <span class="icon is-small is-right">
+        <i class="fas fa-check"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input
+        class="input"
+        type="text"
+        name="reason"
+        placeholder="Razón de la falta"
+        required
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-exclamation-circle"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input
+        class="input"
+        type="email"
+        name="email"
+        placeholder="Correo del colaborador"
+        required
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-envelope"></i>
+      </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control">
+      <button class="button is-success">Enviar</button>
+      <a href="/fault" class="button">Regresar</a>
+    </p>
+  </div>
 </form>
-</div>
-<%- include('includes/_footer') %>
+
+<%- include('includes/_footer') %> <%- include('includes/_footer') %>

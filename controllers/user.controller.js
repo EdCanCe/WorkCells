@@ -17,7 +17,7 @@ exports.get_login = (req, res, next) => {
 exports.post_login = (req, res, next) => {
   const { email, password } = req.body;
 
-  // Buscar usuario en la base de datos usando el modelo
+  // Buscar usuario en la base de datos
   Usuario.fetchOne(email)
     .then(([rows]) => {
       if (rows.length === 0) {
@@ -26,19 +26,32 @@ exports.post_login = (req, res, next) => {
       }
 
       const user = rows[0];
+
       // Compara contraseñas
-      if(password === user.password){
-        req.session.isLoggedIn = true;
+      /* Comentado hasta que este Superadmin registra alta de empleados
+      bcrypt.compare(password, user.password).then((doMatch) => {
+        if (doMatch) {
+          req.session.isLoggedIn = true;
           return req.session.save(() => res.redirect("/home"));
         } else {
           req.session.warning = "Usuario y/o contraseña incorrectos";
-          res.redirect("/login");
+          return res.redirect("/login");
         }
-      }
+      });*/
+      // borrar esta comparación cuando este encriptada la contraseña
 
-    )
+      // Comparación insegura (solo temporal hasta que uses bcrypt)
+      if (password === user.passwd) {
+        req.session.isLoggedIn = true;
+        return req.session.save(() => res.redirect("/home"));
+      } else {
+        req.session.warning = "Usuario y/o contraseña incorrectos";
+        return res.redirect("/login");
+      }
+    })
     .catch((error) => {
       console.error("Error al buscar el usuario:", error);
+      req.session.warning = "Hubo un problema con el servidor";
       res.redirect("/login");
     });
 };

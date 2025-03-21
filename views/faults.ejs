@@ -1,66 +1,41 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
-<div class="content">
-  <div class="card">
-    <div class="card-content">
-      <h2>Falta administrativa</h2>
-      <p>
-        En este apartado el superadmin podrá ver, añadir y filtrar faltas
-        administrativas y el colaborador podrá ver sus faltas
-      </p>
-    </div>
-    <table class="table">
+
+<body>
+  <div class="container">
+    <!-- Mostrar mensaje si existe -->
+    <% if (info) { %>
+    <div class="notification is-success"><%= info %></div>
+    <% } %>
+
+    <h1>Últimas 10 Faltas</h1>
+
+    <table border="1">
       <thead>
         <tr>
-          <th><abbr title="id">id</abbr></th>
-          <th><abbr title="nombre">nombre</abbr></th>
-          <th>puesto</th>
-          <th><abbr title="num">núm de falta</abbr></th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Fecha de la Falta</th>
+          <th>Número de Faltas</th>
         </tr>
       </thead>
       <tbody>
+        <% fault.forEach(falta => { %>
         <tr>
-          <th>2</th>
+          <td><%= falta.nombre %></td>
+          <td><%= falta.correo %></td>
           <td>
-            <a href="/fault/check" title="Luis Lopez">Luis Lopez</a>
+            <%= new Date(falta.fecha_falta).toLocaleDateString('es-MX') %>
           </td>
-          <td>Lider de departamento</td>
-          <td>2</td>
+          <td><%= falta.num_faltas %></td>
         </tr>
-        <tr>
-          <th>3</th>
-          <td>
-            <a href="/check" title="Andres Juarez">Andres Juarez</a>
-          </td>
-          <td>colaborador</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <th>7</th>
-          <td>
-            <a href="fault/check" title="Leo Cervantes">Leo Cervantes</a>
-          </td>
-          <td>Lider de departamento</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <th>4</th>
-          <td>
-            <a href="fault/check" title="Emilio Guzman">Emilio Guzman</a>
-          </td>
-          <td>colaborador</td>
-          <td>3</td>
-        </tr>
-        <tr>
-          <th>9</th>
-          <td>
-            <a href="fault/check" title="Juan Rivera">Juan Rivera</a>
-          </td>
-          <td>colaborador</td>
-          <td>1</td>
-        </tr>
+        <% }) %>
       </tbody>
     </table>
-    <a class="button" href="/fault/add">Añadir falta administrativa</a>
+
+    <div class="back-link">
+      <a href="/fault/add">Registrar Nueva Falta</a>
+    </div>
   </div>
-</div>
+</body>
+
 <%- include('includes/_footer') %>

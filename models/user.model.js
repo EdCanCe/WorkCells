@@ -4,6 +4,6 @@ module.exports = class Usuario {
     
     // Obtiene un usuario por su email
     static fetchOne(email) {
-        return db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
+        return db.execute('SELECT passwd FROM user WHERE mail = ?', [email]);
     }
 };
