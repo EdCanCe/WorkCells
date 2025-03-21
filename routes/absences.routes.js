@@ -7,6 +7,7 @@ router.get("/aprove", absences_controllers.get_aprove);
 
 router.get("/add", absences_controllers.get_add);
 router.post("/add", absences_controllers.post_add)
+
 router.get("/check", absences_controllers.get_check);
 
 router.get("/", absences_controllers.get_root);
