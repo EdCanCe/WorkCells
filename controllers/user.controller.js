@@ -1,5 +1,4 @@
 const Usuario = require("../models/user.model");
-const bcrypt = require("bcryptjs");
 
 // Renderiza la vista de login
 exports.get_login = (req, res, next) => {
@@ -27,22 +26,11 @@ exports.post_login = (req, res, next) => {
 
       const user = rows[0];
 
-      // Compara contraseñas
-      /* Comentado hasta que este Superadmin registra alta de empleados
-      bcrypt.compare(password, user.password).then((doMatch) => {
-        if (doMatch) {
-          req.session.isLoggedIn = true;
-          return req.session.save(() => res.redirect("/home"));
-        } else {
-          req.session.warning = "Usuario y/o contraseña incorrectos";
-          return res.redirect("/login");
-        }
-      });*/
-      // borrar esta comparación cuando este encriptada la contraseña
-
-      // Comparación insegura (solo temporal hasta que uses bcrypt)
+      // Comparación de contraseñas sin bcrypt
       if (password === user.passwd) {
         req.session.isLoggedIn = true;
+        req.session.userID = user.userID; // Asignar userID a la sesión
+        console.log("UserID from session:", req.session.userID);
         return req.session.save(() => res.redirect("/home"));
       } else {
         req.session.warning = "Usuario y/o contraseña incorrectos";

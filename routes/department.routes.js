@@ -1,11 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const departmentController = require('../controllers/department.controller')
+const departmentController = require("../controllers/department.controller");
+const isAuth = require("../util/is-auth");
 
-router.get('/check', departmentController.get_check_department);
-router.get('/check/modify', departmentController.get_modify_department);
-router.get('/add', departmentController.get_add_department);
-router.get('/', departmentController.get_departments);
+router.get("/check",isAuth, departmentController.get_check_department);
+router.get("/check/modify",isAuth, departmentController.get_modify_department);
+router.get("/add",isAuth, departmentController.get_add_department);
+router.get("/", isAuth,departmentController.get_departments);
 
 module.exports = router;

@@ -5,10 +5,15 @@ exports.get_vacation = (request, response, next) => {
 };
 
 exports.get_approve_vacation = (request, response, next) => {
+  console.log("Session:", request.session);
+  console.log("UserID from session:", request.session.userID);
+  const employeedId = request.session.userID;
+  console.log(employeedId);
+
   const mensaje = request.session.info || "";
   request.session.info = ""; // Limpiar la sesión después de usar el mensaje
 
-  Vacation.fetchAll()
+  Vacation.fetchAll(employeedId)
     .then(([rows, fieldData]) => {
       // Asegúrate de pasar "rows" como "vacations"
       response.render("approveVacation", {

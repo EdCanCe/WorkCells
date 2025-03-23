@@ -2,14 +2,17 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 80px; /* Ancho de la barra lateral */
-  height: 100vh; /* Ocupa toda la altura de la pantalla */
-  background-color: #12121b; /* Color oscuro de fondo */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 1rem;
-  border-right: 1px solid #333;
+  width: 200px;   /* Ajusta el ancho según necesites */
+  height: 100vh;  /* Toda la altura de la ventana */
+  background-color: #ece7e7; /* Color de fondo */
+  padding: 20px;
+  color: white;
+}
+
+.content {
+  margin-left: 200px; /* Mismo valor (o más) que el width del sidebar */
+  padding: 20px;
+  color: white;
 }
 
 .sidebar a {
