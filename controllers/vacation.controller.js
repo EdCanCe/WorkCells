@@ -1,10 +1,10 @@
 const Vacation = require("../models/vacation.model");
 
-exports.get_vacation = (request, response, next) => {
+exports.getVacation = (request, response, next) => {
   response.render("ownVacation");
 };
 
-exports.get_approve_vacation = (request, response, next) => {
+exports.getApproveVacation = (request, response, next) => {
   console.log("Session:", request.session);
   console.log("UserID from session:", request.session.userID);
   const employeedId = request.session.userID;
@@ -29,14 +29,14 @@ exports.get_approve_vacation = (request, response, next) => {
     });
 };
 
-exports.get_add_vacation = (request, response, next) => {
+exports.getAddVacation = (request, response, next) => {
   response.render("addVacation");
 };
 
-exports.get_check_vacation = (request, response, next) => {
+exports.getCheckVacation = (request, response, next) => {
   response.render("checkVacation");
 };
 
-exports.get_modify_vacation = (request, response, next) => {
+exports.getModifyVacation = (request, response, next) => {
   response.render("modifyVacation");
 };

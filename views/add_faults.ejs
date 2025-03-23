@@ -1,5 +1,7 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
+
 <h1 class="title">Escribe los datos del colaborador y una Descripción</h1>
+
 <form action="/fault" method="post">
   <div class="field">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
@@ -19,6 +21,7 @@
       </span>
     </p>
   </div>
+
   <div class="field">
     <p class="control has-icons-left">
       <input
@@ -33,6 +36,7 @@
       </span>
     </p>
   </div>
+
   <div class="field">
     <p class="control has-icons-left">
       <input
@@ -47,6 +51,7 @@
       </span>
     </p>
   </div>
+
   <div class="field">
     <p class="control">
       <button class="button is-success">Enviar</button>
@@ -55,4 +60,5 @@
   </div>
 </form>
 
-<%- include('includes/_footer') %> <%- include('includes/_footer') %>
+<%- include('includes/_footer') %>
+<!-- Eliminar una instancia de <%- include('includes/_footer') %> -->

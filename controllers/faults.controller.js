@@ -1,6 +1,6 @@
 const Fault = require("../models/faults.model");
 
-exports.get_add = (request, response, next) => {
+exports.getAdd = (request, response, next) => {
   response.render("add_faults", {
     isLoggedIn: request.session.isLoggedIn || false,
     info:  request.session.info || '',
@@ -8,7 +8,7 @@ exports.get_add = (request, response, next) => {
   });
 };
 
-exports.post_add = (request, response, next) => {
+exports.postAdd = (request, response, next) => {
   console.log(request.body); // Verifica que los datos lleguen correctamente
 
   // Validación de valores en el cuerpo de la solicitud
@@ -34,11 +34,11 @@ exports.post_add = (request, response, next) => {
     });
 };
 
-exports.get_check = (request, response, next) => {
+exports.getCheck = (request, response, next) => {
   response.render("check_fault");
 };
 
-exports.get_root = (request, response, next) => {
+exports.getRoot = (request, response, next) => {
   const mensaje = request.session.info || "";
 
   // Limpiar la sesión después de usar el mensaje
