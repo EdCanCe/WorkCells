@@ -1,4 +1,4 @@
-@startuml CU02 - Superadmin registra alta de empleado
+@startuml CU01 - Superadmin registra alta de empleado
 |Super Admin|
 start
 :Seleccionar registrar colaborador;
@@ -15,8 +15,8 @@ repeat:Registra datos requeridos por el sistema;
     - RFC
     - CURP
     - Contraseña
-    - Bandera de contraseña
     - Dirección
+    - Rol
     - Modalidad de trabajo;
 :Guarda los datos registrados;
 |Sistema|

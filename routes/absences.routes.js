@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const absences_controllers = require("../controllers/absences.controllers");
+const absences_controllers = require("../controllers/absences.controller");
 
 router.get("/aprove", absences_controllers.get_aprove);
 
