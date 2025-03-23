@@ -4,51 +4,194 @@
   <div class="card bg-white shadow-md rounded-lg p-4">
     <div class="card-content">
       <h1 class="text-3xl font-semibold mb-4">Agregar empleado</h1>
-      <p class="text-lg mb-6">
-        En esta vista, el super admin podrá agregar a nuevos empleados.
-      </p>
-      <!-- Aquí puedes agregar el formulario de alta de empleado -->
-      <form action="/employee/add" method="POST">
+      <form action="/employee" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="space-y-4">
           <div class="field">
-            <label for="employeeName" class="block text-lg font-medium"
-              >Nombre del empleado</label
+            <label for="curp" class="block text-lg font-medium">CURP</label>
+            <input
+              type="text"
+              id="curp"
+              name="curp"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              placeholder="CURP del empleado"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="rfc" class="block text-lg font-medium">RFC</label>
+            <input
+              type="text"
+              id="rfc"
+              name="rfc"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              placeholder="RFC del empleado"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="birthName" class="block text-lg font-medium"
+              >Nombre</label
             >
             <input
               type="text"
-              id="employeeName"
-              name="employeeName"
+              id="birthName"
+              name="birthName"
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="Nombre completo"
               required
             />
           </div>
+
           <div class="field">
-            <label for="employeeEmail" class="block text-lg font-medium"
-              >Correo del empleado</label
+            <label for="surname" class="block text-lg font-medium"
+              >Apellido</label
+            >
+            <input
+              type="text"
+              id="surname"
+              name="surname"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              placeholder="Apellido"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="mail" class="block text-lg font-medium"
+              >Correo Electrónico</label
             >
             <input
               type="email"
-              id="employeeEmail"
-              name="employeeEmail"
+              id="mail"
+              name="mail"
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="correo@ejemplo.com"
               required
             />
           </div>
+
           <div class="field">
-            <label for="employeeRole" class="block text-lg font-medium"
-              >Rol del empleado</label
+            <label for="zipCode" class="block text-lg font-medium"
+              >Código Postal</label
             >
             <input
               type="text"
-              id="employeeRole"
-              name="employeeRole"
+              id="zipCode"
+              name="zipCode"
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="Rol del empleado"
+              placeholder="Código Postal"
               required
             />
           </div>
+
+          <div class="field">
+            <label for="houseNumber" class="block text-lg font-medium"
+              >Número de Casa</label
+            >
+            <input
+              type="text"
+              id="houseNumber"
+              name="houseNumber"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              placeholder="Número de casa"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="streetName" class="block text-lg font-medium"
+              >Calle</label
+            >
+            <input
+              type="text"
+              id="streetName"
+              name="streetName"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              placeholder="Nombre de la calle"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="colony" class="block text-lg font-medium"
+              >Colonia</label
+            >
+            <input
+              type="text"
+              id="colony"
+              name="colony"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              placeholder="Colonia"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="workModality" class="block text-lg font-medium"
+              >Modalidad de Trabajo</label
+            >
+            <select
+              id="workModality"
+              name="workModality"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              required
+            >
+              <option value="0">Presencial</option>
+              <option value="1">Remoto</option>
+              <option value="2">Híbrido</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="userRoleIDFK" class="block text-lg font-medium"
+              >Rol del Usuario</label
+            >
+            <select
+              id="userRoleIDFK"
+              name="userRoleIDFK"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              required
+            >
+              <option value="26c5c259-bb65-4e90-ada7-41a56d6a2703">
+                Super Admin
+              </option>
+              <option value="9648deba-0415-4e41-9889-ba5c02b8c7e1">
+                Lider de Departamento
+              </option>
+              <option value="df6efde1-33f6-42f4-95c8-59b077c62982">
+                Colaborador
+              </option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="countryUserIDFK" class="block text-lg font-medium"
+              >País</label
+            >
+            <select
+              id="countryUserIDFK"
+              name="countryUserIDFK"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              required
+            >
+              <option value="b306beb7-1bbc-48b3-85b2-0f476ad62890">
+                México
+              </option>
+              <option value="9bebea57-5038-477d-9f28-224c934a4f46">
+                Estados Unidos
+              </option>
+              <option value="698bf6b9-c3dd-46a2-8659-ee99a33edff3">
+                Argentina
+              </option>
+              <option value="500dfd6b-c9f5-4e0e-a72d-5511037ea19f">
+                Colombia
+              </option>
+            </select>
+          </div>
+
           <div class="flex justify-end mt-4">
             <button
               type="submit"
