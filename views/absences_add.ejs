@@ -1,56 +1,64 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
-<h1 class="title">Escribe los datos sobre tu Ausencia</h1>
-<div class="field">
-  <p class="control has-icons-left has-icons-right">
-    <h4>Razón de la ausencia</h4>
-    <input
-      class="input"
-      type="text"
-      placeholder="razón"
-    />
-    <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-    <span class="icon is-small is-right">
-      <i class="fas fa-check"></i>
-    </span>
-  </p>
-</div>
-<div class="field">
-  <p class="control has-icons-left">
-    <h4>Fecha de Inicio de Ausencia</h4>
-    <input class="input" type="text" placeholder="yyyy-mm-dd" />
-    <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
-    </span>
-  </p>
-</div>
-<div class="field">
-  <p class="control has-icons-left">
-    <h4>Fecha de Regreso</h4>
-    <input class="input" type="text" placeholder="yyyy-mm-dd" />
-    <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
-    </span>
-  </p>
-</div>
-<div class="file">
+
+<div class="content p-6">
+  <h1 class="text-3xl font-semibold mb-6">
+    Escribe los datos sobre tu Ausencia
+  </h1>
+
+  <!-- Razón de la ausencia -->
+  <div class="field mb-4">
+    <label class="label">Razón de la ausencia</label>
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" type="text" placeholder="Razón" />
+      <span class="icon is-small is-left">
+        <i class="fas fa-file-alt"></i>
+      </span>
+      <span class="icon is-small is-right">
+        <i class="fas fa-check-circle"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Fecha de inicio de ausencia -->
+  <div class="field mb-4">
+    <label class="label">Fecha de Inicio de Ausencia</label>
+    <div class="control has-icons-left">
+      <input class="input" type="date" placeholder="yyyy-mm-dd" />
+      <span class="icon is-small is-left">
+        <i class="fas fa-calendar-day"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Fecha de regreso -->
+  <div class="field mb-4">
+    <label class="label">Fecha de Regreso</label>
+    <div class="control has-icons-left">
+      <input class="input" type="date" placeholder="yyyy-mm-dd" />
+      <span class="icon is-small is-left">
+        <i class="fas fa-calendar-check"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- Subir archivo -->
+  <div class="file mb-4">
     <label class="file-label">
       <input class="file-input" type="file" name="resume" />
       <span class="file-cta">
         <span class="file-icon">
           <i class="fas fa-upload"></i>
         </span>
-        <span class="file-label"> Choose a file… </span>
+        <span class="file-label">Elige un archivo...</span>
       </span>
     </label>
   </div>
-<div class="field">
-  <p class="control">
-    <button class="button is-success">Summit</button>
-    <a href="/absence" class="button">Regresar</a>
-  </p>
-  
+
+  <!-- Botones -->
+  <div class="field is-flex is-justify-content-center mt-6">
+    <button class="button is-success is-rounded mr-4">Enviar</button>
+    <a href="/absence" class="button is-danger is-rounded">Regresar</a>
+  </div>
 </div>
 
 <%- include('includes/_footer') %>

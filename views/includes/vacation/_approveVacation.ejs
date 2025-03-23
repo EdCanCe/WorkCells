@@ -1,35 +1,50 @@
-<div class="content">
-  <div class="card">
-    <div class="card-content">
-      <h2>Solicitudes de Vacaciones</h2>
+<div class="p-6">
+  <div class="bg-white shadow-lg rounded-lg">
+    <div class="p-6">
+      <h2 class="text-2xl font-semibold mb-4">Solicitudes de Vacaciones</h2>
     </div>
-    <div class="card-content">
-      <div class="content has-text-centered box">
-        <table class="table">
-          <thead>
+    <div class="p-6">
+      <div class="overflow-x-auto bg-gray-100 p-4 rounded-lg shadow">
+        <table class="min-w-full table-auto">
+          <thead class="bg-gray-200">
             <tr>
-              <th>ID</th>
-              <th>Motivo</th>
-              <th>Fecha Inicio</th>
-              <th>Fecha Fin</th>
-              <th>Estatus</th>
+              <th class="px-4 py-2 text-left">ID</th>
+              <th class="px-4 py-2 text-left">Motivo</th>
+              <th class="px-4 py-2 text-left">Fecha Inicio</th>
+              <th class="px-4 py-2 text-left">Fecha Fin</th>
+              <th class="px-4 py-2 text-left">Estatus</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>01</th>
-              <th>Ir a la playa con mi familia</th>
-              <th>10/08/2024</th>
-              <th>20/08/2024</th>
-              <th>
-                <a href="" class="button">Aprobar</a>
-                <a href="" class="button">Rechazar</a>
-              </th>
+            <!-- Iterar sobre las solicitudes de vacaciones -->
+            <% vacations.forEach(vacation => { %>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2"><%= vacation.id %></td>
+              <td class="px-4 py-2"><%= vacation.reason %></td>
+              <td class="px-4 py-2"><%= vacation.startDate %></td>
+              <td class="px-4 py-2"><%= vacation.endDate %></td>
+              <td class="px-4 py-2">
+                <a
+                  href="/approve/<%= vacation.id %>"
+                  class="inline-block px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                  >Aprobar</a
+                >
+                <a
+                  href="/reject/<%= vacation.id %>"
+                  class="inline-block px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 ml-2"
+                  >Rechazar</a
+                >
+              </td>
             </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-  <a href="/vacation" class="button">Regresar</a>
+  <a
+    href="/vacation"
+    class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+    >Regresar</a
+  >
 </div>

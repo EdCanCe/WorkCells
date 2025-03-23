@@ -1,8 +1,9 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
+
 <div class="content">
   <div class="card">
     <div class="card-content">
-      <h2>Ausencias</h2>
+      <h2 class="title">Ausencias</h2>
       <p>
         Aquí el colaborador podrá ver la razón de su falta y los días que va a
         faltar.
@@ -19,14 +20,14 @@
             <tr>
               <th>
                 <a href="/absence/check"
-                  >Me enferme de covid y el doctor me dió 3 días de reposo</a
+                  >Me enfermé de COVID y el doctor me dio 3 días de reposo</a
                 >
               </th>
               <td>4</td>
             </tr>
             <tr>
               <th>
-                <a href="absence/check"
+                <a href="/absence/check"
                   >Va a ser el cumpleaños de mi madre y cumple 90 años.</a
                 >
               </th>
@@ -34,24 +35,29 @@
             </tr>
             <tr>
               <th>
-                <a href="absence/check"
-                  >Problemas de transporte, se descompuso el autobus.</a
+                <a href="/absence/check"
+                  >Problemas de transporte, se descompuso el autobús.</a
                 >
               </th>
               <td>1</td>
             </tr>
             <tr>
-              <th><a href="absence/check">Emergencia con tu mascota.</a></th>
+              <th>
+                <a href="/absence/check">Emergencia con tu mascota.</a>
+              </th>
               <td>2</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div class="is-flex is-justify-content-center">
-      <a class="button mr-2" href="/absence/aprove">request</a>
-      <a class="button" href="/absence/add">add</a>
+
+    <!-- Botones de acción -->
+    <div class="is-flex is-justify-content-center mt-4">
+      <a class="button is-primary mr-2" href="/absence/approve">Solicitar</a>
+      <a class="button is-success" href="/absence/add">Agregar</a>
     </div>
-    <%- include('includes/_footer') %>
   </div>
 </div>
+
+<%- include('includes/_footer') %>
