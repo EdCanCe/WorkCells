@@ -16,6 +16,7 @@ repeat:Registra datos requeridos por el sistema;
     - CURP
     - Contraseña
     - Dirección
+    - Rol
     - Modalidad de trabajo;
 :Guarda los datos registrados;
 |Sistema|
