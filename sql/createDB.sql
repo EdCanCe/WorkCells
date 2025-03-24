@@ -117,6 +117,7 @@ CREATE TABLE oneOnOne (
     oneOnOneID VARCHAR(40) NOT NULL PRIMARY KEY,
     expectedTime TINYINT NOT NULL,
     meetingDate TIMESTAMP NOT NULL,
+    meetingLink VARCHAR(50) NOT NULL,
     oneOnOneUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT oneOnOneUserIDFK FOREIGN KEY (oneOnOneUserIDFK) REFERENCES user(userID)
 );
