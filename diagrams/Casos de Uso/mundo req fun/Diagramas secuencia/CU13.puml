@@ -1,0 +1,75 @@
+@startuml
+actor Navegador
+boundary vacation.routes
+boundary calendar.routes
+boundary addVacation.ejs
+control vacation.controller
+entity vacation.model
+database mysql
+
+autonumber
+
+activate Navegador
+Navegador -> vacation.routes : GET /vacation/add
+deactivate Navegador
+
+activate vacation.routes
+vacation.routes -> vacation.controller : getAdd(req, res)
+deactivate vacation.routes
+
+activate vacation.controller
+
+vacation.controller ->> vacation.model : fetchAvailableDays(req.session.userID)
+activate vacation.model
+    vacation.model ->> mysql : execute(QUERY)
+    activate mysql
+        mysql -->> vacation.model : rows
+    deactivate mysql
+    vacation.model -->> vacation.controller : rows
+deactivate vacation.model
+
+vacation.controller -> addVacation.ejs : res.render('addVacation.ejs', rows)
+deactivate vacation.controller
+
+activate addVacation.ejs
+addVacation.ejs -> Navegador : HTML
+deactivate addVacation.ejs
+
+activate Navegador
+
+alt AJAX: availableDays < 1
+
+Navegador -> calendar.routes : window.location.replace('/calendar')
+
+activate calendar.routes
+deactivate calendar.routes
+
+else
+
+Navegador -> vacation.routes: POST /vacation/add
+deactivate Navegador
+
+activate vacation.routes
+vacation.routes -> vacation.controller : postAdd(req, res)
+deactivate vacation.routes
+
+activate vacation.controller
+
+vacation.controller -> vacation.model : new Vacation(VARIABLES)
+
+vacation.controller ->> vacation.model : save()
+activate vacation.model
+    vacation.model ->> mysql : execute(QUERY)
+    activate mysql
+        mysql -->> vacation.model : Query OK
+    deactivate mysql
+    vacation.model -->> vacation.controller : promise
+deactivate vacation.model
+
+vacation.controller -> calendar.routes : res.redirect('/calendar')
+deactivate vacation.controller
+
+activate calendar.routes
+deactivate calendar.routes
+
+end
