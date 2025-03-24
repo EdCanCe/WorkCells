@@ -2,7 +2,16 @@ const { error } = require("console");
 const Holiday = require("../models/holiday.model");
 
 exports.getHolidays = (request, response, next) => {
-  response.render("holiday");
+  const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
+
+  // Limpiar el mensaje después de usarlo
+  request.session.info = "";
+
+  response.render("holiday", {
+    isLoggedIn: request.session.isLoggedIn || false,
+    info: mensaje, // Pasamos el mensaje de la sesión
+    csrfToken: request.csrfToken(),
+  });
 };
 
 exports.getHolidaysAdd = (request, response, next) => {
@@ -27,11 +36,10 @@ exports.postHolidaysAdd = (request, response, next) => {
   request.session.info = "";
 
   const holiday = new Holiday(
-    usedHolidayID,
     request.body.usedDate,
     request.body.usedTemplateHolidayIDFK
   );
-
+  console.log(request.body);
   holiday
     .save()
     .then(() => {
@@ -40,7 +48,7 @@ exports.postHolidaysAdd = (request, response, next) => {
     })
     .catch((error) => {
       console.error(error);
-      request.session.info = "Error al registrar dia feriado.";
+      request.session.info = error.message || "Error al registrar dia feriado.";
       response.redirect("/holiday/add");
     });
 };

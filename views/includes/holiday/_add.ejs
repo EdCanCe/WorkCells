@@ -5,15 +5,15 @@
       <% if (info) { %>
       <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4"><%= info %></div>
       <% } %>
-      <form action="/holiday" method="POST">
+      <form action="/holiday/add" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="field">
-          <label for="templateHolidayIDFK" class="block text-lg font-medium"
+          <label for="usedTemplateHolidayIDFK" class="block text-lg font-medium"
             >Selecciona Dia Feriado</label
           >
           <select
-            id="templateHolidayIDFK"
-            name="templateHolidayIDFK"
+            id="usedTemplateHolidayIDFK"
+            name="usedTemplateHolidayIDFK"
             class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
             required
           >
@@ -50,22 +50,21 @@
           >
         </div>
       </form>
-      <p class="text-lg">En esta ruta, se podrá crear un día feriado</p>
     </div>
   </div>
-</div>
 
-<div class="p-6">
-  <div class="bg-white shadow-md rounded-lg mb-6">
-    <div class="p-6">
-      <div class="bg-gray-50 p-6 rounded-lg mb-4">
-        <h3 class="text-xl font-semibold mb-4">Día específico</h3>
-        <p class="text-lg mb-4">Entrar a un día en específico</p>
-        <a
-          href="/holiday/check"
-          class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-          >Consultar</a
-        >
+  <div class="p-6">
+    <div class="bg-white shadow-md rounded-lg mb-6">
+      <div class="p-6">
+        <div class="bg-gray-50 p-6 rounded-lg mb-4">
+          <h3 class="text-xl font-semibold mb-4">Día específico</h3>
+          <p class="text-lg mb-4">Entrar a un día en específico</p>
+          <a
+            href="/holiday/check"
+            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            >Consultar</a
+          >
+        </div>
       </div>
     </div>
   </div>
