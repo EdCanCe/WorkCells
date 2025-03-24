@@ -59,4 +59,3 @@ module.exports = class Absence {
     );
   }
 };
-const db = require("../util/database"); // Asegúrate de importar tu módulo de conexión
