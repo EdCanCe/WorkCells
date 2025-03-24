@@ -1,28 +1,60 @@
+const Fault = require("../models/faults.model");
 
-
-exports.get_add = (request, response, next) => {
-  console.log(request.session.username);
-  Plantas.fetchAll().then(([plantas, fieldData]) => {
-      response.render('add_faults', {
-          isLoggedIn: request.session.isLoggedIn || false,
-          username: request.session.username || '',
-          csrfToken: request.csrfToken(),
-          privilegios: request.session.privilegios || [],
-          plantas: plantas,
-      });
-  }).catch((error) => {
-      console.log(error);
+exports.getAdd = (request, response, next) => {
+  response.render("add_faults", {
+    isLoggedIn: request.session.isLoggedIn || false,
+    info:  request.session.info || '',
+    csrfToken: request.csrfToken(),
   });
 };
 
-exports.post_add = (request, response, next) => {
-  console.log(request.body);
+exports.postAdd = (request, response, next) => {
+  console.log(request.body); // Verifica que los datos lleguen correctamente
+
+  // Validación de valores en el cuerpo de la solicitud
+  if (!request.body.reason || !request.body.doneDate || !request.body.email) {
+    return response.redirect("/error"); // Redirigir a una página de error si faltan datos
+  }
+
+  // Crear un nuevo objeto Fault
+  const faults = new Fault(
+    request.body.reason,
+    request.body.doneDate,
+    request.body.email
+  );
+
+  faults.save()
+    .then(() => {
+      request.session.info = `Fault of ${faults.email} created`;
+      response.redirect("/fault");
+    })
+    .catch((error) => {
+      console.error(error); // Mejor manejo de error
+      response.status(500).send("Error al guardar los datos.");
+    });
 };
 
-exports.get_check = (request, response, next) => {
+exports.getCheck = (request, response, next) => {
   response.render("check_fault");
 };
 
-exports.get_root = (request, response, next) => {
-  response.render("faults");
+exports.getRoot = (request, response, next) => {
+  const mensaje = request.session.info || "";
+
+  // Limpiar la sesión después de usar el mensaje
+  request.session.info = "";
+
+  Fault.fetchAll()
+    .then(([rows, fieldData]) => {
+      response.render("faults", {
+        isLoggedIn: request.session.isLoggedIn || false,
+        username: request.session.username || "",
+        fault: rows,
+        info: mensaje,
+      });
+    })
+    .catch((error) => {
+      console.error(error); // Mejor manejo de error
+      response.status(500).send("Error al obtener los datos.");
+    });
 };

@@ -1,12 +1,22 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
-<div class="content">
-  <h1>Nombre del colaborador</h1>
-  <p>
+
+<div class="content p-6">
+  <h1 class="text-3xl font-semibold mb-4">Nombre del colaborador</h1>
+  <p class="text-lg text-gray-700">
     Descripción de la ausencia: Lorem ipsum, dolor sit amet consectetur
     adipisicing elit. Voluptate natus quibusdam accusamus aperiam? Quis vitae,
     quo asperiores aliquid laborum sequi tenetur ipsa eos sint officia in
     exercitationem cumque quos doloribus!
   </p>
+
+  <div class="mt-6">
+    <a
+      href="/absence"
+      class="button bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600"
+    >
+      Regresar
+    </a>
+  </div>
 </div>
-<a href="/absence" class="button">Regresar</a>
+
 <%- include('includes/_footer') %>

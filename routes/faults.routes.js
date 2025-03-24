@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const fault_controllers = require("../controllers/faults.controller");
+const faultControllers = require("../controllers/faults.controller");
+const isAuth = require('../util/is-auth');
 
-router.get("/add", fault_controllers.get_add);
-router.post("/add", fault_controllers.post_add);
-router.get("/check", fault_controllers.get_check);
-router.get("/",fault_controllers.get_root);
+router.get("/add",isAuth, faultControllers.getAdd);
+router.post("/",isAuth, faultControllers.postAdd);
+router.get("/check",isAuth, faultControllers.getCheck);
+router.get("/",isAuth, faultControllers.getRoot);
 module.exports = router;

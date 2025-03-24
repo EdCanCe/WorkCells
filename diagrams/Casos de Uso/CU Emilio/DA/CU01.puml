@@ -1,0 +1,42 @@
+@startuml CU01 - Superadmin registra alta de empleado
+|Super Admin|
+start
+:Seleccionar registrar colaborador;
+:Ingresa Correo electrónico del colaborador;
+|Sistema|
+if(¿Existe coincidencia en base de datos?) then 
+->NO;
+|Super Admin|
+repeat:Registra datos requeridos por el sistema;
+:Registra:
+    - Nombre    
+    - Apellido
+    - Correo electrónico
+    - RFC
+    - CURP
+    - Contraseña
+    - Dirección
+    - Rol
+    - Modalidad de trabajo;
+:Guarda los datos registrados;
+|Sistema|
+repeat while (¿Los campos estan completos?) is (NO)
+->SI;
+:Registra el nuevo empleado en la base de datos.;
+stop
+else(SI)
+:Muestra la coincidencia al Super Admin;
+if(¿El empleado esta activo o inactivo?) then
+-> Inactivo;
+|Super Admin|
+:Modifica de inactivo a activo;
+|Sistema|
+:Guarda en la base de datos el cambio de estado;
+stop
+|Sistema|
+else(Activo)
+:Termina;
+stop
+
+@enduml
+

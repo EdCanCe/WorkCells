@@ -1,0 +1,32 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;   /* Ajusta el ancho según necesites */
+  height: 100vh;  /* Toda la altura de la ventana */
+  background-color: #ece7e7; /* Color de fondo */
+  padding: 20px;
+  color: white;
+}
+
+.content {
+  margin-left: 200px; /* Mismo valor (o más) que el width del sidebar */
+  padding: 20px;
+  color: white;
+}
+
+.sidebar a {
+  color: #ccc;
+  text-decoration: none;
+  margin: 20px 0;
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+.sidebar a:hover {
+  color: #3b3bde; /* Color al hacer hover */
+}
+
+.login {
+  margin-top: 100px; 
+}

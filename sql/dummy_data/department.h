@@ -20,35 +20,35 @@ Randomizer<string> Dtitle {
 
 class Department {
     private:
-        int idDepartment;
-        int idEnterprise;
+        string idDepartment;
+        string idEnterprise;
         string title;
 
     public:
-        Department(int, string);
-        int getID();
+        Department(string, string);
+        string getId();
         void print();
 };
 
 Randomizer<Department> department;
 
-int Department::getID(){
+string Department::getId(){
     return idDepartment;
 }
 
-Department::Department(int idEnterprise, string title) {
-    this->idDepartment = department.size() + 1;
+Department::Department(string idEnterprise, string title) {
+    this->idDepartment = generateUUID();
     this->idEnterprise = idEnterprise;
     this->title = title;
 }
 
 void Department::print() {
-    cout << "INSERT INTO department(enterpriseIDFK, title) values(" << idEnterprise << ", '" << title << "'); \n";
+    cout << "INSERT INTO department(departmentID, enterpriseIDFK, title) values('" << idDepartment << "', '" << idEnterprise << "', '" << title << "'); \n";
 }
 
 void createDepartment(int x) {
     for (int i = 0; i < x; i++) {
-        department.add(Department(enterprise.random().getID(), Dtitle.random()));
+        department.add(Department(enterprise.random().getId(), Dtitle.random()));
     }
     
 }
