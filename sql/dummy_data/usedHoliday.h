@@ -65,7 +65,7 @@ string UsedHoliday::getId() {
 }
 
 void UsedHoliday:: print() {
-    cout << "INSERT INTO usedHoliday(templateHolidayID, usedDate, usedTemplateHolidayID) VALUES('" << templateHolidayID << "', '" << usedDate << "', '" << usedTemplateHolidayID << "'); \n";
+    cout << "INSERT INTO usedHoliday(usedHolidayID, usedDate, usedTemplateHolidayIDFK) VALUES('" << templateHolidayID << "', '" << usedDate << "', '" << usedTemplateHolidayID << "'); \n";
 }
 
 

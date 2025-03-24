@@ -6,10 +6,10 @@ CREATE TABLE templateHoliday (
 );
 
 CREATE TABLE usedHoliday (
-    templateHolidayID VARCHAR(40) NOT NULL PRIMARY KEY,
+    usedHolidayID VARCHAR(40) NOT NULL PRIMARY KEY,
     usedDate DATE NOT NULL,
-    usedTemplateHolidayID VARCHAR(40),
-    CONSTRAINT usedTemplateHolidayID FOREIGN KEY (usedTemplateHolidayID) REFERENCES templateHoliday(templateHolidayID)
+    usedTemplateHolidayIDFK VARCHAR(40),
+    CONSTRAINT usedTemplateHolidayIDFK FOREIGN KEY (usedTemplateHolidayIDFK) REFERENCES templateHoliday(templateHolidayID)
 );
 
 CREATE TABLE privilege (
