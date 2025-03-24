@@ -1,15 +1,17 @@
-exports.getHolidays = (req, res, next) => {
-    res.render('holiday');
+exports.getHolidays = (require, response, next) => {
+  response.render("holiday");
 };
 
-exports.getHolidaysAdd = (req, res, next) => {
-    res.render('holidayAdd');
+exports.getHolidaysAdd = (require, response, next) => {
+  response.render("holidayAdd");
 };
 
-exports.getHoliday = (req, res, next) => {
-    res.render('holidayCheck');
+exports.postHolidaysAdd = (require, response, next) => {};
+
+exports.getHoliday = (require, response, next) => {
+  response.render("holidayCheck");
 };
 
-exports.getHolidayModify = (req, res, next) => {
-    res.render('holidayModify');
+exports.getHolidayModify = (require, response, next) => {
+  response.render("holidayModify");
 };

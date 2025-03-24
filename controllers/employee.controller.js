@@ -14,6 +14,11 @@ exports.getAdd = (request, response, next) => {
 };
 
 exports.postAdd = (request, response, next) => {
+  const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
+
+  // Limpiar el mensaje después de usarlo
+  request.session.info = "";
+
   const curp = request.body.curp;
 
   // Crear una nueva instancia de Employee
