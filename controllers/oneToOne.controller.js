@@ -5,6 +5,7 @@ exports.getOneToOne = (req, res, next) => {
 exports.getOneToOneSchedule = (req, res, next) => {
     res.render('oneToOne_add', {
         csrfToken: req.csrfToken(),
+        info: req.session.info || '',
     });
 };
 

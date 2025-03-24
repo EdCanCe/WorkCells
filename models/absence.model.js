@@ -12,8 +12,9 @@ module.exports = class Absence {
 
     save(){
         const absenceID = uuidv4();
-        return db.execute('INSERT INTO absence(absenceID, startDate, endDate, reason, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?)', 
-            [absenceID, this.startDate, this.endDate, this.reason, 0, this.absenceUserID]);
+        return db.execute(`INSERT INTO absence(absenceID, startDate, endDate, 
+                reason, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?)`,[absenceID, 
+                this.startDate, this.endDate, this.reason, 0, this.absenceUserID]);
     }
 
     static fetchAll(){

@@ -2,6 +2,12 @@
 <%- include('includes/_navbar') %>
 <h2 class="title">Escribe los datos sobre tu Ausencia</h2>
 
+<% if (info != '') { %>
+  <div class="notification is-info">
+      <%= info %>
+  </div>
+<% } %>
+
 <form action="/absence/add" method="POST">
   <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
 
