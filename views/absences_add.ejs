@@ -5,26 +5,26 @@
 <form action="/absence/add" method="POST">
   <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
 
-  <div>
-    <label>Fecha de inicio de la ausencia: </label>
-    <input type="date" name="startDate" required>
-    <label>Fecha de finalización de la ausencia: </label>
-    <input type="date" name="endDate" required>
+  <div class="block">
+    <label class="label">Fecha de inicio de la ausencia: </label>
+    <input class="input" type="date" name="startDate" required>
+    <label class="label">Fecha de finalización de la ausencia: </label>
+    <input class="input" type="date" name="endDate" required>
   </div>
 
-  <div>
-    <label>Motivo de la ausencia: </label>
-    <textarea type="text" name="reason" required placeholder="Me enfermé y tuve que acudir al médico"> </textarea>
+  <div class="block">
+    <label class="label">Motivo de la ausencia: </label>
+    <textarea class="textarea" type="text" name="reason" required placeholder="Me enfermé y tuve que acudir al médico"> </textarea>
   </div>
   
-  <div>
-    <label class="">
+  <div class="block">
+    <label class="label">
       <input type="file" name="evidence"/>
     </label>
   </div>
 
-  <div>
-    <input type="submit" value="Enviar">
+  <div class="block">
+    <input class="button" type="submit" value="Enviar">
   </div>
 </form>
 
