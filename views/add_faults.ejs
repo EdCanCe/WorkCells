@@ -2,7 +2,7 @@
 
 <h1 class="title">Escribe los datos del colaborador y una Descripción</h1>
 
-<form action="/fault" method="post">
+<form action="/fault" method="post" enctype="multipart/form-data">
   <div class="field">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <p class="control has-icons-left has-icons-right">
@@ -46,6 +46,30 @@
         placeholder="Correo del colaborador"
         required
       />
+      <span class="icon is-small is-left">
+        <i class="fas fa-envelope"></i>
+      </span>
+    </p>
+  </div>
+
+  <div class="field">
+    <p class="control has-icons-left">
+      <input
+        class="input"
+        type="email"
+        name="email"
+        placeholder="Correo del colaborador"
+        required
+      />
+      <span class="icon is-small is-left">
+        <i class="fas fa-envelope"></i>
+      </span>
+    </p>
+  </div>
+
+  <div class="field">
+    <p class="control has-icons-left">
+      <input type="file" name="media" accept=".jpg, .png, .pdf" />
       <span class="icon is-small is-left">
         <i class="fas fa-envelope"></i>
       </span>
