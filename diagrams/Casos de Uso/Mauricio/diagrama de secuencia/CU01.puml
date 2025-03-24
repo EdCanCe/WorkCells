@@ -1,0 +1,73 @@
+@startuml
+actor Navegador
+boundary faults.ejs
+boundary faults.routes
+control faults.controller
+entity FaultsModel
+database mysql
+
+
+autonumber
+' Inicio del flujo
+activate Navegador
+Navegador -> faults.routes : GET /faults
+deactivate Navegador
+activate faults.routes
+
+faults.routes -> faults.controller : get_faults(req, res)
+activate faults.controller
+
+
+' Se utiliza la instancia para obtener los datos
+faults.controller ->> FaultsModel : get_usedHoliday()
+activate FaultsModel
+
+FaultsModel ->> mysql : SELECT * FROM usedHoliday
+activate mysql
+mysql -->> FaultsModel : Datos obtenidos
+deactivate mysql
+
+FaultsModel -->> faults.controller : Retorna datos de días feriados
+deactivate FaultsModel
+
+faults.controller -> faults.ejs : render(faults)
+activate faults.ejs
+faults.ejs -> Navegador : Mostrar faultsio con días feriados
+activate Navegador
+deactivate faults.ejs
+deactivate faults.controller
+deactivate faults.routes
+
+' Filtrar por días feriados
+Navegador -> faults.routes : POST /faults/filterHolidays
+deactivate Navegador
+activate faults.routes
+
+faults.routes -> faults.controller : (req, res)
+activate faults.controller
+
+faults.controller -> faults.ejs : render(faults)
+activate faults.ejs
+faults.ejs -> Navegador : Muestra solo días feriados
+activate Navegador
+deactivate faults.ejs
+deactivate faults.controller
+deactivate faults.routes
+
+' Cambiar la vista (semana)
+Navegador -> faults.routes : POST /faults/weekend
+deactivate Navegador
+activate faults.routes
+
+faults.routes -> faults.controller : change_view(req, res)
+activate faults.controller
+
+faults.controller -> faults.ejs : render(faults)
+activate faults.ejs
+activate Navegador
+faults.ejs -> Navegador : Muestra la vista semanal
+deactivate Navegador
+deactivate faults.ejs
+deactivate faults.controller
+deactivate faults.routes
+@enduml
