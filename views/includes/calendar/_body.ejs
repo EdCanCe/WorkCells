@@ -1,70 +1,96 @@
-<div class="p-6">
-  <div class="bg-white shadow-md rounded-lg mb-6">
-    <div class="p-6">
-      <h2 class="text-2xl font-semibold mb-4">
-        Empleado consulta su calendario
-      </h2>
-      <p class="text-lg">
-        En esta ruta, el empleado podrá ver su calendario, junto con sus eventos
-        en los próximos días (one on one, días feriados, vacaciones). Lo podrá
-        ver de forma semanal o mensual.
-      </p>
-    </div>
+<div class="calendar-grid">
+  <% if (isMonthView) { %>
+  <!-- Encabezados de días -->
+  <% weekDays.forEach(day => { %>
+  <div class="calendar-header"><%= day %></div>
+  <% }); %>
+
+  <!-- Días del mes -->
+  <% days.forEach((day, index) => { %>
+  <div class="calendar-day <%= day.isEmpty ? 'empty-day' : '' %>">
+    <% if (!day.isEmpty) { %>
+    <div class="day-number"><%= day.date.getDate() %></div>
+
+    <!-- Eventos -->
+    <% day.vacations.forEach(event => { %>
+    <div class="event vacation-event">Vacaciones</div>
+    <% }); %> <% day.absences.forEach(event => { %>
+    <div class="event absence-event">Ausencia</div>
+    <% }); %> <% day.holidays.forEach(event => { %>
+    <div class="event holiday-event">Feriado</div>
+    <% }); %> <% day.oneToOnes.forEach(event => { %>
+    <div class="event onetoone-event">1:1</div>
+    <% }); %> <% } %>
   </div>
+  <% }); %> <% } else { %>
+  <!-- Vista semanal -->
+  <% weekDays.forEach((day, index) => { %>
+  <div class="calendar-header"><%= day %></div>
+  <% }); %> <% days.forEach(day => { %>
+  <div class="calendar-day">
+    <div class="day-number"><%= day.date.getDate() %></div>
+
+    <!-- Mismos eventos que en la vista mensual -->
+    <% day.vacations.forEach(event => { %>
+    <div class="event vacation-event">Vacaciones</div>
+    <% }); %>
+
+    <!-- ... otros eventos ... -->
+  </div>
+  <% }); %> <% } %>
 </div>
 
-<div class="p-6">
-  <div class="space-y-6">
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold">Vacaciones</h3>
-        <p class="text-lg">Ver tus solicitudes de vacaciones</p>
-      </div>
-      <div class="flex space-x-4">
-        <a
-          href="/vacation"
-          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >Vacaciones</a
-        >
-        <a
-          href="/vacation/add"
-          class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-          >Agregar</a
-        >
-      </div>
-    </div>
+<style>
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
 
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold">Ausencias</h3>
-        <p class="text-lg">Ver tus ausencias</p>
-      </div>
-      <div class="flex space-x-4">
-        <a
-          href="/absence"
-          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >Ausencias</a
-        >
-        <a
-          href="/absence/add"
-          class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-          >Agregar</a
-        >
-      </div>
-    </div>
+  .calendar-header {
+    text-align: center;
+    font-weight: bold;
+    padding: 8px;
+  }
 
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold">One on One</h3>
-        <p class="text-lg">Ver tus sesiones de One on One</p>
-      </div>
-      <div class="flex space-x-4">
-        <a
-          href="/oneToOne"
-          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >One to One</a
-        >
-      </div>
-    </div>
-  </div>
-</div>
+  .calendar-day {
+    min-height: 100px;
+    border: 1px solid #e2e8f0;
+    padding: 4px;
+  }
+
+  .empty-day {
+    background-color: #f7fafc;
+    border: none;
+  }
+
+  .event {
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    margin: 2px 0;
+    border-radius: 4px;
+    color: white;
+  }
+
+  .vacation-event {
+    background-color: #4299e1;
+  }
+  .absence-event {
+    background-color: #f56565;
+  }
+  .holiday-event {
+    background-color: #48bb78;
+  }
+  .onetoone-event {
+    background-color: #9f7aea;
+  }
+</style>
+
+<script>
+  function setViewPreference(isMonthView) {
+    document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${
+      30 * 24 * 60 * 60
+    }; path=/`;
+    window.location.reload();
+  }
+</script>

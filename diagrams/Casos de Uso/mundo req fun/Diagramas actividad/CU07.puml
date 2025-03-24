@@ -1,0 +1,16 @@
+@startuml
+|Colaborador|
+start
+:Selecciona la categoría “Solicitudes de vacaciones”;
+
+|Sistema|
+:Consulta las solicitudes de vacaciones del colaborador;
+if (¿Tiene solicitudes de vacaciones?) then (Sí)
+    :Renderiza las solicitudes de vacaciones;
+else (No)
+    :Muestra el mensaje “You have no requests”;
+endif
+
+|Colaborador|
+stop
+@enduml
