@@ -1,64 +1,41 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %>
+<h2 class="title">Escribe los datos sobre tu Ausencia</h2>
 
-<div class="content p-6">
-  <h1 class="text-3xl font-semibold mb-6">
-    Escribe los datos sobre tu Ausencia
-  </h1>
+<% if (info != '') { %>
+<div class="notification is-info"><%= info %></div>
+<% } %>
 
-  <!-- Razón de la ausencia -->
-  <div class="field mb-4">
-    <label class="label">Razón de la ausencia</label>
-    <div class="control has-icons-left has-icons-right">
-      <input class="input" type="text" placeholder="Razón" />
-      <span class="icon is-small is-left">
-        <i class="fas fa-file-alt"></i>
-      </span>
-      <span class="icon is-small is-right">
-        <i class="fas fa-check-circle"></i>
-      </span>
-    </div>
+<form action="/absence/add" method="POST">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+  <div class="block">
+    <label class="label">Fecha de inicio de la ausencia: </label>
+    <input class="input" type="date" name="startDate" required />
+    <label class="label">Fecha de finalización de la ausencia: </label>
+    <input class="input" type="date" name="endDate" required />
   </div>
 
-  <!-- Fecha de inicio de ausencia -->
-  <div class="field mb-4">
-    <label class="label">Fecha de Inicio de Ausencia</label>
-    <div class="control has-icons-left">
-      <input class="input" type="date" placeholder="yyyy-mm-dd" />
-      <span class="icon is-small is-left">
-        <i class="fas fa-calendar-day"></i>
-      </span>
-    </div>
+  <div class="block">
+    <label class="label">Motivo de la ausencia: </label>
+    <textarea
+      class="textarea"
+      type="text"
+      name="reason"
+      required
+      placeholder="Me enfermé y tuve que acudir al médico"
+    >
+    </textarea>
   </div>
 
-  <!-- Fecha de regreso -->
-  <div class="field mb-4">
-    <label class="label">Fecha de Regreso</label>
-    <div class="control has-icons-left">
-      <input class="input" type="date" placeholder="yyyy-mm-dd" />
-      <span class="icon is-small is-left">
-        <i class="fas fa-calendar-check"></i>
-      </span>
-    </div>
-  </div>
-
-  <!-- Subir archivo -->
-  <div class="file mb-4">
-    <label class="file-label">
-      <input class="file-input" type="file" name="resume" />
-      <span class="file-cta">
-        <span class="file-icon">
-          <i class="fas fa-upload"></i>
-        </span>
-        <span class="file-label">Elige un archivo...</span>
-      </span>
+  <div class="block">
+    <label class="label">
+      <input type="file" name="evidence" />
     </label>
   </div>
 
-  <!-- Botones -->
-  <div class="field is-flex is-justify-content-center mt-6">
-    <button class="button is-success is-rounded mr-4">Enviar</button>
-    <a href="/absence" class="button is-danger is-rounded">Regresar</a>
+  <div class="block">
+    <input class="button" type="submit" value="Enviar" />
   </div>
-</div>
+</form>
 
 <%- include('includes/_footer') %>

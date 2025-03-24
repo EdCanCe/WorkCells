@@ -1,0 +1,90 @@
+@startuml
+actor Navegador
+boundary oneToOne.routes
+boundary error.routes
+boundary oneToOneForm.ejs
+control oneToOne.controller
+entity oneToOne.model
+entity user.model
+database mysql
+
+autonumber
+
+activate Navegador
+Navegador -> oneToOne.routes : GET /oneToOne/:id/fill
+deactivate Navegador
+
+activate oneToOne.routes
+oneToOne.routes -> oneToOne.controller : getFill(req, res)
+deactivate oneToOne.routes
+
+activate oneToOne.controller
+
+oneToOne.controller ->> user.model : fetchUserRole(req.session.userID)
+activate user.model
+    user.model ->> mysql : execute(QUERY)
+    activate mysql
+        mysql -->> user.model : rows
+    deactivate mysql
+    user.model -->> oneToOne.controller : rows
+deactivate user.model
+
+alt rows.role != "Human Resources"
+    oneToOne.controller -> error.routes : res.redirect('/error/403')
+    activate error.routes
+    deactivate error.routes
+else
+
+oneToOne.controller ->> oneToOne.model : fetchSessionData(req.params.id)
+activate oneToOne.model
+    oneToOne.model ->> mysql : execute(QUERY)
+    activate mysql
+        mysql -->> oneToOne.model : rows
+    deactivate mysql
+    oneToOne.model -->> oneToOne.controller : rows
+deactivate oneToOne.model
+
+oneToOne.controller -> oneToOneForm.ejs : res.render('oneToOneFill.ejs', VARIABLES)
+deactivate oneToOne.controller
+
+activate oneToOneForm.ejs
+oneToOneForm.ejs -> Navegador : HTML
+deactivate oneToOneForm.ejs
+
+activate Navegador
+Navegador -> oneToOne.routes : POST /oneToOne/:id/fill
+deactivate Navegador
+
+activate oneToOne.routes
+oneToOne.routes -> oneToOne.controller : postFill(req, res)
+deactivate oneToOne.routes
+
+activate oneToOne.controller
+
+    oneToOne.controller ->> oneToOne.model : saveAnswers(answers)
+    activate oneToOne.model
+        oneToOne.model ->> mysql : execute(QUERY)
+        activate mysql
+            mysql -->> oneToOne.model : Query OK
+        deactivate mysql
+        oneToOne.model -->> oneToOne.controller : promise
+    deactivate oneToOne.model
+
+    oneToOne.controller ->> oneToOne.model : saveMeasures(measures)
+    activate oneToOne.model
+        oneToOne.model ->> mysql : execute(QUERY)
+        activate mysql
+            mysql -->> oneToOne.model : Query OK
+        deactivate mysql
+        oneToOne.model -->> oneToOne.controller : promise
+    deactivate oneToOne.model
+
+oneToOne.controller -> oneToOne.routes : res.redirect('/oneToOne/' + sessionID)
+deactivate oneToOne.controller
+
+activate oneToOne.routes
+deactivate oneToOne.routes
+
+end
+
+@enduml

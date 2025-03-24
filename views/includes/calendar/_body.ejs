@@ -1,20 +1,48 @@
-<div class="p-6">
-  <div class="bg-white shadow-md rounded-lg mb-6">
-    <div class="p-6">
-      <h2 class="text-2xl font-semibold mb-4">
-        Empleado consulta su calendario
-      </h2>
-      <p class="text-lg">
-        En esta ruta, el empleado podrá ver su calendario, junto con sus eventos
-        en los próximos días (one on one, días feriados, vacaciones). Lo podrá
-        ver de forma semanal o mensual.
-      </p>
-    </div>
+<div class="calendar-grid">
+  <% if (isMonthView) { %>
+  <!-- Encabezados de días -->
+  <% weekDays.forEach(day => { %>
+  <div class="calendar-header"><%= day %></div>
+  <% }); %>
+
+  <!-- Días del mes -->
+  <% days.forEach((day, index) => { %>
+  <div class="calendar-day <%= day.isEmpty ? 'empty-day' : '' %>">
+    <% if (!day.isEmpty) { %>
+    <div class="day-number"><%= day.date.getDate() %></div>
+
+    <!-- Eventos -->
+    <% day.vacations.forEach(event => { %>
+    <div class="event vacation-event">Vacaciones</div>
+    <% }); %> <% day.absences.forEach(event => { %>
+    <div class="event absence-event">Ausencia</div>
+    <% }); %> <% day.holidays.forEach(event => { %>
+    <div class="event holiday-event">Feriado</div>
+    <% }); %> <% day.oneToOnes.forEach(event => { %>
+    <div class="event onetoone-event">1:1</div>
+    <% }); %> <% } %>
   </div>
+  <% }); %> <% } else { %>
+  <!-- Vista semanal -->
+  <% weekDays.forEach((day, index) => { %>
+  <div class="calendar-header"><%= day %></div>
+  <% }); %> <% days.forEach(day => { %>
+  <div class="calendar-day">
+    <div class="day-number"><%= day.date.getDate() %></div>
+
+    <!-- Mismos eventos que en la vista mensual -->
+    <% day.vacations.forEach(event => { %>
+    <div class="event vacation-event">Vacaciones</div>
+    <% }); %>
+
+    <!-- ... otros eventos ... -->
+  </div>
+  <% }); %> <% } %>
 </div>
 
 <div class="p-6">
   <div class="space-y-6">
+    <!-- Vacaciones -->
     <div class="bg-white shadow-md rounded-lg p-6">
       <div class="mb-4">
         <h3 class="text-xl font-semibold">Vacaciones</h3>
@@ -34,6 +62,7 @@
       </div>
     </div>
 
+    <!-- Ausencias -->
     <div class="bg-white shadow-md rounded-lg p-6">
       <div class="mb-4">
         <h3 class="text-xl font-semibold">Ausencias</h3>
@@ -53,6 +82,7 @@
       </div>
     </div>
 
+    <!-- One on One -->
     <div class="bg-white shadow-md rounded-lg p-6">
       <div class="mb-4">
         <h3 class="text-xl font-semibold">One on One</h3>
@@ -63,6 +93,21 @@
           href="/oneToOne"
           class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
           >One to One</a
+        >
+      </div>
+    </div>
+
+    <!-- Lista de días festivos -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-xl font-semibold">Lista de días festivos</h3>
+        <p class="text-lg">Ver todos los días festivos del año</p>
+      </div>
+      <div class="flex space-x-4">
+        <a
+          href="/holiday/used"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >Holiday</a
         >
       </div>
     </div>

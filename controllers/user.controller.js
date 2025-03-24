@@ -29,6 +29,7 @@ exports.post_login = (req, res, next) => {
       // Comparación de contraseñas sin bcrypt
       if (password === user.passwd) {
         req.session.isLoggedIn = true;
+        req.session.mail = email;
         req.session.userID = user.userID; // Asignar userID a la sesión
         console.log("UserID from session:", req.session.userID);
         return req.session.save(() => res.redirect("/home"));

@@ -2,85 +2,85 @@
 
 <h1 class="title">Escribe los datos del colaborador y una Descripción</h1>
 
-<form action="/fault" method="post" enctype="multipart/form-data">
-  <div class="field">
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-    <p class="control has-icons-left has-icons-right">
+<form
+  action="/fault"
+  method="post"
+  class="max-w-lg mx-auto p-6 bg-white rounded-xl shadow-md space-y-6"
+>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+  <div>
+    <label class="block text-gray-700 font-semibold mb-2"
+      >Fecha de la falta</label
+    >
+    <div class="relative">
       <input
-        class="input"
-        type="text"
+        class="w-full border border-gray-300 rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        type="date"
         name="doneDate"
-        placeholder="yyyy-mm-dd"
         required
       />
-      <span class="icon is-small is-left">
+      <div
+        class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"
+      >
         <i class="fas fa-calendar-day"></i>
-      </span>
-      <span class="icon is-small is-right">
-        <i class="fas fa-check"></i>
-      </span>
-    </p>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <p class="control has-icons-left">
+  <div>
+    <label class="block text-gray-700 font-semibold mb-2"
+      >Razón de la falta</label
+    >
+    <div class="relative">
       <input
-        class="input"
+        class="w-full border border-gray-300 rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         type="text"
         name="reason"
         placeholder="Razón de la falta"
         required
       />
-      <span class="icon is-small is-left">
+      <div
+        class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"
+      >
         <i class="fas fa-exclamation-circle"></i>
-      </span>
-    </p>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <p class="control has-icons-left">
+  <div>
+    <label class="block text-gray-700 font-semibold mb-2"
+      >Correo del colaborador</label
+    >
+    <div class="relative">
       <input
-        class="input"
+        class="w-full border border-gray-300 rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         type="email"
         name="email"
         placeholder="Correo del colaborador"
         required
       />
-      <span class="icon is-small is-left">
+      <div
+        class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"
+      >
         <i class="fas fa-envelope"></i>
-      </span>
-    </p>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <p class="control has-icons-left">
-      <input
-        class="input"
-        type="email"
-        name="email"
-        placeholder="Correo del colaborador"
-        required
-      />
-      <span class="icon is-small is-left">
-        <i class="fas fa-envelope"></i>
-      </span>
-    </p>
-  </div>
-
-  <div class="field">
-    <p class="control has-icons-left">
-      <input type="file" name="media" accept=".jpg, .png, .pdf" />
-      <span class="icon is-small is-left">
-        <i class="fas fa-envelope"></i>
-      </span>
-    </p>
-  </div>
-
-  <div class="field">
-    <p class="control">
-      <button class="button is-success">Enviar</button>
-      <a href="/fault" class="button">Regresar</a>
-    </p>
+  <div class="flex items-center justify-between">
+    <button
+      type="submit"
+      class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
+    >
+      Enviar
+    </button>
+    <a
+      href="/fault"
+      class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300"
+    >
+      Regresar
+    </a>
   </div>
 </form>
 

@@ -1,0 +1,84 @@
+@startuml
+|Superadmin|
+start
+:Selecciona la opción de registrar nuevo departamento;
+
+|Sistema|
+:Consulta el rol del usuario;
+if (¿Es Superadmin?) then (Sí)
+    :Consulta las empresas existentes en la tabla “Enterprise”;
+    :Consulta los usuarios con el rol de líder de departamento en la tabla “User”;
+    :Consulta los usuarios con el rol de colaborador en la tabla “User”;
+    :Renderiza un formulario para ingresar los datos del departamento;
+    :Renderiza un input select basándose en las empresas existentes;
+    :Renderiza un input select basándose en los líderes de departamento;
+    :Renderiza un input select basándose en los colaboradores;
+    :Consulta el ID del departamento en la URL;
+    :Consulta los datos del departamento en la tabla “Department”;
+    :Consulta las conexiones entre el líder de departamento y el departamento en la tabla “UserDepartment”;
+    :Consulta las conexiones entre los colaboradores y el departamento en la tabla “UserDepartment”;
+    :Renderiza una tabla con los colaboradores del departamento;
+    :Asigna valor a los datos de los input (Nombre de
+    departamento, ID de líder, ID de empresa, Nombre de empresa);
+
+|Superadmin|
+:Ingresa el nombre del departamento;
+:Selecciona el líder de departamento;
+:Selecciona la empresa de la que es parte el departamento;
+
+|Sistema|
+if (¿Empresa seleccionada es distinta a “Add new enterprise”?) then (No)
+    :Cambia de input select a input text para el input de la empresa;
+|Superadmin|
+    :Ingresa el nombre de la empresa;
+|Sistema|
+    :Crea un registro en la tabla “Enterprise” con el nombre de la empresa;
+    :Obtiene el ID de la empresa ingresada;
+    :Asigna el valor del ID de empresa a la variable correspondiente;
+else (Si)
+    
+endif
+
+|Superadmin|
+:Selecciona un colaborador;
+
+|Sistema|
+:Renderiza en la tabla de colaboradores una fila con el colaborador seleccionado;
+:Añade el ID del colaborador a un arreglo de colaboradores del departamento;
+:Asigna a un input hidden el valor del arreglo de ID’s de colaborador;
+
+|Superadmin|
+:Selecciona eliminar un colaborador del departamento;
+
+|Sistema|
+:Elimina el ID del colaborador del arreglo de colaboradores del departamento;
+:Asigna a un input hidden el valor del arreglo de ID’s de colaborador;
+
+|Superadmin|
+:Selecciona la opción de guardar información;
+
+|Sistema|
+:Recopila la información ingresada (Nombre de departamento, ID de
+líder, ID de empresa, Nombre de empresa, ID’s de colaboradores);
+if (¿Nombre de la empresa es nulo y ID de empresa contiene datos?) then (Sí)
+else (No)
+    :Crea un registro en la tabla “Enterprise” con el nombre de la empresa;
+    :Obtiene el ID de la empresa ingresada;
+    :Asigna el valor del ID de empresa a la variable correspondiente;
+endif
+:Modifica el registro del departamento en la tabla “Department”;
+:Elimina todas las relaciones entre usuario y departamento en la tabla “UserDepartment”;
+:Crea un registro de la conexión del líder de departamento con el departamento en la tabla “UserDepartment”;
+:Modifica el registro del líder de departamento en la tabla “User” (prioritaryDepartmentFK = ID del departamento);
+:Por cada ID de colaborador, crea un registro de la conexión con el departamento en la tabla “UserDepartment”;
+:Muestra un pop-up diciendo que la modificación fue exitosa;
+
+|Superadmin|
+:Selecciona la opción de cerrar modificación de departamento;
+
+|Sistema|
+:Redirige al superadmin a la página de departamentos;
+
+|Superadmin|
+stop
+@enduml

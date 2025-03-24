@@ -12,6 +12,8 @@ router.post("/add", isAuth, holidayController.postHolidaysAdd);
 
 router.get("/check", isAuth, holidayController.getHoliday);
 
+router.get("/used", isAuth, holidayController.getUsedHoliday); // Ver feriados usados
+
 router.get("/check/modify", isAuth, holidayController.getHolidayModify);
 
 module.exports = router;
