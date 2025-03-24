@@ -1,8 +1,33 @@
 <div class="content">
     <div class="card">
         <div class="card-content">
-            <h2>Agendado de sesión One to One</h2>
-            <p>En esta ruta, el usuario podrá agendar una sesión One to One.</p>
+            <h2>Agendar de sesión One to One</h2>
+            <form action="/oneToOne/schedule" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <div class="block">
+                    <h3>Datos de la reunión</h3>
+                    <label class="label">Fecha del One To One:</label>
+                    <input class="input" type="date" name="date" required>
+                    <label class="label">Hora de la reunión:</label>
+                    <input class="input" type="time" name="time" required>
+                    <label class="label">Duración estimada (minutos)</label>
+                    <input class="input" type="number" name="expectedTime" required>
+                </div>
+                <div class="block">
+                    <h3>Datos del colaborador</h3>
+                    <label class="label">Nombre del colaborador:</label>
+                    <input class="input" type="text" name="name" required>
+                    <label class="label">Apellido del colaborador:</label>
+                    <input class="input" type="text" name="surname" required>
+                    <label class="label">Correo electronico del colaborador</label>
+                    <input class="input" type="email" name="email" required>
+                </div>
+                <div class="block has-text-centered">
+                    <input class="button" type="submit" value="Enviar">
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

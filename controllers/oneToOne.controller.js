@@ -3,7 +3,13 @@ exports.getOneToOne = (req, res, next) => {
 };
 
 exports.getOneToOneSchedule = (req, res, next) => {
-    res.render('oneToOneSchedule');
+    res.render('oneToOne_add', {
+        csrfToken: req.csrfToken(),
+    });
+};
+
+exports.postOneToOneSchedule = (req, res, next) => {
+
 };
 
 exports.getOneToOneFill = (req, res, next) => {
