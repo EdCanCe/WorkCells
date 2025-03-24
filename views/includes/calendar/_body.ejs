@@ -40,57 +40,76 @@
   <% }); %> <% } %>
 </div>
 
-<style>
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-  }
+<div class="p-6">
+  <div class="space-y-6">
+    <!-- Vacaciones -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-xl font-semibold">Vacaciones</h3>
+        <p class="text-lg">Ver tus solicitudes de vacaciones</p>
+      </div>
+      <div class="flex space-x-4">
+        <a
+          href="/vacation"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >Vacaciones</a
+        >
+        <a
+          href="/vacation/add"
+          class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+          >Agregar</a
+        >
+      </div>
+    </div>
 
-  .calendar-header {
-    text-align: center;
-    font-weight: bold;
-    padding: 8px;
-  }
+    <!-- Ausencias -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-xl font-semibold">Ausencias</h3>
+        <p class="text-lg">Ver tus ausencias</p>
+      </div>
+      <div class="flex space-x-4">
+        <a
+          href="/absence"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >Ausencias</a
+        >
+        <a
+          href="/absence/add"
+          class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+          >Agregar</a
+        >
+      </div>
+    </div>
 
-  .calendar-day {
-    min-height: 100px;
-    border: 1px solid #e2e8f0;
-    padding: 4px;
-  }
+    <!-- One on One -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-xl font-semibold">One on One</h3>
+        <p class="text-lg">Ver tus sesiones de One on One</p>
+      </div>
+      <div class="flex space-x-4">
+        <a
+          href="/oneToOne"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >One to One</a
+        >
+      </div>
+    </div>
 
-  .empty-day {
-    background-color: #f7fafc;
-    border: none;
-  }
-
-  .event {
-    font-size: 0.8rem;
-    padding: 2px 4px;
-    margin: 2px 0;
-    border-radius: 4px;
-    color: white;
-  }
-
-  .vacation-event {
-    background-color: #4299e1;
-  }
-  .absence-event {
-    background-color: #f56565;
-  }
-  .holiday-event {
-    background-color: #48bb78;
-  }
-  .onetoone-event {
-    background-color: #9f7aea;
-  }
-</style>
-
-<script>
-  function setViewPreference(isMonthView) {
-    document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${
-      30 * 24 * 60 * 60
-    }; path=/`;
-    window.location.reload();
-  }
-</script>
+    <!-- Lista de días festivos -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="mb-4">
+        <h3 class="text-xl font-semibold">Lista de días festivos</h3>
+        <p class="text-lg">Ver todos los días festivos del año</p>
+      </div>
+      <div class="flex space-x-4">
+        <a
+          href="/holiday/used"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >Holiday</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
