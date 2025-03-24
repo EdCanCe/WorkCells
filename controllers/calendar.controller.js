@@ -5,9 +5,9 @@ const Holiday = require("../models/holiday.model");
 
 exports.getRoot = (req, res, next) => {
   let isMonthView = req.cookies.isMonthView || 1;
-  res.cookie('isMonthView', isMonthView, {
+  res.cookie("isMonthView", isMonthView, {
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-    httpOnly: true
+    httpOnly: true,
   });
 
   // Obtener fecha actual y calcular rangos
@@ -32,7 +32,7 @@ exports.getRoot = (req, res, next) => {
 
   // Formatear fechas para SQL (YYYY-MM-DD)
   const formatDateForSQL = (date) => {
-    return date.toISOString().split('T')[0];
+    return date.toISOString().split("T")[0];
   };
 
   const sqlStartDate = formatDateForSQL(startDate);
@@ -52,7 +52,11 @@ exports.getRoot = (req, res, next) => {
           Absence.fetchByDateType(sqlStartDate, sqlEndDate, req.session.userID)
             .then(([rows, fieldData]) => {
               absenceRows = rows;
-              OneToOne.fetchByDateType(sqlStartDate, sqlEndDate, req.session.userID)
+              OneToOne.fetchByDateType(
+                sqlStartDate,
+                sqlEndDate,
+                req.session.userID
+              )
                 .then(([rows, fieldData]) => {
                   oneToOneRows = rows;
 
@@ -61,16 +65,14 @@ exports.getRoot = (req, res, next) => {
                   console.log(absenceRows);
                   console.log(oneToOneRows);
 
-
-
-                  res.render('calendar', {
+                  res.render("calendar", {
                     isMonthView,
                     startDate,
                     endDate,
                     holidays: holidayRows[0] || [],
                     vacations: vacationRows[0] || [],
                     absences: absenceRows[0] || [],
-                    oneToOnes: oneToOneRows[0] || []
+                    oneToOnes: oneToOneRows[0] || [],
                   });
                 })
                 .catch((error) => {
@@ -92,7 +94,4 @@ exports.getRoot = (req, res, next) => {
       console.error(error); // Mejor manejo de error
       res.status(500).send("Error al obtener los datos.");
     });
-
-
-
 };
