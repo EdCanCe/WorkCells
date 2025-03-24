@@ -4,6 +4,9 @@
   <div class="card bg-white shadow-md rounded-lg p-4">
     <div class="card-content">
       <h1 class="text-3xl font-semibold mb-4">Agregar empleado</h1>
+      <% if (info) { %>
+      <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4"><%= info %></div>
+      <% } %>
       <form action="/employee" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="space-y-4">

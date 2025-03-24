@@ -43,7 +43,9 @@ module.exports = class Employee {
       .then(([rows]) => {
         if (rows.length > 0) {
           // El usuario ya existe, evitar el registro
-          throw new Error("El usuario con este CURP ya está registrado.");
+          throw new Error(
+            "El usuario que intento registrar ya está registrado."
+          );
         }
 
         // Si no existe, proceder con la inserción

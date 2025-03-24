@@ -1,16 +1,24 @@
 const Employee = require("../models/employee.model");
 
 exports.getAdd = (request, response, next) => {
+  const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
+
+  // Limpiar el mensaje después de usarlo
+  request.session.info = "";
+
   response.render("employeeAdd", {
     isLoggedIn: request.session.isLoggedIn || false,
-    info: request.session.info || "",
+    info: mensaje, // Pasamos el mensaje de la sesión
     csrfToken: request.csrfToken(),
   });
 };
 
 exports.postAdd = (request, response, next) => {
+  const curp = request.body.curp;
+
+  // Crear una nueva instancia de Employee
   const employee = new Employee(
-    request.body.curp,
+    curp,
     request.body.rfc,
     request.body.birthName,
     request.body.surname,
@@ -23,15 +31,20 @@ exports.postAdd = (request, response, next) => {
     request.body.userRoleIDFK,
     request.body.countryUserIDFK
   );
+
+  // Intentar guardar el empleado
   employee
     .save()
     .then(() => {
-      request.session.info = `Employee created`;
+      // Si la inserción fue exitosa, redirigir con mensaje
+      request.session.info = "Empleado creado correctamente.";
       response.redirect("/employee");
     })
     .catch((error) => {
-      console.error(error); // Mejor manejo de error
-      response.status(500).send("Error al guardar los datos.");
+      // Si ocurre un error (como que el CURP ya exista), mostrar el mensaje
+      console.error(error);
+      request.session.info = error.message || "Error al registrar el empleado.";
+      response.redirect("/employee/add");
     });
 };
 
