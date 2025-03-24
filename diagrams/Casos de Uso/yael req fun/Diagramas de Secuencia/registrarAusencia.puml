@@ -1,0 +1,70 @@
+@startuml
+
+actor navegador
+boundary routes
+boundary "Vista add.ejs" as add
+boundary "Vista home.ejs" as home
+control controller
+
+autonumber
+navegador -> routes: GET /absences/add
+activate routes
+routes -> controller: get_add(req, res)
+deactivate routes
+activate controller
+controller -> add: res.render('add.ejs')
+deactivate controller
+activate add
+add -> navegador: HTML
+deactivate add
+activate navegador
+
+navegador -> routes: POST /absences/add (req, res)
+deactivate navegador
+activate routes
+routes -> controller: post_add(req, res)
+deactivate routes
+activate controller
+
+create entity absence
+controller -> absence: new Modelo(req.body.valor)
+activate absence
+controller ->> absence: save()
+
+
+entity Absences
+database mysql
+
+absence ->> mysql: execute("INSERT INTO absence(?)", this.valor)
+activate mysql
+mysql --> absence: QUERY OK
+deactivate mysql
+absence--> controller: promesa
+deactivate absence
+
+controller -> routes: res.redirect('/absences')
+deactivate controller
+activate routes
+routes -> controller: get_add(req, res)
+deactivate routes
+activate controller
+controller -> add: res.render('add.js', message)
+deactivate controller
+activate add
+add -> navegador: HTML
+deactivate add
+activate navegador
+navegador -> routes: GET /home
+deactivate navegador
+activate routes
+routes -> controller:get_home(req, res)
+deactivate routes
+activate controller
+controller -> home: res.render('home.ejs')
+deactivate controller
+activate home
+home -> navegador: HTML
+deactivate home
+activate navegador
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml hola
+|Colaborador|
+start 
+:Seleccionar la opción de registrar ausencia;
+
+|Sistema|
+:Desplegar la interfaz para registrar ausencia;
+
+|Colaborador|
+:Ingresar las fechas de inicio y final de la ausencia;
+
+|Sistema|
+if(verificar que la duración de la \nausencia sera menor a 3 días) then (SI)
+    :Marcar como opcional el \nregistrar el motivo de \nla ausencia;
+else (NO)
+    :Marcar como obligatorio el \n registrar el motivo de \nla ausencia;
+endif
+
+|Colaborador|
+:Registrar el motivo de la ausencia;
+:Adjuntar una evidencia para la ausencia;
+:Seleccionar la opción de guardar\n el registro de ausencia;
+
+|Sistema|
+:Recuperar la información que ingresó el colaborador\n - Fecha de inicio y fin\n - motivo y evidencia de la ausencia\n - ID del colaborador;
+:Crear un registro en la tabla de \nabsences y absencesMedia;
+:Mostrar un pop-up con un mensaje\n de retroalimentación positivo al colaborador;
+
+|Colaborador|
+:Seleccionar la opción de cerrar \nla pop-up o cualquier otra \nparte de la pantalla;
+
+|Sistema|
+:Redirigir al colaborador a la pantalla de inicio;
+stop
+@enduml

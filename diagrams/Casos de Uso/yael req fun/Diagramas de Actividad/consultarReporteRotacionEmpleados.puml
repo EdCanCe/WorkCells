@@ -1,0 +1,16 @@
+@startuml
+|Superadmin|
+:Seleccionar la opción de consultar \nreporte de rotación de empleados;
+
+|Sistema|
+:Obtener el mes actual;
+:Obtener el ID de los colaboradores que su \nstartDate sea durante el mes actual y su \nworkstatus sea activo, usando las tablas \nworkStatus y user, respectivamente;
+:Obtener la información de los colaboradores, \nasí como el departamento al que pertenecen \ny los ordena por su departamento, con las tablas \nuser, userDepartment y department;
+:Calcular el total de empleados \nque entraron durante el mes actual;
+:Obtener el ID de los colaboradores que \nsu endDate es durante el mes \nactual y su workstatus es inactivo;
+:Obtener la información de los colaboradores, \nasí como el departamento al que pertenecen \n y los ordena por su departamento, con las tablas \nuser, userDepartment y department;
+:Calcular el total de empleados que \nsalieron durante el mes actual;
+:Generar interfaz con los departamentos \ny colaboradores que entraron, seguido por los \ndepartamentos y colaboradores que salieron;
+:Mostrar la interfaz al usuario;
+stop
+@enduml
