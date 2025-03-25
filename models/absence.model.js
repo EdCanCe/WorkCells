@@ -6,7 +6,7 @@ module.exports = class Absence {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reason = reason;
-        this.justified = 0; // 0 -> no justificada | 1 -> justificada
+        this.justified = 0; // 0 -> no justificada | 1 -> justificada 
         this.absenceUserID = absenceUserID;
     }
 
@@ -28,6 +28,10 @@ module.exports = class Absence {
 
     static fetchAll() {
         return db.execute("SELECT * FROM absence ORDER BY startDate DESC");
+    }
+
+    static fetchAllWithName() {
+      return db.execute("SELECT a.*, u.birthName, u.surname, r.title FROM absence as a, user as u, role as r WHERE u.userID = a.absenceUserIDFK AND r.roleID = u.userRoleIDFK ORDER BY startDate DESC");
     }
 
     static fetchAllByID(id) {
@@ -52,6 +56,7 @@ module.exports = class Absence {
     static getID(email) {
         return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email]);
     }
+
 
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(

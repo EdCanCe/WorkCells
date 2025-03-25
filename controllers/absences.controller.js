@@ -22,27 +22,29 @@ exports.getAdd = (request, response, next) => {
 exports.getApprove = (request, response, next) => {
     // console.log("Session:", request.session);
     // console.log("UserID from session:", request.session.userID);
-    const employeedId = request.session.userID;
+    // const employeedId = request.session.userID;
     // console.log(employeedId);
 
     const mensaje = request.session.info || "";
     request.session.info = ""; // Limpiar la sesión después de usar el mensaje
 
-    Absence.fetchAllByID(employeedId)
-        .then(([rows, fieldData]) => {
-            // Asegúrate de pasar "rows" como "vacations"
-            response.render("", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                username: request.session.username || "",
-                absences: rows, // Pasar correctamente "rows" como "absence"
-                info: mensaje,
-            });
-        })
-        .catch((error) => {
-            console.error(error); // Mejor manejo de error
-            response.status(500).send("Error al obtener los datos.");
-        });
-};
+    
+    Absence.fetchAllWithName()
+    .then(([rows, fieldData]) => {
+      // Asegúrate de pasar "rows" como "vacations"
+      response.render("absenceApprove", {
+        isLoggedIn: request.session.isLoggedIn || false,
+        username: request.session.username || "",
+        absences: rows, // Pasar correctamente "rows" como "absence"
+        info: mensaje,
+      });
+    })
+    .catch((error) => {
+      console.error(error); // Mejor manejo de error
+      response.status(500).send("Error al obtener los datos.");
+    });
+    console.log(request.session);
+  };
 
 exports.postAdd = (request, response, next) => {
     console.log(request.body);
@@ -74,7 +76,7 @@ exports.getRoot = (request, response, next) => {
     if (request.session.info) {
         request.session.info = "";
     }
-    console.log(request.session.mail);
+    console.log(request.session);
     Absence.getID(request.session.mail).then(([rows]) => {
         if (rows.length == 0) {
             response.send(500);

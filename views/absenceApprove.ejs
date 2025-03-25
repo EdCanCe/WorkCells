@@ -1,0 +1,124 @@
+<%- include('includes/_header') %> <%- include('includes/_navbar') %>
+
+<div class="content p-6">
+  <div class="card bg-white p-6 rounded-lg shadow-md">
+    <div class="card-content">
+      <h2 class="text-2xl font-semibold mb-4">Absences request</h2>
+      <p class="mb-4">
+        Aquí el super admin haciendo click en alguna de las casillas de estados
+        le va aparecer una popup para poder responder/cambiar el estado de
+        solicitud de ausencia.
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto"
+        id="absences-table"
+        >
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="nombre">Full name</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="colaborador">Role</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="razon">Start date</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="estado">End date</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="estado">Total days</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="estado">Status</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="modificar"></abbr>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let ab of absences) { %>
+              <tr class="bg-gray-100">
+                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                  <%- ab.birthName + ' ' + ab.surname %>
+                </th>
+                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                  <%- ab.title %>
+                </th>
+                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                  <%= new Date(ab.startDate).toLocaleDateString('es-MX'); %>
+                </th>
+                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                  <%= new Date(ab.endDate).toLocaleDateString('es-MX'); %>
+                </th>
+                <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 total-days"
+                data-start-date="<%= ab.startDate %>"
+                data-end-date="<%= ab.endDate %>"
+                ></td>
+                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                  <% if  (ab.justified === 0) { %>
+                    Deny
+                  <% } else if (ab.justified === 1) { %>
+                    Approved
+                  <% } else if (ab.justified === 2) { %>
+                    <div class="px-6 py-4 flex justify-end">
+                      <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded">
+                        Approve
+                      </button>
+                      <br>
+                      <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 mr-2 rounded">
+                        Deny
+                      </button>
+                    </div>
+                  <% } %>
+                </th>
+                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                  <a
+                  href="/absence/modify"
+                  class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">
+                  Modify
+                </a>
+                </th>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-center space-x-4">
+      <a
+        href="/absence"
+        class="button bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+        >Regresar</a
+      >
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Calcular los días para cada fila una vez que la página se ha cargado
+  document.addEventListener("DOMContentLoaded", function () {
+      const rows = document.querySelectorAll("#absences-table tbody tr");
+      rows.forEach((row) => {
+          const startDate = new Date(
+              row.querySelector(".total-days").getAttribute("data-start-date")
+          );
+          const endDate = new Date(
+              row.querySelector(".total-days").getAttribute("data-end-date")
+          );
+          const timeDifference = endDate - startDate;
+          const totalDays = timeDifference / (1000 * 3600 * 24);
+
+          // Asignar el total de días a la celda correspondiente
+          row.querySelector(".total-days").innerText = totalDays;
+      });
+  });
+</script>
+
+<%- include('includes/_footer') %>
