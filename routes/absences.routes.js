@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const absencesControllers = require("../controllers/absences.controller");
-const isAuth = require("../util/is-auth");
+const absences_controllers = require("../controllers/absences.controllers");
 
-router.get("/approve", isAuth, absencesControllers.getApprove);
+router.get("/aprove", absences_controllers.get_aprove);
 
-router.get("/add", isAuth, absencesControllers.getAdd);
-router.post("/add", isAuth, absencesControllers.post_add);
+router.get("/add", absences_controllers.get_add);
 
-router.get("/check", isAuth, absencesControllers.get_check);
+router.get("/check", absences_controllers.get_check);
 
-router.get("/", isAuth, absencesControllers.get_root);
+router.get("/", absences_controllers.get_root);
 
 module.exports = router;

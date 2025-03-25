@@ -41,31 +41,32 @@ Randomizer<string> used_date = {
 // Clase para los días festivos utilizados
 class UsedHoliday {
 private:
-    string templateHolidayID;
+    int templateHolidayID;
     string usedDate;
-    string usedTemplateHolidayID;
+    int usedTemplateHolidayID;
 
 public:
-    UsedHoliday(string _usedDate, string _usedTemplateHolidayID);
-    string getId();
+    UsedHoliday(string _usedDate, int _usedTemplateHolidayID);
+    int getId();
     void print();
 };
 
 // Randomizador de días festivos utilizados
 Randomizer<UsedHoliday> usedHolidays;
 
-UsedHoliday::UsedHoliday(string _usedDate, string _usedTemplateHolidayID){
-    templateHolidayID = generateUUID();
+UsedHoliday::UsedHoliday(string _usedDate, int _usedTemplateHolidayID){
+    templateHolidayID = usedHolidays.size() + 1;
     usedDate = _usedDate;
     usedTemplateHolidayID = _usedTemplateHolidayID;
 }
 
-string UsedHoliday::getId() {
+int UsedHoliday::getId() {
     return templateHolidayID;
 }
 
 void UsedHoliday:: print() {
-    cout << "INSERT INTO usedHoliday(usedHolidayID, usedDate, usedTemplateHolidayIDFK) VALUES('" << templateHolidayID << "', '" << usedDate << "', '" << usedTemplateHolidayID << "'); \n";
+    cout << "INSERT INTO usedHoliday(usedDate, usedTemplateHolidayID) VALUES('"
+        << usedDate << "', " << usedTemplateHolidayID << "); \n";
 }
 
 

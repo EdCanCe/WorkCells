@@ -9,21 +9,21 @@ using namespace std;
 
 class UserDepartment {
     private:
-        string idDepartment;
-        string idUser;
+        int idDepartment;
+        int idUser;
     
     public:
-        UserDepartment(string, string);
-        string getId();
+        UserDepartment(int, int);
+        int getID();
         void print();
         
 };
 
-map<string, Randomizer<string>> auxLink;
+map<int, Randomizer<int>> auxLink;
         
 Randomizer<UserDepartment> userDepartment;
 
-UserDepartment::UserDepartment(string idDepartment, string idUser) {
+UserDepartment::UserDepartment(int idDepartment, int idUser) {
     this->idDepartment = idDepartment;
     this->idUser = idUser;
 
@@ -31,19 +31,19 @@ UserDepartment::UserDepartment(string idDepartment, string idUser) {
 }
 
 void UserDepartment::print() {
-    cout << "INSERT INTO userDepartment(departmentIDFK, userIDFK) values ('" << idDepartment << "', '" << idUser << "'); \n";
+    cout << "INSERT INTO userDepartment(departmentIDFK, userIDFK) values (" << idDepartment << ", " << idUser << "); \n";
 }
 
 void createUserDepartment(int x) {
     for (int i = 0; i < x; i++) {
-        userDepartment.add(UserDepartment(department.random().getId(), users.random().getId()));
+        userDepartment.add(UserDepartment(department.random().getID(), users.random().getId()));
     }
 }
 
 void selectUserPriorityDepartment(){
     for(int i = 0; i < users.size(); i++){
-        if(!auxLink[userIds[i]].size() == 0){
-            cout << "UPDATE user SET prioritaryDepartmentFK = '" << auxLink[userIds[i]].random() << "' WHERE userID = '" << userIds[i] << "'; \n";
+        if(!auxLink[i].size() == 0){
+            cout << "UPDATE user SET prioritaryDepartmentFK = " << auxLink[i].random() << " WHERE userID = " << i+1 << "; \n";
         }
     }
 }

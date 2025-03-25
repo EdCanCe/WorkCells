@@ -20,12 +20,12 @@ Randomizer<string> question = {
 // Defino la clase que voy a usar
 class Question {
     private:
-        string id;
+        int id;
         string question;
 
     public:
         Question(string);
-        string getId();
+        int getId();
         void print();
 };
 
@@ -34,18 +34,18 @@ Randomizer<Question> questions;
 
 // Constructor de una tupla
 Question::Question(string question_) {
-    id = generateUUID();
+    id = questions.size() + 1;
     question = question_;
 }
 
 // Obtengo su Id
-string Question::getId(){
+int Question::getId(){
     return id;
 }
 
 // Impresión / Código en SQL
 void Question::print() {
-    cout << "INSERT INTO oneOnOneQuestion(questionID, question) VALUES('" << id << "', '" << question << "'); \n";
+    cout << "INSERT INTO oneOnOneQuestion(question) VALUES('" << question << "'); \n";
 }
 
 // Función para crear la tabla con X registros

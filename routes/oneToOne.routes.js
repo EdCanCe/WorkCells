@@ -2,17 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const oneToOneController = require("../controllers/oneToOne.controller.js");
-const isAuth = require("../util/is-auth");
 
-router.get("/", isAuth, oneToOneController.getOneToOne);
+router.get("/", oneToOneController.getOneToOne);
 
-router.get("/schedule", isAuth, oneToOneController.getOneToOneSchedule);
-router.post("/schedule", oneToOneController.postOneToOneSchedule);
+router.get("/schedule", oneToOneController.getOneToOneSchedule);
 
-router.get("/check/fill", isAuth, oneToOneController.getOneToOneFill);
+router.get("/check/fill", oneToOneController.getOneToOneFill);
 
-router.get("/graphs", isAuth, oneToOneController.getOneToOneGraphs);
+router.get("/graphs", oneToOneController.getOneToOneGraphs);
 
-router.get("/check", isAuth, oneToOneController.getOneToOneCheck);
+router.get("/check", oneToOneController.getOneToOneCheck);
 
 module.exports = router;

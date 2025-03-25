@@ -23,14 +23,14 @@ Randomizer<string> lastName = {
 // Defino la clase que voy a usar
 class Entity {
     private:
-        string id;
+        int id;
         string name;
         string fLastName;
         string mLastName;
 
     public:
         Entity(string, string, string);
-        string getId();
+        int getId();
         void print();
 };
 

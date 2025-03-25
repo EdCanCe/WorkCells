@@ -72,33 +72,34 @@ Randomizer<string> end_date = {
 // Clase para los días festivos utilizados
 class WorkStatus {
 private:
-    string workStatusID;
+    int workStatusID;
     string start_date;
     string end_date;
-    string userStatusIDFK;
+    int userStatusIDFK;
 
 public:
-    WorkStatus(string,string,string);
-    string getId();
+    WorkStatus(string,string,int);
+    int getId();
     void print();
 };
 
 // Randomizador de días festivos utilizados
 Randomizer<WorkStatus> WorkStatus1;
 
-WorkStatus::WorkStatus(string _start_date, string _end_date,string _userStatusIDFK){
-    workStatusID = generateUUID();
+WorkStatus::WorkStatus(string _start_date, string _end_date,int _userStatusIDFK){
+    workStatusID = WorkStatus1.size() + 1;
     start_date = _start_date;
     end_date = _end_date;
     userStatusIDFK = _userStatusIDFK;
 }
 
-string WorkStatus::getId() {
+int WorkStatus::getId() {
     return workStatusID;
 }
 
 void WorkStatus:: print() {
-    cout << "INSERT INTO workStatus(workStatusID, startDate,endDate, userStatusIDFK) VALUES('" << workStatusID << "', '" << start_date << "', " << "'"<< end_date << "', '"<< userStatusIDFK << "'); \n";
+    cout << "INSERT INTO workStatus(startDate,endDate, userStatusIDFK) VALUES('"
+        << start_date << "', " << "'"<< end_date << "',"<< userStatusIDFK << "); \n";
 }
 
 // Función para crear registros de días festivos utilizados

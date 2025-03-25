@@ -130,7 +130,7 @@ Randomizer<string> states = {
 // Defino la clase que voy a usar
 class User {
     private:
-        string id;
+        int id;
         string curp;
         string rfc;
         string birthName;
@@ -144,23 +144,23 @@ class User {
         string colony;
         int workModality;
         bool workStatus;
-        string userRoleIDFK;
-        string countryUserIDFK;
+        int userRoleIDFK;
+        int countryUserIDFK;
 
     public:
-        User(string, string, string, string, string, string, string, bool, int, string, string, string, int, bool, string, string);
-        string getId();
+        User(int, string, string, string, string, string, string, bool, int, string, string, string, int, bool, int, int);
+        int getId();
         void print();
 };
 
 // Creo un randomizador de dicha clase para usarla en un futuro
 Randomizer<User> users;
-vector<string> userIds;
+map<int, bool> userIds;
 
 // Constructor de una tupla
-User::User(string Id, string CURP, string RFC, string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, string UserRoleIDFK, string CountryUserIDFK) {
+User::User(int Id, string CURP, string RFC, string BirthName, string Surname, string Mail, string Passwd, bool PasswdFlag, int ZipCode, string HouseNumber, string StreetName, string Colony, int WorkModality, bool WorkStatus, int UserRoleIDFK, int CountryUserIDFK) {
     id = Id;
-    userIds.push_back(id);
+    userIds[id] = true;
     curp = CURP;
     rfc = RFC;
     birthName = BirthName;
@@ -179,17 +179,19 @@ User::User(string Id, string CURP, string RFC, string BirthName, string Surname,
 }
 
 // Obtengo su Id
-string User::getId(){
+int User::getId(){
     return id;
 }
 
 // Impresión / Código en SQL
 void User::print() {
-    cout << "INSERT INTO user(userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES('" << id << "', '" << curp << "', '" << rfc << "', '" << birthName << "', '" << surname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", '" << userRoleIDFK << "', '" << countryUserIDFK << "');\n";
+    cout << "INSERT INTO user(userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES(" << id << ", '" << curp << "', '" << rfc << "', '" << birthName << "', '" << surname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", " << userRoleIDFK << ", " << countryUserIDFK << ");\n";
 }
 
-string createUserID(){
-    return generateUUID();;
+int createUserID(){
+    int x = getRandom(8388607);
+    while(userIds[x]) getRandom(8388607);
+    return x;
 }
 
 string createString(){
@@ -250,9 +252,8 @@ void createUsers(int x){
         string Name = name.random();
         string FLname = lastName.random();
         string MLname = lastName.random();
-        string role = roles[getRandom(roles.size())].getId();
         string Curp = createCurp(Name, FLname, MLname);
-        users.add(User(createUserID(), Curp, createRfc(Curp), Name, (FLname + " " + MLname), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), role, countries.random().getId()));
+        users.add(User(createUserID(), Curp, createRfc(Curp), Name, (FLname + " " + MLname), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), roles.random().getId(), countries.random().getId()));
     }
 }
 

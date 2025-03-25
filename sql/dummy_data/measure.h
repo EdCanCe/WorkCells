@@ -13,12 +13,12 @@ Randomizer<int> evaluation_data = {1, 2, 3, 4, 5};
 class Measure {
     private:
         int evaluation;
-        string measureOneOnOneIDFK; // ID del One On One
-        string measurableIDFK; // ID del Medible/Mesurable
+        int measureOneOnOneIDFK; // ID del One On One
+        int measurableIDFK; // ID del Medible/Mesurable
 
     public:
-        Measure(int, string, string);
-        string getId();
+        Measure(int, int, int);
+        int getId();
         void print();
 };
 
@@ -26,7 +26,7 @@ class Measure {
 Randomizer<Measure> measures;
 
 // Constructor de una tupla
-Measure::Measure(int evaluation_, string measureOneOnOneIDFK_, string measurableIDFK_) {
+Measure::Measure(int evaluation_, int measureOneOnOneIDFK_, int measurableIDFK_) {
     evaluation = evaluation_;
     measureOneOnOneIDFK = measureOneOnOneIDFK_;
     measurableIDFK = measurableIDFK_;
@@ -34,7 +34,7 @@ Measure::Measure(int evaluation_, string measureOneOnOneIDFK_, string measurable
 
 // Impresión / Código en SQL
 void Measure::print() {
-    cout << "INSERT INTO oneOnOneMeasure(evaluation, measureOneOnOneIDFK, measurableIDFK) VALUES('" << evaluation << "', '" << measureOneOnOneIDFK << "', '" << measurableIDFK << "');\n";
+    cout << "INSERT INTO oneOnOneMeasure(evaluation, measureOneOnOneIDFK, measurableIDFK) VALUES(" << evaluation << ", " << measureOneOnOneIDFK << ", " << measurableIDFK << ");\n";
 }
 
 // Función para crear la tabla con X registros

@@ -1,15 +1,15 @@
-exports.getDepartments = (req, res, next) => {
+exports.get_departments = (req, res, next) => {
     res.render('checkDepartment');
 }
 
-exports.getAddDepartment = (req, res, next) => {
+exports.get_add_department = (req, res, next) => {
     res.render('addDepartment');
 };
 
-exports.getCheckDepartment = (req, res, next) => {
+exports.get_check_department = (req, res, next) => {
     res.render('checkOneDpmt')
 };
 
-exports.getModifyDepartment = (req, res, next) => {
+exports.get_modify_department = (req, res, next) => {
     res.render('modifyDepartment')
 };

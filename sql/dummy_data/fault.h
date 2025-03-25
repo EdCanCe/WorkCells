@@ -37,14 +37,14 @@ Randomizer<string> summary_data = {
 // Defino la clase que voy a usar
 class Fault {
     private:
-        string id;
+        int id;
         string doneDate; 
         string summary;
-        string faultUserIDFK;
+        int faultUserIDFK;
 
     public:
-        Fault(string, string, string);
-        string getId();
+        Fault(string, string, int);
+        int getId();
         void print();
 };
 
@@ -52,20 +52,16 @@ class Fault {
 Randomizer<Fault> faults;
 
 // Constructor de una tupla
-Fault::Fault(string doneDate_, string summary_, string faultUserIDFK_) {
-    id = generateUUID();
+Fault::Fault(string doneDate_, string summary_, int faultUserIDFK_) {
+    id = faults.size() + 1;
     doneDate = doneDate_;
     summary = summary_;
     faultUserIDFK = faultUserIDFK_;
 }
 
-string Fault::getId(){
-    return id;
-}
-
 // Impresión / Código en SQL
 void Fault::print() {
-    cout << "INSERT INTO fault(faultID, doneDate, summary, faultUserIDFK) VALUES('" << id << "', '" << doneDate << "', '" << summary << "', '" << faultUserIDFK << "');\n";
+    cout << "INSERT INTO fault(doneDate, summary, faultUserIDFK) VALUES('" << doneDate << "', '" << summary << "', " << faultUserIDFK << ");\n";
 }
 
 // Función para crear la tabla con X registros

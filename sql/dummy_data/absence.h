@@ -9,7 +9,7 @@ using namespace std;
 
 class Absence {
     private:
-        string id;
+        int id;
         string reason;
         string startDate;
         string endDate;
@@ -19,26 +19,26 @@ class Absence {
             string startDate,
             string endDate,
             int justified);
-        string getId();
+        int getID();
         void print();
 };
 
 Randomizer<Absence> absence;
 
 Absence::Absence(string reason, string startDate, string endDate, int justified) {
-    id = generateUUID();
+    id = absence.size() + 1;
     this->reason = reason;
     this->startDate = startDate;
     this->endDate = endDate;
     this->justified = justified;
 }
 
-string Absence::getId(){
+int Absence::getID(){
     return id;
 }
 
 void Absence::print(){
-    cout << "INSERT INTO absence(absenceID, reason, startDate, endDate, justified, absenceUserIDFK) values('" << id << "', '" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", '" << users.random().getId() << "'); \n";
+    cout << "INSERT INTO absence(reason, startDate, endDate, justified, absenceUserIDFK) values('" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", " << users.random().getId() << "); \n";
 };
 
 

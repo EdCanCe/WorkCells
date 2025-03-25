@@ -32,14 +32,14 @@ Randomizer<string> meetingDate = {
 // Defino la clase que voy a usar
 class OneOnOne {
     private:
-        string id;
+        int id;
         int expectedTime;
         string meetingDate;
-        string oneOnOneUserIDFK;
+        int oneOnOneUserIDFK;
 
     public:
-        OneOnOne(int, string, string);
-        string getId();
+        OneOnOne(int, string, int);
+        int getId();
         void print();
 };
 
@@ -47,21 +47,21 @@ class OneOnOne {
 Randomizer<OneOnOne> oneonones;
 
 // Constructor de una tupla
-OneOnOne::OneOnOne(int expectedTime_, string meetingDate_, string oneOnOneUserIDFK_) {
-    id = generateUUID();
+OneOnOne::OneOnOne(int expectedTime_, string meetingDate_, int oneOnOneUserIDFK_) {
+    id = oneonones.size() + 1;
     expectedTime = expectedTime_;
     meetingDate = meetingDate_;
     oneOnOneUserIDFK = oneOnOneUserIDFK_;
 }
 
 // Obtengo su Id
-string OneOnOne::getId(){
+int OneOnOne::getId(){
     return id;
 }
 
 // Impresión / Código en SQL
 void OneOnOne::print() {
-    cout << "INSERT INTO oneOnOne(oneOnOneID, expectedTime, meetingDate, meetingLink, oneOnOneUserIDFK) VALUES('" << id << "', " <<expectedTime << ", '" << meetingDate << "', 'https://meet.google.com/abc-defg-hij', '" << oneOnOneUserIDFK << "');\n";
+    cout << "INSERT INTO oneOnOne(expectedTime, meetingDate, oneOnOneUserIDFK) VALUES(" << expectedTime << ", '" << meetingDate << "', " << oneOnOneUserIDFK << ");\n";
 }
 
 // Función para crear la tabla con X registros

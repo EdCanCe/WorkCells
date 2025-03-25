@@ -1,9 +1,3 @@
-exports.getHomepage = (request, response, next) => {
-    response.render('homepage');
+exports.get_homepage = (req, res, next) => {
+    res.render('homepage');
 };
-
-exports.getLogout = (request, response, next) => {
-    request.session.destroy(() => {
-        response.redirect('/login'); 
-    });
-}

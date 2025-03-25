@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#include "templateHoliday.h"
-#include "usedHoliday.h"
 #include "privileges.h"
 #include "roles.h"
 #include "rolePrivileges.h"
@@ -9,42 +7,35 @@
 #include "enterprise.h"
 #include "department.h"
 #include "userDepartment.h"
+#include "vacations.h"
+#include "absence.h"
+#include "absenceMedia.h"
+#include "templateHoliday.h"
+#include "usedHoliday.h"
 #include "workstatus.h"
 #include "question.h"
 #include "mesurable.h"
 #include "oneonone.h"
 #include "answer.h"
 #include "measure.h"
-#include "vacations.h"
-#include "absence.h"
-#include "absenceMedia.h"
 #include "fault.h"
-#include "faultMedia.h"
-//#include "kpi.h"
-//#include "evidence.h"
-//#include "evidenceMedia.h"
+#include "kpi.h"
+#include "evidence.h"
+#include "evidenceMedia.h"
 
 using namespace std;
 
 int main() {
 
     srand (time(NULL));
-    createUsers(100);
-    users.print();
 
     freopen("addData.sql", "w", stdout);  // Pasa el output a un archivo
-    
-    createTemplateHolidays(20);
-    templateHolidays.print();
-
-    createUsedHolidays(50);
-    usedHolidays.print();
 
     createPrivileges();
-    for(auto i:privileges) i.print();
+    privileges.print();
 
     createRoles();
-    for(auto i:roles) i.print();
+    roles.print();
 
     createRolePrivileges();
     rolePrivileges.print();
@@ -58,10 +49,18 @@ int main() {
     createDepartment(25);
     department.print();
 
+    createUsers(100);
+    users.print();
 
     createUserDepartment(160);
     userDepartment.print();
     selectUserPriorityDepartment();
+
+    createTemplateHolidays(20);
+    templateHolidays.print();
+
+    createUsedHolidays(50);
+    usedHolidays.print();
 
     createUsedWorkStatus(60);
     WorkStatus1.print();
@@ -81,6 +80,9 @@ int main() {
     createMesures(150);
     measures.print();
 
+    createFaults(50);
+    faults.print();
+
     createVacations(60);
     vacations.print();
     
@@ -89,12 +91,6 @@ int main() {
     
     createAbsenceMedia(50);
     absenceMedia.print();
-
-    createFaults(50);
-    faults.print();
-
-    createFaultMedia(50);
-    faultMedia.print();
 
     /*
     createKpi(50);

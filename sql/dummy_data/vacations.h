@@ -7,7 +7,7 @@ using namespace std;
 
 class Vacations {
     private:
-        string id;
+        int id;
         int leaderStatus;
         int hrStatus;
         string reason;
@@ -21,14 +21,14 @@ class Vacations {
             string,
             string
         );
-        string getId();
+        int getId();
         void print();
 };
 
 Randomizer<Vacations> vacations;
 
 Vacations::Vacations(int LeaderStatus, string Reason, int HrStatus, string StartDate, string EndDate) {
-    id = generateUUID();
+    id = vacations.size() + 1;
     leaderStatus = LeaderStatus;
     reason = Reason;
     hrStatus = HrStatus;
@@ -37,12 +37,12 @@ Vacations::Vacations(int LeaderStatus, string Reason, int HrStatus, string Start
     
 };
 
-string Vacations::getId(){
+int Vacations::getId(){
     return id;
 };
 
 void Vacations::print() {
-    cout << "INSERT INTO vacation(vacationID, startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << id << "', '" << startDate << "', '" << endDate << "', '" << reason << "', " << leaderStatus << ", " <<  hrStatus << ", '" << users.random().getId() << "');\n";
+    cout << "INSERT INTO vacation(startDate, endDate, reason, leaderStatus, hrStatus, vacationUserIDFK) VALUES('" << startDate << "', '" << endDate << "', '" << reason << "', " << leaderStatus << ", " <<  hrStatus << ", " << users.random().getId() << ");\n";
 };
 
 Randomizer<int> leaderStatus = {

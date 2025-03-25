@@ -1,86 +1,36 @@
-<div class="container mx-auto p-4">
-    <!-- Selector de vista -->
-    <div class="flex justify-end mb-4 gap-2">
-        <button
-            onclick="setViewPreference(true)"
-            class="px-4 py-2 rounded-md flex items-center <%= isMonthView ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' %>"
-        >
-            Vista Mensual
-        </button>
-        <button
-            onclick="setViewPreference(false)"
-            class="px-4 py-2 rounded-md flex items-center <%= !isMonthView ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' %>"
-        >
-            Vista Semanal
-        </button>
-    </div>
-
-    <!-- Encabezados de días -->
-    <div class="grid grid-cols-7 gap-1 mb-2">
-        <% weekDays.forEach(day => { %>
-        <div class="text-center font-bold py-2 bg-gray-100 rounded">
-            <%= day %>
+<div class="content">
+    <div class="card">
+        <div class="card-content">
+            <h2>Empleado consulta su calendario</h2>
+            <p>En esta ruta, el empleado podrá ver su calendario, junto con sus eventos en los próximos días (one on one, días feriados, vacaciones). Lo podrá ver de forma semanal o mensual.</p>
         </div>
-        <% }); %>
-    </div>
-
-    <!-- Días del calendario -->
-    <div class="grid grid-cols-7 gap-1">
-        <% days.forEach((day, index) => { %>
-        <div
-            class="min-h-24 p-1 rounded <%= day.isEmpty ? 'bg-gray-50' : 'bg-white border border-gray-200' %>"
-        >
-            <% if (!day.isEmpty) { %>
-            <div class="text-right font-medium mb-1"><%= day.dayNumber %></div>
-
-            <!-- Vacaciones -->
-            <% day.events.vacations.forEach(vacation => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-blue-500 <%= vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : '' %> <%= vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : '' %>"
-            >
-                <%= vacation.isStart ? 'Inicio ' : (vacation.isEnd ? 'Fin ' :
-                '') %>Vacaciones
-            </div>
-            <% }); %>
-
-            <!-- Ausencias -->
-            <% day.events.absences.forEach(absence => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-red-500 <%= absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : '' %> <%= absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : '' %>"
-            >
-                <%= absence.isStart ? 'Inicio ' : (absence.isEnd ? 'Fin ' : '')
-                %><%= absence.type || 'Ausencia' %>
-            </div>
-            <% }); %>
-
-            <!-- Feriados -->
-            <% day.events.holidays.forEach(holiday => { %>
-            <div class="text-xs mb-1 p-1 rounded text-white bg-green-500">
-                <%= holiday.name || 'Feriado' %>
-            </div>
-            <% }); %>
-
-            <!-- One-to-One -->
-            <% day.events.oneToOnes.forEach(oneToOne => { %>
-            <div class="text-xs mb-1 p-1 rounded text-white bg-purple-500">
-                1:1 <%= oneToOne.participant ? `con ${oneToOne.participant}` :
-                '' %>
-            </div>
-            <% }); %> <% } %>
-        </div>
-        <% }); %>
     </div>
 </div>
 
-<script>
-    // Función para establecer la preferencia de vista (mes o lista)
-    function setViewPreference(isMonthView) {
-        // Establecer la cookie con el valor de la preferencia
-        document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${
-            30 * 24 * 60 * 60
-        }; path=/`;
-
-        // Recargar la página para que los cambios se apliquen
-        window.location.reload();
-    }
-</script>
+<div class="content">
+    <div class="card">
+        <div class="box">
+            <div class="card-content">
+                <h3>Vacaciones</h3>
+                <p>Ver tus solicitudes de vacaciones</p>
+                    <a href="/vacation" class="button">Vacaciones</a>
+                    <a href="/vacation/add" class="button">Agregar</a>
+            </div>
+        </div>
+        <div class="box">
+            <div class="card-content">
+                <h3>Ausencias</h3>
+                <p>Ver tus ausencias</p>
+                    <a href="/absence" class="button">Ausencias</a>
+                    <a href="/absence/add" class="button">Agregar</a>
+            </div>
+        </div>
+        <div class="box">
+            <div class="card-content">
+                <h3>One on One</h3>
+                <p>Ver tus sesiones de One on One</p>
+                    <a href="/oneToOne" class="button">One to One</a>
+            </div>
+        </div>
+    </div>
+</div>
