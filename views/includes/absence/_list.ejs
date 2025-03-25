@@ -31,7 +31,15 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= new Date(ab.startDate).toLocaleDateString('es-MX') %></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= new Date(ab.endDate).toLocaleDateString('es-MX') %></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 total-days" data-start-date="<%= ab.startDate %>" data-end-date="<%= ab.endDate %>"></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= ab.justified %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <% if  (ab.justified === 0) {%>
+                        No aprobado
+                    <% } else if (ab.justified === 1) { %>
+                        Aprobado
+                    <% else if (ab.justified === 2) {
+                        
+                    <% }  %>
+                </td>
                 </tr>
                 <% } %>
             </tbody>

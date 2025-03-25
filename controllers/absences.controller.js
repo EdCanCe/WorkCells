@@ -44,24 +44,24 @@ exports.getApprove = (request, response, next) => {
         });
 };
 
-exports.postAdd = (req, res, next) => {
-    console.log(req.body);
-    Absence.getID(req.session.mail).then(([rows]) => {
+exports.postAdd = (request, response, next) => {
+    console.log(request.body);
+    Absence.getID(request.session.mail).then(([rows]) => {
         if (rows.length == 0) {
-            res.send(500);
+            response.send(500);
         }
         const userID = rows[0].userID;
         const absence = new Absence(
-            req.body.startDate,
-            req.body.endDate,
-            req.body.reason,
+            request.body.startDate,
+            request.body.endDate,
+            request.body.reason,
             userID
         );
         absence
             .save()
             .then(() => {
-                req.session.info = `Absence from ${absence.startDate} to ${absence.endDate} created`;
-                res.redirect("/absence");
+                request.session.info = `Absence from ${absence.startDate} to ${absence.endDate} created`;
+                response.redirect("/absence");
             })
             .catch((err) => {
                 console.log(err);
@@ -69,22 +69,22 @@ exports.postAdd = (req, res, next) => {
     });
 };
 
-exports.getRoot = (req, res, next) => {
-    const mensaje = req.session.info || "";
-    if (req.session.info) {
-        req.session.info = "";
+exports.getRoot = (request, response, next) => {
+    const mensaje = request.session.info || "";
+    if (request.session.info) {
+        request.session.info = "";
     }
-    console.log(req.session.mail);
-    Absence.getID(req.session.mail).then(([rows]) => {
+    console.log(request.session.mail);
+    Absence.getID(request.session.mail).then(([rows]) => {
         if (rows.length == 0) {
-            res.send(500);
+            response.send(500);
         }
         const userID = rows[0].userID;
         Absence.fetchAllByID(userID)
             .then(([rows, fieldData]) => {
                 console.log(fieldData);
                 console.log(rows);
-                res.render("absencesList", {
+                response.render("absencesList", {
                     absences: rows,
                     info: mensaje,
                 });
