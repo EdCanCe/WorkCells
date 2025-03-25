@@ -9,5 +9,9 @@ module.exports = class AbsenceMedia {
 
     save() {
         const absenceMediaID = uuidv4();
+        return db.execute(
+            `INSERT INTO absencemedia(absenceMediaID, mediaLink, absenceIDFK) VALUES(?,?,?)`,
+            [absenceMediaID, this.mediaLink, this.absenceIDFK]
+        );
     }
 };

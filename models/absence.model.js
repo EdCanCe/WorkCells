@@ -27,15 +27,14 @@ module.exports = class Absence {
     }
 
     static fetchAll() {
-        return db.execute(
-            "SELECT * FROM absence ORDER BY startDate DESC LIMIT 10"
-        );
+        return db.execute("SELECT * FROM absence ORDER BY startDate DESC");
     }
 
     static fetchAllByID(id) {
-        return db.execute("SELECT * FROM absence WHERE absenceUserIDFK = ?", [
-            id,
-        ]);
+        return db.execute(
+            "SELECT * FROM absence WHERE absenceUserIDFK = ? ORDER BY startDate DESC",
+            [id]
+        );
     }
 
     static fetchOne(id) {
