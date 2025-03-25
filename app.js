@@ -77,6 +77,9 @@ app.use("/holiday", holidayRouter);
 const oneToOneRouter = require("./routes/oneToOne.routes.js");
 app.use("/oneToOne", oneToOneRouter);
 
+const reportRouter = require("./routes/report.routes.js");
+app.use("/reports", reportRouter);
+
 app.use((request, response, next) => {
     response.statusCode = 404;
     response.render("notFound");
