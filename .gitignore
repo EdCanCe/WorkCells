@@ -2,6 +2,7 @@
 *.mp4
 *.jpeg
 *.jpg
+*.pdf
 *.out
 *.exe
 .vscode/*
