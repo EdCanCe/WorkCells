@@ -1,0 +1,37 @@
+<div class="p-6">
+<h2 class="text-2xl font-semibold mb-4">Escribe los datos sobre tu Ausencia</h2>
+
+<% if (info !== '') { %>
+    <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4" role="alert">
+    <%= info %>
+    </div>
+<% } %>
+
+<form action="/absence/add" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+    <div>
+    <label class="block text-gray-700 font-medium mb-2">Fecha de inicio de la ausencia:</label>
+    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="date" name="startDate" required />
+    </div>
+
+    <div>
+    <label class="block text-gray-700 font-medium mb-2">Fecha de finalización de la ausencia:</label>
+    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="date" name="endDate" required />
+    </div>
+
+    <div>
+    <label class="block text-gray-700 font-medium mb-2">Motivo de la ausencia:</label>
+    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" name="reason" required placeholder="Me enfermé y tuve que acudir al médico"></textarea>
+    </div>
+
+    <!-- <div>
+    <label class="block text-gray-700 font-medium mb-2">Evidencia:</label>
+    <input class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" type="file" name="evidence" />
+    </div> -->
+
+    <div>
+    <input class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer" type="submit" value="Enviar" />
+    </div>
+</form>
+</div>

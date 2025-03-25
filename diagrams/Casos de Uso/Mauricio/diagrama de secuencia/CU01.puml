@@ -1,0 +1,60 @@
+@startuml
+actor Navegador
+boundary faults.ejs
+boundary faults.routes
+control faults.controller
+entity FaultsModel
+database mysql
+
+
+autonumber
+' Inicio del flujo
+activate Navegador
+Navegador -> faults.routes : GET /faults
+deactivate Navegador
+activate faults.routes
+faults.routes -> faults.controller : get_faults(req, res)
+deactivate faults.routes
+activate faults.controller
+
+
+' Se utiliza la instancia para obtener los datos
+faults.controller ->> FaultsModel : fetchAll()
+activate FaultsModel
+
+FaultsModel ->> mysql : SELECT * FROM faults
+activate mysql
+mysql -->> FaultsModel : Datos obtenidos
+deactivate mysql
+
+FaultsModel -->> faults.controller : Retorno de datos de faltas.
+deactivate FaultsModel
+
+faults.controller -> faults.ejs : render(faults)
+activate faults.ejs
+faults.ejs -> Navegador : Mostrar faltas
+activate Navegador
+deactivate faults.ejs
+deactivate faults.controller
+deactivate faults.routes
+
+Navegador -> faults.controller : Selección de ausencia.
+deactivate Navegador
+activate faults.controller
+faults.controller ->> FaultsModel : get_info(Id)
+activate FaultsModel
+FaultsModel ->> mysql : SELECT summary FROM faults WHERE faultId = Id
+activate mysql
+mysql -->> FaultsModel : Datos obtenidos
+deactivate mysql
+FaultsModel -->> faults.controller : Retorno de descripción de falta
+activate faults.ejs
+faults.controller -> faults.ejs : render(summary)
+activate Navegador
+faults.ejs -> Navegador : descripción de la falta
+deactivate faults.ejs
+
+
+
+
+@enduml
