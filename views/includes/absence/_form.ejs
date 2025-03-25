@@ -1,38 +1,64 @@
-<h2 class="title">Escribe los datos sobre tu Ausencia</h2>
+<h2 class="text-2xl font-bold mb-4">Escribe los datos sobre tu Ausencia</h2>
 
 <% if (info != '') { %>
-<div class="notification is-info"><%= info %></div>
+<div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4"><%= info %></div>
 <% } %>
 
-<form action="/absence/add" method="POST">
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+<div class="flex items-center justify-center">
+    <form action="/absence/add" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-    <div class="block">
-        <label class="label">Fecha de inicio de la ausencia: </label>
-        <input class="input" type="date" name="startDate" required />
-        <label class="label">Fecha de finalización de la ausencia: </label>
-        <input class="input" type="date" name="endDate" required />
-    </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-1"
+                >Fecha de inicio de la ausencia:
+            </label>
+            <input
+                class="w-3/4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="date"
+                name="startDate"
+                required
+            />
+            <label class="block text-gray-700 font-semibold mb-1"
+                >Fecha de finalización de la ausencia:
+            </label>
+            <input
+                class="w-3/4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="date"
+                name="endDate"
+                required
+            />
+        </div>
 
-    <div class="block">
-        <label class="label">Motivo de la ausencia: </label>
-        <textarea
-            class="textarea"
-            type="text"
-            name="reason"
-            required
-            placeholder="Me enfermé y tuve que acudir al médico"
-        >
-        </textarea>
-    </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-1"
+                >Motivo de la ausencia:
+            </label>
+            <textarea
+                class="w-3/4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="text"
+                name="reason"
+                required
+                placeholder="Me enfermé y tuve que acudir al médico"
+            >
+            </textarea>
+        </div>
 
-    <div class="block">
-        <label class="label">
-            <input type="file" name="evidence" />
-        </label>
-    </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-1">
+                <input
+                    class="block text-gray-700 font-semibold w-3/4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="file"
+                    name="evidence"
+                />
+            </label>
+        </div>
 
-    <div class="block">
-        <input class="button" type="submit" value="Enviar" />
-    </div>
-</form>
+        <div class="mb-4">
+            <input
+                class="w-1/6 bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                type="submit"
+                value="Enviar"
+            />
+        </div>
+    </form>
+</div>
