@@ -1,7 +1,7 @@
 <div class="p-6">
   <div class="bg-white shadow-md rounded-lg mb-6">
     <div class="p-6">
-      <h2 class="text-2xl font-semibold mb-4">Add Unique Holiday</h2>
+      <h2 class="text-2xl font-semibold mb-4">Add Used Holiday</h2>
       <% if (info) { %>
       <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4"><%= info %></div>
       <% } %>
@@ -22,9 +22,12 @@
               required
             >
               <option value="" selected disabled>Select Holiday</option>
-              <%holidays.forEach(holiday => { %>
+              <%holidays.forEach(holiday => { const date = new
+              Date(holiday.holidayDate); const formattedDate =
+              date.toLocaleDateString('en-US', { weekday: 'long', day:
+              '2-digit', month: 'long', year: 'numeric' });%>
               <option value="<%=holiday.templateHolidayID %>">
-                <%=holiday.title %>
+                <%=holiday.title %> - <%=formattedDate %>
               </option>
               <% }) %>
             </select>

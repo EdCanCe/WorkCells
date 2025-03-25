@@ -31,6 +31,21 @@ module.exports = class Employee {
   }
 
   save() {
+    // Validación de CURP
+    if (
+      !/^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/.test(this.curp.toUpperCase())
+    ) {
+      return Promise.reject(
+        new Error("CURP inválido. Debe contener 18 caracteres alfanuméricos.")
+      );
+    }
+
+    // Validación de RFC (12 o 13 caracteres)
+    if (!/^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/.test(this.rfc.toUpperCase())) {
+      return Promise.reject(
+        new Error("RFC inválido. Debe contener 13 caracteres alfanuméricos.")
+      );
+    }
     const userID = uuidv4();
     const passwd = "1234"; // Considera usar un hash para seguridad
     const passwdFlag = false;

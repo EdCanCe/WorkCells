@@ -14,7 +14,9 @@ module.exports = class Holiday {
       .execute(checkDateQuery, [this.usedDate, this.usedTemplateHolidayIDFK])
       .then(([rows]) => {
         if (rows.length > 0) {
-          throw new Error("El dia feriado que deseas agregar ya fue agregado.");
+          throw new Error(
+            "El dia feriado que deseas agregar ya fue agregado en este año."
+          );
         }
 
         const query = `INSERT INTO usedHoliday(usedHolidayID, usedDate, usedTemplateHolidayIDFK) VALUES( ?, ?, ?)`;
@@ -31,7 +33,7 @@ module.exports = class Holiday {
   }
 
   static fetchAll() {
-    return db.execute(`SELECT templateHolidayID, title FROM templateHoliday`);
+    return db.execute(`SELECT * FROM templateHoliday`);
   }
 
   static fetchByDateType(startDate, endDate) {
