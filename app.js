@@ -7,23 +7,23 @@ app.set("views", "views");
 const session = require("express-session");
 
 app.use(
-  session({
-    secret:
-      "mi string secreto que debe ser un string aleatorio muy largo, no como éste",
-    resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
-    saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
-  })
+	session({
+		secret:
+		"mi string secreto que debe ser un string aleatorio muy largo, no como éste",
+		resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
+		saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+	})
 );
 const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
-  session({
-    secret:
-      "mi string secreto que debe ser un string aleatorio muy largo, no como éste",
-    resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
-    saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
-  })
+	session({
+		secret:
+		"mi string secreto que debe ser un string aleatorio muy largo, no como éste",
+		resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
+		saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+	})
 );
 
 const bodyParser = require("body-parser");
@@ -69,8 +69,8 @@ const oneToOneRouter = require("./routes/oneToOne.routes.js");
 app.use("/oneToOne", oneToOneRouter);
 
 app.use((request, response, next) => {
-  response.statusCode = 404;
-  response.render("notFound");
+	response.statusCode = 404;
+	response.render("notFound");
 });
 
 app.listen(3000);
