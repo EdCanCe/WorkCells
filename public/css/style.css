@@ -1,32 +1,56 @@
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px;   /* Ajusta el ancho según necesites */
-  height: 100vh;  /* Toda la altura de la ventana */
-  background-color: #ece7e7; /* Color de fondo */
-  padding: 20px;
-  color: white;
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Book.otf") format("opentype");
+    font-weight: 400; /* Normal weight */
+    font-style: normal;
 }
 
-.content {
-  margin-left: 200px; /* Mismo valor (o más) que el width del sidebar */
-  padding: 20px;
-  color: white;
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-BookItalic.otf") format("opentype");
+    font-weight: 400; /* Normal weight */
+    font-style: italic;
 }
 
-.sidebar a {
-  color: #ccc;
-  text-decoration: none;
-  margin: 20px 0;
-  font-size: 1.5rem;
-  transition: color 0.3s;
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Medium.otf") format("opentype");
+    font-weight: 500; /* Medium weight */
+    font-style: normal;
 }
 
-.sidebar a:hover {
-  color: #3b3bde; /* Color al hacer hover */
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-MediumItalic.otf") format("opentype");
+    font-weight: 500; /* Medium weight */
+    font-style: italic;
 }
 
-.login {
-  margin-top: 100px; 
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Bold.otf") format("opentype");
+    font-weight: 600; /* Bold weight */
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Black.otf") format("opentype");
+    font-weight: 700; /* Bold weight */
+    font-style: normal;
+}
+
+body {
+    font-family: "Gotham", sans-serif;
+}
+
+@keyframes collapseText {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
 }
