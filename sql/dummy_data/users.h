@@ -252,7 +252,7 @@ void createUsers(int x){
         string MLname = lastName.random();
         string role = roles[getRandom(roles.size())].getId();
         string Curp = createCurp(Name, FLname, MLname);
-        users.add(User(createUserID(), Curp, createRfc(Curp), Name, (FLname + " " + MLname), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(4), getRandom(2), role, countries.random().getId()));
+        users.add(User(createUserID(), Curp, createRfc(Curp), Name, (FLname + " " + MLname), createMail(), createString(), getRandom(2), createZipCode(), createHouseNumber(), streets.random(), colonies.random(), getRandom(3), getRandom(2), role, countries.random().getId()));
     }
 }
 
