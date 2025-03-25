@@ -1,9 +1,16 @@
 <div class="container mx-auto p-4">
     <div class="bg-white shadow rounded-lg overflow-hidden">
-
         <div class="px-6 py-4 flex justify-end">
-            <a href="/absence/aprove" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 mr-2 rounded">Request</a>
-            <a href="/absence/add" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">Add</a>
+            <a
+                href="/absence/aprove"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 mr-2 rounded"
+                >Request</a
+            >
+            <a
+                href="/absence/add"
+                class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+                >Add</a
+            >
         </div>
 
         <div class="p-6">
@@ -13,44 +20,92 @@
                 <%= info %>
             </div>
             <% } %>
-    
-            <table class="min-w-full divide-y divide-gray-200" id="absences-table">
-            <thead class="bg-gray-50">
-                <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de inicio</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha final</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total de días</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <% for(let ab of absences) { %>
-                <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= ab.reason %></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= new Date(ab.startDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= new Date(ab.endDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 total-days" data-start-date="<%= ab.startDate %>" data-end-date="<%= ab.endDate %>"></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= ab.justified %></td>
-                </tr>
-                <% } %>
-            </tbody>
+
+            <table
+                class="min-w-full divide-y divide-gray-200"
+                id="absences-table"
+            >
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Reason
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Fecha de inicio
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Fecha final
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Total de días
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <% for(let ab of absences) { %>
+                    <tr>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                            <%= ab.reason %>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                            <%= new
+                            Date(ab.startDate).toLocaleDateString('es-MX') %>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                            <%= new Date(ab.endDate).toLocaleDateString('es-MX')
+                            %>
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 total-days"
+                            data-start-date="<%= ab.startDate %>"
+                            data-end-date="<%= ab.endDate %>"
+                        ></td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                            <%= ab.justified %>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
             </table>
         </div>
     </div>
 </div>
 
-
 <script>
     // Calcular los días para cada fila una vez que la página se ha cargado
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const rows = document.querySelectorAll("#absences-table tbody tr");
-        rows.forEach(row => {
-            const startDate = new Date(row.querySelector(".total-days").getAttribute("data-start-date"));
-            const endDate = new Date(row.querySelector(".total-days").getAttribute("data-end-date"));
+        rows.forEach((row) => {
+            const startDate = new Date(
+                row.querySelector(".total-days").getAttribute("data-start-date")
+            );
+            const endDate = new Date(
+                row.querySelector(".total-days").getAttribute("data-end-date")
+            );
             const timeDifference = endDate - startDate;
             const totalDays = timeDifference / (1000 * 3600 * 24);
-            
+
             // Asignar el total de días a la celda correspondiente
             row.querySelector(".total-days").innerText = totalDays;
         });

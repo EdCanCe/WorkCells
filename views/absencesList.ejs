@@ -1,22 +1,2 @@
 <%- include('includes/_header') %> <%- include('includes/_navbar') %> <%-
-include('includes/absence/_absenceList.ejs') %> <%- include('includes/_footer')
-%>
-<script>
-    // Calcular los días para cada fila una vez que la página se ha cargado
-    document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll("#absences-table tbody tr");
-        rows.forEach((row) => {
-            const startDate = new Date(
-                row.querySelector(".total-days").getAttribute("data-start-date")
-            );
-            const endDate = new Date(
-                row.querySelector(".total-days").getAttribute("data-end-date")
-            );
-            const timeDifference = endDate - startDate;
-            const totalDays = timeDifference / (1000 * 3600 * 24);
-
-            // Asignar el total de días a la celda correspondiente
-            row.querySelector(".total-days").innerText = totalDays;
-        });
-    });
-</script>
+include('includes/absence/_list.ejs') %> <%- include('includes/_footer') %>
