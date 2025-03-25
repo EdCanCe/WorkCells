@@ -11,6 +11,8 @@ router.post("/add", isAuth, absencesControllers.postAdd);
 
 router.get("/check", isAuth, absencesControllers.getCheck);
 
+router.get("/deny/:absenceID", isAuth, )
+
 router.get("/", isAuth, absencesControllers.getRoot);
 
 module.exports = router;

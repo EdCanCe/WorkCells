@@ -20,6 +20,10 @@ exports.getAdd = (request, response, next) => {
         });
 };
 
+exports.postDenyRequest = (request, response, next) => {
+  
+}
+
 exports.getApprove = (request, response, next) => {
     // console.log("Session:", request.session);
     // console.log("UserID from session:", request.session.userID);

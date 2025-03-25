@@ -61,12 +61,16 @@
                 ></td>
                 <th class="px-4 py-2 text-left font-semibold text-gray-700">
                   <% if  (ab.justified === 0) { %>
-                    Deny
+                    Denyed
                   <% } else if (ab.justified === 1) { %>
                     Approved
                   <% } else if (ab.justified === 2) { %>
                     <div class="px-6 py-4 flex justify-end">
-                      <button class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded">
+                      <button 
+                      action="/absence/deny/<%-ab.absenceID%>"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded">
                         Approve
                       </button>
                       <br>
