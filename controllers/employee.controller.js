@@ -3,13 +3,15 @@ const Employee = require("../models/employee.model");
 exports.getAdd = (request, response, next) => {
   const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
 
-  // Limpiar el mensaje después de usarlo
-  request.session.info = "";
-
-  response.render("employeeAdd", {
-    isLoggedIn: request.session.isLoggedIn || false,
-    info: mensaje, // Pasamos el mensaje de la sesión
-    csrfToken: request.csrfToken(),
+  Employee.fetchCountry().then(([rows]) => {
+    // Limpiar el mensaje después de usarlo
+    request.session.info = "";
+    response.render("employeeAdd", {
+      employees: rows,
+      isLoggedIn: request.session.isLoggedIn || false,
+      info: mensaje, // Pasamos el mensaje de la sesión
+      csrfToken: request.csrfToken(),
+    });
   });
 };
 

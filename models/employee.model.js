@@ -59,8 +59,8 @@ module.exports = class Employee {
 
         return db.execute(query, [
           userID,
-          this.curp,
-          this.rfc,
+          this.curp.toUpperCase(),
+          this.rfc.toUpperCase(),
           this.birthName,
           this.surname,
           this.mail,
@@ -80,5 +80,8 @@ module.exports = class Employee {
         console.error("Error al guardar el usuario:", error.message);
         throw error;
       });
+  }
+  static fetchCountry() {
+    return db.execute(`SELECT * FROM country`);
   }
 };
