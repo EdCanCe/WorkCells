@@ -1,4 +1,10 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <string>
 #include "templateHoliday.h"
 #include "usedHoliday.h"
 #include "privileges.h"

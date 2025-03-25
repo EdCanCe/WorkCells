@@ -4,6 +4,8 @@
 #include "random.h"
 #include "department.h"
 #include "users.h"
+#include <map>
+
 
 using namespace std;
 
@@ -42,7 +44,7 @@ void createUserDepartment(int x) {
 
 void selectUserPriorityDepartment(){
     for(int i = 0; i < users.size(); i++){
-        if(!auxLink[userIds[i]].size() == 0){
+        if(auxLink[userIds[i]].size() != 0){
             cout << "UPDATE user SET prioritaryDepartmentFK = '" << auxLink[userIds[i]].random() << "' WHERE userID = '" << userIds[i] << "'; \n";
         }
     }

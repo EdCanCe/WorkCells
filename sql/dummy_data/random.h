@@ -1,7 +1,13 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 using namespace std;
