@@ -11,7 +11,8 @@ router.post("/add", isAuth, absencesControllers.postAdd);
 
 router.get("/check", isAuth, absencesControllers.getCheck);
 
-router.get("/deny/:absenceID", isAuth, )
+router.post("/deny/:absenceID", isAuth, absencesControllers.postDenyRequest);
+router.post("/approve/:absenceID", isAuth, absencesControllers.postApproveRequest);
 
 router.get("/", isAuth, absencesControllers.getRoot);
 

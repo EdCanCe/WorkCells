@@ -16,25 +16,25 @@
         >
           <thead>
             <tr class="bg-gray-100">
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="nombre">Full name</abbr>
               </th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="colaborador">Role</abbr>
               </th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="razon">Start date</abbr>
               </th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="estado">End date</abbr>
               </th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="estado">Total days</abbr>
               </th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="estado">Status</abbr>
               </th>
-              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+              <th class="px-4 py-2 text-center font-semibold text-gray-700">
                 <abbr title="modificar"></abbr>
               </th>
             </tr>
@@ -42,16 +42,16 @@
           <tbody>
             <% for (let ab of absences) { %>
               <tr class="bg-gray-100">
-                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <th class="px-4 py-2 text-center font-semibold text-gray-700">
                   <%- ab.birthName + ' ' + ab.surname %>
                 </th>
-                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <th class="px-4 py-2 text-center font-semibold text-gray-700">
                   <%- ab.title %>
                 </th>
-                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <th class="px-4 py-2 text-center font-semibold text-gray-700">
                   <%= new Date(ab.startDate).toLocaleDateString('es-MX'); %>
                 </th>
-                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <th class="px-4 py-2 text-center font-semibold text-gray-700">
                   <%= new Date(ab.endDate).toLocaleDateString('es-MX'); %>
                 </th>
                 <td
@@ -59,7 +59,7 @@
                 data-start-date="<%= ab.startDate %>"
                 data-end-date="<%= ab.endDate %>"
                 ></td>
-                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <th class="px-4 py-2 text-center font-semibold text-gray-700">
                   <% if  (ab.justified === 0) { %>
                     Denyed
                   <% } else if (ab.justified === 1) { %>
@@ -67,20 +67,22 @@
                   <% } else if (ab.justified === 2) { %>
                     <div class="px-6 py-4 flex justify-end">
                       <button 
-                      action="/absence/deny/<%-ab.absenceID%>"
-                      method="POST"
-                      enctype="multipart/form-data"
-                      class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded">
+                        id="approve"
+                        data-url="/absence/approve/<%- ab.absenceID %>"
+                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded">
                         Approve
                       </button>
                       <br>
-                      <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 mr-2 rounded">
+                      <button 
+                        id="deny"
+                        data-url="/absence/deny/<%- ab.absenceID %>"
+                        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 mr-2 rounded">
                         Deny
                       </button>
                     </div>
                   <% } %>
                 </th>
-                <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <th class="px-4 py-2 text-center font-semibold text-gray-700">
                   <a
                   href="/absence/modify"
                   class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded">
@@ -123,6 +125,60 @@
           row.querySelector(".total-days").innerText = totalDays;
       });
   });
+
+  // Agregar event listener a todos los botones de "Approve"
+  document.querySelectorAll('.approve-btn').forEach(button => {
+    button.addEventListener('click', function(event) {
+      const url = this.dataset.url;
+      const csrf = document.getElementById('_csrf').value;
+      
+      // Se define el body de la petición, si no se requiere información adicional se puede enviar un objeto vacío
+      const data = {};
+
+      fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'csrf-token': csrf
+          },
+          body: JSON.stringify(data)
+      })
+      .then(result => result.json())
+      .then(data => {
+          // Actualizar el texto del botón a "Approved" o realizar otra acción según la respuesta
+          this.innerText = "Approved";
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    });
+  });
+
+  // Agregar event listener a todos los botones de "Deny"
+  document.querySelectorAll('.deny-btn').forEach(button => {
+    button.addEventListener('click', function(event) {
+      const url = this.dataset.url;
+      const csrf = document.getElementById('_csrf').value;
+      const data = {};
+
+      fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'csrf-token': csrf
+          },
+          body: JSON.stringify(data)
+      })
+      .then(result => result.json())
+      .then(data => {
+          this.innerText = "Denyed";
+      })
+      .catch(err => {
+          console.log(err);
+      });
+    });
+  });
+
 </script>
 
 <%- include('includes/_footer') %>

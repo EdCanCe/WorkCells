@@ -6,7 +6,6 @@ exports.getCheck = (request, response, next) => {
 };
 
 exports.getAdd = (request, response, next) => {
-    console.log(request.session.mail);
     Absence.fetchAll()
         .then(([absences, fieldData]) => {
             response.render("absencesAdd", {
@@ -20,15 +19,19 @@ exports.getAdd = (request, response, next) => {
         });
 };
 
+// exports.postDenyRequest = (request, response, next) => {
+//   response.status(200).json({message: "Respuesta asíncrona"});
+// }
+
 exports.postDenyRequest = (request, response, next) => {
-  
-}
+  response.status(200).json({ message: "Deny response sent" });
+};
+
+exports.postApproveRequest = (request, response, next) => {
+  response.status(200).json({ message: "Approved successfully" });
+};
 
 exports.getApprove = (request, response, next) => {
-    // console.log("Session:", request.session);
-    // console.log("UserID from session:", request.session.userID);
-    // const employeedId = request.session.userID;
-    // console.log(employeedId);
 
     const mensaje = request.session.info || "";
     request.session.info = ""; // Limpiar la sesión después de usar el mensaje
@@ -81,7 +84,6 @@ exports.getRoot = (request, response, next) => {
     if (request.session.info) {
         request.session.info = "";
     }
-    console.log(request.session);
     Absence.getID(request.session.mail).then(([rows]) => {
         if (rows.length == 0) {
             response.send(500);

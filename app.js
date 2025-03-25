@@ -24,6 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(cookieParser());
 //fileStorage: Es nuestra constante de configuración para manejar el almacenamiento
