@@ -14,6 +14,7 @@ app.use(
     saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
   })
 );
+
 const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -30,12 +31,13 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 const csrf = require("csurf");
 const csrfProtection = csrf();
 app.use(csrfProtection);
 
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
 
 const usersRoutes = require("./routes/user.routes");
 app.use("/login", usersRoutes);
