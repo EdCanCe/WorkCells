@@ -1,15 +1,19 @@
 <%- include('includes/_header.ejs') %> <%- include('includes/_navbar.ejs') %>
 <script src="/javascript/employeeValidator.js"></script>
+
 <div class="content p-4">
   <div class="card bg-white shadow-md rounded-lg p-4">
     <div class="card-content">
-      <h1 class="text-3xl font-semibold mb-4">Add Employee</h1>
+      <h1 class="text-3xl font-semibold mb-4">Create New Employee</h1>
       <% if (info) { %>
       <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4"><%= info %></div>
       <% } %>
       <form id="registerForm" action="/employee" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-        <div class="space-y-4">
+
+        <!-- Datos generales -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <!-- CURP -->
           <div class="field">
             <label for="curp" class="block text-lg font-medium">CURP</label>
             <input
@@ -24,6 +28,7 @@
             <div id="curpFormatError" class="text-red-600 text-sm mt-2"></div>
           </div>
 
+          <!-- RFC -->
           <div class="field">
             <label for="rfc" class="block text-lg font-medium">RFC</label>
             <input
@@ -38,6 +43,7 @@
             <div id="rfcFormatError" class="text-red-600 text-sm mt-2"></div>
           </div>
 
+          <!-- Name -->
           <div class="field">
             <label for="birthName" class="block text-lg font-medium"
               >Name</label
@@ -52,6 +58,7 @@
             />
           </div>
 
+          <!-- Surname -->
           <div class="field">
             <label for="surname" class="block text-lg font-medium"
               >Surname</label
@@ -66,6 +73,7 @@
             />
           </div>
 
+          <!-- Email -->
           <div class="field">
             <label for="mail" class="block text-lg font-medium">Email</label>
             <input
@@ -77,7 +85,11 @@
               required
             />
           </div>
+        </div>
 
+        <!-- Dirección -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <!-- Zip Code -->
           <div class="field">
             <label for="zipCode" class="block text-lg font-medium"
               >Zip Code</label
@@ -92,6 +104,7 @@
             />
           </div>
 
+          <!-- House Number -->
           <div class="field">
             <label for="houseNumber" class="block text-lg font-medium"
               >House Number</label
@@ -106,6 +119,7 @@
             />
           </div>
 
+          <!-- Street Name -->
           <div class="field">
             <label for="streetName" class="block text-lg font-medium"
               >Street Name</label
@@ -120,6 +134,7 @@
             />
           </div>
 
+          <!-- Colony -->
           <div class="field">
             <label for="colony" class="block text-lg font-medium">Colony</label>
             <input
@@ -132,6 +147,30 @@
             />
           </div>
 
+          <!-- Country (Moved here) -->
+          <div class="field">
+            <label for="countryUserIDFK" class="block text-lg font-medium"
+              >Country</label
+            >
+            <select
+              id="countryUserIDFK"
+              name="countryUserIDFK"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              required
+            >
+              <option value="" selected disabled>Select Country</option>
+              <%employees.forEach(employee => { %>
+              <option value="<%=employee.countryID %>">
+                <%=employee.title %>
+              </option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <!-- Rol y modalidad -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <!-- Work Modality -->
           <div class="field">
             <label for="workModality" class="block text-lg font-medium"
               >Work Modality</label
@@ -149,6 +188,7 @@
             </select>
           </div>
 
+          <!-- User Role -->
           <div class="field">
             <label for="userRoleIDFK" class="block text-lg font-medium"
               >User Role</label
@@ -171,39 +211,20 @@
               </option>
             </select>
           </div>
+        </div>
 
-          <div class="field">
-            <label for="countryUserIDFK" class="block text-lg font-medium"
-              >Country</label
-            >
-            <select
-              id="countryUserIDFK"
-              name="countryUserIDFK"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              required
-            >
-              <option value="" selected disabled>Select Country</option>
-              <%employees.forEach(employee => { %>
-              <option value="<%=employee.countryID %>">
-                <%=employee.title %>
-              </option>
-              <% }) %>
-            </select>
-          </div>
-
-          <div class="flex justify-end mt-4">
-            <button
-              type="submit"
-              class="btn bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
-            >
-              Add
-            </button>
-            <a
-              href="/employee"
-              class="btn bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 ml-4"
-              >Cancel</a
-            >
-          </div>
+        <div class="flex justify-end mt-4">
+          <button
+            type="submit"
+            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+          >
+            Add
+          </button>
+          <a
+            href="/employee"
+            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-4"
+            >Cancel</a
+          >
         </div>
       </form>
     </div>
