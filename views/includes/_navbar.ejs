@@ -1,65 +1,92 @@
-<div id='navBar' class='text-neutral-50 bg-neutral-900 border-neutral-700 relative h-screen w-fit border-r-[1px] relative'>
-
-    <div class='bg-neutral-800 border-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden border-b-[1px] text-nowrap'>
-        <a href='/' class='hover:bg-neutral-600 toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-[opacity,width] duration-[1s]'>
-            <span class='text-xl font-semibold inline-block w-full whitespace-nowrap text-center'>WorkCells</span>
+<div
+    id="navBar"
+    class="text-neutral-50 bg-neutral-900 border-neutral-700 relative h-screen w-fit border-r-[1px] relative"
+>
+    <div
+        class="bg-neutral-800 border-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden border-b-[1px] text-nowrap"
+    >
+        <a
+            href="/"
+            class="hover:bg-neutral-600 toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-[opacity,width] duration-[1s]"
+        >
+            <span
+                class="text-xl font-semibold inline-block w-full whitespace-nowrap text-center"
+                >WorkCells</span
+            >
         </a>
-        <div id='openAndCloseNav' class='hover:bg-neutral-600 navIcon z-10 inline-block aspect-square h-full cursor-pointer p-3'>
-            <img src='icons/openArrow.svg' class='size-full'>
+        <div
+            id="openAndCloseNav"
+            class="hover:bg-neutral-600 navIcon z-10 inline-block aspect-square h-full cursor-pointer p-3"
+        >
+            <img src="icons/openArrow.svg" class="size-full" />
         </div>
     </div>
 
     <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
-    <a href='/' class='hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap'>
-        <img src='icons/openArrow.svg' class='navIcon z-10 inline-block aspect-square h-full'>
-        <div class='toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]'>
-            <span class='font-medium inline-block ml-2 whitespace-nowrap'>WorkCells</span>
+    <a
+        href="/"
+        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="icons/openArrow.svg"
+            class="navIcon z-10 inline-block aspect-square h-full"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >WorkCells</span
+            >
         </div>
     </a>
 
-
-
-
-
-
-
-    <a href='/' class='hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap absolute bottom-0'>
-        <img src='icons/logout.svg' class='navIcon z-10 inline-block aspect-square h-full scale-75'>
-        <div class='toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]'>
-            <span class='font-medium inline-block ml-2 whitespace-nowrap'>Logout</span>
+    <a
+        href="/"
+        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap absolute bottom-0"
+    >
+        <img
+            src="icons/logout.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Logout</span
+            >
         </div>
     </a>
 
-    <a class='block p-4'></a>
+    <a class="block p-4"></a>
 </div>
 
 <script>
-    const navToggle = document.getElementById('openAndCloseNav');
-    const navBar = document.getElementById('navBar');
-    const navText = document.querySelectorAll('.toggleText');
-    const navIcons = document.querySelectorAll('.navIcon');
-    const finalWidth = 'w-40'; // Clase de tailwind
+    const navToggle = document.getElementById("openAndCloseNav");
+    const navBar = document.getElementById("navBar");
+    const navText = document.querySelectorAll(".toggleText");
+    const navIcons = document.querySelectorAll(".navIcon");
+    const finalWidth = "w-40"; // Clase de tailwind
 
-    navIcons.forEach(navElement => {
-        navElement.style.height = String(navElement.height) + 'px';
-        navElement.style.width = String(navElement.height) + 'px';
-        navElement.style.minHeight = String(navElement.height) + 'px';
-        navElement.style.minWidth = String(navElement.height) + 'px';
-
+    navIcons.forEach((navElement) => {
+        navElement.style.height = String(navElement.height) + "px";
+        navElement.style.width = String(navElement.height) + "px";
+        navElement.style.minHeight = String(navElement.height) + "px";
+        navElement.style.minWidth = String(navElement.height) + "px";
     });
 
-    navToggle.addEventListener('click', () => {
-        navToggle.classList.toggle('rotate-180');
+    navToggle.addEventListener("click", () => {
+        navToggle.classList.toggle("rotate-180");
 
-        navText.forEach(navElement => {
-            if (navElement.classList.contains('opacity-0')) { //Abre la nav
-                navElement.classList.add('opacity-100', finalWidth);
-                navElement.classList.remove('opacity-0', 'w-0');
-            } else { //Cierra la nav
-                navElement.classList.add('opacity-0', 'w-0');
-                navElement.classList.remove('opacity-100', finalWidth);
+        navText.forEach((navElement) => {
+            if (navElement.classList.contains("opacity-0")) {
+                //Abre la nav
+                navElement.classList.add("opacity-100", finalWidth);
+                navElement.classList.remove("opacity-0", "w-0");
+            } else {
+                //Cierra la nav
+                navElement.classList.add("opacity-0", "w-0");
+                navElement.classList.remove("opacity-100", finalWidth);
             }
         });
-        
     });
 </script>

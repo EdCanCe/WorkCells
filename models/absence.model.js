@@ -21,7 +21,7 @@ module.exports = class Absence {
                     this.startDate,
                     this.endDate,
                     this.reason,
-                    0,
+                    this.justified,
                     this.absenceUserID,
                 ]
             )
