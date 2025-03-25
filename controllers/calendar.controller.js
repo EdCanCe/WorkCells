@@ -4,94 +4,185 @@ const OneToOne = require("../models/oneToOne.model");
 const Holiday = require("../models/holiday.model");
 
 exports.getRoot = (req, res, next) => {
-  let isMonthView = req.cookies.isMonthView || 1;
-  res.cookie("isMonthView", isMonthView, {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-    httpOnly: true,
-  });
+    // 1. Leer la cookie correctamente (convertir a booleano)
+    let isMonthView = (req.cookies.isMonthView === '1') ? true : false; // Convertir a booleano con '1' o '0'
 
-  // Obtener fecha actual y calcular rangos
-  const today = new Date();
-  let startDate, endDate;
+    // 2. Configurar la cookie con valores consistentes
+    res.cookie("isMonthView", isMonthView ? '1' : '0', {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+    });
 
-  if (isMonthView) {
-    // Vista mensual: primer y último día del mes actual
-    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  } else {
-    // Vista semanal: lunes a domingo de la semana actual
-    const dayOfWeek = today.getDay();
-    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajuste para domingo
+    // Obtener fecha actual y calcular rangos
+    const today = new Date();
+    let startDate, endDate;
 
-    startDate = new Date(today);
-    startDate.setDate(today.getDate() - diffToMonday);
+    if (isMonthView) {
+        // Vista mensual: primer y último día del mes actual
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    } else {
+        // Vista semanal: lunes a domingo de la semana actual
+        const dayOfWeek = today.getDay();
+        const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Ajuste para domingo
 
-    endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 6);
-  }
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - diffToMonday);
 
-  // Formatear fechas para SQL (YYYY-MM-DD)
-  const formatDateForSQL = (date) => {
-    return date.toISOString().split("T")[0];
-  };
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+    }
 
-  const sqlStartDate = formatDateForSQL(startDate);
-  const sqlEndDate = formatDateForSQL(endDate);
+    // Formatear fechas para SQL (YYYY-MM-DD)
+    const formatDateForSQL = (date) => {
+        return date.toISOString().split("T")[0];
+    };
 
-  let holidayRows;
-  let absenceRows;
-  let vacationRows;
-  let oneToOneRows;
+    const sqlStartDate = formatDateForSQL(startDate);
+    const sqlEndDate = formatDateForSQL(endDate);
 
-  Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
-    .then(([rows, fieldData]) => {
-      holidayRows = rows;
-      Vacation.fetchByDateType(sqlStartDate, sqlEndDate, req.session.userID)
+    let holidayRows;
+    let absenceRows;
+    let vacationRows;
+    let oneToOneRows;
+
+    Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
         .then(([rows, fieldData]) => {
-          vacationRows = rows;
-          Absence.fetchByDateType(sqlStartDate, sqlEndDate, req.session.userID)
-            .then(([rows, fieldData]) => {
-              absenceRows = rows;
-              OneToOne.fetchByDateType(
-                sqlStartDate,
-                sqlEndDate,
-                req.session.userID
-              )
+            holidayRows = rows;
+            Vacation.fetchByDateType(sqlStartDate, sqlEndDate, req.session.userID)
                 .then(([rows, fieldData]) => {
-                  oneToOneRows = rows;
+                    vacationRows = rows;
+                    Absence.fetchByDateType(sqlStartDate, sqlEndDate, req.session.userID)
+                        .then(([rows, fieldData]) => {
+                            absenceRows = rows;
+                            OneToOne.fetchByDateType(
+                                sqlStartDate,
+                                sqlEndDate,
+                                req.session.userID
+                            )
+                                .then(([rows, fieldData]) => {
+                                    oneToOneRows = rows;
 
-                  console.log(holidayRows);
-                  console.log(vacationRows);
-                  console.log(absenceRows);
-                  console.log(oneToOneRows);
+                                    console.log(holidayRows);
+                                    console.log(vacationRows);
+                                    console.log(absenceRows);
+                                    console.log(oneToOneRows);
 
-                  res.render("calendar", {
-                    isMonthView,
-                    startDate,
-                    endDate,
-                    holidays: holidayRows[0] || [],
-                    vacations: vacationRows[0] || [],
-                    absences: absenceRows[0] || [],
-                    oneToOnes: oneToOneRows[0] || [],
-                  });
+                                    const daysMap = new Map(); // Usamos Map para acceso rápido por fecha
+                                    const currentDate = new Date(startDate);
+
+                                    while (currentDate <= endDate) {
+                                        const dateStr = currentDate.toISOString().split('T')[0];
+                                        daysMap.set(dateStr, {
+                                            date: new Date(currentDate),
+                                            dateString: dateStr,
+                                            dayNumber: currentDate.getDate(),
+                                            events: {
+                                                vacations: [],
+                                                absences: [],
+                                                holidays: [],
+                                                oneToOnes: []
+                                            },
+                                            isEmpty: false
+                                        });
+                                        currentDate.setDate(currentDate.getDate() + 1);
+                                    }
+
+                                    // 5.1 Procesar feriados (eventos de un día)
+                                    holidayRows.forEach(holiday => {
+                                        const date = new Date(holiday.usedDate);
+                                        const day = daysMap.get(date.toISOString().split('T')[0]);
+                                        if (day) {
+                                            day.events.holidays.push(holiday);
+                                        }
+                                    });
+
+                                    // 5.2 Procesar one-to-ones (eventos de un día)
+                                    oneToOneRows.forEach(oneToOne => {
+                                        const date = new Date(oneToOne.meetingDate);
+                                        const day = daysMap.get(date.toISOString().split('T')[0]);
+                                        if (day) {
+                                            day.events.oneToOnes.push(oneToOne);
+                                        }
+                                    });
+
+                                    // 5.3 Procesar vacaciones (eventos de múltiples días)
+                                    vacationRows.forEach(vacation => {
+                                        const start = new Date(vacation.startDate);
+                                        const end = new Date(vacation.endDate);
+                                        const current = new Date(start);
+
+                                        while (current <= end) {
+                                            const dateStr = current.toISOString().split('T')[0];
+                                            const day = daysMap.get(dateStr);
+                                            if (day) {
+                                                day.events.vacations.push({
+                                                    ...vacation,
+                                                    isStart: dateStr === vacation.startDate,
+                                                    isEnd: dateStr === vacation.endDate
+                                                });
+                                            }
+                                            current.setDate(current.getDate() + 1);
+                                        }
+                                    });
+
+                                    // 5.4 Procesar ausencias (eventos de múltiples días)
+                                    absenceRows.forEach(absence => {
+                                        const start = new Date(absence.startDate);
+                                        const end = new Date(absence.endDate);
+                                        const current = new Date(start);
+
+                                        while (current <= end) {
+                                            const dateStr = current.toISOString().split('T')[0];
+                                            const day = daysMap.get(dateStr);
+                                            if (day) {
+                                                day.events.absences.push({
+                                                    ...absence,
+                                                    isStart: dateStr === absence.startDate,
+                                                    isEnd: dateStr === absence.endDate
+                                                });
+                                            }
+                                            current.setDate(current.getDate() + 1);
+                                        }
+                                    });
+
+                                    // 6. Convertir a array y añadir días vacíos para alineación
+                                    let daysArray = Array.from(daysMap.values());
+
+                                    if (isMonthView) {
+                                        const firstDayOfWeek = startDate.getDay();
+                                        const emptyDays = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+                                        for (let i = 0; i < emptyDays; i++) {
+                                            daysArray.unshift({ isEmpty: true });
+                                        }
+                                    }
+
+                                    console.log(daysArray);
+
+                                    res.render("calendar", {
+                                        isMonthView,
+                                        days: daysArray,
+                                        weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                                        startDate,
+                                        endDate
+                                    });
+                                })
+                                .catch((error) => {
+                                    console.error(error); // Mejor manejo de error
+                                    res.status(500).send("Error al obtener los datos.");
+                                });
+                        })
+                        .catch((error) => {
+                            console.error(error); // Mejor manejo de error
+                            res.status(500).send("Error al obtener los datos.");
+                        });
                 })
                 .catch((error) => {
-                  console.error(error); // Mejor manejo de error
-                  res.status(500).send("Error al obtener los datos.");
+                    console.error(error); // Mejor manejo de error
+                    res.status(500).send("Error al obtener los datos.");
                 });
-            })
-            .catch((error) => {
-              console.error(error); // Mejor manejo de error
-              res.status(500).send("Error al obtener los datos.");
-            });
         })
         .catch((error) => {
-          console.error(error); // Mejor manejo de error
-          res.status(500).send("Error al obtener los datos.");
+            console.error(error); // Mejor manejo de error
+            res.status(500).send("Error al obtener los datos.");
         });
-    })
-    .catch((error) => {
-      console.error(error); // Mejor manejo de error
-      res.status(500).send("Error al obtener los datos.");
-    });
 };
