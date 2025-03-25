@@ -32,6 +32,10 @@ module.exports = class Absence {
         return db.execute("SELECT * FROM absence ORDER BY startDate DESC");
     }
 
+    static fetchAllWithName() {
+      return db.execute("SELECT a.*, u.birthName, u.surname, r.title FROM absence as a, user as u, role as r WHERE u.userID = a.absenceUserIDFK AND r.roleID = u.userRoleIDFK ORDER BY startDate DESC");
+    }
+
     static fetchAllByID(id) {
         return db.execute(
             `SELECT a.*, am.mediaLink FROM absence AS a LEFT JOIN absencemedia AS am 
@@ -56,6 +60,7 @@ module.exports = class Absence {
     static getID(email) {
         return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email]);
     }
+
 
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(
