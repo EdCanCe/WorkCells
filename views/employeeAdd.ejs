@@ -11,9 +11,7 @@
       <form id="registerForm" action="/employee" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-        <!-- Datos generales -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <!-- CURP -->
           <div class="field">
             <label for="curp" class="block text-lg font-medium">CURP</label>
             <input
@@ -28,7 +26,6 @@
             <div id="curpFormatError" class="text-red-600 text-sm mt-2"></div>
           </div>
 
-          <!-- RFC -->
           <div class="field">
             <label for="rfc" class="block text-lg font-medium">RFC</label>
             <input
@@ -39,11 +36,11 @@
               placeholder="GOGE0927MNQ9"
               required
               maxlength="13"
+              disabled
             />
             <div id="rfcFormatError" class="text-red-600 text-sm mt-2"></div>
           </div>
 
-          <!-- Name -->
           <div class="field">
             <label for="birthName" class="block text-lg font-medium"
               >Name</label
@@ -55,10 +52,10 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="Elena"
               required
+              disabled
             />
           </div>
 
-          <!-- Surname -->
           <div class="field">
             <label for="surname" class="block text-lg font-medium"
               >Surname</label
@@ -70,10 +67,10 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="González González"
               required
+              disabled
             />
           </div>
 
-          <!-- Email -->
           <div class="field">
             <label for="mail" class="block text-lg font-medium">Email</label>
             <input
@@ -83,13 +80,12 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="eiujmidiam@nuclea.solution"
               required
+              disabled
             />
           </div>
         </div>
 
-        <!-- Dirección -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <!-- Zip Code -->
           <div class="field">
             <label for="zipCode" class="block text-lg font-medium"
               >Zip Code</label
@@ -101,10 +97,10 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="61683"
               required
+              disabled
             />
           </div>
 
-          <!-- House Number -->
           <div class="field">
             <label for="houseNumber" class="block text-lg font-medium"
               >House Number</label
@@ -116,10 +112,10 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="869C"
               required
+              disabled
             />
           </div>
 
-          <!-- Street Name -->
           <div class="field">
             <label for="streetName" class="block text-lg font-medium"
               >Street Name</label
@@ -131,10 +127,10 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="Avenida Madero"
               required
+              disabled
             />
           </div>
 
-          <!-- Colony -->
           <div class="field">
             <label for="colony" class="block text-lg font-medium">Colony</label>
             <input
@@ -144,10 +140,10 @@
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               placeholder="Colonia La Pradera"
               required
+              disabled
             />
           </div>
 
-          <!-- Country (Moved here) -->
           <div class="field">
             <label for="countryUserIDFK" class="block text-lg font-medium"
               >Country</label
@@ -157,6 +153,7 @@
               name="countryUserIDFK"
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               required
+              disabled
             >
               <option value="" selected disabled>Select Country</option>
               <%employees.forEach(employee => { %>
@@ -168,9 +165,7 @@
           </div>
         </div>
 
-        <!-- Rol y modalidad -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <!-- Work Modality -->
           <div class="field">
             <label for="workModality" class="block text-lg font-medium"
               >Work Modality</label
@@ -180,6 +175,7 @@
               name="workModality"
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               required
+              disabled
             >
               <option value="">Select Modality</option>
               <option value="0">Presencial</option>
@@ -188,7 +184,6 @@
             </select>
           </div>
 
-          <!-- User Role -->
           <div class="field">
             <label for="userRoleIDFK" class="block text-lg font-medium"
               >User Role</label
@@ -198,6 +193,7 @@
               name="userRoleIDFK"
               class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
               required
+              disabled
             >
               <option value="">Select Role</option>
               <option value="26c5c259-bb65-4e90-ada7-41a56d6a2703">
@@ -217,6 +213,7 @@
           <button
             type="submit"
             class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+            disabled
           >
             Add
           </button>
