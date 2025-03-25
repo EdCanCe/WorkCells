@@ -1,0 +1,12 @@
+@startuml
+|Líder|
+start
+:Seleccionar la opción de consultar \n colaboradores en su departamento;
+
+|Sistema|
+:Consultar el ID del departamento al que \n pertenece el líder;
+:Consultar la tabla userDepartment para \n obtener el ID de los colaboradores que \n coincidan con el ID del departamento;
+:Obtener los datos de los colaboradores\n que coincidieron, como:\n - Nombre y apellido. \n - Mail.;
+:Desplegar la interfaz de consultar colaboradores con \nla lista de ellos  y su información recopilada, además de un  \nboton para ver el perfil de cada uno de los colaboradores;
+stop
+@enduml

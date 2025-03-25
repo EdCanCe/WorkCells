@@ -1,0 +1,26 @@
+@startuml CU05 - Líder consulta solicitudes de vacaciones de colaborador
+
+|__Líder__|
+start
+:Selecciona opción\n "Solicitudes de ausencias";
+
+|__Sistema__|
+if(Verificar que existen >1 solicitudes\n de ausencias pendientes) then (Sí)
+    :Despliega las solicitudes para\n revisar de forma resumida.;
+else (No)
+    :Mostrar mensaje al líder que\nno existen solicitudes pendientes;
+    stop
+endif
+
+|__Líder__|
+:Selecciona una de todas\nlas solicitudes de ausencias;
+
+|__Sistema__|
+:Obtiene y muestra la solicitud de ausencias\n completa del colaborador en detalle;
+
+|__Líder__|
+:Presiona el botón de cerrar;
+
+stop
+
+@enduml

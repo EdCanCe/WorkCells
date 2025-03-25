@@ -6,34 +6,34 @@ using namespace std;
 
 class Role {
     private:
-        int id;
+        string id;
         string title;
 
     public:
         Role(string);
-        int getId();
+        string getId();
         void print();
 };
 
-Randomizer<Role> roles;
+vector<Role> roles;
 
 Role::Role(string Title) {
-    id = roles.size() + 1;
+    id = generateUUID();
     title = Title;
 }
 
-int Role::getId(){
+string Role::getId(){
     return id;
 }
 
 void Role::print() {
-    cout << "INSERT INTO role(title) values('" << title << "'); \n";
+    cout << "INSERT INTO role(roleID, title) values('" << id << "', '" << title << "'); \n";
 }
 
 void createRoles(){
-    roles.add(Role("Colaborator"));
-    roles.add(Role("Department Leader"));
-    roles.add(Role("Human Resources"));
+    roles.push_back(Role("Colaborator"));
+    roles.push_back(Role("Department Leader"));
+    roles.push_back(Role("Human Resources"));
 }
 
 #endif

@@ -1,0 +1,128 @@
+@startuml
+actor navegador
+boundary user.routes
+boundary login.ejs
+control user.controler
+entity user.model
+entity bcrypt
+database mysql
+
+autonumber 
+navegador -> user.routes: GET /login
+activate user.routes
+
+user.routes -> user.controler: get_login(req, res)
+activate user.controler
+
+user.controler -> login.ejs: Render login.ejs
+activate login.ejs
+login.ejs -> user: HTML
+deactivate login.ejs
+deactivate user.controler
+deactivate user.routes
+
+navegador -> user.routes: POST /login (email, password)
+activate user.routes
+
+user.routes -> user.controler: post_login(req, res)
+activate user.controler
+
+user.controler ->> user.model: get_user(email)
+activate user.model
+
+user.model ->> mysql: SELECT email, password FROM users WHERE email = ?
+activate mysql
+mysql -->> user.model: Query OK (user data)
+deactivate mysql
+
+user.model ->> user.controler: email
+deactivate user.model
+
+
+alt Usuario encontrado
+    user.controler ->> bcrypt: compare(password, hashed_password)
+    activate bcrypt
+    alt Contraseña válida
+        bcrypt -->> user.controler: OK
+        deactivate bcrypt
+        user.controler -> user.routes: Login exitoso (redirect /dashboard)
+        user.routes -> navegador: HTML
+        activate navegador
+    else Contraseña incorrecta
+        bcrypt -->> user.controler: Error
+        deactivate bcrypt
+        user.controler -> user.routes: Render login.ejs (error credenciales)
+        user.routes -> navegador: HTML
+
+    end
+else Usuario no encontrado
+    user.controler -> user.routes: Render login.ejs (usuario no existe)
+    user.routes -> navegador: HTML
+end
+
+deactivate user.controler
+deactivate user.routes
+deactivate navegador
+@enduml
+
+--------------------------------------------------------------------------------------------------------
+
+sin if
+
+@startuml
+actor navegador
+boundary user.routes
+boundary login.ejs
+control user.controler
+entity user.model
+entity bcrypt
+database mysql
+
+autonumber 
+navegador -> user.routes: GET /login
+activate user.routes
+
+user.routes -> user.controler: get_login(req, res)
+activate user.controler
+
+user.controler -> login.ejs: Render login.ejs
+activate login.ejs
+login.ejs -> navegador: HTML
+deactivate login.ejs
+deactivate user.controler
+deactivate user.routes
+
+navegador -> user.routes: POST /login (email, password)
+activate user.routes
+
+user.routes -> user.controler: post_login(req, res)
+activate user.controler
+
+user.controler ->> user.model: get_user(email)
+activate user.model
+
+user.model ->> mysql: SELECT email, password FROM users WHERE email = ?
+activate mysql
+mysql -->> user.model: Query OK (user data)
+deactivate mysql
+
+user.model ->> user.controler: email
+deactivate user.model
+
+
+
+user.controler ->> bcrypt: compare(password, hashed_password)
+activate bcrypt
+
+bcrypt -->> user.controler: OK
+deactivate bcrypt
+user.controler -> user.routes: Login exitoso (redirect /dashboard)
+user.routes -> navegador: HTML 
+activate navegador
+    
+
+
+deactivate user.controler
+deactivate user.routes
+deactivate navegador
+@enduml

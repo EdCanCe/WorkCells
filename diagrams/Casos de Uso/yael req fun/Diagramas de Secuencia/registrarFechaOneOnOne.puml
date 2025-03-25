@@ -1,0 +1,78 @@
+@startuml
+
+actor navegador
+boundary routes
+boundary "Vista add.ejs" as add
+boundary "Vista list.ejs" as list
+control controller
+
+autonumber
+activate navegador
+navegador -> routes: GET /oneonone/add
+deactivate navegador
+activate routes
+routes -> controller: get_add(req, res)
+deactivate routes
+activate controller
+controller -> add: res.render('add.ejs')
+deactivate controller
+activate add
+add -> navegador: HTML
+deactivate add
+
+activate navegador
+navegador -> routes: POST /oneonone/add
+deactivate navegador
+activate routes
+routes -> controller: registrarOneOnOne(datos)
+deactivate routes
+
+
+entity OneOnOne
+database mysql
+
+activate controller
+controller -> OneOnOne: get_id(nombre, email)
+activate OneOnOne
+OneOnOne ->> mysql: execute("SELECT id FROM usuarios \nWHERE nombre = ? AND correo = ?", \n[nombre, email])
+activate mysql
+mysql -->> OneOnOne: ID del usuario
+deactivate mysql
+OneOnOne -->> controller: Promesa
+deactivate OneOnOne
+
+create entity oneonone
+
+controller ->> oneonone: save(duracion, fechaHora, idUsuario)
+activate oneonone
+oneonone ->> mysql: execute("INSERT INTO OneOnOne \n(?, ?, ?)", [duracion, fechaHora, \nidUsuario])
+activate mysql
+mysql --> oneonone: Query OK
+deactivate mysql
+oneonone -->> controller: promesa
+deactivate oneonone
+
+controller -> routes: res.redirect('/')
+activate routes
+deactivate controller
+routes -> controller: get(req, res)
+deactivate routes
+
+activate controller
+controller ->> OneOnOne: fetchAll()
+
+activate OneOnOne
+OneOnOne ->> mysql: execute("SELECT * FROM oneOnOne")
+activate mysql
+mysql -->> OneOnOne: rows
+deactivate mysql
+OneOnOne -->> controller: rows
+deactivate OneOnOne
+controller -> list: res.render('list.ejs', rows)
+activate list
+deactivate controller
+list -> navegador: HTML
+deactivate list
+activate navegador
+
+@enduml

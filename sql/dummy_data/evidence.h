@@ -24,13 +24,13 @@ Randomizer<string> uploadDate {
 
 class Evidence {
     private:
-        int id;
+        string id;
         string summary;
         string uploadDate;
         int idKpi;
     public:
         Evidence(string, string, int);
-        int getID();
+        string getId();
         void print();
 };
 
@@ -43,7 +43,7 @@ Evidence::Evidence(string summary, string uploadDate, int idKpi) {
     this->idKpi = idKpi;
 }
 
-int Evidence::getID(){
+int Evidence::getId(){
     return id;
 }
 
@@ -53,7 +53,7 @@ void Evidence::print(){
 
 void createEvidence(int x) {
     for (int i = 0; i < x; i++){
-        evidence.add(Evidence(summaryEv.random(), uploadDate.random(), kpi.random().getID()));
+        evidence.add(Evidence(summaryEv.random(), uploadDate.random(), kpi.random().getId()));
     }
 }
 
