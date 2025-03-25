@@ -1,18 +1,18 @@
 const Absence = require("../models/absence.model");
 
-exports.get_check = (request, response, next) => {
+exports.getCheck = (request, response, next) => {
   response.render("absence_check");
 };
 
-exports.get_aprove = (request, response, next) => {
-  response.render("absence_aprove");
+exports.getAprove = (request, response, next) => {
+  response.render("absenceAprove");
 };
 
-exports.get_add = (request, response, next) => {
+exports.getAdd = (request, response, next) => {
   console.log(request.session.mail);
   Absence.fetchAll()
     .then(([absences, fieldData]) => {
-      response.render("absences_add", {
+      response.render("absencesAdd", {
         csrfToken: request.csrfToken(),
         absences: absences,
         info: request.session.info || "",
@@ -23,7 +23,7 @@ exports.get_add = (request, response, next) => {
     });
 };
 
-exports.post_add = (req, res, next) => {
+exports.postAdd = (req, res, next) => {
   console.log(req.body);
   Absence.getID(req.session.mail).then(([rows]) => {
     if (rows.length == 0) {
@@ -48,7 +48,7 @@ exports.post_add = (req, res, next) => {
   });
 };
 
-exports.get_root = (req, res, next) => {
+exports.getRoot = (req, res, next) => {
   const mensaje = req.session.info || "";
   if (req.session.info) {
     req.session.info = "";
@@ -63,7 +63,7 @@ exports.get_root = (req, res, next) => {
       .then(([rows, fieldData]) => {
         console.log(fieldData);
         console.log(rows);
-        res.render("absences_list", {
+        res.render("absencesList", {
           absences: rows,
           info: mensaje,
         });
