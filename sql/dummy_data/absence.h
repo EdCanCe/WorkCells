@@ -13,7 +13,7 @@ class Absence {
         string reason;
         string startDate;
         string endDate;
-        bool justified;
+        int justified;
     public:
         Absence( string reason,
             string startDate,
@@ -66,10 +66,7 @@ Randomizer<string> reasonA {
 };
 
 
-// Randomizer<string> endDate{};
-
-
-Randomizer<int> justified{
+Randomizer<int> justifiedValues{
     0,
     1,
     2
@@ -79,7 +76,7 @@ Randomizer<int> justified{
 void createAbsence(int x) {
     for (int i = 0; i < x; i++){
         string start_date = startDate.random();
-        absence.add(Absence(reasonA.random(), changeFormat(start_date), createEndDate(start_date), justified.random()));
+        absence.add(Absence(reasonA.random(), changeFormat(start_date), createEndDate(start_date), justifiedValues.random()));
     }
 }
 

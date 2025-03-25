@@ -1,4 +1,5 @@
 const Absence = require("../models/absence.model");
+const AbsenceMedia = require("../models/absenceMedia.model");
 
 exports.getCheck = (request, response, next) => {
     response.render("absence_check");
