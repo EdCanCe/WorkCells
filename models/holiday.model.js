@@ -38,11 +38,11 @@ module.exports = class Holiday {
 
   static fetchByDateType(startDate, endDate) {
     return db.execute(
-      `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayID = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
+      `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
       [startDate, endDate]
     );
   }
-  static fetchAllMundo() {
+  static fetchAllUsed() {
     return db.execute(
       "SELECT t.title , u.usedDate FROM templateholiday t, usedholiday u WHERE t.templateHolidayID = u.usedTemplateHolidayID;"
     );

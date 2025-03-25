@@ -168,21 +168,21 @@ exports.getRoot = (req, res, next) => {
                                 })
                                 .catch((error) => {
                                     console.error(error); // Mejor manejo de error
-                                    res.status(500).send("Error al obtener los datos.");
+                                    res.status(500).send("Error al obtener los datos. 1");
                                 });
                         })
                         .catch((error) => {
                             console.error(error); // Mejor manejo de error
-                            res.status(500).send("Error al obtener los datos.");
+                            res.status(500).send("Error al obtener los datos. 2");
                         });
                 })
                 .catch((error) => {
                     console.error(error); // Mejor manejo de error
-                    res.status(500).send("Error al obtener los datos.");
+                    res.status(500).send("Error al obtener los datos. 3");
                 });
         })
         .catch((error) => {
             console.error(error); // Mejor manejo de error
-            res.status(500).send("Error al obtener los datos.");
+            res.status(500).send("Error al obtener los datos. 4");
         });
 };
