@@ -1,44 +1,55 @@
-<%- include('includes/_header') %> <%- include('includes/_navbar') %>
+<%- include('includes/_header') %>
 
-<div class="container mx-auto p-4">
-  <!-- Mostrar mensaje si existe -->
-  <% if (info) { %>
-  <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4"><%= info %></div>
-  <% } %>
+<div class="flex bg-gray-50 min-h-screen">
+  <aside class="w-64 bg-white shadow-md">
+    <%- include('includes/_navbar') %>
+  </aside>
 
-  <h1 class="text-3xl font-semibold mb-6">Últimas 10 Faltas</h1>
+  <div class="flex-1 p-8">
+    <!-- Mensaje de información -->
+    <% if (info) { %>
+    <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-6 shadow">
+      <%= info %>
+    </div>
+    <% } %>
 
-  <table class="min-w-full table-auto border-collapse border border-gray-200">
-    <thead>
-      <tr class="bg-gray-100">
-        <th class="px-4 py-2 text-left">Nombre</th>
-        <th class="px-4 py-2 text-left">Correo</th>
-        <th class="px-4 py-2 text-left">Fecha de la Falta</th>
-        <th class="px-4 py-2 text-left">Número de Faltas</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% fault.forEach(falta => { %>
-      <tr class="border-t">
-        <td class="px-4 py-2"><%= falta.nombre %></td>
-        <td class="px-4 py-2"><%= falta.correo %></td>
-        <td class="px-4 py-2">
-          <%= new Date(falta.fecha_falta).toLocaleDateString('es-MX') %>
-        </td>
-        <td class="px-4 py-2"><%= falta.num_faltas %></td>
-      </tr>
-      <% }) %>
-    </tbody>
-  </table>
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Últimas 10 Faltas</h1>
 
-  <div class="mt-6">
-    <a
-      href="/fault/add"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300"
-    >
-      Registrar Nueva Falta
-    </a>
+    <!-- Tabla de faltas -->
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-100 text-gray-700 text-left text-lg">
+          <tr>
+            <th class="px-6 py-4">Nombre</th>
+            <th class="px-6 py-4">Correo</th>
+            <th class="px-6 py-4">Fecha de la Falta</th>
+            <th class="px-6 py-4">Número de Faltas</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-800">
+          <% fault.forEach(falta => { %>
+          <tr class="hover:bg-gray-50 border-b">
+            <td class="px-6 py-4"><%= falta.nombre %></td>
+            <td class="px-6 py-4"><%= falta.correo %></td>
+            <td class="px-6 py-4">
+              <%= new Date(falta.fecha_falta).toLocaleDateString('es-MX') %>
+            </td>
+            <td class="px-6 py-4 font-semibold"><%= falta.num_faltas %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón para agregar nueva falta -->
+    <div class="mt-8 flex justify-end">
+      <a
+        href="/fault/add"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow transition duration-300"
+      >
+        Registrar Nueva Falta
+      </a>
+    </div>
   </div>
-
   <%- include('includes/_footer') %>
 </div>
