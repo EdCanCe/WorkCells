@@ -1,0 +1,77 @@
+<%- include('includes/_header') %> <%- include('includes/_navbar') %>
+
+<div class="content p-6">
+  <div class="card bg-white p-6 rounded-lg shadow-md">
+    <div class="card-content">
+      <h2 class="text-2xl font-semibold mb-4">Ausencias</h2>
+      <p class="mb-4">
+        Aquí el super admin haciendo click en alguna de las casillas de estados
+        le va aparecer una popup para poder responder/cambiar el estado de
+        solicitud de ausencia.
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="id">id</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="colaborador">Colaborador</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="razon">Ausencia</abbr>
+              </th>
+              <th class="px-4 py-2 text-left font-semibold text-gray-700">
+                <abbr title="estado">Estado</abbr>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2">1</td>
+              <td class="px-4 py-2">Juan Lopez</td>
+              <td class="px-4 py-2">
+                Me enferme de covid y el doctor me dió 3 días de reposo
+              </td>
+              <td class="px-4 py-2 text-green-500">Aprobada</td>
+            </tr>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2">2</td>
+              <td class="px-4 py-2">Carlos Gómez</td>
+              <td class="px-4 py-2">
+                Va a ser el cumpleaños de mi madre y cumple 90 años.
+              </td>
+              <td class="px-4 py-2 text-red-500">Negada</td>
+            </tr>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2">3</td>
+              <td class="px-4 py-2">Carlos Ruiz</td>
+              <td class="px-4 py-2">
+                Problemas de transporte, se descompuso el autobus.
+              </td>
+              <td class="px-4 py-2 text-green-500">Aprobada</td>
+            </tr>
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2">4</td>
+              <td class="px-4 py-2">Imanol Gómez</td>
+              <td class="px-4 py-2">Emergencia con tu mascota.</td>
+              <td class="px-4 py-2 text-yellow-500">Falta de responder</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-center space-x-4">
+      <a
+        href="/absence"
+        class="button bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+        >Regresar</a
+      >
+    </div>
+  </div>
+</div>
+
+<%- include('includes/_footer') %>

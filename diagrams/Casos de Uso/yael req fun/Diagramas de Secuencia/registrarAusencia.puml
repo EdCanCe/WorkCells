@@ -3,7 +3,7 @@
 actor navegador
 boundary routes
 boundary "Vista add.ejs" as add
-boundary "Vista home.ejs" as home
+boundary "Vista list.ejs" as list
 control controller
 
 autonumber
@@ -31,40 +31,49 @@ controller -> absence: new Modelo(req.body.valor)
 activate absence
 controller ->> absence: save()
 
-
 entity Absences
+entity AbsencesMedia
 database mysql
 
 absence ->> mysql: execute("INSERT INTO absence(?)", this.valor)
 activate mysql
-mysql --> absence: QUERY OK
+mysql -->> absence: Query OK
 deactivate mysql
-absence--> controller: promesa
+absence -->> controller: promesa
 deactivate absence
 
-controller -> routes: res.redirect('/absences')
+create entity absenceMedia
+controller ->> absenceMedia : save()
+activate absenceMedia
+absenceMedia ->> mysql: execute("INSERT INTO \nabsenceMedia(?)", this.valor)
+activate mysql
+mysql -->> absenceMedia: Query OK
+deactivate mysql
+absenceMedia -->> controller: promesa
+deactivate absenceMedia
+
+controller -> routes: res.redirect('/')
 deactivate controller
+
 activate routes
-routes -> controller: get_add(req, res)
+routes -> controller: get_root(req, res)
 deactivate routes
 activate controller
-controller -> add: res.render('add.js', message)
+controller ->> Absences: fetchAll()
+activate Absences
+Absences ->> mysql: execute("SELECT * FROM absence \nJOIN absenceMedia")
+activate mysql
+mysql -->> Absences: rows
+deactivate mysql
+Absences -->> controller: rows
+deactivate Absences
+
+controller -> list: res.render('list.ejs', rows)
 deactivate controller
-activate add
-add -> navegador: HTML
-deactivate add
+activate list
+list -> navegador: HTML
+deactivate list
 activate navegador
-navegador -> routes: GET /home
-deactivate navegador
-activate routes
-routes -> controller:get_home(req, res)
-deactivate routes
-activate controller
-controller -> home: res.render('home.ejs')
-deactivate controller
-activate home
-home -> navegador: HTML
-deactivate home
-activate navegador
+
 
 @enduml

@@ -1,65 +1,76 @@
-<div class="content">
-  <div class="card">
-    <div class="card-content">
-      <h2>Agendar de sesión One to One</h2>
+<div class="container mx-auto p-4">
+	<div class="bg-white shadow rounded-lg overflow-hidden">
 
-      <% if (info != '') { %>
-      <div class="notification is-info"><%= info %></div>
-      <% } %>
+		<!-- Formulario para agendar la sesión -->
+		<div class="p-6 border-b">
+			<div class="bg-gray-50 p-6 rounded-lg shadow mb-6">
+				<h2 class="text-2xl font-semibold mb-4">Agendado de sesión One to One</h2>
+			</div>
 
-      <form action="/oneToOne/schedule" method="POST">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+			<% if (info != '') { %>
+			<div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+				<%= info %>
+			</div>
+			<% } %>
 
-        <div class="block">
-          <h3>Datos de la reunión</h3>
-          <label class="label">Fecha del One To One:</label>
-          <input class="input" type="date" name="date" required />
-          <label class="label">Hora de la reunión:</label>
-          <input class="input" type="time" name="time" required />
-          <label class="label">Duración estimada (minutos)</label>
-          <input class="input" type="number" name="expectedTime" required />
-        </div>
-        <div class="block">
-          <h3>Datos del colaborador</h3>
-          <label class="label">Nombre del colaborador:</label>
-          <input class="input" type="text" name="name" required />
-          <label class="label">Apellido del colaborador:</label>
-          <input class="input" type="text" name="surname" required />
-          <label class="label">Correo electronico del colaborador</label>
-          <input class="input" type="email" name="email" required />
-        </div>
-        <div class="block has-text-centered">
-          <input class="button" type="submit" value="Enviar" />
-        </div>
-      </form>
-    </div>
-    <div class="p-6">
-      <div class="bg-white shadow-md rounded-lg">
-        <div class="p-6">
-          <h2 class="text-2xl font-semibold mb-4">
-            Agendado de sesión One to One
-          </h2>
-          <p class="text-lg">
-            En esta ruta, el usuario podrá agendar una sesión One to One.
-          </p>
-        </div>
-      </div>
-    </div>
+			<form action="/oneToOne/schedule" method="POST">
+				<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-    <div class="p-6">
-      <div class="bg-white shadow-md rounded-lg">
-        <div class="space-y-6">
-          <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <h3 class="text-xl font-medium">Sesión</h3>
-            <p class="text-lg">Consultar sesión de One To One</p>
-            <a
-              href="/oneToOne/check"
-              class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >Consultar</a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+				<!-- Datos de la reunión -->
+				<div class="mb-6">
+					<h3 class="text-xl font-semibold mb-2">Datos de la reunión</h3>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Fecha del One To One:</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="date" name="date" required />
+					</div>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Hora de la reunión:</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="time" name="time" required />
+					</div>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Duración estimada (minutos):</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="number" name="expectedTime" required />
+					</div>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Enlace a reunion:</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="meetingLink" placeholder="https://meet.google.com/abc-defg-hij"/>
+					</div>
+				</div>
+
+				<!-- Datos del colaborador -->
+				<div class="mb-6">
+					<h3 class="text-xl font-semibold mb-2">Datos del colaborador</h3>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Nombre del colaborador:</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="name" required />
+					</div>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Apellido del colaborador:</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="text" name="surname" required />
+					</div>
+					<div class="mb-4">
+						<label class="block text-gray-700 mb-1">Correo electrónico del colaborador:</label>
+						<input class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" type="email" name="email" required />
+					</div>
+				</div>
+
+				<div class="text-center">
+					<input class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded cursor-pointer transition duration-200" type="submit" value="Enviar" />
+				</div>
+			</form>
+		</div>		
+
+		<!-- Tarjeta para consultar la sesión -->
+		<div class="p-6">
+			<div class="bg-white shadow rounded-lg p-6">
+				<div class="space-y-6">
+					<div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+						<h3 class="text-xl font-medium mb-2">Sesión</h3>
+						<p class="text-lg mb-4">Consultar sesión de One To One</p>
+						<a href="/oneToOne/check" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200">Consultar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
