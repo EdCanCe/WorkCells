@@ -6,24 +6,26 @@ module.exports = class Absence {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reason = reason;
-        this.justified = 0; // 0 -> no justificada | 1 -> justificada
+        this.justified = 2; // 0 -> no justificada | 1 -> justificada | 2 -> pendiente
         this.absenceUserID = absenceUserID;
     }
 
     save() {
         const absenceID = uuidv4();
-        return db.execute(
-            `INSERT INTO absence(absenceID, startDate, endDate, 
+        return db
+            .execute(
+                `INSERT INTO absence(absenceID, startDate, endDate, 
                 reason, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?)`,
-            [
-                absenceID,
-                this.startDate,
-                this.endDate,
-                this.reason,
-                0,
-                this.absenceUserID,
-            ]
-        );
+                [
+                    absenceID,
+                    this.startDate,
+                    this.endDate,
+                    this.reason,
+                    0,
+                    this.absenceUserID,
+                ]
+            )
+            .then(() => absenceID);
     }
 
     static fetchAll() {
