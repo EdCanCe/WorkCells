@@ -76,7 +76,7 @@ exports.postAdd = (req, res, next) => {
         })
         .catch((err) => {
             console.log(err);
-            res.sendStatus(500);
+            res.send(500);
         });
 };
 
@@ -86,22 +86,24 @@ exports.getRoot = (req, res, next) => {
         req.session.info = "";
     }
     console.log(req.session.mail);
-    Absence.getID(req.session.mail).then(([rows]) => {
-        if (rows.length == 0) {
-            res.send(500);
-        }
-        const userID = rows[0].userID;
-        Absence.fetchAllByID(userID)
-            .then(([rows, fieldData]) => {
-                console.log(fieldData);
-                console.log(rows);
-                res.render("absencesList", {
-                    absences: rows,
-                    info: mensaje,
-                });
-            })
-            .catch((err) => {
-                console.log(err);
+    Absence.getID(req.session.mail)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return res.sendStatus(500);
+            }
+            const userID = rows[0].userID;
+            return Absence.fetchAllByID(userID);
+        })
+        .then(([rows, fieldData]) => {
+            console.log(fieldData);
+            console.log(rows);
+            res.render("absencesList", {
+                absences: rows,
+                info: mensaje,
             });
-    });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(500);
+        });
 };
