@@ -38,7 +38,7 @@ module.exports = class Absence {
 
     static fetchAllByID(id) {
         return db.execute(
-            `SELECT a.*, am.mediaLink FROM absence AS a LEFT JOIN absencemedia AS am 
+            `SELECT a.*, am.mediaLink FROM absence AS a LEFT JOIN absenceMedia AS am 
                 ON a.absenceID = am.absenceIDFK WHERE a.absenceUserIDFK = ? 
                 ORDER BY a.startDate DESC`,
             [id]
