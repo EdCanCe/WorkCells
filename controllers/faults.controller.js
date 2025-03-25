@@ -61,3 +61,17 @@ exports.getRoot = (request, response, next) => {
       response.status(500).send("Error al obtener los datos.");
     });
 };
+
+exports.listPaginated = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
+  try {
+    const [rows] = await Fault.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener las faltas" });
+  }
+};

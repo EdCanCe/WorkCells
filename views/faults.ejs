@@ -5,57 +5,24 @@
     <%- include('includes/_navbar') %>
   </aside>
 
-  <div class="flex-1 p-8">
-    <!-- Mensaje de información -->
-    <% if (info === "Error al ingresar datos.") { %>
-    <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 shadow">
-      <%= info %>
-    </div>
-    <% } else if (info && info.trim() !== '') { %>
-    <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-6 shadow">
-      <%= info %>
-    </div>
-    <% } %>
+  <div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Faltas Administrativas</h1>
 
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">
-      Últimas 10 Faltas Administrativas
-    </h1>
+    <div
+      id="faltasTable"
+      class="overflow-x-auto bg-white rounded-lg shadow"
+    ></div>
 
-    <!-- Tabla de faltas -->
-    <div class="overflow-x-auto bg-white rounded-lg shadow">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-100 text-gray-700 text-left text-lg">
-          <tr>
-            <th class="px-6 py-4">Nombre</th>
-            <th class="px-6 py-4">Correo</th>
-            <th class="px-6 py-4">Fecha de la Falta</th>
-            <th class="px-6 py-4">Número de Faltas</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-800">
-          <% fault.forEach(falta => { %>
-          <tr class="hover:bg-gray-50 border-b">
-            <td class="px-6 py-4"><%= falta.nombre %></td>
-            <td class="px-6 py-4"><%= falta.correo %></td>
-            <td class="px-6 py-4">
-              <%= new Date(falta.fecha_falta).toLocaleDateString('es-MX') %>
-            </td>
-            <td class="px-6 py-4 font-semibold"><%= falta.num_faltas %></td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Botón para agregar nueva falta -->
-    <div class="mt-8 flex justify-end">
-      <a
-        href="/fault/add"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg shadow transition duration-300"
-      >
-        Registrar Nueva Falta
-      </a>
+    <div class="mt-6 flex justify-between">
+      <button id="prevBtn" class="bg-gray-300 px-4 py-2 rounded">
+        Anterior
+      </button>
+      <button id="nextBtn" class="bg-gray-300 px-4 py-2 rounded">
+        Siguiente
+      </button>
     </div>
   </div>
+
+  <script src="/javascript/paginedFaults.js"></script>
   <%- include('includes/_footer') %>
 </div>
