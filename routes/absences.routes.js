@@ -4,7 +4,7 @@ const router = express.Router();
 const absencesControllers = require("../controllers/absences.controller");
 const isAuth = require("../util/is-auth");
 
-router.get("/aprove", isAuth, absencesControllers.getAprove);
+router.get("/approve", isAuth, absencesControllers.getApprove);
 
 router.get("/add", isAuth, absencesControllers.getAdd);
 router.post("/add", isAuth, absencesControllers.postAdd);
