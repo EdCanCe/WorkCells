@@ -29,6 +29,8 @@ using namespace std;
 int main() {
 
     srand (time(NULL));
+    createUsers(100);
+    users.print();
 
     freopen("addData.sql", "w", stdout);  // Pasa el output a un archivo
     
@@ -56,8 +58,6 @@ int main() {
     createDepartment(25);
     department.print();
 
-    createUsers(100);
-    users.print();
 
     createUserDepartment(160);
     userDepartment.print();

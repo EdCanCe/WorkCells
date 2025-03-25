@@ -8,6 +8,8 @@ router.get("/", isAuth, holidayController.getHolidays);
 
 router.get("/add", isAuth, holidayController.getHolidaysAdd);
 
+router.post("/add", isAuth, holidayController.postHolidaysAdd);
+
 router.get("/check", isAuth, holidayController.getHoliday);
 
 router.get("/used", isAuth, holidayController.getUsedHoliday); // Ver feriados usados

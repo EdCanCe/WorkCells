@@ -2,24 +2,65 @@
 <div class="p-6">
   <div class="bg-white shadow-md rounded-lg mb-6">
     <div class="p-6">
-      <h2 class="text-2xl font-semibold mb-4">Día feriados</h2>
-      <p class="text-lg">En esta ruta, se podrá crear un día feriado</p>
-    </div>
-  </div>
-</div>
+      <h2 class="text-2xl font-semibold mb-4">Add Used Holiday</h2>
+      <% if (info) { %>
+      <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4"><%= info %></div>
+      <% } %>
+      <form action="/holiday/add" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-<div class="p-6">
-  <div class="bg-white shadow-md rounded-lg mb-6">
-    <div class="p-6">
-      <div class="bg-gray-50 p-6 rounded-lg mb-4">
-        <h3 class="text-xl font-semibold mb-4">Día específico</h3>
-        <p class="text-lg mb-4">Entrar a un día en específico</p>
-        <a
-          href="/holiday/check"
-          class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-          >Consultar</a
-        >
-      </div>
+        <div class="flex space-x-6 mb-4">
+          <div class="field w-1/2">
+            <label
+              for="usedTemplateHolidayIDFK"
+              class="block text-lg font-medium"
+              >Select Holiday Name</label
+            >
+            <select
+              id="usedTemplateHolidayIDFK"
+              name="usedTemplateHolidayIDFK"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              required
+            >
+              <option value="" selected disabled>Select Holiday</option>
+              <%holidays.forEach(holiday => { const date = new
+              Date(holiday.holidayDate); const formattedDate =
+              date.toLocaleDateString('en-US', { weekday: 'long', day:
+              '2-digit', month: 'long', year: 'numeric' });%>
+              <option value="<%=holiday.templateHolidayID %>">
+                <%=holiday.title %> - <%=formattedDate %>
+              </option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="field w-1/2">
+            <label for="title" class="block text-lg font-medium"
+              >Celebration Date</label
+            >
+            <input
+              type="date"
+              id="usedDate"
+              name="usedDate"
+              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-4">
+          <button
+            type="submit"
+            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+          >
+            Add
+          </button>
+          <a
+            href="/holiday"
+            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-4"
+            >Cancel</a
+          >
+        </div>
+      </form>
     </div>
   </div>
 </div>

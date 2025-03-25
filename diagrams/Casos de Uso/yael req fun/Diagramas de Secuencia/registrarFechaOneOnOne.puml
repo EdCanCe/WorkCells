@@ -3,7 +3,6 @@
 actor navegador
 boundary routes
 boundary "Vista add.ejs" as add
-boundary "Vista list.ejs" as list
 control controller
 
 autonumber
@@ -24,7 +23,7 @@ activate navegador
 navegador -> routes: POST /oneonone/add
 deactivate navegador
 activate routes
-routes -> controller: registrarOneOnOne(datos)
+routes -> controller: post_add(req, res)
 deactivate routes
 
 
@@ -52,27 +51,11 @@ deactivate mysql
 oneonone -->> controller: promesa
 deactivate oneonone
 
-controller -> routes: res.redirect('/')
-activate routes
+controller -> add: res.redirect('/oneonone/add', info)
 deactivate controller
-routes -> controller: get(req, res)
-deactivate routes
-
-activate controller
-controller ->> OneOnOne: fetchAll()
-
-activate OneOnOne
-OneOnOne ->> mysql: execute("SELECT * FROM oneOnOne")
-activate mysql
-mysql -->> OneOnOne: rows
-deactivate mysql
-OneOnOne -->> controller: rows
-deactivate OneOnOne
-controller -> list: res.render('list.ejs', rows)
-activate list
-deactivate controller
-list -> navegador: HTML
-deactivate list
+activate add
+add -> navegador: HTML
+deactivate add
 activate navegador
 
 @enduml

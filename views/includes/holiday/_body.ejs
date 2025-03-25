@@ -1,17 +1,22 @@
 <div class="flex">
   <aside class="w-64"><%- include('../_navbar') %></aside>
 
-  <div class="p-6 w-full">
-    <!-- Título y descripción -->
-    <div class="bg-white shadow-md rounded-lg mb-6">
-      <div class="p-6">
-        <h2 class="text-2xl font-semibold mb-4">
-          Lista de los días feriados del año
-        </h2>
-        <p class="text-lg">
-          En esta ruta, se podrán ver los días feriados que se usarán en el año,
-          junto con los días feriados que se tendrán de plantilla.
-        </p>
+<div class="p-6">
+  <div class="bg-white shadow-md rounded-lg mb-6">
+    <div class="p-6">
+      <div class="bg-gray-50 p-6 rounded-lg mb-4">
+        <% if (info) { %>
+        <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+          <%= info %>
+        </div>
+        <% } %>
+        <h3 class="text-xl font-semibold mb-4">Añadir</h3>
+        <p class="text-lg mb-4">Añadir día feriado</p>
+        <a
+          href="/holiday/add"
+          class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          >Agregar</a
+        >
       </div>
     </div>
 

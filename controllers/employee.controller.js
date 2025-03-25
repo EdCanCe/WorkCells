@@ -1,23 +1,81 @@
-
+const Employee = require("../models/employee.model");
 
 exports.getAdd = (request, response, next) => {
-    response.render("employeeAdd");
-}
+  const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
+
+  Employee.fetchCountry().then(([rows]) => {
+    // Limpiar el mensaje después de usarlo
+    request.session.info = "";
+    response.render("employeeAdd", {
+      employees: rows,
+      isLoggedIn: request.session.isLoggedIn || false,
+      info: mensaje, // Pasamos el mensaje de la sesión
+      csrfToken: request.csrfToken(),
+    });
+  });
+};
+
+exports.postAdd = (request, response, next) => {
+  const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
+
+  // Limpiar el mensaje después de usarlo
+  request.session.info = "";
+
+  const curp = request.body.curp;
+
+  // Crear una nueva instancia de Employee
+  const employee = new Employee(
+    curp,
+    request.body.rfc,
+    request.body.birthName,
+    request.body.surname,
+    request.body.mail,
+    request.body.zipCode,
+    request.body.houseNumber,
+    request.body.streetName,
+    request.body.colony,
+    request.body.workModality,
+    request.body.userRoleIDFK,
+    request.body.countryUserIDFK
+  );
+
+  // Intentar guardar el empleado
+  employee
+    .save()
+    .then(() => {
+      // Si la inserción fue exitosa, redirigir con mensaje
+      request.session.info = "Empleado creado correctamente.";
+      response.redirect("/employee");
+    })
+    .catch((error) => {
+      // Si ocurre un error (como que el CURP ya exista), mostrar el mensaje
+      console.error(error);
+      request.session.info = error.message || "Error al registrar el empleado.";
+      response.redirect("/employee/add");
+    });
+};
 
 exports.getModify = (request, response, next) => {
-    response.render("employeeCheckModify");
-}
+  response.render("employeeCheckModify");
+};
 
 exports.getCheck = (request, response, next) => {
-    response.render("employeeCheck");
-}
+  response.render("employeeCheck");
+};
 
 exports.getMe = (request, response, next) => {
-    response.render("employeeMe");
-}
-
-
+  response.render("employeeMe");
+};
 
 exports.getRoot = (request, response, next) => {
-    response.render("employee");
-}
+  const mensaje = request.session.info || "";
+
+  // Limpiar la sesión después de usar el mensaje
+  request.session.info = "";
+
+  response.render("employee", {
+    isLoggedIn: request.session.isLoggedIn || false,
+    username: request.session.username || "",
+    info: mensaje, // Aquí pasamos el mensaje de éxito o error
+  });
+};
