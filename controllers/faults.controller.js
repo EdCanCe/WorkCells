@@ -3,7 +3,7 @@ const Fault = require("../models/faults.model");
 exports.getAdd = (request, response, next) => {
   response.render("add_faults", {
     isLoggedIn: request.session.isLoggedIn || false,
-    info:  request.session.info || '',
+    info: request.session.info || "",
     csrfToken: request.csrfToken(),
   });
 };
@@ -23,14 +23,17 @@ exports.postAdd = (request, response, next) => {
     request.body.email
   );
 
-  faults.save()
+  faults
+    .save()
     .then(() => {
       request.session.info = `Fault of ${faults.email} created`;
       response.redirect("/fault");
     })
     .catch((error) => {
       console.error(error); // Mejor manejo de error
-      response.status(500).send("Error al guardar los datos.");
+      request.session.info = `Error al ingresar datos.`;
+      response.redirect("/fault");
+      response.status(500);
     });
 };
 

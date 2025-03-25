@@ -7,13 +7,19 @@
 
   <div class="flex-1 p-8">
     <!-- Mensaje de información -->
-    <% if (info) { %>
+    <% if (info === "Error al ingresar datos.") { %>
+    <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 shadow">
+      <%= info %>
+    </div>
+    <% } else if (info && info.trim() !== '') { %>
     <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-6 shadow">
       <%= info %>
     </div>
     <% } %>
 
-    <h1 class="text-4xl font-bold text-gray-800 mb-8">Últimas 10 Faltas</h1>
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">
+      Últimas 10 Faltas Administrativas
+    </h1>
 
     <!-- Tabla de faltas -->
     <div class="overflow-x-auto bg-white rounded-lg shadow">
