@@ -20,11 +20,9 @@ exports.postOneToOneSchedule = (req, res, next) => {
                 res.send(400).status('USUARIO NO ENCONTRADO')
             }
             const oneOnOneUserIDFK = rows[0].userID;
-            console.log(oneOnOneUserIDFK);
             const meetingDate = req.body.date + " " + req.body.time + ":00";
-            console.log(meetingDate)
             const meeting = new OneToOne(req.body.expectedTime, meetingDate, 
-                oneOnOneUserIDFK);
+                req.body.meetingLink, oneOnOneUserIDFK);
             
             meeting.save()
                 .then(() => {
