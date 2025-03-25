@@ -1,111 +1,114 @@
-<div class="p-6">
-  <!-- Historial de Vacaciones -->
-  <div class="bg-white shadow-lg rounded-lg mb-6">
-    <div class="p-6">
-      <h2 class="text-2xl font-semibold mb-4">Historial de Vacaciones</h2>
-    </div>
-    <div class="p-6">
-      <div class="content has-text-centered box">
-        <table class="table w-full text-sm text-left">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="px-4 py-2">ID</th>
-              <th class="px-4 py-2">Motivo</th>
-              <th class="px-4 py-2">Fecha Inicio</th>
-              <th class="px-4 py-2">Fecha Fin</th>
-              <th class="px-4 py-2">Estatus RH</th>
-              <th class="px-4 py-2">Estatus Lider</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b">
-              <td class="px-4 py-2">01</td>
-              <td class="px-4 py-2">
-                <a href="/vacation/check" class="text-blue-500"
-                  >Ir a la playa con mi familia</a
-                >
-              </td>
-              <td class="px-4 py-2">10/08/2024</td>
-              <td class="px-4 py-2">20/08/2024</td>
-              <td class="px-4 py-2 text-green-500">Approved</td>
-              <td class="px-4 py-2 text-green-500">Approved</td>
-            </tr>
-            <tr class="border-b">
-              <td class="px-4 py-2">02</td>
-              <td class="px-4 py-2">
-                <a href="/vacation/check" class="text-blue-500"
-                  >Voy a ir a visitar a mi familia</a
-                >
-              </td>
-              <td class="px-4 py-2">25/12/2024</td>
-              <td class="px-4 py-2">05/01/2025</td>
-              <td class="px-4 py-2 text-green-500">Approved</td>
-              <td class="px-4 py-2 text-green-500">Approved</td>
-            </tr>
-          </tbody>
-        </table>
+<div class="flex">
+  <aside class="w-64"><%- include('../_navbar') %></aside>
+  <div class="p-6">
+    <!-- Historial de Vacaciones -->
+    <div class="bg-white shadow-lg rounded-lg mb-6">
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold mb-4">Historial de Vacaciones</h2>
+      </div>
+      <div class="p-6">
+        <div class="content has-text-centered box">
+          <table class="table w-full text-sm text-left">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Motivo</th>
+                <th class="px-4 py-2">Fecha Inicio</th>
+                <th class="px-4 py-2">Fecha Fin</th>
+                <th class="px-4 py-2">Estatus RH</th>
+                <th class="px-4 py-2">Estatus Lider</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="px-4 py-2">01</td>
+                <td class="px-4 py-2">
+                  <a href="/vacation/check" class="text-blue-500"
+                    >Ir a la playa con mi familia</a
+                  >
+                </td>
+                <td class="px-4 py-2">10/08/2024</td>
+                <td class="px-4 py-2">20/08/2024</td>
+                <td class="px-4 py-2 text-green-500">Approved</td>
+                <td class="px-4 py-2 text-green-500">Approved</td>
+              </tr>
+              <tr class="border-b">
+                <td class="px-4 py-2">02</td>
+                <td class="px-4 py-2">
+                  <a href="/vacation/check" class="text-blue-500"
+                    >Voy a ir a visitar a mi familia</a
+                  >
+                </td>
+                <td class="px-4 py-2">25/12/2024</td>
+                <td class="px-4 py-2">05/01/2025</td>
+                <td class="px-4 py-2 text-green-500">Approved</td>
+                <td class="px-4 py-2 text-green-500">Approved</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Vacaciones Pendientes por Aprobar -->
-  <div class="bg-white shadow-lg rounded-lg mb-6">
-    <div class="p-6">
-      <h2 class="text-2xl font-semibold mb-4">
-        Vacaciones Pendientes por Aprobar
-      </h2>
-    </div>
-    <div class="p-6">
-      <div class="content has-text-centered box">
-        <table class="table w-full text-sm text-left">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="px-4 py-2">ID</th>
-              <th class="px-4 py-2">Motivo</th>
-              <th class="px-4 py-2">Fecha Inicio</th>
-              <th class="px-4 py-2">Fecha Fin</th>
-              <th class="px-4 py-2">Estatus RH</th>
-              <th class="px-4 py-2">Estatus Lider</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b">
-              <td class="px-4 py-2">03</td>
-              <td class="px-4 py-2">
-                <a href="/vacation/check" class="text-blue-500"
-                  >Quiero ir a Grecia en Semana Santa</a
-                >
-              </td>
-              <td class="px-4 py-2">13/04/2025</td>
-              <td class="px-4 py-2">20/04/2025</td>
-              <td class="px-4 py-2 text-yellow-500">Pending...</td>
-              <td class="px-4 py-2 text-yellow-500">Pending...</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Vacaciones Pendientes por Aprobar -->
+    <div class="bg-white shadow-lg rounded-lg mb-6">
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold mb-4">
+          Vacaciones Pendientes por Aprobar
+        </h2>
+      </div>
+      <div class="p-6">
+        <div class="content has-text-centered box">
+          <table class="table w-full text-sm text-left">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Motivo</th>
+                <th class="px-4 py-2">Fecha Inicio</th>
+                <th class="px-4 py-2">Fecha Fin</th>
+                <th class="px-4 py-2">Estatus RH</th>
+                <th class="px-4 py-2">Estatus Lider</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b">
+                <td class="px-4 py-2">03</td>
+                <td class="px-4 py-2">
+                  <a href="/vacation/check" class="text-blue-500"
+                    >Quiero ir a Grecia en Semana Santa</a
+                  >
+                </td>
+                <td class="px-4 py-2">13/04/2025</td>
+                <td class="px-4 py-2">20/04/2025</td>
+                <td class="px-4 py-2 text-yellow-500">Pending...</td>
+                <td class="px-4 py-2 text-yellow-500">Pending...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Botones -->
-  <div class="flex space-x-4 justify-center">
-    <a
-      href="/vacation/add"
-      class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      >Nueva Solicitud</a
-    >
-    <a
-      href="/vacation/check/modify"
-      class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-      >Modificar Solicitud</a
-    >
-  </div>
+    <!-- Botones -->
+    <div class="flex space-x-4 justify-center">
+      <a
+        href="/vacation/add"
+        class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >Nueva Solicitud</a
+      >
+      <a
+        href="/vacation/check/modify"
+        class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+        >Modificar Solicitud</a
+      >
+    </div>
 
-  <div class="flex justify-center mt-6">
-    <a
-      href="/vacation/approve"
-      class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-      >Revisar Solicitudes de Vacaciones</a
-    >
+    <div class="flex justify-center mt-6">
+      <a
+        href="/vacation/approve"
+        class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        >Revisar Solicitudes de Vacaciones</a
+      >
+    </div>
   </div>
 </div>

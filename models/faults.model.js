@@ -1,5 +1,5 @@
 const db = require("../util/database"); // Asegúrate de importar tu módulo de conexión
-const {v4:uuidv4} = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 class Fault {
   constructor(reason, doneDate, email) {
     this.reason = reason;
@@ -20,7 +20,12 @@ class Fault {
           INSERT INTO fault (faultID,summary, doneDate, faultUserIDFK) 
           VALUES (?,?, ?, ?)
         `;
-        return db.execute(query, [faultID, this.reason, this.doneDate, rows[0].userID]);
+        return db.execute(query, [
+          faultID,
+          this.reason,
+          this.doneDate,
+          rows[0].userID,
+        ]);
       });
   }
 
@@ -34,6 +39,24 @@ class Fault {
       GROUP BY  u.userId 
       ORDER BY num_faltas desc 
       limit 10;`
+    );
+  }
+
+  static getFaltasPaginated(limit, offset) {
+    return db.execute(
+      `SELECT 
+    u.birthName AS nombre, 
+    u.mail AS correo, 
+    MAX(f.doneDate) AS fecha_falta, 
+    COUNT(f.faultUserIDFK) AS num_faltas
+FROM user u
+JOIN fault f ON u.userId = f.faultUserIDFK
+WHERE u.mail IS NOT NULL
+GROUP BY u.userId
+ORDER BY num_faltas DESC
+LIMIT ? OFFSET ?;
+`,
+      [limit, offset]
     );
   }
 }

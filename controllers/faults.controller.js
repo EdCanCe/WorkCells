@@ -3,7 +3,7 @@ const Fault = require("../models/faults.model");
 exports.getAdd = (request, response, next) => {
   response.render("add_faults", {
     isLoggedIn: request.session.isLoggedIn || false,
-    info:  request.session.info || '',
+    info: request.session.info || "",
     csrfToken: request.csrfToken(),
   });
 };
@@ -23,14 +23,17 @@ exports.postAdd = (request, response, next) => {
     request.body.email
   );
 
-  faults.save()
+  faults
+    .save()
     .then(() => {
       request.session.info = `Fault of ${faults.email} created`;
       response.redirect("/fault");
     })
     .catch((error) => {
       console.error(error); // Mejor manejo de error
-      response.status(500).send("Error al guardar los datos.");
+      request.session.info = `Error al ingresar datos.`;
+      response.redirect("/fault");
+      response.status(500);
     });
 };
 
@@ -57,4 +60,18 @@ exports.getRoot = (request, response, next) => {
       console.error(error); // Mejor manejo de error
       response.status(500).send("Error al obtener los datos.");
     });
+};
+
+exports.listPaginated = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
+  try {
+    const [rows] = await Fault.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener las faltas" });
+  }
 };
