@@ -1,24 +1,28 @@
-<div class="h-screen bg-gray-800 text-white w-fit p-4 space-y-4">
-    <button class="block py-2 px-4 w-full rounded bg-gray-700 hover:bg-gray-800" id="openAndCloseNav">></button>
-    <!--La clase toggleIcon permite "eliminar" el elemento en el toggle-->
-    <a class="block py-2 px-4 rounded bg-gray-700 hover:bg-gray-800"><span class="">:)</span><span class="toggleIcon hidden ml-2">Texto</span></a>
-    <a class="block py-2 px-4 rounded bg-gray-700 hover:bg-gray-800"><span class="">:)</span><span class="toggleIcon hidden ml-2">Texto</span></a>
-    <a class="block py-2 px-4 rounded bg-gray-700 hover:bg-gray-800"><span class="">:)</span><span class="toggleIcon hidden ml-2">Texto</span></a>
-    <a class="block py-2 px-4 rounded bg-gray-700 hover:bg-gray-800"><span class="">:)</span><span class="toggleIcon hidden ml-2">Texto</span></a>
-    <a class="block py-2 px-4 rounded bg-gray-700 hover:bg-gray-800"><span class="">:)</span><span class="toggleIcon hidden ml-2">Texto</span></a>
+<div id='navBar' class='h-screen bg-neutral-900 w-20 border-r-[1px] border-neutral-700 transition-all duration-600 ease-in-out'>
+    <button id='openAndCloseNav' class='transition-all duration-300 ease-in-out'>-></button>
 
+    <!--La clase toggleIcon permite 'eliminar' el elemento en el toggle-->
+    <a class='block p-2'>
+        <span class=''>:)</span
+        ><span class='toggleIcon ml-2 hidden opacity-0 transition-all duration-300 ease-in-out'>Texto</span>
+    </a>
+
+    <a class='block p-4'></a>
 </div>
 
 <script>
     const navToggle = document.getElementById('openAndCloseNav');
-    const navText = document.querySelectorAll('.toggleIcon'); // Fixed class name
+    const navBar = document.getElementById('navBar');
+    const navText = document.querySelectorAll('.toggleIcon');
 
     navToggle.addEventListener('click', () => {
-        if (navToggle.textContent == "<") navToggle.textContent = ">";
-        else navToggle.textContent = "<";
-        navText.forEach(navElement => {
-            navElement.classList.toggle('hidden'); // Toggle visibility
-            navElement.classList.toggle('inline'); // Optionally add 'inline-block' for display
+        navBar.classList.toggle('w-20');
+        navBar.classList.toggle('w-80');
+        navToggle.classList.toggle('rotate-180');
+        navText.forEach((navElement) => {
+            navElement.classList.toggle('hidden');
+            navElement.classList.toggle('opacity-0');
+            navElement.classList.toggle('opacity-100');
         });
     });
 </script>
