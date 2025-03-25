@@ -1,67 +1,72 @@
 <%- include('includes/_header') %>
 
 <div class="flex">
-  <aside class="w-64"><%- include('includes/_navbar') %></aside>
+    <div class="content">
+        <div class="card">
+            <div class="card-content">
+                <h2 class="title">Ausencias</h2>
+                <p>
+                    Aquí el colaborador podrá ver la razón de su falta y los
+                    días que va a faltar.
+                </p>
+                <div class="is-flex is-justify-content-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><abbr title="razon">Razón</abbr></th>
+                                <th><abbr title="estado">Días</abbr></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <a href="/absence/check"
+                                        >Me enfermé de COVID y el doctor me dio
+                                        3 días de reposo</a
+                                    >
+                                </th>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <a href="/absence/check"
+                                        >Va a ser el cumpleaños de mi madre y
+                                        cumple 90 años.</a
+                                    >
+                                </th>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <a href="/absence/check"
+                                        >Problemas de transporte, se descompuso
+                                        el autobús.</a
+                                    >
+                                </th>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <a href="/absence/check"
+                                        >Emergencia con tu mascota.</a
+                                    >
+                                </th>
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-  <div class="content">
-    <div class="card">
-      <div class="card-content">
-        <h2 class="title">Ausencias</h2>
-        <p>
-          Aquí el colaborador podrá ver la razón de su falta y los días que va a
-          faltar.
-        </p>
-        <div class="is-flex is-justify-content-center">
-          <table class="table">
-            <thead>
-              <tr>
-                <th><abbr title="razon">Razón</abbr></th>
-                <th><abbr title="estado">Días</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>
-                  <a href="/absence/check"
-                    >Me enfermé de COVID y el doctor me dio 3 días de reposo</a
-                  >
-                </th>
-                <td>4</td>
-              </tr>
-              <tr>
-                <th>
-                  <a href="/absence/check"
-                    >Va a ser el cumpleaños de mi madre y cumple 90 años.</a
-                  >
-                </th>
-                <td>2</td>
-              </tr>
-              <tr>
-                <th>
-                  <a href="/absence/check"
-                    >Problemas de transporte, se descompuso el autobús.</a
-                  >
-                </th>
-                <td>1</td>
-              </tr>
-              <tr>
-                <th>
-                  <a href="/absence/check">Emergencia con tu mascota.</a>
-                </th>
-                <td>2</td>
-              </tr>
-            </tbody>
-          </table>
+            <!-- Botones de acción -->
+            <div class="is-flex is-justify-content-center mt-4">
+                <a class="button is-primary mr-2" href="/absence/approve"
+                    >Solicitar</a
+                >
+                <a class="button is-success" href="/absence/add">Agregar</a>
+            </div>
         </div>
-      </div>
-
-      <!-- Botones de acción -->
-      <div class="is-flex is-justify-content-center mt-4">
-        <a class="button is-primary mr-2" href="/absence/approve">Solicitar</a>
-        <a class="button is-success" href="/absence/add">Agregar</a>
-      </div>
     </div>
-  </div>
 </div>
 
 <%- include('includes/_footer') %>

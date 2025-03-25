@@ -1,61 +1,63 @@
 <div class="flex">
-  <aside class="w-64"><%- include('../_navbar') %></aside>
-  <div class="p-6">
-    <div class="bg-white shadow-lg rounded-lg">
-      <div class="p-6">
-        <h2 class="text-2xl font-semibold mb-4">
-          Modificar Solicitud de Vacaciones
-        </h2>
-      </div>
-      <div class="p-6">
-        <label for="reason" class="block text-sm font-medium text-gray-700 mb-2"
-          >Motivo</label
-        >
-        <input
-          type="text"
-          id="reason"
-          class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Quiero ir a la playa."
-        />
-      </div>
-      <div class="p-6">
-        <label
-          for="startDate"
-          class="block text-sm font-medium text-gray-700 mb-2"
-          >Fecha Inicio</label
-        >
-        <input
-          type="text"
-          id="startDate"
-          class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="01/02/2025"
-        />
-      </div>
-      <div class="p-6">
-        <label
-          for="endDate"
-          class="block text-sm font-medium text-gray-700 mb-2"
-          >Fecha Fin</label
-        >
-        <input
-          type="text"
-          id="endDate"
-          class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="02/02/2025"
-        />
-      </div>
+    <aside class="w-64"></aside>
+    <div class="p-6">
+        <div class="bg-white shadow-lg rounded-lg">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">
+                    Modificar Solicitud de Vacaciones
+                </h2>
+            </div>
+            <div class="p-6">
+                <label
+                    for="reason"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Motivo</label
+                >
+                <input
+                    type="text"
+                    id="reason"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Quiero ir a la playa."
+                />
+            </div>
+            <div class="p-6">
+                <label
+                    for="startDate"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Fecha Inicio</label
+                >
+                <input
+                    type="text"
+                    id="startDate"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="01/02/2025"
+                />
+            </div>
+            <div class="p-6">
+                <label
+                    for="endDate"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                    >Fecha Fin</label
+                >
+                <input
+                    type="text"
+                    id="endDate"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="02/02/2025"
+                />
+            </div>
+        </div>
+        <div class="flex space-x-4 mt-6">
+            <a
+                href=""
+                class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >Confirmar Cambios</a
+            >
+            <a
+                href="/vacation"
+                class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                >Cancelar</a
+            >
+        </div>
     </div>
-    <div class="flex space-x-4 mt-6">
-      <a
-        href=""
-        class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >Confirmar Cambios</a
-      >
-      <a
-        href="/vacation"
-        class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-        >Cancelar</a
-      >
-    </div>
-  </div>
 </div>

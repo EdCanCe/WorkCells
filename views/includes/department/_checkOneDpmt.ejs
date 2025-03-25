@@ -1,67 +1,69 @@
 <div class="flex">
-  <aside class="w-64"><%- include('../_navbar') %></aside>
-  <div class="p-6">
-    <div class="bg-white shadow-md rounded-lg mb-6">
-      <div class="p-6">
-        <div class="mb-4">
-          <p class="font-semibold text-xl">
-            Nombre del departamento:
-            <span class="font-normal">Recursos Humanos</span>
-          </p>
+    <aside class="w-64"></aside>
+    <div class="p-6">
+        <div class="bg-white shadow-md rounded-lg mb-6">
+            <div class="p-6">
+                <div class="mb-4">
+                    <p class="font-semibold text-xl">
+                        Nombre del departamento:
+                        <span class="font-normal">Recursos Humanos</span>
+                    </p>
+                </div>
+                <div class="content box p-4">
+                    <table class="min-w-full table-auto">
+                        <caption class="text-lg font-semibold mb-4">
+                            Colaboradores en el departamento
+                        </caption>
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2 text-left">Nombre</th>
+                                <th class="px-4 py-2 text-left">Apellido</th>
+                                <th class="px-4 py-2 text-left">Posición</th>
+                                <th class="px-4 py-2 text-left">Correo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-t">
+                                <td class="px-4 py-2">Jose Fernando</td>
+                                <td class="px-4 py-2">Martinez Vazquez</td>
+                                <td class="px-4 py-2">Colaborador</td>
+                                <td class="px-4 py-2">josefer@hotmail.com</td>
+                            </tr>
+                            <tr class="border-t">
+                                <td class="px-4 py-2">Josue Angel</td>
+                                <td class="px-4 py-2">Lopez Castillo</td>
+                                <td class="px-4 py-2">Colaborador</td>
+                                <td class="px-4 py-2">josue123@hotmail.com</td>
+                            </tr>
+                            <tr class="border-t">
+                                <td class="px-4 py-2">Karina</td>
+                                <td class="px-4 py-2">Lopez Murillo</td>
+                                <td class="px-4 py-2">Lider</td>
+                                <td class="px-4 py-2">
+                                    kariMurillo@hotmail.com
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="flex space-x-4 mt-4">
+                        <a
+                            href=""
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                            >Añadir</a
+                        >
+                        <a
+                            href="/department/check/modify"
+                            class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
+                            >Modificar</a
+                        >
+                        <a
+                            href="/department"
+                            class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                            >Cancelar</a
+                        >
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="content box p-4">
-          <table class="min-w-full table-auto">
-            <caption class="text-lg font-semibold mb-4">
-              Colaboradores en el departamento
-            </caption>
-            <thead>
-              <tr class="bg-gray-100">
-                <th class="px-4 py-2 text-left">Nombre</th>
-                <th class="px-4 py-2 text-left">Apellido</th>
-                <th class="px-4 py-2 text-left">Posición</th>
-                <th class="px-4 py-2 text-left">Correo</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="border-t">
-                <td class="px-4 py-2">Jose Fernando</td>
-                <td class="px-4 py-2">Martinez Vazquez</td>
-                <td class="px-4 py-2">Colaborador</td>
-                <td class="px-4 py-2">josefer@hotmail.com</td>
-              </tr>
-              <tr class="border-t">
-                <td class="px-4 py-2">Josue Angel</td>
-                <td class="px-4 py-2">Lopez Castillo</td>
-                <td class="px-4 py-2">Colaborador</td>
-                <td class="px-4 py-2">josue123@hotmail.com</td>
-              </tr>
-              <tr class="border-t">
-                <td class="px-4 py-2">Karina</td>
-                <td class="px-4 py-2">Lopez Murillo</td>
-                <td class="px-4 py-2">Lider</td>
-                <td class="px-4 py-2">kariMurillo@hotmail.com</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="flex space-x-4 mt-4">
-            <a
-              href=""
-              class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-              >Añadir</a
-            >
-            <a
-              href="/department/check/modify"
-              class="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
-              >Modificar</a
-            >
-            <a
-              href="/department"
-              class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-              >Cancelar</a
-            >
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

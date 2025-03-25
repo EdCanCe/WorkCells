@@ -1,51 +1,54 @@
 <div class="flex">
-  <aside class="w-64"><%- include('../_navbar') %></aside>
-  <div class="p-6">
-    <div class="bg-white shadow-lg rounded-lg">
-      <div class="p-6">
-        <h2 class="text-2xl font-semibold mb-4">
-          Agregar Solicitud de Vacaciones
-        </h2>
-      </div>
-      <div class="p-6 space-y-4">
-        <div>
-          <label class="block text-lg font-medium mb-2">Motivo</label>
-          <input
-            type="text"
-            class="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="Quiero ir a la playa."
-          />
+    <div class="p-6">
+        <div class="bg-white shadow-lg rounded-lg">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">
+                    Agregar Solicitud de Vacaciones
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-lg font-medium mb-2">Motivo</label>
+                    <input
+                        type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="Quiero ir a la playa."
+                    />
+                </div>
+                <div>
+                    <label class="block text-lg font-medium mb-2"
+                        >Fecha Inicio</label
+                    >
+                    <input
+                        type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="01/02/2025"
+                    />
+                </div>
+                <div>
+                    <label class="block text-lg font-medium mb-2"
+                        >Fecha Fin</label
+                    >
+                    <input
+                        type="text"
+                        class="w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="02/02/2025"
+                    />
+                </div>
+            </div>
         </div>
-        <div>
-          <label class="block text-lg font-medium mb-2">Fecha Inicio</label>
-          <input
-            type="text"
-            class="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="01/02/2025"
-          />
-        </div>
-        <div>
-          <label class="block text-lg font-medium mb-2">Fecha Fin</label>
-          <input
-            type="text"
-            class="w-full p-2 border border-gray-300 rounded-md"
-            placeholder="02/02/2025"
-          />
-        </div>
-      </div>
-    </div>
 
-    <div class="flex space-x-4 mt-6">
-      <a
-        href=""
-        class="inline-block px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >Confirmar Solicitud</a
-      >
-      <a
-        href="/vacation"
-        class="inline-block px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-        >Cancelar</a
-      >
+        <div class="flex space-x-4 mt-6">
+            <a
+                href=""
+                class="inline-block px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >Confirmar Solicitud</a
+            >
+            <a
+                href="/vacation"
+                class="inline-block px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                >Cancelar</a
+            >
+        </div>
     </div>
-  </div>
 </div>
