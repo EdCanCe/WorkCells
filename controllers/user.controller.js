@@ -31,6 +31,7 @@ exports.post_login = (req, res, next) => {
         req.session.isLoggedIn = true;
         req.session.mail = email;
         req.session.userID = user.userID; // Asignar userID a la sesión
+        req.session.role = user.role;
         console.log("UserID from session:", req.session.userID);
         return req.session.save(() => res.redirect("/home"));
       } else {

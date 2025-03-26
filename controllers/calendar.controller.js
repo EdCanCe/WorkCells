@@ -4,6 +4,10 @@ const OneToOne = require("../models/oneToOne.model");
 const Holiday = require("../models/holiday.model");
 
 exports.getRoot = (req, res, next) => {
+    const mensaje = req.session.info || ""; // Obtén el mensaje de la sesión
+    // Limpiar el mensaje después de usarlo
+    req.session.info = "";
+
     // 1. Leer la cookie correctamente (convertir a booleano)
     let isMonthView = (req.cookies.isMonthView === '1') ? true : false; // Convertir a booleano con '1' o '0'
 
@@ -159,9 +163,10 @@ exports.getRoot = (req, res, next) => {
                                     console.log(daysArray);
 
                                     res.render("calendar", {
+                                        info: mensaje,
                                         isMonthView,
                                         days: daysArray,
-                                        weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                                        weekDays: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
                                         startDate,
                                         endDate
                                     });

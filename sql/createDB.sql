@@ -90,8 +90,8 @@ CREATE TABLE vacation (
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
-    leaderStatus TINYINT NOT NULL,
-    hrStatus TINYINT NOT NULL,
+    leaderStatus TINYINT DEFAULT 0,
+    hrStatus TINYINT DEFAULT 0,
     vacationUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT vacationUserIDFK FOREIGN KEY (vacationUserIDFK) REFERENCES user(userID)
 );

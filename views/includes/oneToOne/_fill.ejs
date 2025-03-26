@@ -1,36 +1,195 @@
-<div class="flex">
-    <aside class="w-64"></aside>
-    <div class="p-6">
-        <div class="bg-white shadow-md rounded-lg">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    Llenado de datos de sesión One to One
-                </h2>
-                <p class="text-lg">
-                    En esta ruta, el usuario podrá rellenar los datos de una
-                    sesión One to One.
-                </p>
-            </div>
-        </div>
-    </div>
+<div class="container mx-auto p-6 max-w-4xl">
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <h2 class="text-2xl font-semibold text-center">One On One</h2>
 
-    <div class="p-6">
-        <div class="bg-white shadow-md rounded-lg">
-            <div class="grid grid-cols-1 gap-4">
-                <div class="bg-gray-100 p-4 rounded-md">
-                    <div class="p-4">
-                        <h3 class="text-xl font-semibold mb-2">Sesión</h3>
-                        <p class="text-md mb-4">
-                            Consultar sesión de One To One
-                        </p>
-                        <a
-                            href="/oneToOne/check"
-                            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
-                            >Consultar</a
-                        >
+        <h3 class="text-2xl font-semibold text-center">
+            <%= name %> | <%= meetingDate %>
+        </h3>
+
+        <!-- Info Message -->
+        <% if (info && info !== '') { %>
+        <div class="bg-green-100 text-green-800 p-4 rounded-lg mx-6 mt-6">
+            <%= info %>
+        </div>
+        <% } %>
+
+        <!-- Form -->
+        <form action="/oneToOne/<%= sessionID %>/fill" method="POST" class="p-6 space-y-8">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+            <!-- Questions -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <% questions.forEach((question, index) => { %>
+                <div class="space-y-2">
+                    <label class="block text-lg font-medium text-gray-700">
+                        <%= question.question %>
+                    </label>
+                    <input
+                        type="hidden"
+                        name="question_id_<%= index + 1 %>"
+                        value="<%= question.questionID %>"
+                    />
+                    <textarea
+                        name="question_<%= index + 1 %>"
+                        rows="3"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Please provide your answer..."
+                        required
+                    ></textarea>
+                </div>
+                <% }); %>
+            </div>
+
+            <!-- Measure -->
+            <div class="space-y-8">
+                <% measurables.forEach((measurable, qIndex) => { %>
+                <div class="space-y-4">
+                    <label class="block text-lg font-medium text-gray-700">
+                        <%= measurable.summary %>
+                    </label>
+                    <input
+                        type="hidden"
+                        name="measurable_id_<%= qIndex + 1 %>"
+                        value="<%= measurable.measurableID %>"
+                    />
+                    <input
+                        type="range"
+                        name="measure_<%= qIndex + 1 %>"
+                        min="1"
+                        max="5"
+                        value="3"
+                        step="1"
+                        class="hidden range-input"
+                        data-measurable="<%= qIndex + 1 %>"
+                    />
+
+                    <div
+                        class="flex items-center gap-1 rating-buttons"
+                        data-measurable="<%= qIndex + 1 %>"
+                    >
+                        <% for (let i = 1; i <= 5; i++) { %>
+                        <div
+                            class="flex-1 h-10 bg-gray-100 rounded-md cursor-pointer transition-all duration-100 rating-button border border-blue-300 <%= i <= 3 ? 'bg-blue-500 border-blue-600' : '' %>"
+                            data-value="<%= i %>"
+                            onclick="updateRating(this)"
+                            onmouseover="previewRating(this)"
+                            onmouseout="resetPreview(this)"
+                            title="Rating <%= i %>"
+                        ></div>
+                        <% } %>
                     </div>
                 </div>
+                <% }); %>
             </div>
-        </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end pt-6">
+                <button
+                    type="submit"
+                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                    Submit Survey
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    // Store original states
+    const originalStates = new Map();
+
+    function previewRating(button) {
+        const container = button.closest(".rating-buttons");
+        const value = parseInt(button.getAttribute("data-value"));
+        const buttons = container.querySelectorAll(".rating-button");
+
+        // Save original states if not already saved
+        if (!originalStates.has(container)) {
+            const states = Array.from(buttons).map((btn) => ({
+                element: btn,
+                classes: [...btn.classList],
+            }));
+            originalStates.set(container, states);
+        }
+
+        // Preview selection
+        buttons.forEach((btn) => {
+            const btnValue = parseInt(btn.getAttribute("data-value"));
+            if (btnValue <= value) {
+                btn.classList.add("bg-blue-400", "border-blue-500");
+                btn.classList.remove("bg-gray-100");
+            }
+        });
+    }
+
+    function resetPreview(button) {
+        const container = button.closest(".rating-buttons");
+        const savedStates = originalStates.get(container);
+
+        if (savedStates) {
+            savedStates.forEach((state) => {
+                state.element.className = ""; // Clear all classes
+                state.classes.forEach((c) => state.element.classList.add(c)); // Restore original
+            });
+        }
+    }
+
+    function updateRating(button) {
+        const container = button.closest(".rating-buttons");
+        const value = parseInt(button.getAttribute("data-value"));
+        const measurableIndex = container.getAttribute("data-measurable");
+        const rangeInput = document.querySelector(
+            `.range-input[data-measurable="${measurableIndex}"]`
+        );
+
+        // Update hidden range input
+        rangeInput.value = value;
+
+        // Update button styles permanently
+        const buttons = container.querySelectorAll(".rating-button");
+        buttons.forEach((btn) => {
+            const btnValue = parseInt(btn.getAttribute("data-value"));
+            btn.classList.remove("bg-gray-100", "bg-blue-400", "bg-blue-500");
+
+            if (btnValue <= value) {
+                btn.classList.add("bg-blue-500", "border-blue-600");
+            } else {
+                btn.classList.add("bg-gray-100");
+            }
+        });
+
+        // Update original states
+        const states = Array.from(buttons).map((btn) => ({
+            element: btn,
+            classes: [...btn.classList],
+        }));
+        originalStates.set(container, states);
+    }
+
+    // Initialize with default value (3)
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".range-input").forEach((input) => {
+            const measurableIndex = input.getAttribute("data-measurable");
+            const container = document.querySelector(
+                `.rating-buttons[data-measurable="${measurableIndex}"]`
+            );
+            const buttons = container.querySelectorAll(".rating-button");
+
+            buttons.forEach((btn) => {
+                const btnValue = parseInt(btn.getAttribute("data-value"));
+                if (btnValue <= 3) {
+                    btn.classList.add("bg-blue-500", "border-blue-600");
+                    btn.classList.remove("bg-gray-100");
+                }
+            });
+
+            // Save initial state
+            const states = Array.from(buttons).map((btn) => ({
+                element: btn,
+                classes: [...btn.classList],
+            }));
+            originalStates.set(container, states);
+        });
+    });
+</script>
