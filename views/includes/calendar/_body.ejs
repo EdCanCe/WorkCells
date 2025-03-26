@@ -1,58 +1,4 @@
 <div class="container mx-auto p-4">
-<<<<<<< HEAD
-    <!-- Mensaje de información -->
-    <% if (info && info !== '') { %>
-    <div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4">
-        <%= info %>
-    </div>
-    <% } %>
-
-    <!-- Selector de vista -->
-    <div class="flex justify-end mb-4 gap-2">
-        <button
-            onclick="setViewPreference(true)"
-            class="px-4 py-2 rounded-md flex items-center <%= isMonthView ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' %>"
-        >
-            Vista Mensual
-        </button>
-        <button
-            onclick="setViewPreference(false)"
-            class="px-4 py-2 rounded-md flex items-center <%= !isMonthView ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' %>"
-        >
-            Vista Semanal
-        </button>
-    </div>
-
-    <!-- Resto de tu código permanece exactamente igual -->
-    <!-- Encabezados de días -->
-    <div class="grid grid-cols-7 gap-1 mb-2">
-        <% weekDays.forEach(day => { %>
-        <div class="text-center font-bold py-2 bg-gray-100 rounded">
-            <%= day %>
-        </div>
-        <% }); %>
-    </div>
-
-    <!-- Días del calendario -->
-    <div class="grid grid-cols-7 gap-1">
-        <% days.forEach((day, index) => { %>
-        <div
-            class="min-h-24 p-1 rounded <%= day.isEmpty ? 'bg-gray-50' : 'bg-white border border-gray-200' %>"
-        >
-            <% if (!day.isEmpty) { %>
-            <div class="text-right font-medium mb-1"><%= day.dayNumber %></div>
-
-            <!-- Vacaciones -->
-            <% day.events.vacations.forEach(vacation => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-blue-500 <%= vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : '' %> <%= vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : '' %>"
-            >
-                <%= vacation.isStart ? 'Inicio ' : (vacation.isEnd ? 'Fin ' :
-                '') %>Vacaciones
-            </div>
-            <% }); %>
-
-=======
     <!-- Selector de vista -->
     <div class="flex justify-end mb-4 gap-2">
         <button
@@ -97,7 +43,6 @@
             </div>
             <% }); %>
 
->>>>>>> d809b34
             <!-- Ausencias -->
             <% day.events.absences.forEach(absence => { %>
             <div
@@ -138,8 +83,4 @@
         // Recargar la página para que los cambios se apliquen
         window.location.reload();
     }
-<<<<<<< HEAD
 </script>
-=======
-</script>
->>>>>>> d809b34
