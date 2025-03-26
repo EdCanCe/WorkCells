@@ -22,7 +22,6 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -47,11 +46,8 @@ app.use(multer({ storage: fileStorage }).single("evidence"));
 
 app.use(csrfProtection);
 
-const usersRoutes = require("./routes/user.routes");
-app.use("/login", usersRoutes);
-const homeRouter = require("./routes/home.routes");
-app.use("/home", homeRouter);
-app.use("/", homeRouter);
+const usersRouter = require("./routes/user.routes");
+app.use("/login", usersRouter);
 
 const calendarRouter = require("./routes/calendar.routes");
 app.use("/calendar", calendarRouter);
@@ -59,19 +55,18 @@ app.use("/calendar", calendarRouter);
 const departmentRouter = require("./routes/department.routes");
 app.use("/department", departmentRouter);
 
-const faults_routers = require("./routes/faults.routes");
-const absences_routers = require("./routes/absences.routes");
-const employeeRouter = require("./routes/employee.routes");
-const vacationRouter = require("./routes/vacation.routes");
+const faultsRouters = require("./routes/faults.routes");
+app.use("/fault", faultsRouters);
 
-app.use("/department", departmentRouter);
-app.use("/home", homeRouter);
-app.use("/fault", faults_routers);
-app.use("/absence", absences_routers);
+const absencesRouter = require("./routes/absences.routes");
+app.use("/absence", absencesRouter);
+
+const employeeRouter = require("./routes/employee.routes");
 app.use("/employee", employeeRouter);
+
+const vacationRouter = require("./routes/vacation.routes");
 app.use("/vacation", vacationRouter);
 
-app.use("/", homeRouter);
 const holidayRouter = require("./routes/holiday.routes.js");
 app.use("/holiday", holidayRouter);
 
@@ -80,6 +75,10 @@ app.use("/oneToOne", oneToOneRouter);
 
 const reportRouter = require("./routes/report.routes.js");
 app.use("/reports", reportRouter);
+
+const homeRouter = require("./routes/home.routes");
+app.use("/home", homeRouter);
+app.use("/", homeRouter);
 
 app.use((request, response, next) => {
     response.statusCode = 404;
