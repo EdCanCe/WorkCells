@@ -2,6 +2,11 @@
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-6 py-4 flex justify-end">
             <a
+                href="/home"
+                class="bg-violet-500 hover:bg-violet-600 text-white font-semibold py-2 px-4 rounded"
+                >Home</a
+            >
+            <a
                 href="/absence/approve"
                 class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 mr-2 rounded"
                 >Request</a
@@ -87,13 +92,9 @@
                         <td
                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                         >
-                        <% if  (ab.justified === 0) { %>
-                            Denyed
-                        <% } else if (ab.justified === 1) { %>
-                            Approved
-                        <% } else if (ab.justified === 2) { %>
-                            On wating
-                        <% }  %>
+                            <% if (ab.justified === 0) { %> Denyed <% } else if
+                            (ab.justified === 1) { %> Approved <% } else if
+                            (ab.justified === 2) { %> On wating <% } %>
                         </td>
                         <td
                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
