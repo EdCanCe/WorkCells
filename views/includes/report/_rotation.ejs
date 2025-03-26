@@ -1,3 +1,4 @@
+<h3>New Workers</h3>
 <table>
     <thead>
         <tr>
@@ -21,6 +22,35 @@
             <td><%= a.userRoleIDFK %></td>
             <td><%= a.countryUserIDFK %></td>
             <td><%= a.workModality %></td>
+        </tr>
+        <% }) %> <% } %> <% } %>
+    </tbody>
+</table>
+
+<h3>Fired Workers</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Full name</th>
+            <th>Role</th>
+            <th>Country</th>
+            <th>Work modality</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let dp of departments) { %> <% let usersInDepartment =
+        inactiveUsers.filter(i => i.title == dp.title); %> <% if
+        (usersInDepartment.length > 0) { %>
+        <tr>
+            <td colspan="4"><%= dp.title %></td>
+        </tr>
+
+        <% usersInDepartment.forEach(i => { %>
+        <tr>
+            <td><%= i.birthName %> <%= i.surname %></td>
+            <td><%= i.userRoleIDFK %></td>
+            <td><%= i.countryUserIDFK %></td>
+            <td><%= i.workModality %></td>
         </tr>
         <% }) %> <% } %> <% } %>
     </tbody>
