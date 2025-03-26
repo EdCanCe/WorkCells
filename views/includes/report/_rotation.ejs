@@ -1,0 +1,27 @@
+<table>
+    <thead>
+        <tr>
+            <th>Full name</th>
+            <th>Role</th>
+            <th>Country</th>
+            <th>Work modality</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let dp of departments) { %> <% let usersInDepartment =
+        activeUsers.filter(a => a.title == dp.title); %> <% if
+        (usersInDepartment.length > 0) { %>
+        <tr>
+            <td colspan="4"><%= dp.title %></td>
+        </tr>
+
+        <% usersInDepartment.forEach(a => { %>
+        <tr>
+            <td><%= a.birthName %> <%= a.surname %></td>
+            <td><%= a.userRoleIDFK %></td>
+            <td><%= a.countryUserIDFK %></td>
+            <td><%= a.workModality %></td>
+        </tr>
+        <% }) %> <% } %> <% } %>
+    </tbody>
+</table>

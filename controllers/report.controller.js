@@ -12,17 +12,21 @@ exports.getEmployeeRotation = (request, response, next) => {
 
     let end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     end = end.toISOString().split("T")[0];
-    Report.getActiveIDs(start, end)
-        .then(([activesIds]) => {
-            if (activesIds) {
-                console.log(activesIds);
-                return Report.getInfoActives(activesIds);
-            }
-            return Promise.resolve();
-        })
+
+    Report.getInfoActives(start, end)
         .then(([activeUsers]) => {
-            console.log(activeUsers);
-            response.render("reportRotation");
+            return Report.getInfoInactives(start, end).then(
+                ([inactiveUsers]) => {
+                    return Report.getAllDepartments().then(([departments]) => {
+                        console.log(departments);
+                        response.render("reportRotation", {
+                            activeUsers: activeUsers,
+                            inactiveUsers: inactiveUsers,
+                            departments: departments,
+                        });
+                    });
+                }
+            );
         })
         .catch((err) => {
             console.log(err);
