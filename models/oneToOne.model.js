@@ -35,4 +35,17 @@ module.exports = class OneToOne {
 		[startDate, endDate, userID]
 		);
 	}
+
+	static fetchBySession(sessionID) {
+		return db.execute(`SELECT o.meetingLink, o.meetingDate, u.birthName, u.surname
+						FROM oneOnOne o, user u
+						WHERE o.oneOnOneUserIDFK = u.userID
+						AND o.oneOnOneID = ? `, [sessionID]);
+	}
+
+	static countVariables() {
+		return db.execute(`SELECT 
+    					(SELECT COUNT(*) FROM oneOnOneQuestion) AS questionAmount,
+    					(SELECT COUNT(*) FROM oneOnOneMeasurable) AS measurableAmount`)
+	}
 };
