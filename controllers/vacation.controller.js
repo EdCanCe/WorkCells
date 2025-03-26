@@ -1,4 +1,7 @@
 const Vacation = require("../models/vacation.model");
+const User = require("../models/user.model");
+const { error } = require("console");
+const { request } = require("http");
 
 exports.getVacation = (request, response, next) => {
   response.render("ownVacation");
@@ -30,8 +33,73 @@ exports.getApproveVacation = (request, response, next) => {
 };
 
 exports.getAddVacation = (request, response, next) => {
-  response.render("addVacation");
+  const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
+  // Limpiar el mensaje después de usarlo
+  request.session.info = "";
+
+  User.fetchStartDate(request.session.userID)
+    .then(([rows]) => {
+      // Obtiene una fecha inicial para ver si ya pasó, o aún no.
+      let today = new Date();
+      let givenDate = new Date();
+      givenDate.setFullYear(givenDate.getUTCFullYear(), rows[0].month - 1 , rows[0].day);
+
+      let firstYear;
+      let midYear;
+      let lastYear;
+      
+      
+      if (today < givenDate) { // Aún no pasa
+        firstYear = givenDate.getUTCFullYear() - 1;
+        midYear = givenDate.getUTCFullYear();
+        lastYear = givenDate.getUTCFullYear() + 1;
+      } else {
+        firstYear = givenDate.getUTCFullYear();
+        midYear = givenDate.getUTCFullYear() + 1;
+        lastYear = givenDate.getUTCFullYear() + 2;
+      }
+
+      const firstDate = firstYear + "/" + rows[0].month + "/" + rows[0].day;
+      const midDate = midYear + "/" + rows[0].month + "/" + rows[0].day;
+      const lastDate = lastYear + "/" + rows[0].month + "/" + rows[0].day;
+      
+      response.render("addVacation", {
+        isLoggedIn: request.session.isLoggedIn || false,
+        userID: request.session.userID || 0,
+        firstDate: firstDate,
+        midDate: midDate,
+        lastDate: lastDate,
+        info: mensaje,
+        csrfToken: request.csrfToken(),
+      });
+  })
+    .catch((error) => {
+    console.error(error); // Mejor manejo de error
+    response.status(500).send("Error al obtener los datos.");
+  });
 };
+
+exports.postAddVacation = (request, response, next) => {
+  const vacation = new Vacation(
+    request.session.userID,
+    request.body.startDate,
+    request.body.endDate,
+    request.body.reason
+  );
+  console.log(request.session.userID);
+  console.log(request.body.startDate);
+  console.log(request.body.endDate);
+  console.log(request.body.reason);
+  vacation.save()
+    .then(() =>{
+      request.session.info = "Your request was submitted without any problem."
+      response.redirect("/calendar");
+    })
+    .catch((error) => {
+      request.session.info = error.message || "There was an error trying to sumbit your request.";
+      response.redirect("/vacation/add");
+    })
+}
 
 exports.getCheckVacation = (request, response, next) => {
   response.render("checkVacation");

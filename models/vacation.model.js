@@ -2,6 +2,22 @@ const db = require("../util/database"); // Asegúrate de importar tu módulo de 
 
 class Vacation {
 
+  constructor(userID, startDate, endDate, reason) {
+    this.userID = userID;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.reason = reason;
+  }
+
+  save(){
+    const saveQuery = "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
+    return db.execute(saveQuery, [this.userID, this.startDate, this.endDate, this.reason])
+      .catch((error) => {
+        console.error("Error al añadir vacación:", error.message);
+        throw error;
+      });
+  }
+
   static fetchAll(userID) {
     return db.execute(
       `SELECT 
