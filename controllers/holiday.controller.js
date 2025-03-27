@@ -63,8 +63,7 @@ exports.getUsedHoliday = (req, res, next) => {
   // Limpiar la sesión después de usar el mensaje
   req.session.info = "";
 
-  holiday
-    .fetchAll()
+  Holiday.fetchAll()
     .then(([rows, fieldData]) => {
       res.render("usedHoliday", {
         isLoggedIn: req.session.isLoggedIn || false,
