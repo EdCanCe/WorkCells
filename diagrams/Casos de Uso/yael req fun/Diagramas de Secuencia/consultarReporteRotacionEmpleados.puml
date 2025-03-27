@@ -19,7 +19,7 @@ deactivate routes
 activate controller
 controller ->> Report: getInfoActivos(start, end)
 activate Report
-Report ->> mysql: SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol,\n d.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r ON u.userRoleIDFK = r.roleID \nJOIN country c ON u.countryUserIDFK = c.countryID\n WHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK WHERE u2.workStatus = 1 \nAND w.startDate BETWEEN '2025-03-01' AND '2025-03-31') GROUP BY u.curp ORDER BY d.title;
+Report ->> mysql: SELECT u.*, d.title FROM user u, userDepartment ud, department d \nWHERE u.userID = ud.userIDFK AND ud.departmentIDFK = d.departmentID \nAND u.userID IN(SELECT userID FROM user u, workStatus w WHERE \nu.userID = w.userStatusIDFK AND u.workStatus = 1 \nAND w.startDate BETWEEN ? AND ?) ORDER BY d.title
 mysql -->> Report: activeUsers
 deactivate mysql
 Report -->> controller: Promesa
@@ -27,7 +27,7 @@ deactivate Report
 
 controller ->> Report: getInfoInactivos(start, end)
 activate Report
-Report ->> mysql: SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol, \nd.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r ON u.userRoleIDFK = r.roleID JOIN \ncountry c ON u.countryUserIDFK = c.countryID \nWHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK WHERE u2.workStatus = 0 \nAND w.endDate BETWEEN '2025-03-01' AND '2025-03-31') GROUP BY u.curp ORDER BY d.title;
+Report ->> mysql: SELECT u.*, d.title FROM user u, userDepartment ud, department d \nWHERE u.userID = ud.userIDFK AND ud.departmentIDFK = d.departmentID \nAND u.userID IN(SELECT userID FROM user u, workStatus w WHERE \nu.userID = w.userStatusIDFK AND u.workStatus = 0 \nAND w.endDate BETWEEN ? AND ?) ORDER BY d.title
 activate mysql
 mysql -->> Report: inactiveUsers
 deactivate mysql
