@@ -23,22 +23,22 @@ exports.getAdd = (request, response, next) => {
 //   response.status(200).json({message: "Respuesta asíncrona"});
 // }
 
-exports.postDenyRequest = (request, response, next) => {
+exports.postRequestDeny = (request, response, next) => {
     response.status(200).json({ message: "Deny response sent" });
 };
 
-exports.postApproveRequest = (request, response, next) => {
+exports.postRequestApprove = (request, response, next) => {
     response.status(200).json({ message: "Approved successfully" });
 };
 
-exports.getApprove = (request, response, next) => {
+exports.getRequest = (request, response, next) => {
     const mensaje = request.session.info || "";
     request.session.info = ""; // Limpiar la sesión después de usar el mensaje
 
     Absence.fetchAllWithName()
         .then(([rows, fieldData]) => {
             // Asegúrate de pasar "rows" como "vacations"
-            response.render("absenceApprove", {
+            response.render("absenceRequests", {
                 isLoggedIn: request.session.isLoggedIn || false,
                 username: request.session.username || "",
                 absences: rows, // Pasar correctamente "rows" como "absence"
