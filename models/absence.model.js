@@ -33,7 +33,12 @@ module.exports = class Absence {
     }
 
     static fetchAllWithName() {
-      return db.execute("SELECT a.*, u.birthName, u.surname, r.title FROM absence as a, user as u, role as r WHERE u.userID = a.absenceUserIDFK AND r.roleID = u.userRoleIDFK ORDER BY startDate DESC");
+        return db.execute(`SELECT a.*, u.birthName, u.surname, r.title
+FROM absence as a, user as u, role as r 
+WHERE u.userID = a.absenceUserIDFK 
+AND r.roleID = u.userRoleIDFK 
+AND a.justified = 2
+ORDER BY startDate DESC`);
     }
 
     static fetchAllByID(id) {

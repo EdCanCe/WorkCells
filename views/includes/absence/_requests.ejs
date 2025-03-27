@@ -98,12 +98,10 @@
         button.addEventListener("click", async function (event) {
             const url = this.dataset.url;
             const csrf = this.dataset.csrf;
-            
             // Deshabilitar el botón y mostrar estado de carga
             this.disabled = true;
             const originalText = this.innerText;
             this.innerText = "Processing...";
-
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -113,11 +111,9 @@
                     },
                     body: JSON.stringify({}),
                 });
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 
                 // Obtener la celda de la tabla que contiene los botones
@@ -139,12 +135,10 @@
         button.addEventListener("click", async function (event) {
             const url = this.dataset.url;
             const csrf = this.dataset.csrf;
-            
             // Deshabilitar el botón y mostrar estado de carga
             this.disabled = true;
             const originalText = this.innerText;
             this.innerText = "Processing...";
-
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -154,11 +148,9 @@
                     },
                     body: JSON.stringify({}),
                 });
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 
                 // Obtener la celda de la tabla que contiene los botones
