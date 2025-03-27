@@ -19,28 +19,6 @@ exports.getAdd = (request, response, next) => {
         });
 };
 
-// exports.postDenyRequest = (request, response, next) => {
-//   response.status(200).json({message: "Respuesta asíncrona"});
-// }
-
-exports.postRequestDeny = (request, response, next) => {
-    const absenceId = request.params.absenceID;
-    
-    Absence.updateStatus(absenceId, 0) // 0 = Denegado
-        .then(() => {
-            response.status(200).json({ 
-                success: true,
-                message: "Solicitud denegada exitosamente" 
-            });
-        })
-        .catch(error => {
-            console.error("Error al denegar la solicitud:", error);
-            response.status(500).json({ 
-                success: false,
-                message: "Error al procesar la solicitud" 
-            });
-        });
-};
 
 exports.postRequestApprove = (request, response, next) => {
     const absenceId = request.params.absenceID;
@@ -49,17 +27,38 @@ exports.postRequestApprove = (request, response, next) => {
         .then(() => {
             response.status(200).json({ 
                 success: true,
-                message: "Solicitud aprobada exitosamente" 
+                message: "Request approved" 
             });
         })
         .catch(error => {
-            console.error("Error al aprobar la solicitud:", error);
+            console.error("Error approving request:", error);
             response.status(500).json({ 
                 success: false,
-                message: "Error al procesar la solicitud" 
+                message: "Error processing request" 
             });
         });
 };
+
+
+exports.postRequestDeny = (request, response, next) => {
+    const absenceId = request.params.absenceID;
+    
+    Absence.updateStatus(absenceId, 0) // 0 = Denegado
+        .then(() => {
+            response.status(200).json({ 
+                success: true,
+                message: "Request denied" 
+            });
+        })
+        .catch(error => {
+            console.error("Error denying request:", error);
+            response.status(500).json({ 
+                success: false,
+                message: "Error processing request" 
+            });
+        });
+};
+
 
 exports.getRequest = (request, response, next) => {
     const mensaje = request.session.info || "";

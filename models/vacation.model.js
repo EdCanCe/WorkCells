@@ -42,6 +42,50 @@ AND u.userID IN (
 );`, [userID]
     );
   }
+  
+  static fetchAllWithNames(userID) {
+    return db.execute(
+      `SELECT 
+  u.mail, 
+  v.reason, 
+  v.startDate, 
+  v.endDate, 
+  v.leaderStatus,
+  v.hrStatus,
+  v.vacationID,
+  u.birthName,
+  u.surname
+  FROM vacation v, user u
+  WHERE v.vacationUserIDFK = u.userID
+  AND u.userID IN (
+  -- Subconsulta: Usuarios del mismo departamento del líder
+  SELECT ud.userIDFK
+  FROM userDepartment ud
+  WHERE ud.departmentIDFK IN (
+    -- Subconsulta: Departamento del líder
+    SELECT departmentIDFK
+    FROM userDepartment, user
+    WHERE userIDFK = ?
+    
+  )
+  );`, [userID]
+    );
+
+  }
+
+  static updateStatusLeader(vacationId, status) {
+    return db.execute(
+      "UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?",
+      [status, vacationId]
+    );
+  }
+
+  static updateStatusHR(vacationId, status) {
+    return db.execute(
+      "UPDATE vacation SET hrStatus = ? WHERE vacationID = ?",
+      [status, vacationId]
+    );
+  }
 
   static fetchByDateType(startDate, endDate, userID) {
     return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)

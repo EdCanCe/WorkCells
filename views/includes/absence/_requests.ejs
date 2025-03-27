@@ -1,126 +1,75 @@
-<div class="content p-6">
-    <div class="card bg-white p-6 rounded-lg shadow-md">
-        <div class="card-content">
-            <h2 class="text-2xl font-semibold mb-4">Absences request</h2>
-
-            <div class="overflow-x-auto">
-                <table class="min-w-full table-auto" id="absences-table">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="nombre">Full name</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="rol">Role</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="fecha inicio">Start date</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="fecha fin">End date</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="dias totales">Total days</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="razon">Reason</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                                >
-                                <abbr title="estado">Status</abbr>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for (let ab of absences) { %>
-                        <tr class="bg-gray-100">
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <%- ab.birthName + ' ' + ab.surname %>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <%- ab.title %>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <%= new
-                                Date(ab.startDate).toLocaleDateString('es-MX');
-                                %>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <%= new
-                                Date(ab.endDate).toLocaleDateString('es-MX'); %>
-                            </th>
-                            <td
-                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 total-days"
-                                data-start-date="<%= ab.startDate %>"
-                                data-end-date="<%= ab.endDate %>"
-                            ></td>
-                            <th>
-                                <%- ab.reason %>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <% if (ab.justified === 0) { %>
-                                    <span class="text-red-600 font-semibold">Denied</span>
-                                <% } else
-                                if (ab.justified === 1) { %>
-                                    <span class="text-green-600 font-semibold">Approved</span>
-                                <% } else
-                                if (ab.justified === 2) { %>
-                                <div class="px-6 py-4 flex justify-end">
-                                    <button
-                                        class="approve-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded"
-                                        data-url="/absence/requests/approve/<%- ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Approve
-                                    </button>
-                                    <br />
-                                    <button
-                                        class="deny-btn bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 mr-2 rounded"
-                                        data-url="/absence/requests/deny/<%- ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Denied
-                                    </button>
-                                </div>
-                                <% } %>
-                            </th>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
+<div class="flex-1 p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="bg-white shadow-lg rounded-lg">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">Solicitudes de Ausencias</h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto bg-gray-100 p-4 rounded-lg shadow">
+                    <table class="min-w-full table-auto" id="absences-table">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Full name</th>
+                                <th class="px-4 py-2 text-left">Role</th>
+                                <th class="px-4 py-2 text-left">Start date</th>
+                                <th class="px-4 py-2 text-left">End date</th>
+                                <th class="px-4 py-2 text-left">Total days</th>
+                                <th class="px-4 py-2 text-left">Reason</th>
+                                <th class="px-4 py-2 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let ab of absences) { %>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-4 py-2"><%= ab.birthName + ' ' + ab.surname %></td>
+                                <td class="px-4 py-2"><%= ab.title %></td>
+                                <td class="px-4 py-2">
+                                    <%= new Date(ab.startDate).toLocaleDateString('es-MX') %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= new Date(ab.endDate).toLocaleDateString('es-MX') %>
+                                </td>
+                                <td class="px-4 py-2 total-days" 
+                                    data-start-date="<%= ab.startDate %>"
+                                    data-end-date="<%= ab.endDate %>">
+                                </td>
+                                <td class="px-4 py-2"><%= ab.reason %></td>
+                                <td class="px-4 py-2">
+                                    <% if (ab.justified === 0) { %>
+                                        <span class="text-red-600 font-semibold flex items-center justify-center">Denied</span>
+                                    <% } else if (ab.justified === 1) { %>
+                                        <span class="text-green-600 font-semibold flex items-center justify-center">Approved</span>
+                                    <% } else if (ab.justified === 2) { %>
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4 justify-center">
+                                            <button
+                                                class="approve-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+                                                data-url="/absence/requests/approve/<%= ab.absenceID %>"
+                                                data-csrf="<%= csrfToken %>"
+                                            >
+                                                Approve
+                                            </button>
+                                            <button
+                                                class="deny-btn bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+                                                data-url="/absence/requests/deny/<%= ab.absenceID %>"
+                                                data-csrf="<%= csrfToken %>"
+                                            >
+                                                Deny
+                                            </button>
+                                        </div>
+                                    <% } %>
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-        <div class="mt-4 flex justify-center space-x-4">
-            <a
-                href="/absence"
-                class="button bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-                >Regresar</a
-            >
-        </div>
+        <a
+            href="/absence"
+            class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >Regresar</a
+        >
     </div>
 </div>
 
@@ -129,17 +78,18 @@
     document.addEventListener("DOMContentLoaded", function () {
         const rows = document.querySelectorAll("#absences-table tbody tr");
         rows.forEach((row) => {
-            const startDate = new Date(
-                row.querySelector(".total-days").getAttribute("data-start-date")
-            );
-            const endDate = new Date(
-                row.querySelector(".total-days").getAttribute("data-end-date")
-            );
-            const timeDifference = endDate - startDate;
-            const totalDays = timeDifference / (1000 * 3600 * 24);
-
-            // Asignar el total de días a la celda correspondiente
-            row.querySelector(".total-days").innerText = totalDays;
+            const totalDaysCell = row.querySelector(".total-days");
+            if (totalDaysCell) {
+                const startDate = new Date(totalDaysCell.getAttribute("data-start-date"));
+                const endDate = new Date(totalDaysCell.getAttribute("data-end-date"));
+                
+                // Ajustar las fechas para incluir el día inicial y final
+                const timeDifference = endDate - startDate;
+                const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+                
+                // Asignar el total de días a la celda correspondiente
+                totalDaysCell.innerText = totalDays;
+            }
         });
     });
 
@@ -171,7 +121,7 @@
                 const data = await response.json();
                 
                 // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest('th');
+                const tableCell = this.closest('td');
                 // Reemplazar el contenido con el nuevo estado
                 tableCell.innerHTML = '<span class="text-green-600 font-semibold">Approved</span>';
             } catch (err) {
@@ -212,7 +162,7 @@
                 const data = await response.json();
                 
                 // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest('th');
+                const tableCell = this.closest('td');
                 // Reemplazar el contenido con el nuevo estado
                 tableCell.innerHTML = '<span class="text-red-600 font-semibold">Denied</span>';
             } catch (err) {
