@@ -128,7 +128,7 @@ exports.postRequestApprove = (request, response, next) => {
 exports.postRequestDeny = (request, response, next) => {
   const vacationId = request.params.vacationID;
 
-  Vacation.updateStatusHR(vacationId, 0) // 0 = Denegado
+  Vacation.updateStatusLeader(vacationId, 0) // 0 = Denegado
     .then(() => {
       response.status(200).json({
         success: true,
