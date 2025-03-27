@@ -1,15 +1,15 @@
 <div class="flex-1 p-6">
     <div class="max-w-7xl mx-auto">
-        <div class="bg-white shadow-lg rounded-lg">
+        <div class="bg-neutral-800 shadow-lg rounded-lg">
             <div class="p-6">
                 <h2 class="text-2xl font-semibold mb-4">
                     Vacation Requests
                 </h2>
             </div>
             <div class="p-6">
-                <div class="overflow-x-auto bg-gray-100 p-4 rounded-lg shadow">
+                <div class="overflow-x-auto bg-neutral-700/50 p-4 rounded-lg shadow">
                     <table id="vacations-table" class="min-w-full table-auto">
-                        <thead class="bg-gray-200">
+                        <thead class="bg-neutral-800">
                             <tr>
                                 <th class="px-4 py-2 text-left">Full name</th>
                                 <th class="px-4 py-2 text-left">Reason</th>
@@ -26,7 +26,7 @@
                         <tbody>
                             <!-- Iterar sobre las solicitudes de vacaciones -->
                             <% vacations.forEach(vacation => { %>
-                            <tr class="border-b hover:bg-gray-50">
+                            <tr class="border-b hover:bg-neutral-800">
                                 <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
                                 <td class="px-4 py-2">
                                     <%= vacation.reason %>
@@ -51,7 +51,7 @@
                                     <% } else if (vacation.leaderStatus === 0) { %>
                                         <span class="text-red-600 font-semibold text-center">Denied</span>
                                     <% } else { %>
-                                        <span class="text-gray-600 font-semibold text-center">Pending</span>
+                                        <span class="text-neutral-500 font-semibold text-center">Pending</span>
                                     <% } %>
                                 </td>
                                 <td class="px-4 py-2">
@@ -60,7 +60,7 @@
                                     <% } else if (vacation.hrStatus === 0) { %>
                                         <span class="text-red-600 font-semibold text-center">Denied</span>
                                     <% } else { %>
-                                        <span class="text-gray-600 font-semibold text-center">Pending</span>
+                                        <span class="text-neutral-500 font-semibold text-center">Pending</span>
                                     <% } %>
                                 </td>
                                 <td class="px-4 py-2">
