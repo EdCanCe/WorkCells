@@ -42,6 +42,7 @@ Navegador -> absence.controller : POST /absence/requests/:response
 deactivate Navegador
 activate absence.controller
 absence.controller ->> AbsenceModel : saveResponse()
+
 activate AbsenceModel
 ' absenceID, startDate, endDate, reason, justified, absenceUserIDFK
 AbsenceModel ->> mysql : INSERT INTO absence \nVALUES()

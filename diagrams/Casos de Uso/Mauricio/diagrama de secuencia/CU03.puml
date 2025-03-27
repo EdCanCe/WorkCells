@@ -35,26 +35,6 @@ activate vacations.ejs
 vacations.ejs -> Navegador : Mostrar vacaciones
 deactivate vacations.ejs
 activate Navegador
-' deactivate vacations.ejs
-' deactivate vacations.controller
-' deactivate vacations.routes
-
-' Navegador -> vacations.controller : POST /vacations/requests/:response
-' deactivate Navegador
-' activate vacations.controller
-' vacations.controller ->> VacationsModel : saveResponse()
-' activate VacationsModel
-' ' vacationsID, startDate, endDate, reason, justified, vacationsUserIDFK
-' VacationsModel ->> mysql : INSERT INTO vacations \nVALUES()
-' activate mysql
-' mysql -->> VacationsModel : Datos obtenidos
-' deactivate mysql
-' VacationsModel -->> vacations.controller : Retorno modificiación de falta
-' activate vacations.ejs
-' vacations.controller -> vacations.ejs : render()
-' activate Navegador
-' vacations.ejs -> Navegador : Mostrar respuesta
-' deactivate vacations.ejs
 
 
 @enduml

@@ -5,12 +5,9 @@ start
 :Selecciona opción\n "Solicitudes de ausencias";
 
 |__Sistema__|
-if(Verificar que existen >1 solicitudes\n de ausencias pendientes) then (Sí)
-    :Despliega en forma de tabla\n todas las solicitudes de ausencias.;
-else (No)
-    :Despliega en forma de tabla\n. Muestra mensaje al líder que\nno existen solicitudes pendientes;
-    stop
-endif
+:Obtiene las últimas 10 solicitudes de ausencias;
+
+:Despliega en forma de tabla las solicitudes;
 
 |__Líder__|
 :De una solicitud, da click\n en aceptar o denegar solicitud.;

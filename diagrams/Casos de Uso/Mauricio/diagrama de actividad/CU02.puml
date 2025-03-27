@@ -5,12 +5,8 @@ start
 :Selecciona opción\n"Solicitudes de vacaciones";
 
 |__Sistema__|
-if(Verificar que existen >1 solicitudes\nde vacaciones pendientes) then (Sí)
-    :Despliega en forma de tabla\ntodas las solicitudes de vacaciones.;
-else (No)
-    :Despliega en forma de tabla.\nMuestra mensaje al líder que\nno existen solicitudes pendientes;
-    stop
-endif
+:Obtiene las últimas 10 solicitudes de vacaciones;
+:Despliega en forma de tabla las solicitudes.;
 
 |__SuperAdmin__|
 :De una solicitud, da click\nen aceptar o denegar solicitud.;
