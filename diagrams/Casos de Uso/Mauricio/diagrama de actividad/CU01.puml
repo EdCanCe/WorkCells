@@ -1,4 +1,4 @@
-@startuml CU05 - Líder consulta solicitudes de vacaciones de colaborador
+@startuml CU01 - Líder consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
 
 |__Líder__|
 start
@@ -6,17 +6,17 @@ start
 
 |__Sistema__|
 if(Verificar que existen >1 solicitudes\n de ausencias pendientes) then (Sí)
-    :Despliega las solicitudes para\n revisar de forma resumida.;
+    :Despliega en forma de tabla\n todas las solicitudes de ausencias.;
 else (No)
-    :Mostrar mensaje al líder que\nno existen solicitudes pendientes;
+    :Despliega en forma de tabla\n. Muestra mensaje al líder que\nno existen solicitudes pendientes;
     stop
 endif
 
 |__Líder__|
-:Selecciona una de todas\nlas solicitudes de ausencias;
+:De una solicitud, da click\n en aceptar o denegar solicitud.;
 
 |__Sistema__|
-:Obtiene y muestra la solicitud de ausencias\n completa del colaborador en detalle;
+:Registra la respuesta en la base de datos\n y muestra el cambio al líder.;
 
 |__Líder__|
 :Presiona el botón de cerrar;
