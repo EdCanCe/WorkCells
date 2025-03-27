@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Campos adicionales del formulario
     const additionalFields = document.querySelectorAll(
-        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK"
+        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK, #prioritaryDepartmentIDFK"
     );
 
     // Expresiones regulares para validaciones

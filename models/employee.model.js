@@ -14,7 +14,8 @@ module.exports = class Employee {
         colony,
         workModality,
         userRoleIDFK,
-        countryUserIDFK
+        countryUserIDFK,
+        prioritaryDepartmentIDFK
     ) {
         this.curp = curp;
         this.rfc = rfc;
@@ -28,6 +29,7 @@ module.exports = class Employee {
         this.workModality = workModality;
         this.userRoleIDFK = userRoleIDFK;
         this.countryUserIDFK = countryUserIDFK;
+        this.prioritaryDepartmentIDFK = prioritaryDepartmentIDFK;
     }
 
     save() {
@@ -52,6 +54,7 @@ module.exports = class Employee {
                 )
             );
         }
+
         const userID = uuidv4();
         const passwd = "1234"; // Considera usar un hash para seguridad
         const passwdFlag = false;
@@ -73,9 +76,9 @@ module.exports = class Employee {
                 const query = `
           INSERT INTO user(
             userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, 
-            streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK
+            streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
           ) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
                 return db.execute(query, [
@@ -95,6 +98,7 @@ module.exports = class Employee {
                     workStatus,
                     this.userRoleIDFK,
                     this.countryUserIDFK,
+                    this.prioritaryDepartmentIDFK,
                 ]);
             })
             .catch((error) => {
@@ -107,5 +111,10 @@ module.exports = class Employee {
     }
     static fetchRoleID() {
         return db.execute(`SELECT * FROM role`);
+    }
+    static fetchDepartment() {
+        return db.execute(`SELECT d.departmentID, d.title AS departmentTitle, e.title AS enterpriseTitle 
+                        FROM department d, enterprise e 
+                        WHERE d.enterpriseIDFK = e.enterpriseID;`);
     }
 };
