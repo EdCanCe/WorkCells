@@ -36,6 +36,10 @@ module.exports = class Holiday {
     return db.execute(`SELECT * FROM templateHoliday`);
   }
 
+  static fetchUsedHoliday() {
+    return db.execute(`SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID`);
+  }
+
   static fetchByDateType(startDate, endDate) {
     return db.execute(
       `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
