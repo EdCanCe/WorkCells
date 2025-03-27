@@ -19,46 +19,43 @@ exports.getAdd = (request, response, next) => {
         });
 };
 
-
 exports.postRequestApprove = (request, response, next) => {
     const absenceId = request.params.absenceID;
-    
+
     Absence.updateStatus(absenceId, 1) // 1 = Aprobado
         .then(() => {
-            response.status(200).json({ 
+            response.status(200).json({
                 success: true,
-                message: "Request approved" 
+                message: "Request approved",
             });
         })
-        .catch(error => {
+        .catch((error) => {
             console.error("Error approving request:", error);
-            response.status(500).json({ 
+            response.status(500).json({
                 success: false,
-                message: "Error processing request" 
+                message: "Error processing request",
             });
         });
 };
-
 
 exports.postRequestDeny = (request, response, next) => {
     const absenceId = request.params.absenceID;
-    
+
     Absence.updateStatus(absenceId, 0) // 0 = Denegado
         .then(() => {
-            response.status(200).json({ 
+            response.status(200).json({
                 success: true,
-                message: "Request denied" 
+                message: "Request denied",
             });
         })
-        .catch(error => {
+        .catch((error) => {
             console.error("Error denying request:", error);
-            response.status(500).json({ 
+            response.status(500).json({
                 success: false,
-                message: "Error processing request" 
+                message: "Error processing request",
             });
         });
 };
-
 
 exports.getRequest = (request, response, next) => {
     const mensaje = request.session.info || "";
@@ -66,17 +63,17 @@ exports.getRequest = (request, response, next) => {
 
     Absence.fetchAllWithName()
         .then(([rows, fieldData]) => {
-            // Asegúrate de pasar "rows" como "vacations"
             response.render("absenceRequests", {
                 isLoggedIn: request.session.isLoggedIn || false,
                 csrfToken: request.csrfToken(),
                 username: request.session.username || "",
-                absences: rows, // Pasar correctamente "rows" como "absence"
+                absences: rows,
                 info: mensaje,
+                today: new Date(),
             });
         })
         .catch((error) => {
-            console.error(error); // Mejor manejo de error
+            console.error(error);
             response.status(500).send("Error al obtener los datos.");
         });
     console.log(request.session);
