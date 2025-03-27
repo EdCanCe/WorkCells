@@ -18,11 +18,15 @@ exports.getEmployeeRotation = (request, response, next) => {
             return Report.getInfoInactives(start, end).then(
                 ([inactiveUsers]) => {
                     return Report.getAllDepartments().then(([departments]) => {
-                        console.log(departments);
+                        // console.log(departments);
+                        // console.log(activeUsers.length);
+                        // console.log(inactiveUsers.length);
                         response.render("reportRotation", {
                             activeUsers: activeUsers,
                             inactiveUsers: inactiveUsers,
                             departments: departments,
+                            activeSize: activeUsers.length,
+                            inactiveSize: inactiveUsers.length,
                         });
                     });
                 }
