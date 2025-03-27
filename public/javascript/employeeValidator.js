@@ -101,6 +101,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "CURP must be 18 characters long and in the correct format."
             );
             isValid = false;
+        } else {
+            curpFormatError.textContent = "";
+            curpInput.setCustomValidity("");
         }
 
         if (rfcInput.value.length < 13 || !rfcRegex.test(rfcInput.value)) {
@@ -110,6 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 "RFC must be 18 characters long and in the correct format."
             );
             isValid = false;
+        } else {
+            rfcFormatError.textContent = "";
+            rfcInput.setCustomValidity("");
         }
 
         nameFields.forEach((field) => {
