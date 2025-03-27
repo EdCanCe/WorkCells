@@ -63,7 +63,7 @@ exports.getUsedHoliday = (req, res, next) => {
   // Limpiar la sesión después de usar el mensaje
   req.session.info = "";
 
-  holiday
+  Holiday
     .fetchAll()
     .then(([rows, fieldData]) => {
       res.render("usedHoliday", {
