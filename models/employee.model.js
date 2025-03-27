@@ -60,10 +60,10 @@ module.exports = class Employee {
         const passwdFlag = false;
         const workStatus = true;
 
-        const checkUserQuery = `SELECT userID FROM user WHERE curp = ? OR rfc = ?`;
+        const checkUserQuery = `SELECT userID FROM user WHERE curp = ? OR rfc = ? OR mail = ?`;
 
         return db
-            .execute(checkUserQuery, [this.curp, this.rfc])
+            .execute(checkUserQuery, [this.curp, this.rfc, this.mail])
             .then(([rows]) => {
                 if (rows.length > 0) {
                     // El usuario ya existe, evitar el registro
