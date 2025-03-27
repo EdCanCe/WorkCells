@@ -3,7 +3,7 @@
     class="text-neutral-100 bg-neutral-900 border-neutral-700 relative h-screen w-fit border-r-[1px] relative"
 >
     <div
-        class="bg-neutral-800 border-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden border-b-[1px] text-nowrap"
+        class="bg-neutral-800 border-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden border-b-[1px] text-nowrap"
     >
         <a
             href="/"
@@ -25,11 +25,11 @@
     <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
     <a
         href="/calendar"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/calendar.svg"
-            class="navIcon z-10 inline-block aspect-square h-full"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
             class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
@@ -42,7 +42,7 @@
 
     <a
         href="/department"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/department.svg"
@@ -59,7 +59,7 @@
 
     <a
         href="/vacation"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/vacation.svg"
@@ -76,7 +76,7 @@
 
     <a
         href="/absence"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/absence.svg"
@@ -93,7 +93,7 @@
 
     <a
         href="/holiday"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/holiday.svg"
@@ -110,7 +110,7 @@
 
     <a
         href="/oneToOne"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/onetoone.svg"
@@ -127,7 +127,7 @@
 
     <a
         href="/fault"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/faults.svg"
@@ -144,7 +144,7 @@
 
     <a
         href="/employee"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/employee.svg"
@@ -161,7 +161,7 @@
 
     <a
         href="/reports"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
     >
         <img
             src="/icons/report.svg"
@@ -178,7 +178,7 @@
 
     <a
         href="/logout"
-        class="hover:bg-neutral-700 flex h-[70px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap absolute bottom-0"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap absolute bottom-0"
     >
         <img
             src="/icons/logout.svg"
@@ -193,36 +193,6 @@
         </div>
     </a>
 
-    <a class="block p-4"></a>
+    <a class="block p-3"></a>
 </div>
-
-<script>
-    const navToggle = document.getElementById("openAndCloseNav");
-    const navBar = document.getElementById("navBar");
-    const navText = document.querySelectorAll(".toggleText");
-    const navIcons = document.querySelectorAll(".navIcon");
-    const finalWidth = "w-40"; // Clase de tailwind
-
-    navIcons.forEach((navElement) => {
-        navElement.style.height = String(navElement.height) + "px";
-        navElement.style.width = String(navElement.height) + "px";
-        navElement.style.minHeight = String(navElement.height) + "px";
-        navElement.style.minWidth = String(navElement.height) + "px";
-    });
-
-    navToggle.addEventListener("click", () => {
-        navToggle.classList.toggle("rotate-180");
-
-        navText.forEach((navElement) => {
-            if (navElement.classList.contains("opacity-0")) {
-                //Abre la nav
-                navElement.classList.add("opacity-100", finalWidth);
-                navElement.classList.remove("opacity-0", "w-0");
-            } else {
-                //Cierra la nav
-                navElement.classList.add("opacity-0", "w-0");
-                navElement.classList.remove("opacity-100", finalWidth);
-            }
-        });
-    });
-</script>
+<script src="/javascript/navBarFunctionality.js"></script>

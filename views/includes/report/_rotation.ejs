@@ -12,7 +12,7 @@
             <h2 class="text-2xl font-bold mb-4">New Workers</h2>
         </div>
 
-        <table class="min-w-full divide-y divide-emerald-200">
+        <table class="min-w-full divide-y divide-neutral-200">
             <thead class="bg-neutral-800/50">
                 <tr>
                     <th
@@ -37,7 +37,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-neutral-800 divide-y divide-emerald-200">
+            <tbody class="bg-neutral-800 divide-y divide-neutral-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
                 activeUsers.filter(a => a.title == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
@@ -81,7 +81,7 @@
             <h2 class="text-2xl font-bold mb-4">Fired Workers</h2>
         </div>
 
-        <table class="min-w-full divide-y divide-emerald-200">
+        <table class="min-w-full divide-y divide-neutral-200">
             <thead class="bg-neutral-800/50">
                 <tr>
                     <th
@@ -106,7 +106,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-neutral-800 divide-y divide-emerald-200">
+            <tbody class="bg-neutral-800 divide-y divide-neutral-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
                 inactiveUsers.filter(i => i.title == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
