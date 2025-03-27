@@ -70,4 +70,11 @@ module.exports = class Absence {
             [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
+
+    static updateStatus(absenceId, status) {
+        return db.execute(
+            "UPDATE absence SET justified = ? WHERE absenceID = ?",
+            [status, absenceId]
+        );
+    }
 };

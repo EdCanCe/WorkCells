@@ -24,11 +24,41 @@ exports.getAdd = (request, response, next) => {
 // }
 
 exports.postRequestDeny = (request, response, next) => {
-    response.status(200).json({ message: "Deny response sent" });
+    const absenceId = request.params.absenceID;
+    
+    Absence.updateStatus(absenceId, 0) // 0 = Denegado
+        .then(() => {
+            response.status(200).json({ 
+                success: true,
+                message: "Solicitud denegada exitosamente" 
+            });
+        })
+        .catch(error => {
+            console.error("Error al denegar la solicitud:", error);
+            response.status(500).json({ 
+                success: false,
+                message: "Error al procesar la solicitud" 
+            });
+        });
 };
 
 exports.postRequestApprove = (request, response, next) => {
-    response.status(200).json({ message: "Approved successfully" });
+    const absenceId = request.params.absenceID;
+    
+    Absence.updateStatus(absenceId, 1) // 1 = Aprobado
+        .then(() => {
+            response.status(200).json({ 
+                success: true,
+                message: "Solicitud aprobada exitosamente" 
+            });
+        })
+        .catch(error => {
+            console.error("Error al aprobar la solicitud:", error);
+            response.status(500).json({ 
+                success: false,
+                message: "Error al procesar la solicitud" 
+            });
+        });
 };
 
 exports.getRequest = (request, response, next) => {
@@ -40,6 +70,7 @@ exports.getRequest = (request, response, next) => {
             // Asegúrate de pasar "rows" como "vacations"
             response.render("absenceRequests", {
                 isLoggedIn: request.session.isLoggedIn || false,
+                csrfToken: request.csrfToken(),
                 username: request.session.username || "",
                 absences: rows, // Pasar correctamente "rows" como "absence"
                 info: mensaje,

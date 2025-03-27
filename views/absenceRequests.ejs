@@ -4,11 +4,6 @@
     <div class="card bg-white p-6 rounded-lg shadow-md">
         <div class="card-content">
             <h2 class="text-2xl font-semibold mb-4">Absences request</h2>
-            <p class="mb-4">
-                Aquí el super admin haciendo click en alguna de las casillas de
-                estados le va aparecer una popup para poder responder/cambiar el
-                estado de solicitud de ausencia.
-            </p>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto" id="absences-table">
@@ -22,32 +17,32 @@
                             <th
                                 class="px-4 py-2 text-center font-semibold text-gray-700"
                             >
-                                <abbr title="colaborador">Role</abbr>
+                                <abbr title="rol">Role</abbr>
                             </th>
                             <th
                                 class="px-4 py-2 text-center font-semibold text-gray-700"
                             >
-                                <abbr title="razon">Start date</abbr>
+                                <abbr title="fecha inicio">Start date</abbr>
                             </th>
                             <th
                                 class="px-4 py-2 text-center font-semibold text-gray-700"
                             >
-                                <abbr title="estado">End date</abbr>
+                                <abbr title="fecha fin">End date</abbr>
                             </th>
                             <th
                                 class="px-4 py-2 text-center font-semibold text-gray-700"
                             >
-                                <abbr title="estado">Total days</abbr>
+                                <abbr title="dias totales">Total days</abbr>
                             </th>
                             <th
                                 class="px-4 py-2 text-center font-semibold text-gray-700"
                             >
+                                <abbr title="razon">Reason</abbr>
+                            </th>
+                            <th
+                                class="px-4 py-2 text-center font-semibold text-gray-700"
+                                >
                                 <abbr title="estado">Status</abbr>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <abbr title="modificar"></abbr>
                             </th>
                         </tr>
                     </thead>
@@ -82,40 +77,37 @@
                                 data-start-date="<%= ab.startDate %>"
                                 data-end-date="<%= ab.endDate %>"
                             ></td>
+                            <th>
+                                <%- ab.reason %>
+                            </th>
                             <th
                                 class="px-4 py-2 text-center font-semibold text-gray-700"
                             >
-                                <% if (ab.justified === 0) { %> Denyed <% } else
-                                if (ab.justified === 1) { %> Approved <% } else
+                                <% if (ab.justified === 0) { %>
+                                    <span class="text-red-600 font-semibold">Denied</span>
+                                <% } else
+                                if (ab.justified === 1) { %>
+                                    <span class="text-green-600 font-semibold">Approved</span>
+                                <% } else
                                 if (ab.justified === 2) { %>
                                 <div class="px-6 py-4 flex justify-end">
                                     <button
-                                        id="approve"
-                                        data-url="/absence/approve/<%- ab.absenceID %>"
-                                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded"
+                                        class="approve-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mr-2 rounded"
+                                        data-url="/absence/requests/approve/<%- ab.absenceID %>"
+                                        data-csrf="<%= csrfToken %>"
                                     >
                                         Approve
                                     </button>
                                     <br />
                                     <button
-                                        id="deny"
-                                        data-url="/absence/deny/<%- ab.absenceID %>"
-                                        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 mr-2 rounded"
+                                        class="deny-btn bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 mr-2 rounded"
+                                        data-url="/absence/requests/deny/<%- ab.absenceID %>"
+                                        data-csrf="<%= csrfToken %>"
                                     >
-                                        Deny
+                                        Denied
                                     </button>
                                 </div>
                                 <% } %>
-                            </th>
-                            <th
-                                class="px-4 py-2 text-center font-semibold text-gray-700"
-                            >
-                                <a
-                                    href="/absence/modify"
-                                    class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
-                                >
-                                    Modify
-                                </a>
                             </th>
                         </tr>
                         <% } %>
@@ -155,54 +147,83 @@
 
     // Agregar event listener a todos los botones de "Approve"
     document.querySelectorAll(".approve-btn").forEach((button) => {
-        button.addEventListener("click", function (event) {
+        button.addEventListener("click", async function (event) {
             const url = this.dataset.url;
-            const csrf = document.getElementById("_csrf").value;
+            const csrf = this.dataset.csrf;
+            
+            // Deshabilitar el botón y mostrar estado de carga
+            this.disabled = true;
+            const originalText = this.innerText;
+            this.innerText = "Processing...";
 
-            // Se define el body de la petición, si no se requiere información adicional se puede enviar un objeto vacío
-            const data = {};
-
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "csrf-token": csrf,
-                },
-                body: JSON.stringify(data),
-            })
-                .then((result) => result.json())
-                .then((data) => {
-                    // Actualizar el texto del botón a "Approved" o realizar otra acción según la respuesta
-                    this.innerText = "Approved";
-                })
-                .catch((err) => {
-                    console.log(err);
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "csrf-token": csrf,
+                    },
+                    body: JSON.stringify({}),
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Obtener la celda de la tabla que contiene los botones
+                const tableCell = this.closest('th');
+                // Reemplazar el contenido con el nuevo estado
+                tableCell.innerHTML = '<span class="text-green-600 font-semibold">Approved</span>';
+            } catch (err) {
+                console.error("Error al aprobar:", err);
+                // Restaurar el estado del botón en caso de error
+                this.disabled = false;
+                this.innerText = originalText;
+                alert("Hubo un error al procesar la solicitud. Por favor, intente nuevamente.");
+            }
         });
     });
 
     // Agregar event listener a todos los botones de "Deny"
     document.querySelectorAll(".deny-btn").forEach((button) => {
-        button.addEventListener("click", function (event) {
+        button.addEventListener("click", async function (event) {
             const url = this.dataset.url;
-            const csrf = document.getElementById("_csrf").value;
-            const data = {};
+            const csrf = this.dataset.csrf;
+            
+            // Deshabilitar el botón y mostrar estado de carga
+            this.disabled = true;
+            const originalText = this.innerText;
+            this.innerText = "Processing...";
 
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "csrf-token": csrf,
-                },
-                body: JSON.stringify(data),
-            })
-                .then((result) => result.json())
-                .then((data) => {
-                    this.innerText = "Denyed";
-                })
-                .catch((err) => {
-                    console.log(err);
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "csrf-token": csrf,
+                    },
+                    body: JSON.stringify({}),
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Obtener la celda de la tabla que contiene los botones
+                const tableCell = this.closest('th');
+                // Reemplazar el contenido con el nuevo estado
+                tableCell.innerHTML = '<span class="text-red-600 font-semibold">Denied</span>';
+            } catch (err) {
+                console.error("Error denying:", err);
+                // Restaurar el estado del botón en caso de error
+                this.disabled = false;
+                this.innerText = originalText;
+                alert("Hubo un error al procesar la solicitud. Por favor, intente nuevamente.");
+            }
         });
     });
 </script>
