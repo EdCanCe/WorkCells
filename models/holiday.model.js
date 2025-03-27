@@ -37,7 +37,9 @@ module.exports = class Holiday {
   }
 
   static fetchUsedHoliday() {
-    return db.execute(`SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID`);
+    return db.execute(
+      `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID`
+    );
   }
 
   static fetchByDateType(startDate, endDate) {
@@ -49,6 +51,19 @@ module.exports = class Holiday {
   static fetchAllUsed() {
     return db.execute(
       "SELECT t.title , u.usedDate FROM templateholiday t, usedholiday u WHERE t.templateHolidayID = u.usedTemplateHolidayID;"
+    );
+  }
+
+  static getFaltasPaginated(limit, offset) {
+    return db.execute(
+    `SELECT 
+    t.title AS nombre, 
+    u.usedDate AS fecha 
+    FROM templateHoliday t, usedHoliday u
+    WHERE u.usedTemplateHolidayIDFK = t.templateHolidayID
+    ORDER BY u.usedDate DESC
+    LIMIT ? OFFSET ?;
+`, [limit, offset]
     );
   }
 };

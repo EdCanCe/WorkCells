@@ -6,6 +6,8 @@ const isAuth = require("../util/is-auth");
 
 router.get("/", isAuth, holidayController.getHolidays);
 
+router.get('/search', isAuth, holidayController.listPaginated);
+
 router.get("/add", isAuth, holidayController.getHolidaysAdd);
 
 router.post("/add", isAuth, holidayController.postHolidaysAdd);
