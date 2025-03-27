@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const value = field.value;
             if (!lettersRegex.test(value)) {
                 errorSpan.textContent =
-                    "No debe llevar números ni caracteres especiales.";
+                    "It must not contain numbers or special characters.";
                 field.setCustomValidity(
-                    "No debe llevar números ni caracteres especiales."
+                    "It must not contain numbers or special characters."
                 );
             } else {
                 errorSpan.textContent = "";
@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
         curpInput.value = curpValue; // Convertir automáticamente a mayúsculas
 
         if (curpValue.length < 18) {
-            curpFormatError.textContent = "CURP debe tener 18 caracteres.";
-            curpInput.setCustomValidity("CURP debe tener 18 caracteres.");
+            curpFormatError.textContent = "CURP must be 18 characters long.";
+            curpInput.setCustomValidity("CURP must be 18 characters long.");
         } else if (!curpRegex.test(curpValue)) {
-            curpFormatError.textContent = "Formato incorrecto de CURP.";
-            curpInput.setCustomValidity("Formato incorrecto de CURP.");
+            curpFormatError.textContent = "Incorrect CURP format.";
+            curpInput.setCustomValidity("Incorrect CURP format.");
         } else {
             curpFormatError.textContent = "";
             curpInput.setCustomValidity("");
@@ -69,11 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
         rfcInput.value = rfcValue; // Convertir automáticamente a mayúsculas
 
         if (rfcValue.length < 13) {
-            rfcFormatError.textContent = "RFC debe tener 13 caracteres.";
-            rfcInput.setCustomValidity("RFC debe tener 13 caracteres.");
+            rfcFormatError.textContent = "RFC must be 13 characters long.";
+            rfcInput.setCustomValidity("RFC must be 13 characters long.");
         } else if (!rfcRegex.test(rfcValue)) {
-            rfcFormatError.textContent = "Formato incorrecto de RFC.";
-            rfcInput.setCustomValidity("Formato incorrecto de RFC.");
+            rfcFormatError.textContent = "Incorrect RFC format.";
+            rfcInput.setCustomValidity("Incorrect RFC format.");
         } else {
             rfcFormatError.textContent = "";
             rfcInput.setCustomValidity("");
@@ -96,18 +96,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (curpInput.value.length < 18 || !curpRegex.test(curpInput.value)) {
             curpFormatError.textContent =
-                "CURP debe tener 18 caracteres y el formato correcto.";
+                "CURP must be 18 characters long and in the correct format.";
             curpInput.setCustomValidity(
-                "CURP debe tener 18 caracteres y el formato correcto."
+                "CURP must be 18 characters long and in the correct format."
             );
             isValid = false;
         }
 
         if (rfcInput.value.length < 13 || !rfcRegex.test(rfcInput.value)) {
             rfcFormatError.textContent =
-                "RFC debe tener 13 caracteres y el formato correcto.";
+                "RFC must be 18 characters long and in the correct format.";
             rfcInput.setCustomValidity(
-                "RFC debe tener 13 caracteres y el formato correcto."
+                "RFC must be 18 characters long and in the correct format."
             );
             isValid = false;
         }
@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
         nameFields.forEach((field) => {
             let errorSpan = field.nextElementSibling;
             if (!lettersRegex.test(field.value)) {
-                errorSpan.textContent = "Solo se permiten letras y espacios.";
-                field.setCustomValidity("Solo se permiten letras y espacios.");
+                errorSpan.textContent = "Only letters and spaces are allowed.";
+                field.setCustomValidity("Only letters and spaces are allowed.");
                 isValid = false;
             } else {
                 errorSpan.textContent = "";
