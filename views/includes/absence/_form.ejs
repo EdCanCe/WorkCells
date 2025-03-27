@@ -13,15 +13,15 @@
             action="/absence/add"
             method="POST"
             enctype="multipart/form-data"
-            class="w-full max-w-lg bg-white p-6 rounded-lg shadow"
+            class="w-full max-w-lg bg-neutral-800 p-6 rounded-lg shadow"
         >
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="mb-6">
-                <label class="block text-gray-700 font-semibold mb-2">
+                <label class="block text-neutral-100 font-semibold mb-2">
                     Fecha de inicio de la ausencia:
                 </label>
                 <input
-                    class="w-full md:w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                     type="date"
                     name="startDate"
                     required
@@ -29,11 +29,11 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-gray-700 font-semibold mb-2">
+                <label class="block text-neutral-100 font-semibold mb-2">
                     Fecha de finalización de la ausencia:
                 </label>
                 <input
-                    class="w-full md:w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                     type="date"
                     name="endDate"
                     required
@@ -41,11 +41,11 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-gray-700 font-semibold mb-2">
+                <label class="block text-neutral-100 font-semibold mb-2">
                     Motivo de la ausencia:
                 </label>
                 <textarea
-                    class="w-full md:w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden"
+                    class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg resize-none overflow-hidden"
                     name="reason"
                     required
                     placeholder="Me enfermé y tuve que acudir al médico"
@@ -54,11 +54,11 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-gray-700 font-semibold mb-2">
+                <label class="block text-neutral-100 font-semibold mb-2">
                     Evidencia (opcional):
                 </label>
                 <input
-                    class="w-full md:w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                     type="file"
                     name="evidence"
                     accept=".jpg, .png, .docx, .jpeg, .pdf"

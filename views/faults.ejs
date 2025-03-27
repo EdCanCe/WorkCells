@@ -1,25 +1,25 @@
 <%- include('includes/_header') %>
 
-<div class="flex bg-gray-50 min-h-screen">
+<div class="flex bg-neutral-800/50 min-h-screen">
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6">Faltas Administrativas</h1>
 
         <div
             id="faltasTable"
-            class="overflow-x-auto bg-white rounded-lg shadow"
+            class="overflow-x-auto rounded-lg shadow"
         ></div>
 
         <div class="mt-6 flex justify-between">
-            <button id="prevBtn" class="bg-gray-300 px-4 py-2 rounded">
+            <button id="prevBtn" class="bg-neutral-800 px-4 py-2 rounded">
                 Anterior
             </button>
-            <button id="nextBtn" class="bg-gray-300 px-4 py-2 rounded">
+            <button id="nextBtn" class="bg-neutral-800 px-4 py-2 rounded">
                 Siguiente
             </button>
 
             <a
                 href="/fault/add"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200"
             >
                 Registrar Nueva Falta
             </a>
