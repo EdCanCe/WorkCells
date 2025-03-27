@@ -1,12 +1,12 @@
 <div class="p-6">
-    <div class="bg-white shadow-lg rounded-lg">
+    <div class="bg-neutral-800 shadow-lg rounded-lg">
       <div class="p-6">
         <h2 class="text-2xl font-semibold mb-4">Solicitudes de Vacaciones</h2>
       </div>
       <div class="p-6">
-        <div class="overflow-x-auto bg-gray-100 p-4 rounded-lg shadow">
+        <div class="overflow-x-auto bg-neutral-700/50 p-4 rounded-lg shadow">
           <table class="min-w-full table-auto">
-            <thead class="bg-gray-200">
+            <thead class="bg-neutral-800">
               <tr>
                 <th class="px-4 py-2 text-left">ID</th>
                 <th class="px-4 py-2 text-left">Motivo</th>
@@ -18,7 +18,7 @@
             <tbody>
               <!-- Iterar sobre las solicitudes de vacaciones -->
               <% absences.forEach(absence => { %>
-              <tr class="border-b hover:bg-gray-50">
+              <tr class="border-b hover:bg-neutral-800">
                 <td class="px-4 py-2"><%= absence.absenceID %></td>
                 <td class="px-4 py-2"><%= absence.reason %></td>
                 <td class="px-4 py-2">

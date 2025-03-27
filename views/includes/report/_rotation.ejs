@@ -1,5 +1,5 @@
 <div class="container mx-auto p-4">
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-neutral-800 shadow rounded-lg overflow-hidden">
         <div class="px-6 py-4 flex justify-end">
             <a
                 href="/reports"
@@ -12,39 +12,39 @@
             <h2 class="text-2xl font-bold mb-4">New Workers</h2>
         </div>
 
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-emerald-200">
+            <thead class="bg-neutral-800/50">
                 <tr>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Full name
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Role
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Country
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Work modality
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-neutral-800 divide-y divide-emerald-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
                 activeUsers.filter(a => a.title == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
                 <tr>
                     <td
                         colspan="4"
-                        class="text-center text-xl font-semibold text-gray-700"
+                        class="text-center text-xl font-semibold text-neutral-100"
                     >
                         <%= dp.title %>
                     </td>
@@ -53,22 +53,22 @@
                 <% usersInDepartment.forEach(a => { %>
                 <tr>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= a.birthName %> <%= a.surname %>
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= a.userRoleIDFK %>
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= a.countryUserIDFK %>
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= a.workModality %>
                     </td>
@@ -81,39 +81,39 @@
             <h2 class="text-2xl font-bold mb-4">Fired Workers</h2>
         </div>
 
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-emerald-200">
+            <thead class="bg-neutral-800/50">
                 <tr>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Full name
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Role
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Country
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
                     >
                         Work modality
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-neutral-800 divide-y divide-emerald-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
                 inactiveUsers.filter(i => i.title == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
                 <tr>
                     <td
                         colspan="4"
-                        class="text-center text-xl font-semibold text-gray-700"
+                        class="text-center text-xl font-semibold text-neutral-100"
                     >
                         <%= dp.title %>
                     </td>
@@ -122,22 +122,22 @@
                 <% usersInDepartment.forEach(i => { %>
                 <tr>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= i.birthName %> <%= i.surname %>
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= i.userRoleIDFK %>
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= i.countryUserIDFK %>
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        class="px-6 py-4 whitespace-nowrap text-sm "
                     >
                         <%= i.workModality %>
                     </td>

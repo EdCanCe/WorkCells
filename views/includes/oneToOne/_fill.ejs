@@ -1,5 +1,5 @@
 <div class="container mx-auto p-6 max-w-4xl">
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-neutral-800 shadow-lg rounded-lg overflow-hidden">
         <h2 class="text-2xl font-semibold text-center">One On One</h2>
 
         <h3 class="text-2xl font-semibold text-center">
@@ -21,7 +21,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <% questions.forEach((question, index) => { %>
                 <div class="space-y-2">
-                    <label class="block text-lg font-medium text-gray-700">
+                    <label class="block text-lg font-medium text-neutral-100">
                         <%= question.question %>
                     </label>
                     <input
@@ -32,7 +32,7 @@
                     <textarea
                         name="question_<%= index + 1 %>"
                         rows="3"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                         placeholder="Please provide your answer..."
                         required
                     ></textarea>
@@ -44,7 +44,7 @@
             <div class="space-y-8">
                 <% measurables.forEach((measurable, qIndex) => { %>
                 <div class="space-y-4">
-                    <label class="block text-lg font-medium text-gray-700">
+                    <label class="block text-lg font-medium text-neutral-100">
                         <%= measurable.summary %>
                     </label>
                     <input
@@ -69,7 +69,7 @@
                     >
                         <% for (let i = 1; i <= 5; i++) { %>
                         <div
-                            class="flex-1 h-10 bg-gray-100 rounded-md cursor-pointer transition-all duration-100 rating-button border border-blue-300 <%= i <= 3 ? 'bg-blue-500 border-blue-600' : '' %>"
+                            class="flex-1 h-10 bg-neutral-700/50 rounded-md cursor-pointer transition-all duration-100 rating-button border border-blue-300 <%= i <= 3 ? 'bg-blue-500 border-blue-600' : '' %>"
                             data-value="<%= i %>"
                             onclick="updateRating(this)"
                             onmouseover="previewRating(this)"
@@ -118,7 +118,7 @@
             const btnValue = parseInt(btn.getAttribute("data-value"));
             if (btnValue <= value) {
                 btn.classList.add("bg-blue-400", "border-blue-500");
-                btn.classList.remove("bg-gray-100");
+                btn.classList.remove("bg-neutral-700/50");
             }
         });
     }
@@ -150,12 +150,12 @@
         const buttons = container.querySelectorAll(".rating-button");
         buttons.forEach((btn) => {
             const btnValue = parseInt(btn.getAttribute("data-value"));
-            btn.classList.remove("bg-gray-100", "bg-blue-400", "bg-blue-500");
+            btn.classList.remove("bg-neutral-700/50", "bg-blue-400", "bg-blue-500");
 
             if (btnValue <= value) {
                 btn.classList.add("bg-blue-500", "border-blue-600");
             } else {
-                btn.classList.add("bg-gray-100");
+                btn.classList.add("bg-neutral-700/50");
             }
         });
 
@@ -180,7 +180,7 @@
                 const btnValue = parseInt(btn.getAttribute("data-value"));
                 if (btnValue <= 3) {
                     btn.classList.add("bg-blue-500", "border-blue-600");
-                    btn.classList.remove("bg-gray-100");
+                    btn.classList.remove("bg-neutral-700/50");
                 }
             });
 
