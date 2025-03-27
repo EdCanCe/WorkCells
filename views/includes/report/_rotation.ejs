@@ -7,6 +7,12 @@
                 >Return</a
             >
         </div>
+        <div class="flex justify-end">
+            <p class="text-2xl font-bold">New Workers: <%= activeSize %></p>
+        </div>
+        <div class="flex justify-end">
+            <p class="text-2xl font-bold">Fired Workers: <%= inactiveSize %></p>
+        </div>
 
         <div class="p-6">
             <h2 class="text-2xl font-bold mb-4">New Workers</h2>
@@ -15,6 +21,11 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                        CURP
+                    </th>
                     <th
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
@@ -39,11 +50,11 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
-                activeUsers.filter(a => a.title == dp.title); %> <% if
+                activeUsers.filter(a => a.departamento == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
                 <tr>
                     <td
-                        colspan="4"
+                        colspan="5"
                         class="text-center text-xl font-semibold text-gray-700"
                     >
                         <%= dp.title %>
@@ -55,22 +66,29 @@
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= a.birthName %> <%= a.surname %>
+                        <%= a.curp %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= a.userRoleIDFK %>
+                        <%= a.nombre %> <%= a.apellido %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= a.countryUserIDFK %>
+                        <%= a.rol %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= a.workModality %>
+                        <%= a.pais %>
+                    </td>
+                    <td
+                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                        <% if(a.workModality == 0) { %> In person <% } else
+                        if(a.workModality == 1) { %> Remote <% } else { %>
+                        Hybrid <% } %>
                     </td>
                 </tr>
                 <% }) %> <% } %> <% } %>
@@ -87,6 +105,11 @@
                     <th
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
+                        CURP
+                    </th>
+                    <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                         Full name
                     </th>
                     <th
@@ -108,7 +131,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
-                inactiveUsers.filter(i => i.title == dp.title); %> <% if
+                inactiveUsers.filter(i => i.departamento == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
                 <tr>
                     <td
@@ -124,22 +147,29 @@
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= i.birthName %> <%= i.surname %>
+                        <%= i.curp %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= i.userRoleIDFK %>
+                        <%= i.nombre %> <%= i.apellido %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= i.countryUserIDFK %>
+                        <%= i.rol %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                     >
-                        <%= i.workModality %>
+                        <%= i.pais %>
+                    </td>
+                    <td
+                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                    >
+                        <% if(i.workModality == 0) { %> In person <% } else
+                        if(i.workModality == 1) { %> Remote <% } else { %>
+                        Hybrid <% } %>
                     </td>
                 </tr>
                 <% }) %> <% } %> <% } %>
