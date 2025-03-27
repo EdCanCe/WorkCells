@@ -7,44 +7,55 @@
                 >Return</a
             >
         </div>
+        <div class="flex justify-end">
+            <p class="text-2xl font-bold">New Workers: <%= activeSize %></p>
+        </div>
+        <div class="flex justify-end">
+            <p class="text-2xl font-bold">Fired Workers: <%= inactiveSize %></p>
+        </div>
 
         <div class="p-6">
             <h2 class="text-2xl font-bold mb-4">New Workers</h2>
         </div>
 
-        <table class="min-w-full divide-y divide-emerald-200">
+        <table class="min-w-full divide-y divide-neutral-200">
             <thead class="bg-neutral-800/50">
                 <tr>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                    >
+                        CURP
+                    </th>
+                    <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                         Full name
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                     >
                         Role
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                     >
                         Country
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                     >
                         Work modality
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-neutral-800 divide-y divide-emerald-200">
+            <tbody class="bg-neutral-800 divide-y divide-neutral-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
-                activeUsers.filter(a => a.title == dp.title); %> <% if
+                activeUsers.filter(a => a.departamento == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
                 <tr>
                     <td
-                        colspan="4"
-                        class="text-center text-xl font-semibold text-neutral-100"
+                        colspan="5"
+                        class="text-center text-xl font-semibold text-gray-700"
                     >
                         <%= dp.title %>
                     </td>
@@ -52,25 +63,24 @@
 
                 <% usersInDepartment.forEach(a => { %>
                 <tr>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-sm "
-                    >
-                        <%= a.birthName %> <%= a.surname %>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= a.curp %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= a.nombre %> <%= a.apellido %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= a.rol %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= a.pais %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm "
                     >
-                        <%= a.userRoleIDFK %>
-                    </td>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-sm "
-                    >
-                        <%= a.countryUserIDFK %>
-                    </td>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-sm "
-                    >
-                        <%= a.workModality %>
+                        <% if(a.workModality == 0) { %> In person <% } else
+                        if(a.workModality == 1) { %> Remote <% } else { %>
+                        Hybrid <% } %>
                     </td>
                 </tr>
                 <% }) %> <% } %> <% } %>
@@ -81,34 +91,39 @@
             <h2 class="text-2xl font-bold mb-4">Fired Workers</h2>
         </div>
 
-        <table class="min-w-full divide-y divide-emerald-200">
+        <table class="min-w-full divide-y divide-neutral-200">
             <thead class="bg-neutral-800/50">
                 <tr>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                    >
+                        CURP
+                    </th>
+                    <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                         Full name
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                     >
                         Role
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                     >
                         Country
                     </th>
                     <th
-                        class="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider"
+                        class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
                     >
                         Work modality
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-neutral-800 divide-y divide-emerald-200">
+            <tbody class="bg-neutral-800 divide-y divide-neutral-200">
                 <% for (let dp of departments) { %> <% let usersInDepartment =
-                inactiveUsers.filter(i => i.title == dp.title); %> <% if
+                inactiveUsers.filter(i => i.departamento == dp.title); %> <% if
                 (usersInDepartment.length > 0) { %>
                 <tr>
                     <td
@@ -121,25 +136,24 @@
 
                 <% usersInDepartment.forEach(i => { %>
                 <tr>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-sm "
-                    >
-                        <%= i.birthName %> <%= i.surname %>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= i.curp %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= i.nombre %> <%= i.apellido %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= i.rol %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <%= i.pais %>
                     </td>
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm "
                     >
-                        <%= i.userRoleIDFK %>
-                    </td>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-sm "
-                    >
-                        <%= i.countryUserIDFK %>
-                    </td>
-                    <td
-                        class="px-6 py-4 whitespace-nowrap text-sm "
-                    >
-                        <%= i.workModality %>
+                        <% if(i.workModality == 0) { %> In person <% } else
+                        if(i.workModality == 1) { %> Remote <% } else { %>
+                        Hybrid <% } %>
                     </td>
                 </tr>
                 <% }) %> <% } %> <% } %>
