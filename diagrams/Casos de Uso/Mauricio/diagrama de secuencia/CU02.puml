@@ -1,0 +1,59 @@
+@startuml CU02 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
+actor Navegador
+boundary vacations.ejs
+boundary vacations.routes
+control vacations.controller
+entity VacationsModel
+database mysql
+
+
+autonumber
+' Inicio del flujo
+activate Navegador
+Navegador -> vacations.routes : GET /vacations/requests
+deactivate Navegador
+activate vacations.routes
+vacations.routes -> vacations.controller : getVacations(req, res)
+deactivate vacations.routes
+activate vacations.controller
+
+
+' Se utiliza la instancia para obtener los datos
+vacations.controller ->> VacationsModel : fetchTop10()
+activate VacationsModel
+
+VacationsModel ->> mysql : SELECT * FROM vacations LIMIT 10;
+activate mysql
+mysql -->> VacationsModel : Datos obtenidos
+deactivate mysql
+
+VacationsModel -->> vacations.controller : Retorno de datos de vacaciones.
+deactivate VacationsModel
+
+vacations.controller -> vacations.ejs : render(vacations)
+activate vacations.ejs
+vacations.ejs -> Navegador : Mostrar vacaciones
+activate Navegador
+deactivate vacations.ejs
+deactivate vacations.controller
+deactivate vacations.routes
+
+Navegador -> vacations.controller : POST /vacations/requests/:response
+deactivate Navegador
+activate vacations.controller
+vacations.controller ->> VacationsModel : saveResponse()
+activate VacationsModel
+' vacationsID, startDate, endDate, reason, justified, vacationsUserIDFK
+VacationsModel ->> mysql : INSERT INTO vacations \nVALUES()
+activate mysql
+mysql -->> VacationsModel : Datos obtenidos
+deactivate mysql
+VacationsModel -->> vacations.controller : Retorno modificiación de falta
+activate vacations.ejs
+vacations.controller -> vacations.ejs : render()
+activate Navegador
+vacations.ejs -> Navegador : Mostrar respuesta
+deactivate vacations.ejs
+
+
+@enduml

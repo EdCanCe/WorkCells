@@ -1,60 +1,60 @@
-@startuml
+@startuml CU01 - Líder registra respuesta hacia ausencia de colaborador - Diagrama de secuencia
 actor Navegador
-boundary faults.ejs
-boundary faults.routes
-control faults.controller
-entity FaultsModel
+boundary absence.ejs
+boundary absence.routes
+control absence.controller
+entity AbsenceModel
 database mysql
 
 
 autonumber
 ' Inicio del flujo
 activate Navegador
-Navegador -> faults.routes : GET /faults
+Navegador -> absence.routes : GET /absence/requests
 deactivate Navegador
-activate faults.routes
-faults.routes -> faults.controller : get_faults(req, res)
-deactivate faults.routes
-activate faults.controller
+activate absence.routes
+absence.routes -> absence.controller : getFaults(req, res)
+deactivate absence.routes
+activate absence.controller
 
 
 ' Se utiliza la instancia para obtener los datos
-faults.controller ->> FaultsModel : fetchAll()
-activate FaultsModel
+absence.controller ->> AbsenceModel : fetchTop10()
+activate AbsenceModel
 
-FaultsModel ->> mysql : SELECT * FROM faults
+AbsenceModel ->> mysql : SELECT * FROM absence LIMIT 10;
 activate mysql
-mysql -->> FaultsModel : Datos obtenidos
+mysql -->> AbsenceModel : Datos obtenidos
 deactivate mysql
 
-FaultsModel -->> faults.controller : Retorno de datos de faltas.
-deactivate FaultsModel
+AbsenceModel -->> absence.controller : Retorno de datos de faltas.
+deactivate AbsenceModel
 
-faults.controller -> faults.ejs : render(faults)
-activate faults.ejs
-faults.ejs -> Navegador : Mostrar faltas
+absence.controller -> absence.ejs : render(absence)
+activate absence.ejs
+absence.ejs -> Navegador : Mostrar faltas
 activate Navegador
-deactivate faults.ejs
-deactivate faults.controller
-deactivate faults.routes
+deactivate absence.ejs
+deactivate absence.controller
+deactivate absence.routes
 
-Navegador -> faults.controller : Selección de ausencia.
+Navegador -> absence.controller : POST /absence/requests/:response
 deactivate Navegador
-activate faults.controller
-faults.controller ->> FaultsModel : get_info(Id)
-activate FaultsModel
-FaultsModel ->> mysql : SELECT summary FROM faults WHERE faultId = Id
+activate absence.controller
+absence.controller ->> AbsenceModel : saveResponse()
+
+activate AbsenceModel
+' absenceID, startDate, endDate, reason, justified, absenceUserIDFK
+AbsenceModel ->> mysql : INSERT INTO absence \nVALUES()
 activate mysql
-mysql -->> FaultsModel : Datos obtenidos
+mysql -->> AbsenceModel : Datos obtenidos
 deactivate mysql
-FaultsModel -->> faults.controller : Retorno de descripción de falta
-activate faults.ejs
-faults.controller -> faults.ejs : render(summary)
+AbsenceModel -->> absence.controller : Retorno modificiación de falta
+activate absence.ejs
+absence.controller -> absence.ejs : render()
 activate Navegador
-faults.ejs -> Navegador : descripción de la falta
-deactivate faults.ejs
-
-
+absence.ejs -> Navegador : Mostrar respuesta
+deactivate absence.ejs
 
 
 @enduml

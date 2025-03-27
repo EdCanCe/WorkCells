@@ -1,27 +1,23 @@
 const Vacation = require("../models/vacation.model");
 const User = require("../models/user.model");
-const { error } = require("console");
-const { request } = require("http");
 
-exports.getVacation = (request, response, next) => {
-  response.render("ownVacation");
-};
-
-exports.getApproveVacation = (request, response, next) => {
-  console.log("Session:", request.session);
-  console.log("UserID from session:", request.session.userID);
+exports.getRequests = (request, response, next) => {
+  // console.log("Session:", request.session);
+  // console.log("UserID from session:", request.session.userID);
   const employeedId = request.session.userID;
-  console.log(employeedId);
+  // console.log(employeedId);
 
   const mensaje = request.session.info || "";
   request.session.info = ""; // Limpiar la sesión después de usar el mensaje
 
-  Vacation.fetchAll(employeedId)
+  Vacation.fetchAllWithNames(employeedId)
     .then(([rows, fieldData]) => {
+      console.log(rows);
       // Asegúrate de pasar "rows" como "vacations"
-      response.render("approveVacation", {
+      response.render("vacationRequests", {
         isLoggedIn: request.session.isLoggedIn || false,
         username: request.session.username || "",
+        csrfToken: request.csrfToken(),
         vacations: rows, // Pasar correctamente "rows" como "vacations"
         info: mensaje,
       });
@@ -107,4 +103,50 @@ exports.getCheckVacation = (request, response, next) => {
 
 exports.getModifyVacation = (request, response, next) => {
   response.render("modifyVacation");
+};
+
+// TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
+
+exports.postRequestApprove = (request, response, next) => {
+  const vacationId = request.params.vacationID;
+
+  Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
+    .then(() => {
+      response.status(200).json({
+        success: true,
+        message: "Request approved"
+      });
+  }).catch((error) => {
+    console.error(error);
+    response.status(500).json({
+      success: false,
+      message: "Error processing request"
+    });
+  });
+};
+
+exports.postRequestDeny = (request, response, next) => {
+  const vacationId = request.params.vacationID;
+
+  Vacation.updateStatusLeader(vacationId, 0) // 0 = Denegado
+    .then(() => {
+      response.status(200).json({
+        success: true,
+        message: "Request denied"
+      });
+    }).catch((error) => {
+      console.error(error);
+      response.status(500).json({
+        success: false,
+        message: "Error processing request"
+      });
+    });
+};
+
+
+
+
+
+exports.getRoot = (request, response, next) => {
+  response.render("ownVacation");
 };

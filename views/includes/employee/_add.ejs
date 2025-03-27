@@ -1,228 +1,256 @@
 <script src="/javascript/employeeValidator.js"></script>
 
 <div class="content p-4">
-  <div class="card bg-white shadow-md rounded-lg p-4">
-    <div class="card-content">
-      <h1 class="text-3xl font-semibold mb-4">Create New Employee</h1>
-      <% if (info) { %>
-      <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4"><%= info %></div>
-      <% } %>
-      <form id="registerForm" action="/employee" method="POST">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <div class="card bg-white shadow-md rounded-lg p-4">
+        <div class="card-content">
+            <h1 class="text-3xl font-semibold mb-4">Create New Employee</h1>
+            <% if (info) { %>
+            <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+                <%= info %>
+            </div>
+            <% } %>
+            <form id="registerForm" action="/employee" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <div class="field">
-            <label for="curp" class="block text-lg font-medium">CURP</label>
-            <input
-              type="text"
-              id="curp"
-              name="curp"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full uppercase"
-              placeholder="GOGE0927MNTPCE10"
-              required
-              maxlength="18"
-            />
-            <div id="curpFormatError" class="text-red-600 text-sm mt-2"></div>
-          </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div class="field">
+                        <label for="curp" class="block text-lg font-medium"
+                            >CURP</label
+                        >
+                        <input
+                            type="text"
+                            id="curp"
+                            name="curp"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full uppercase"
+                            placeholder="GOGE0927MNTPCE10"
+                            required
+                            maxlength="18"
+                        />
+                        <div
+                            id="curpFormatError"
+                            class="text-red-600 text-sm mt-2"
+                        ></div>
+                    </div>
 
-          <div class="field">
-            <label for="rfc" class="block text-lg font-medium">RFC</label>
-            <input
-              type="text"
-              id="rfc"
-              name="rfc"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full uppercase"
-              placeholder="GOGE0927MNQ9"
-              required
-              maxlength="13"
-              disabled
-            />
-            <div id="rfcFormatError" class="text-red-600 text-sm mt-2"></div>
-          </div>
+                    <div class="field">
+                        <label for="rfc" class="block text-lg font-medium"
+                            >RFC</label
+                        >
+                        <input
+                            type="text"
+                            id="rfc"
+                            name="rfc"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full uppercase"
+                            placeholder="GOGE0927MNQ9"
+                            required
+                            maxlength="13"
+                            disabled
+                        />
+                        <div
+                            id="rfcFormatError"
+                            class="text-red-600 text-sm mt-2"
+                        ></div>
+                    </div>
 
-          <div class="field">
-            <label for="birthName" class="block text-lg font-medium"
-              >Name</label
-            >
-            <input
-              type="text"
-              id="birthName"
-              name="birthName"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="Elena"
-              required
-              disabled
-            />
-          </div>
+                    <div class="field">
+                        <label for="birthName" class="block text-lg font-medium"
+                            >Name</label
+                        >
+                        <input
+                            type="text"
+                            id="birthName"
+                            name="birthName"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="Elena"
+                            required
+                            disabled
+                        />
+                    </div>
 
-          <div class="field">
-            <label for="surname" class="block text-lg font-medium"
-              >Surname</label
-            >
-            <input
-              type="text"
-              id="surname"
-              name="surname"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="González González"
-              required
-              disabled
-            />
-          </div>
+                    <div class="field">
+                        <label for="surname" class="block text-lg font-medium"
+                            >Surname</label
+                        >
+                        <input
+                            type="text"
+                            id="surname"
+                            name="surname"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="González González"
+                            required
+                            disabled
+                        />
+                    </div>
 
-          <div class="field">
-            <label for="mail" class="block text-lg font-medium">Email</label>
-            <input
-              type="email"
-              id="mail"
-              name="mail"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="eiujmidiam@nuclea.solution"
-              required
-              disabled
-            />
-          </div>
+                    <div class="field">
+                        <label for="mail" class="block text-lg font-medium"
+                            >Email</label
+                        >
+                        <input
+                            type="email"
+                            id="mail"
+                            name="mail"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="eiujmidiam@nuclea.solution"
+                            required
+                            disabled
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div class="field">
+                        <label for="zipCode" class="block text-lg font-medium"
+                            >Zip Code</label
+                        >
+                        <input
+                            type="text"
+                            id="zipCode"
+                            name="zipCode"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="61683"
+                            required
+                            maxlength="10"
+                            disabled
+                        />
+                    </div>
+
+                    <div class="field">
+                        <label
+                            for="houseNumber"
+                            class="block text-lg font-medium"
+                            >House Number</label
+                        >
+                        <input
+                            type="text"
+                            id="houseNumber"
+                            name="houseNumber"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="869C"
+                            required
+                            disabled
+                        />
+                    </div>
+
+                    <div class="field">
+                        <label
+                            for="streetName"
+                            class="block text-lg font-medium"
+                            >Street Name</label
+                        >
+                        <input
+                            type="text"
+                            id="streetName"
+                            name="streetName"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="Avenida Madero"
+                            required
+                            disabled
+                        />
+                    </div>
+
+                    <div class="field">
+                        <label for="colony" class="block text-lg font-medium"
+                            >Colony</label
+                        >
+                        <input
+                            type="text"
+                            id="colony"
+                            name="colony"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            placeholder="Colonia La Pradera"
+                            required
+                            disabled
+                        />
+                    </div>
+
+                    <div class="field">
+                        <label
+                            for="countryUserIDFK"
+                            class="block text-lg font-medium"
+                            >Country</label
+                        >
+                        <select
+                            id="countryUserIDFK"
+                            name="countryUserIDFK"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            required
+                            disabled
+                        >
+                            <option value="" selected disabled>
+                                Select Country
+                            </option>
+                            <%employees.forEach(employee => { %>
+                            <option value="<%=employee.countryID %>">
+                                <%=employee.title %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div class="field">
+                        <label
+                            for="workModality"
+                            class="block text-lg font-medium"
+                            >Work Modality</label
+                        >
+                        <select
+                            id="workModality"
+                            name="workModality"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            required
+                            disabled
+                        >
+                            <option value="">Select Modality</option>
+                            <option value="0">Presencial</option>
+                            <option value="1">Remote</option>
+                            <option value="2">Hybrid</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label
+                            for="userRoleIDFK"
+                            class="block text-lg font-medium"
+                        >
+                            User Role
+                        </label>
+                        <select
+                            id="userRoleIDFK"
+                            name="userRoleIDFK"
+                            class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
+                            required
+                            disabled
+                        >
+                            <option value="" selected disabled>
+                                Select Role
+                            </option>
+                            <% roles.forEach(role => { %>
+                            <option value="<%= role.roleID %>">
+                                <%= role.title %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-4">
+                    <button
+                        type="submit"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                        disabled
+                    >
+                        Add
+                    </button>
+                    <a
+                        href="/employee"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-4"
+                        >Cancel</a
+                    >
+                </div>
+            </form>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <div class="field">
-            <label for="zipCode" class="block text-lg font-medium"
-              >Zip Code</label
-            >
-            <input
-              type="number"
-              id="zipCode"
-              name="zipCode"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="61683"
-              required
-              disabled
-            />
-          </div>
-
-          <div class="field">
-            <label for="houseNumber" class="block text-lg font-medium"
-              >House Number</label
-            >
-            <input
-              type="text"
-              id="houseNumber"
-              name="houseNumber"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="869C"
-              required
-              disabled
-            />
-          </div>
-
-          <div class="field">
-            <label for="streetName" class="block text-lg font-medium"
-              >Street Name</label
-            >
-            <input
-              type="text"
-              id="streetName"
-              name="streetName"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="Avenida Madero"
-              required
-              disabled
-            />
-          </div>
-
-          <div class="field">
-            <label for="colony" class="block text-lg font-medium">Colony</label>
-            <input
-              type="text"
-              id="colony"
-              name="colony"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              placeholder="Colonia La Pradera"
-              required
-              disabled
-            />
-          </div>
-
-          <div class="field">
-            <label for="countryUserIDFK" class="block text-lg font-medium"
-              >Country</label
-            >
-            <select
-              id="countryUserIDFK"
-              name="countryUserIDFK"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              required
-              disabled
-            >
-              <option value="" selected disabled>Select Country</option>
-              <%employees.forEach(employee => { %>
-              <option value="<%=employee.countryID %>">
-                <%=employee.title %>
-              </option>
-              <% }) %>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <div class="field">
-            <label for="workModality" class="block text-lg font-medium"
-              >Work Modality</label
-            >
-            <select
-              id="workModality"
-              name="workModality"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              required
-              disabled
-            >
-              <option value="">Select Modality</option>
-              <option value="0">Presencial</option>
-              <option value="1">Remote</option>
-              <option value="2">Hybrid</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="userRoleIDFK" class="block text-lg font-medium"
-              >User Role</label
-            >
-            <select
-              id="userRoleIDFK"
-              name="userRoleIDFK"
-              class="input bg-gray-100 border border-gray-300 p-3 rounded-md w-full"
-              required
-              disabled
-            >
-              <option value="">Select Role</option>
-              <option value="26c5c259-bb65-4e90-ada7-41a56d6a2703">
-                Super Admin
-              </option>
-              <option value="9648deba-0415-4e41-9889-ba5c02b8c7e1">
-                Department Leader
-              </option>
-              <option value="df6efde1-33f6-42f4-95c8-59b077c62982">
-                Colaborator
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div class="flex justify-end mt-4">
-          <button
-            type="submit"
-            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-            disabled
-          >
-            Add
-          </button>
-          <a
-            href="/employee"
-            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-4"
-            >Cancel</a
-          >
-        </div>
-      </form>
     </div>
-  </div>
 </div>

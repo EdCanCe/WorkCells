@@ -19,27 +19,57 @@ exports.getAdd = (request, response, next) => {
         });
 };
 
-// exports.postDenyRequest = (request, response, next) => {
-//   response.status(200).json({message: "Respuesta asíncrona"});
-// }
 
-exports.postDenyRequest = (request, response, next) => {
-    response.status(200).json({ message: "Deny response sent" });
+exports.postRequestApprove = (request, response, next) => {
+    const absenceId = request.params.absenceID;
+    
+    Absence.updateStatus(absenceId, 1) // 1 = Aprobado
+        .then(() => {
+            response.status(200).json({ 
+                success: true,
+                message: "Request approved" 
+            });
+        })
+        .catch(error => {
+            console.error("Error approving request:", error);
+            response.status(500).json({ 
+                success: false,
+                message: "Error processing request" 
+            });
+        });
 };
 
-exports.postApproveRequest = (request, response, next) => {
-    response.status(200).json({ message: "Approved successfully" });
+
+exports.postRequestDeny = (request, response, next) => {
+    const absenceId = request.params.absenceID;
+    
+    Absence.updateStatus(absenceId, 0) // 0 = Denegado
+        .then(() => {
+            response.status(200).json({ 
+                success: true,
+                message: "Request denied" 
+            });
+        })
+        .catch(error => {
+            console.error("Error denying request:", error);
+            response.status(500).json({ 
+                success: false,
+                message: "Error processing request" 
+            });
+        });
 };
 
-exports.getApprove = (request, response, next) => {
+
+exports.getRequest = (request, response, next) => {
     const mensaje = request.session.info || "";
     request.session.info = ""; // Limpiar la sesión después de usar el mensaje
 
     Absence.fetchAllWithName()
         .then(([rows, fieldData]) => {
             // Asegúrate de pasar "rows" como "vacations"
-            response.render("absenceApprove", {
+            response.render("absenceRequests", {
                 isLoggedIn: request.session.isLoggedIn || false,
+                csrfToken: request.csrfToken(),
                 username: request.session.username || "",
                 absences: rows, // Pasar correctamente "rows" como "absence"
                 info: mensaje,
