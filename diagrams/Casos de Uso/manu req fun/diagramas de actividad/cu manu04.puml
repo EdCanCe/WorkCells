@@ -1,0 +1,33 @@
+@startuml
+|Usuario|
+start
+:Accede a la URL de login;
+
+|Sistema|
+:Mostrar formulario de login;
+
+|Usuario|
+:Ingresa usuario y contraseña;
+:Le da al botón de acceder;
+
+|Sistema|
+:Recibir solicitud de login;
+:Buscar usuario en la base de datos;
+if (Usuario encontrado?) then (sí)
+  :Obtener contraseña hasheada;
+  :Comparar contraseña con bcrypt;
+  if (Contraseña válida?) then (sí)
+    :Login exitoso;
+  else (no)
+    :Error: Usuario o Contraseña incorrecta;
+  endif
+else (no)
+  :Error: Usuario no encontrado;
+endif
+
+:Enviar respuesta al usuario;
+
+|Usuario|
+:Visualizar resultado;
+stop
+@enduml

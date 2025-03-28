@@ -6,28 +6,28 @@ using namespace std;
 
 class Country {
     private:
-        int id;
+        string id;
         string title;
 
     public:
         Country(string);
-        int getId();
+        string getId();
         void print();
 };
 
 Randomizer<Country> countries;
 
 Country::Country(string Title) {
-    id = countries.size() + 1;
+    id = generateUUID();
     title = Title;
 }
 
-int Country::getId(){
+string Country::getId(){
     return id;
 }
 
 void Country::print() {
-    cout << "INSERT INTO country(title) values('" << title << "'); \n";
+    cout << "INSERT INTO country(countryID, title) values('" << id << "', '" << title << "'); \n";
 }
 
 void createCountries(){

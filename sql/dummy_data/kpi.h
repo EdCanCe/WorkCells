@@ -40,7 +40,7 @@ Randomizer<string> goal {
 
 class Kpi {
     private:
-        int id;
+        string id;
         string title;
         string creationDate;
         int progress;
@@ -51,7 +51,7 @@ class Kpi {
 
     public:
         Kpi(string, string, int, string, int, int, int);
-        int getID();
+        string getId();
         void print();
 };
 
@@ -68,7 +68,7 @@ Kpi::Kpi(string title, string creationDate, int progress, string goal, int month
     this->idUser = idUser;
 }
 
-int Kpi::getID(){
+int Kpi::getId(){
     return id;
 }
 
@@ -80,7 +80,7 @@ void Kpi::print() {
 
 void createKpi(int x) {
     for (int i = 0; i < x; i++) {
-        kpi.add(Kpi(title.random(), creationDate.random(), 1 + getRandom(5), goal.random(), 1 + getRandom(12), department.random().getID(), users.random().getId()));
+        kpi.add(Kpi(title.random(), creationDate.random(), 1 + getRandom(5), goal.random(), 1 + getRandom(12), department.random().getId(), users.random().getId()));
     }
     
 }

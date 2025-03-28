@@ -1,0 +1,34 @@
+@startuml
+|Superadmin|
+start
+:Selecciona "Add";
+
+|Sistema|
+:Despliega la interfaz para registrar la falta;
+
+|Superadmin|
+:Superadmin ingresa datos y razón de la falta;
+:Superadmin presiona "Submit";
+
+|Sistema|
+:Valida si todos los campos están completos;
+while (¿Campos incompletos?) is (incompletos)
+    :Solicita completar todos los campos requeridos;
+|Superadmin|
+    :Superadmin ingresa los datos faltantes;
+endwhile (completos)
+
+|Sistema|
+:Busca en la base de datos si existe el colaborador;
+
+while (¿Existen colaborador?) is (no existe)
+        :Manda mensaje de error "Colaborador no encontrado";
+        :Solicita ingresar los datos de nuevo;
+
+endwhile(existe)
+:Sube la falta a la tabla "fault" de la base de datos;
+:Manda notificación de falta creada exitosamente;
+
+|Superadmin|
+stop
+@enduml

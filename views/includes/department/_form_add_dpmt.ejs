@@ -1,43 +1,86 @@
-<div class="content">
-    <div class="card">
-        <div class="card-content">
-            <h2>Ingresa los datos en el formulario para agregar un departamento</h2>
-            <div class="field">
-                <label class="label">Nombre del departamento:</label>
-                <div class="control">
-                    <input type="text" class="input" placeholder="Recursos Humanos">
+<div class="flex">
+    <aside class="w-64"></aside>
+    <div class="p-6">
+        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-6">
+                    Ingresa los datos en el formulario para agregar un
+                    departamento
+                </h2>
+
+                <div class="mb-4">
+                    <label class="block text-lg font-medium mb-2"
+                        >Nombre del departamento:</label
+                    >
+                    <input
+                        type="text"
+                        class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        placeholder="Recursos Humanos"
+                    />
                 </div>
-            </div>
-            <div class="field">
-                <label class="label">Empresa origen:</label>
-                <div class="control">
-                    <input type="text" class="input" placeholder="Nuclea Solutions">
+
+                <div class="mb-4">
+                    <label class="block text-lg font-medium mb-2"
+                        >Empresa origen:</label
+                    >
+                    <input
+                        type="text"
+                        class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        placeholder="Nuclea Solutions"
+                    />
                 </div>
-            </div>
-            <div class="card-content">
-                <h3>Añadir colaboradores / lider de departamento</h3>
-                <div class="field">
-                    <label class="label">Nombre(s) del colaborador</label>
-                    <div class="control">
-                        <input type="text" class="input" placeholder="Joel Antonio">
+
+                <div class="bg-neutral-800/50 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4">
+                        Añadir colaboradores / líder de departamento
+                    </h3>
+
+                    <div class="mb-4">
+                        <label class="block text-lg font-medium mb-2"
+                            >Nombre(s) del colaborador:</label
+                        >
+                        <input
+                            type="text"
+                            class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            placeholder="Joel Antonio"
+                        />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-lg font-medium mb-2"
+                            >Apellido(s) del colaborador:</label
+                        >
+                        <input
+                            type="text"
+                            class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            placeholder="Mendez Mendiola"
+                        />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-lg font-medium mb-2"
+                            >Curp del colaborador:</label
+                        >
+                        <input
+                            type="text"
+                            class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            placeholder="ROHJ030618HGTDRSA5"
+                        />
                     </div>
                 </div>
-                <div class="field">
-                    <label class="label">Apellido(s) del colaborador</label>
-                    <div class="control">
-                        <input type="text" class="input" placeholder="Mendez Mendiola">
-                    </div>
+
+                <div class="flex justify-center space-x-4">
+                    <a
+                        href=""
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                        >Añadir</a
+                    >
+                    <a
+                        href="/department"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                        >Cancelar</a
+                    >
                 </div>
-                <div class="field">
-                    <label class="label">Curp del colaborador</label>
-                    <div class="control">
-                        <input type="text" class="input" placeholder="ROHJ030618HGTDRSA5">
-                    </div>
-                </div>
-            </div>
-            <div class="content has-text-centered box">
-                <a href="" class="button">Añadir</a>
-                <a href="/department" class="button">Cancelar</a>
             </div>
         </div>
     </div>

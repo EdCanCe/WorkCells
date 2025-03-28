@@ -2,10 +2,10 @@
 |Super Admin|
 start
 :Seleccionar registrar colaborador;
-:Ingresa RFC del colaborador;
-|#AntiqueWhite|Sistema|
+:Ingresa Correo electrónico del colaborador;
+|Sistema|
 if(¿Existe coincidencia en base de datos?) then 
-->SI;
+->NO;
 |Super Admin|
 repeat:Registra datos requeridos por el sistema;
 :Registra:
@@ -17,18 +17,25 @@ repeat:Registra datos requeridos por el sistema;
     - Contraseña
     - Bandera de contraseña
     - Dirección
-    - Modalidad de trabajo
-    - Estado de trabajo;
-:El Super Admin guarda los datos registrados;
+    - Modalidad de trabajo;
+:Guarda los datos registrados;
 |Sistema|
 repeat while (¿Los campos estan completos?) is (NO)
 ->SI;
-:Registra en la tabla USER de la base de datos la información recibida;
+:Registra el nuevo empleado en la base de datos.;
 stop
-else(NO)
+else(SI)
 :Muestra la coincidencia al Super Admin;
+if(¿El empleado esta activo o inactivo?) then
+-> Inactivo;
 |Super Admin|
 :Modifica de inactivo a activo;
+|Sistema|
+:Guarda en la base de datos el cambio de estado;
+stop
+|Sistema|
+else(Activo)
+:Termina;
 stop
 
 @enduml

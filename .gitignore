@@ -2,8 +2,11 @@
 *.mp4
 *.jpeg
 *.jpg
+*.pdf
 *.out
-*.png
 *.exe
 .vscode/*
 node_modules/
+util/database.js
+uploads/
+*.x

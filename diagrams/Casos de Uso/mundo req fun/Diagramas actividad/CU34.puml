@@ -1,0 +1,38 @@
+@startuml
+|Superadmin|
+start
+:Selecciona la opción de registrar datos de One-On-One;
+
+|Sistema|
+:Consulta el rol del usuario;
+if (¿Es Superadmin?) then (No)
+    :Redirige al usuario a una página de error 403;
+    stop
+    
+else (Si)
+    
+    :Consulta el ID de la sesión One-On-One en la URL;
+    :Consulta los datos de la sesión One-On-One;
+    :Renderiza el empleado y la fecha de la sesión;
+    :Renderiza un formulario para ingresar respuestas y métricas;
+
+|Superadmin|
+    :Registra las respuestas a las preguntas del One-On-One;
+    :Selecciona la opción de guardar información;
+
+|Sistema|
+    :Recopila la información ingresada (respuestas a las preguntas y métricas);
+    :Crea registros en la tabla “OneOnOneAnswer” con las respuestas;
+    :Crea registros en la tabla “OneOnOneMeasure” con las métricas;
+    :Muestra un pop-up diciendo que el registro fue exitoso;
+
+|Superadmin|
+    :Selecciona la opción de cerrar registro de datos de One-On-One;
+
+|Sistema|
+    :Redirige al superadmin a la página de la sesión de One-On-One;
+endif
+
+|Superadmin|
+stop
+@enduml

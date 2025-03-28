@@ -1,0 +1,30 @@
+@startuml
+|Colaborador|
+start
+:Selecciona "Calendario";
+
+|Sistema|
+:Consulta la tabla usedHoliday;
+if (¿Datos obtenidos?) then (Sí)
+    :Mostrar la información en el calendario;
+else (No)
+    :Mostrar mensaje de error;
+    stop
+endif
+
+|Colaborador|
+:Selecciona filtar por días feriados;
+
+|Sistema|
+:Filtra y muestra solo los días feriados;
+
+|Colaborador|
+:Selecciona la vista que quiere;
+
+|Sistema|
+:Actualiza la vista por mes o por semana;
+
+
+|Colaborador|
+stop
+@enduml
