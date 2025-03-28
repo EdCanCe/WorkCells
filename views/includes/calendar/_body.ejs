@@ -4,22 +4,75 @@
     <div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4"><%= info %></div>
     <% } %>
 
-    <!-- Selector de vista -->
-    <div class="flex justify-end mb-4 gap-2">
-        <button
-            onclick="setViewPreference(true)"
-            class="px-4 py-2 rounded-md flex items-center <%= isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>"
-        >
-            Vista Mensual
-        </button>
-        <button
-            onclick="setViewPreference(false)"
-            class="px-4 py-2 rounded-md flex items-center <%= !isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>"
-        >
-            Vista Semanal
-        </button>
+    <meta name="current-date" content="<%= today %>">
+    <meta name="typeOfRender" content="<%= isMonthView %>">
+
+    <!-- Controles de navegación y selector de vista -->
+    <div class="flex justify-between items-center mb-4">
+        <!-- Controles de navegación -->
+        <div class="flex items-center gap-2">
+            <button onclick="navigateCalendar('prev')" class="p-2 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            
+            <button onclick="navigateCalendar('today')" class="px-3 py-1 font-medium rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700">
+                Today
+            </button>
+            
+            <button onclick="navigateCalendar('next')" class="p-2 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            
+            <span id="dateTitle" class="ml-2 font-medium text-lg">
+            </span>
+        </div>
+
+        <!-- Selector de vista y filtros -->
+        <div class="flex gap-2">
+            <!-- New Filter Dropdown -->
+            <div class="relative">
+                <button id="filterButton" class="px-4 py-2 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700 flex items-center gap-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                    </svg>
+                    Filter
+                </button>
+                <div id="filterDropdown" class="hidden absolute right-0 mt-2 w-48 bg-neutral-800 rounded-md shadow-lg z-10">
+                    <div class="p-2">
+                        <label class="flex items-center px-2 py-1 text-sm text-neutral-100 hover:bg-neutral-700 rounded cursor-pointer">
+                            <input type="checkbox" class="form-checkbox rounded text-blue-500" data-type="vacation" checked>
+                            <span class="ml-2">Vacations</span>
+                        </label>
+                        <label class="flex items-center px-2 py-1 text-sm text-neutral-100 hover:bg-neutral-700 rounded cursor-pointer">
+                            <input type="checkbox" class="form-checkbox rounded text-red-500" data-type="absence" checked>
+                            <span class="ml-2">Absences</span>
+                        </label>
+                        <label class="flex items-center px-2 py-1 text-sm text-neutral-100 hover:bg-neutral-700 rounded cursor-pointer">
+                            <input type="checkbox" class="form-checkbox rounded text-green-500" data-type="holiday" checked>
+                            <span class="ml-2">Holidays</span>
+                        </label>
+                        <label class="flex items-center px-2 py-1 text-sm text-neutral-100 hover:bg-neutral-700 rounded cursor-pointer">
+                            <input type="checkbox" class="form-checkbox rounded text-purple-500" data-type="oneToOne" checked>
+                            <span class="ml-2">One To One</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="setViewPreference(false)" class="px-4 py-2 rounded-md flex bg-neutral-800 items-center hover:bg-neutral-700">
+                View by Week
+            </button>
+            <button onclick="setViewPreference(true)" class="px-4 py-2 rounded-md flex bg-neutral-800 items-center hover:bg-neutral-700">
+                View by Month
+            </button>
+        </div>
     </div>
 
+    <!-- Rest of your calendar code remains exactly the same -->
     <!-- Encabezados de días -->
     <div class="grid grid-cols-7 gap-1 mb-2">
         <% weekDays.forEach(day => { %>
@@ -30,62 +83,163 @@
     </div>
 
     <!-- Días del calendario -->
-    <div class="grid grid-cols-7 gap-1">
-        <% days.forEach((day, index) => { %>
-        <div
-            class="min-h-24 p-1 rounded <%= day.isEmpty ? 'bg-neutral-800/50' : 'bg-neutral-800 border border-neutral-600/50' %>"
-        >
-            <% if (!day.isEmpty) { %>
-            <div class="text-right font-medium mb-1"><%= day.dayNumber %></div>
-
-            <!-- Vacaciones -->
-            <% day.events.vacations.forEach(vacation => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-blue-500 <%= vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : '' %> <%= vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : '' %>"
-            >
-                <%= vacation.isStart ? 'Inicio ' : (vacation.isEnd ? 'Fin ' :
-                '') %>Vacaciones
-            </div>
-            <% }); %>
-
-            <!-- Ausencias -->
-            <% day.events.absences.forEach(absence => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-red-500 <%= absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : '' %> <%= absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : '' %>"
-            >
-                <%= absence.isStart ? 'Inicio ' : (absence.isEnd ? 'Fin ' : '')
-                %><%= absence.type || 'Ausencia' %>
-            </div>
-            <% }); %>
-
-            <!-- Feriados -->
-            <% day.events.holidays.forEach(holiday => { %>
-            <div class="text-xs mb-1 p-1 rounded text-white bg-green-500">
-                <%= holiday.name || 'Feriado' %>
-            </div>
-            <% }); %>
-
-            <!-- One-to-One -->
-            <% day.events.oneToOnes.forEach(oneToOne => { %>
-            <div class="text-xs mb-1 p-1 rounded text-white bg-purple-500">
-                1:1 <%= oneToOne.participant ? `con ${oneToOne.participant}` :
-                '' %>
-            </div>
-            <% }); %> <% } %>
-        </div>
-        <% }); %>
+    <div id="calendarContainer" class="grid grid-cols-7 gap-1">
+        
     </div>
+
 </div>
 
 <script>
+
+    const currentDate = document.querySelector('[name="current-date"]');
+    const typeOfRender = document.querySelector('[name="typeOfRender"]');
+    const calendarContainer = document.getElementById('calendarContainer');
+    const dateTitle = document.getElementById('dateTitle');
+
+    const loadFilters = () => {
+        const checkboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
+        
+        checkboxes.forEach(checkbox => {
+            const eventType = checkbox.dataset.type;
+            const eventElements = document.querySelectorAll(`.${eventType}-event`);
+
+            if (checkbox.checked) {
+                eventElements.forEach(el => el.classList.remove('hidden'));
+            } else {
+                eventElements.forEach(el => el.classList.add('hidden'));
+            }
+        });
+    };
+
+    const formatDateForSQL = (date) => {
+        return date.toISOString().split("T")[0];
+    };
+
+    const fetchByDate = (usedDate) => {
+        const isMonthView = typeOfRender.content === "true";
+
+        const createDay = (day) => {
+            return `
+            <div class="${isMonthView ? 'h-24 max-h-24' : 'h-[500px] max-h-[500px]'} p-1 overflow-auto rounded bg-neutral-800 border border-neutral-600/50 ${day.isOutside ? 'opacity-30' : ''}">
+                <div class="text-right font-medium mb-1">${day.dayNumber}</div>
+
+                ${day.events.vacations.map(vacation => `
+                <a href="/vacation/${vacation.vacationID}" class="vacation-event block w-full text-xs mb-1 p-1 rounded text-white bg-blue-500 ${vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : ''} ${vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : ''}">
+                    Vacation
+                </a>
+                `).join('')}
+
+                ${day.events.absences.map(absence => `
+                <a href="/absence/${absence.absenceID}" class="absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500 ${absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : ''} ${absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : ''}">
+                    Absence
+                </a>
+                `).join('')}
+
+                ${day.events.holidays.map(holiday => `
+                <p class="holiday-event block w-full text-xs mb-1 p-1 rounded text-white bg-green-500">
+                    ${holiday.title || 'Feriado'}
+                </p>
+                `).join('')}
+
+                ${day.events.oneToOnes.map(oneToOne => `
+                <a href="/oneToOne/${oneToOne.oneOnOneID}" class="oneToOne-event block w-full text-xs mb-1 p-1 rounded text-white bg-purple-500">
+                    One To One
+                </a>
+                `).join('')}
+            </div>
+            `;
+        }
+
+        fetch(`/calendar/${usedDate}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(result => {
+            return result.json(); //Regresa otra promesa
+        }).then(data => {
+            calendarContainer.innerHTML = "";
+            
+            data.days.forEach(day => {
+                calendarContainer.innerHTML = calendarContainer.innerHTML + createDay(day);
+            });
+
+            dateTitle.innerHTML = isMonthView ? data.formattedMonth : (data.formattedStart + " - " + data.formattedEnd);
+
+            currentDate.setAttribute('content', usedDate);
+
+            loadFilters();
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    const getCookieByName = (name) => {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) {
+            return match[2];
+        }
+        return null;
+    }
+
     // Función para establecer la preferencia de vista (mes o lista)
     function setViewPreference(isMonthView) {
-        // Establecer la cookie con el valor de la preferencia
-        document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${
-            30 * 24 * 60 * 60
-        }; path=/`;
-
-        // Recargar la página para que los cambios se apliquen
-        window.location.reload();
+        document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${30 * 24 * 60 * 60}; path=/`;
+        const thisDate = new Date(currentDate.content);
+        if(isMonthView){
+            typeOfRender.setAttribute('content', "true");
+            fetchByDate(new Date(thisDate.getFullYear(), thisDate.getMonth()));
+        } else {
+            typeOfRender.setAttribute('content', "false");
+            fetchByDate(thisDate);
+        }
     }
+
+    function navigateCalendar(navigation) {
+        // Convertir el valor de la cookie a booleano
+        const isMonthView = typeOfRender.content === "true";
+        const thisDate = new Date(currentDate.content);
+        console.log(currentDate.content);
+
+        console.log(isMonthView);
+        
+        if (navigation === 'prev') {
+            if (isMonthView) {
+                thisDate.setMonth(thisDate.getMonth() - 1, 1);
+            } else { // Week view: retrocede 7 días
+                thisDate.setDate(thisDate.getDate() - 7);
+            }
+        } else if (navigation === 'today') {
+            thisDate.setTime(Date.now());
+        } else if (navigation === 'next') {
+            if (isMonthView) {
+                thisDate.setMonth(thisDate.getMonth() + 1, 1);
+            } else { // Week view: avanza 7 días
+                thisDate.setDate(thisDate.getDate() + 7);
+            }
+        }
+        
+        fetchByDate(thisDate);
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButton = document.getElementById('filterButton');
+        const filterDropdown = document.getElementById('filterDropdown');
+        const checkboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
+
+        filterButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            filterDropdown.classList.toggle('hidden');
+        });
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', loadFilters);
+        });
+    });
+
+    fetchByDate(currentDate.content);
+
 </script>
