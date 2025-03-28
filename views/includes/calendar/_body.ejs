@@ -6,16 +6,10 @@
 
     <!-- Selector de vista -->
     <div class="flex justify-end mb-4 gap-2">
-        <button
-            onclick="setViewPreference(true)"
-            class="px-4 py-2 rounded-md flex items-center <%= isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>"
-        >
+        <button onclick="setViewPreference(true)" class="px-4 py-2 rounded-md flex items-center <%= isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>">
             Vista Mensual
         </button>
-        <button
-            onclick="setViewPreference(false)"
-            class="px-4 py-2 rounded-md flex items-center <%= !isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>"
-        >
+        <button onclick="setViewPreference(false)" class="px-4 py-2 rounded-md flex items-center <%= !isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>">
             Vista Semanal
         </button>
     </div>
@@ -32,47 +26,36 @@
     <!-- Días del calendario -->
     <div class="grid grid-cols-7 gap-1">
         <% days.forEach((day, index) => { %>
-        <div
-            class="h-24 max-h-24 p-1 overflow-auto rounded <%= day.isOutside ? 'opacity-50' : 'bg-neutral-800 border border-neutral-600/50' %>"
-        >
-            <% if (!day.isEmpty) { %>
+        <div class="h-24 max-h-24 p-1 overflow-auto rounded bg-neutral-800 border border-neutral-600/50 <%= day.isOutside ? 'opacity-30' : '' %>">
             <div class="text-right font-medium mb-1"><%= day.dayNumber %></div>
 
             <!-- Vacaciones -->
             <% day.events.vacations.forEach(vacation => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-blue-500 <%= vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : '' %> <%= vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : '' %>"
-            >
-                <%= vacation.isStart ? 'Inicio ' : (vacation.isEnd ? 'Fin ' :
-                '') %>Vacaciones
-                <% console.log(vacation) %>
-            </div>
+            <a href="/vacation/<%= vacation.vacationID %>" class="block w-full text-xs mb-1 p-1 rounded text-white bg-blue-500 <%= vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : '' %> <%= vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : '' %>">
+                Vacation
+            </a>
             <% }); %>
 
             <!-- Ausencias -->
             <% day.events.absences.forEach(absence => { %>
-            <div
-                class="text-xs mb-1 p-1 rounded text-white bg-red-500 <%= absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : '' %> <%= absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : '' %>"
-            >
-                <%= absence.isStart ? 'Inicio ' : (absence.isEnd ? 'Fin ' : '')
-                %><%= absence.type || 'Ausencia' %>
-            </div>
+            <a href="/absence/<%= absence.absenceID %>" class="block w-full text-xs mb-1 p-1 rounded text-white bg-red-500 <%= absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : '' %> <%= absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : '' %>">
+                Absence
+            </a>
             <% }); %>
 
             <!-- Feriados -->
             <% day.events.holidays.forEach(holiday => { %>
-            <div class="text-xs mb-1 p-1 rounded text-white bg-green-500">
-                <%= holiday.name || 'Feriado' %>
-            </div>
+            <p class="block w-full text-xs mb-1 p-1 rounded text-white bg-green-500">
+                <%= holiday.title || 'Feriado' %>
+            </p>
             <% }); %>
 
             <!-- One-to-One -->
             <% day.events.oneToOnes.forEach(oneToOne => { %>
-            <div class="text-xs mb-1 p-1 rounded text-white bg-purple-500">
-                1:1 <%= oneToOne.participant ? `con ${oneToOne.participant}` :
-                '' %>
-            </div>
-            <% }); %> <% } %>
+            <a href="/oneToOne/<%= oneToOne.oneOnOneID %>" class="block w-full text-xs mb-1 p-1 rounded text-white bg-purple-500">
+                One To One
+            </a>
+            <% }); %>
         </div>
         <% }); %>
     </div>
@@ -82,9 +65,7 @@
     // Función para establecer la preferencia de vista (mes o lista)
     function setViewPreference(isMonthView) {
         // Establecer la cookie con el valor de la preferencia
-        document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${
-            30 * 24 * 60 * 60
-        }; path=/`;
+        document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${30 * 24 * 60 * 60}; path=/`;
 
         // Recargar la página para que los cambios se apliquen
         window.location.reload();

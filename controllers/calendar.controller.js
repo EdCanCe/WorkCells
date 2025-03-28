@@ -170,20 +170,31 @@ exports.getRoot = (request, response, next) => {
                                     let daysArray = Array.from(daysMap.values());
 
                                     // En caso de ser mensual, le dice a los días extras que no son parte del mes
-                                    /*if (isMonthView) {
-                                        const firstDayOfMonth = startDate.getDay(); // El día de la semana del 1ro de mes
-                                        for (let i = 0; i < firstDayOfMonth; i++) {
-                                            //daysArray[i].isOutside = true;
-                                            console.log(daysArray[i]);
+                                    if (isMonthView) {
+                                        // Obtener el día de la semana del primer día del mes
+                                        const firstDayOfWeek = startDate.getDay();
+                                        
+                                        // Marcar días anteriores al mes como que están fuera
+                                        for (let i = 0; i < firstDayOfWeek; i++) {
+                                            daysArray[i] = {
+                                                ...daysArray[i],
+                                                isOutside: true,
+                                            };
                                         }
                                         
-                                        const lastDayOfMonth = endDate.getDay();
+                                        // Obtener el día de la semana del último día del mes
+                                        const totalDaysInMonth = endDate.getDate();
+                                        const totalCellsNeeded = Math.ceil((totalDaysInMonth + firstDayOfWeek) / 7) * 7;
+                                        const daysToAddAtEnd = totalCellsNeeded - (totalDaysInMonth + firstDayOfWeek);
                                         
-                                        for (let i = 0; i < 6-lastDayOfMonth; i) {
-                                            //daysArray[i].isOutside = true;
-                                            console.log(daysArray[i]);
+                                        // Marcar días anteriores al mes como que están fuera
+                                        for (let i = daysArray.length - daysToAddAtEnd; i < daysArray.length; i++) {
+                                            daysArray[i] = {
+                                                ...daysArray[i],
+                                                isOutside: true,
+                                            };
                                         }
-                                    }*/
+                                    }
 
                                     // console.log(daysArray);
 
