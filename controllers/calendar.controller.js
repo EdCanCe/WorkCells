@@ -15,15 +15,15 @@ exports.getRoot = (request, response, next) => {
     const getWeekDays = (date) => {
         const dayOfWeek = date.getDay(); // Obtiene el día de la semana
 
-        startDate = new Date(date);
-        startDate.setDate(date.getDate() - dayOfWeek); // Obtiene el primer día de la semana
+        let startingDate = new Date(date);
+        startingDate.setDate(date.getDate() - dayOfWeek); // Obtiene el primer día de la semana
 
-        endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 6); // Obtiene el último día de la semana
+        let endingDate = new Date(startingDate);
+        endingDate.setDate(startingDate.getDate() + 6); // Obtiene el último día de la semana
 
         return {
-            startDate,
-            endDate,
+            startingDate,
+            endingDate,
         }
     }
 
@@ -48,23 +48,23 @@ exports.getRoot = (request, response, next) => {
         endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     } else { // Vista semanal: lunes a domingo de la semana actual
         const weekDays = getWeekDays(today);
-        startDate = weekDays.startDate;
-        endDate = weekDays.endDate;
+        startDate = weekDays.startingDate;
+        endDate = weekDays.endingDate;
     }
 
-    /*let preSqlStartDate = startDate;
+    let preSqlStartDate = startDate;
     let preSqlEndDate = endDate
     if(isMonthView) {
-        preSqlStartDate = getWeekDays(startDate).startDate;
-        preSqlEndDate = getWeekDays(startDate).endDate;
+        preSqlStartDate = getWeekDays(startDate).startingDate;
+        preSqlEndDate = getWeekDays(endDate).endingDate;
     }
 
     preSqlStartDate = new Date(preSqlStartDate);
-    preSqlEndDate = new Date(preSqlEndDate);*/
+    preSqlEndDate = new Date(preSqlEndDate);
     
     // Obtiene las fechas en formato SQL para hacer queries
-    const sqlStartDate = formatDateForSQL(startDate);
-    const sqlEndDate = formatDateForSQL(endDate);
+    const sqlStartDate = formatDateForSQL(preSqlStartDate);
+    const sqlEndDate = formatDateForSQL(preSqlEndDate);
 
     console.log("Start, End, preStart, endStart: ");
     console.log(startDate, endDate);
@@ -87,10 +87,10 @@ exports.getRoot = (request, response, next) => {
                                     // Lógica para hacer el arreglo a renderizar
 
                                     const daysMap = new Map(); // Usamos Map para acceso rápido por fecha
-                                    const currentDate = new Date(startDate); // Índice para recorrer cada uno de los días
+                                    const currentDate = new Date(preSqlStartDate); // Índice para recorrer cada uno de los días
 
                                     // Genera un arreglo vacío para los eventos de cada día
-                                    while (currentDate <= endDate) {
+                                    while (currentDate <= preSqlEndDate) {
                                         const dateStr = formatDateForSQL(currentDate);
                                         daysMap.set(dateStr, { // La llave para los elementos del mapa es la fecha en string
                                             date: new Date(currentDate),
@@ -169,19 +169,21 @@ exports.getRoot = (request, response, next) => {
                                     // Convierte el mapa a array
                                     let daysArray = Array.from(daysMap.values());
 
-                                    // En caso de ser mensual, añade los días necesarios para mantener el formato rectangular
-                                    if (isMonthView) {
+                                    // En caso de ser mensual, le dice a los días extras que no son parte del mes
+                                    /*if (isMonthView) {
                                         const firstDayOfMonth = startDate.getDay(); // El día de la semana del 1ro de mes
                                         for (let i = 0; i < firstDayOfMonth; i++) {
-                                            daysArray.unshift({ isEmpty: true });
+                                            //daysArray[i].isOutside = true;
+                                            console.log(daysArray[i]);
                                         }
                                         
                                         const lastDayOfMonth = endDate.getDay();
                                         
-                                        for (let i = lastDayOfMonth; i < 6; i++) {
-                                            daysArray.push({ isEmpty: true });
+                                        for (let i = 0; i < 6-lastDayOfMonth; i) {
+                                            //daysArray[i].isOutside = true;
+                                            console.log(daysArray[i]);
                                         }
-                                    }
+                                    }*/
 
                                     // console.log(daysArray);
 
