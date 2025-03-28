@@ -1,3 +1,4 @@
+const { off } = require("process");
 const db = require("../util/database");
 const { v4: uuidv4 } = require("uuid");
 
@@ -66,7 +67,6 @@ ORDER BY startDate DESC`);
         return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email]);
     }
 
-
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(
             `(SELECT * FROM absence WHERE startDate BETWEEN ? AND ? AND absenceUserIDFK = ?)
@@ -85,15 +85,27 @@ ORDER BY startDate DESC`);
 
     static fetchPaginated(limit, offset) {
         return db.execute(
-        `SELECT a.*, u.birthName, u.surname, r.title
+            `SELECT a.*, u.birthName, u.surname, r.title
         FROM absence AS a
         JOIN user AS u ON u.userID = a.absenceUserIDFK
         JOIN role AS r ON r.roleID = u.userRoleIDFK
         WHERE a.justified = 2
         ORDER BY a.startDate DESC
         LIMIT ? OFFSET ?`,
-        [limit, offset]
+            [limit, offset]
         );
     }
 
+    static getPagination(limit, offset, id) {
+        return db.execute(
+            `SELECT a.*, am.mediaLink 
+                FROM absence AS a 
+                LEFT JOIN absenceMedia AS am 
+                ON a.absenceID = am.absenceIDFK 
+                WHERE a.absenceUserIDFK = ? 
+                ORDER BY a.startDate DESC 
+                LIMIT ? OFFSET ?`,
+            [id, limit, offset]
+        );
+    }
 };

@@ -16,4 +16,6 @@ router.get("/graphs", isAuth, oneToOneController.getOneToOneGraphs);
 
 router.get("/check", isAuth, oneToOneController.getOneToOneCheck);
 
+router.get("/getFullName/:email", isAuth, oneToOneController.getFullName);
+
 module.exports = router;
