@@ -82,4 +82,18 @@ ORDER BY startDate DESC`);
             [status, absenceId]
         );
     }
+
+    static fetchPaginated(limit, offset) {
+        return db.execute(
+        `SELECT a.*, u.birthName, u.surname, r.title
+        FROM absence AS a
+        JOIN user AS u ON u.userID = a.absenceUserIDFK
+        JOIN role AS r ON r.roleID = u.userRoleIDFK
+        WHERE a.justified = 2
+        ORDER BY a.startDate DESC
+        LIMIT ? OFFSET ?`,
+        [limit, offset]
+        );
+    }
+
 };
