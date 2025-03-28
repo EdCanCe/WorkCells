@@ -1,0 +1,24 @@
+@startuml CU02 - Superadmin modifica datos de empleado
+|Super Admin|
+start
+:Seleccionar modificar colaborador;
+|Sistema|
+:Presenta interfaz para modificar colaborador;
+|Super Admin|
+repeat:Datos que puede modificar;
+:Modificar:
+    - Nombre    
+    - Apellido
+    - Correo electrónico
+    - RFC
+    - CURP
+    - Contraseña
+    - Dirección
+    - Modalidad de trabajo;
+:Guarda los datos modificados;
+|Sistema|
+repeat while (¿Los campos estan completos?) is (NO)
+->SI;
+:Registra la modificación del empleado en la base de datos;
+stop
+@enduml

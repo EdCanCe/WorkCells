@@ -9,36 +9,36 @@ using namespace std;
 
 class Absence {
     private:
-        int id;
+        string id;
         string reason;
         string startDate;
         string endDate;
-        bool justified;
+        int justified;
     public:
         Absence( string reason,
             string startDate,
             string endDate,
             int justified);
-        int getID();
+        string getId();
         void print();
 };
 
 Randomizer<Absence> absence;
 
 Absence::Absence(string reason, string startDate, string endDate, int justified) {
-    id = absence.size() + 1;
+    id = generateUUID();
     this->reason = reason;
     this->startDate = startDate;
     this->endDate = endDate;
     this->justified = justified;
 }
 
-int Absence::getID(){
+string Absence::getId(){
     return id;
 }
 
 void Absence::print(){
-    cout << "INSERT INTO absence(reason, startDate, endDate, justified, absenceUserIDFK) values('" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", " << users.random().getId() << "); \n";
+    cout << "INSERT INTO absence(absenceID, reason, startDate, endDate, justified, absenceUserIDFK) values('" << id << "', '" << reason << "', '" << startDate << "', '" << endDate << "', " << justified << ", '" << users.random().getId() << "'); \n";
 };
 
 
@@ -66,10 +66,7 @@ Randomizer<string> reasonA {
 };
 
 
-// Randomizer<string> endDate{};
-
-
-Randomizer<int> justified{
+Randomizer<int> justifiedValues{
     0,
     1,
     2
@@ -79,7 +76,7 @@ Randomizer<int> justified{
 void createAbsence(int x) {
     for (int i = 0; i < x; i++){
         string start_date = startDate.random();
-        absence.add(Absence(reasonA.random(), changeFormat(start_date), createEndDate(start_date), justified.random()));
+        absence.add(Absence(reasonA.random(), changeFormat(start_date), createEndDate(start_date), justifiedValues.random()));
     }
 }
 

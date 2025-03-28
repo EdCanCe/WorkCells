@@ -3,7 +3,9 @@
 *.jpeg
 *.jpg
 *.out
-*.png
 *.exe
 .vscode/*
 node_modules/
+util/database.js
+uploads/
+*.x

@@ -1,23 +1,104 @@
-<div class="content">
-  <div class="card">
-    <div class="card-content">
-      <h2>Agregar Solicitud de Vacaciones</h2>
+<div class="container mx-auto p-6 max-w-2xl">
+    <div class="bg-neutral-700/25 shadow-lg rounded-lg overflow-hidden">
+        <!-- Encabezado -->
+        <h2 class="text-2xl font-semibold text-center">Request Vacation</h2>
+
+        <!-- Mensaje de información -->
+        <% if (info != '') { %>
+        <div class="bg-green-100 text-green-800 p-4 rounded-lg mx-6 mt-6">
+            <%= info %>
+        </div>
+        <% } %>
+
+        <!-- Formulario -->
+        <form action="/vacation/add" method="POST" class="p-6 space-y-6">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+            <!-- Selector de Período -->
+            <div class="space-y-2">
+                <label class="block text-lg font-medium text-neutral-100">
+                    Which period?
+                </label>
+                <select
+                    id="periodSelect"
+                    name="period"
+                    class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                    required
+                >
+                    <option value="" disabled selected>Select period:</option>
+                    <option value="<%= firstDate %>">
+                        Current: <%= firstDate %> - <%= midDate %>
+                    </option>
+                    <option value="<%= midDate %>">
+                        Next: <%= midDate %> - <%= lastDate %>
+                    </option>
+                </select>
+            </div>
+
+            <div id="hideExtra" class="hidden m-0 p-0">
+                <!-- Fechas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label
+                            class="block text-lg font-medium text-neutral-100"
+                        >
+                            Start date
+                        </label>
+                        <input
+                            id="startDateInput"
+                            type="date"
+                            name="startDate"
+                            class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            required
+                        />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label
+                            class="block text-lg font-medium text-neutral-100"
+                        >
+                            End date
+                        </label>
+                        <input
+                            id="endDateInput"
+                            type="date"
+                            name="endDate"
+                            class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="space-y-2">
+                    <label class="block text-lg font-medium text-neutral-100">
+                        Reason to request vacations:
+                    </label>
+                    <textarea
+                        name="reason"
+                        rows="4"
+                        class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        placeholder="Describe el motivo de tu solicitud de vacaciones..."
+                    ></textarea>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4">
+                    <a
+                        href="/vacations"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                    >
+                        Cancel
+                    </a>
+                    <button
+                        type="submit"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="card-content">
-      <label class="label">Motivo</label>
-      <div class="control">
-        <input type="text" class="input" placeholder="Quiero ir a la playa." />
-      </div>
-    </div>
-    <div class="card-content">
-      <label class="label">Fecha Inicio</label>
-      <input type="text" class="input" placeholder="01/02/2025" />
-    </div>
-    <div class="card-content">
-      <label class="label">Fecha Fin</label>
-      <input type="text" class="input" placeholder="02/02/2025" />
-    </div>
-  </div>
-  <a href="" class="button">Confirmar Solicitud</a>
-  <a href="/vacation" class="button">Cancelar</a>
 </div>
+<script src="/javascript/vacationPeriod.js"></script>

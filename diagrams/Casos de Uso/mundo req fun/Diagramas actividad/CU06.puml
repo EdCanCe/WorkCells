@@ -1,0 +1,24 @@
+@startuml
+|Colaborador|
+start
+:Selecciona una sesión de One-On-One;
+
+|Sistema|
+:Consulta el rol del usuario;
+:Consulta el ID de la sesión One-On-One en la URL;
+:Consulta los datos de la Sesión One-On-One;
+if (¿Es Super Admin?) then (Sí)
+    :Continúa su ejecución normalmente;
+else (No)
+    if (¿Está vinculado a la sesión?) then (Sí)
+        :Continúa su ejecución normalmente;
+    else (No)
+        :Redirige al colaborador a una página de error 403;
+        stop
+    endif
+endif
+:Renderiza los datos de la sesión One-On-One;
+
+|Colaborador|
+stop
+@enduml

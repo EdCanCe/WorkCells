@@ -1,0 +1,31 @@
+<div class="min-h-screen">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Días feriados</h1>
+
+        <div
+            id="holidaysTable"
+            class="overflow-x-auto bg-white rounded-lg shadow"
+        ></div>
+
+        <div class="mt-6 flex justify-between">
+            <button
+                id="prevBtn"
+                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+            >
+                Anterior
+            </button>
+            <button
+                id="nextBtn"
+                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-2"
+            >
+                Siguiente
+            </button>
+
+            <!-- Atención: revisa si este enlace corresponde a días feriados -->
+        </div>
+    </div>
+
+    <script src="/javascript/paginedHoliday.js"></script>
+</div>
+
+<%- include('../_footer') %>

@@ -1,21 +1,198 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-menu">
-    <div class="navbar-start">
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">More Options</a>
-        <div class="navbar-dropdown">
-          <!-- Aquí se agregan los elementos de la navbar -->
-          <a href="/home" class="navbar-item"> Home </a>
-          <a href="/calendar" class="navbar-item">Calendar</a>  
-          <a href="/department" class="navbar-item"> Department </a>
-          <a href="/vacation" class="navbar-item"> Vacation</a>
-          <a href="/fault" class="navbar-item">Fault</a>
-          <a href="/absence" class="navbar-item">Absence</a>
-          <a href="/holiday" class="navbar-item">Holidays</a>  
-          <a href="/oneToOne" class="navbar-item">One To One</a>  
-          <a href="/employee" class="navbar-item">Employee</a>
+<div
+    id="navBar"
+    class="text-neutral-100 bg-neutral-900 border-neutral-700 relative h-screen w-fit border-r-[1px] relative"
+>
+    <div
+        class="bg-neutral-800 border-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden border-b-[1px] text-nowrap"
+    >
+        <a
+            href="/"
+            class="hover:bg-neutral-600 toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-[opacity,width] duration-[1s]"
+        >
+            <span
+                class="text-xl font-semibold inline-block w-full whitespace-nowrap text-center"
+                >WorkCells</span
+            >
+        </a>
+        <div
+            id="openAndCloseNav"
+            class="hover:bg-neutral-600 navIcon z-10 inline-block aspect-square h-full cursor-pointer p-3"
+        >
+            <img src="/icons/openArrow.svg" class="size-full" />
         </div>
-      </div>
     </div>
-  </div>
-</nav>
+
+    <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
+    <a
+        href="/calendar"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/calendar.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Calendar</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/department"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/department.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Departments</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/vacation"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/vacation.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Vacations</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/absence"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/absence.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Absences</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/holiday"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/holiday.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Holidays</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/oneToOne"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/onetoone.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >One To One</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/fault"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/faults.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Faults</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/employee"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/employee.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Employees</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/reports"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+    >
+        <img
+            src="/icons/report.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Reports</span
+            >
+        </div>
+    </a>
+
+    <a
+        href="/logout"
+        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap absolute bottom-0"
+    >
+        <img
+            src="/icons/logout.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Logout</span
+            >
+        </div>
+    </a>
+
+    <a class="block p-3"></a>
+</div>
+<script src="/javascript/navBarFunctionality.js"></script>

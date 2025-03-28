@@ -1,0 +1,60 @@
+@startuml CU01 - Líder registra respuesta hacia ausencia de colaborador - Diagrama de secuencia
+actor Navegador
+boundary absence.ejs
+boundary absence.routes
+control absence.controller
+entity AbsenceModel
+database mysql
+
+
+autonumber
+' Inicio del flujo
+activate Navegador
+Navegador -> absence.routes : GET /absence/requests
+deactivate Navegador
+activate absence.routes
+absence.routes -> absence.controller : getFaults(req, res)
+deactivate absence.routes
+activate absence.controller
+
+
+' Se utiliza la instancia para obtener los datos
+absence.controller ->> AbsenceModel : fetchTop10()
+activate AbsenceModel
+
+AbsenceModel ->> mysql : SELECT * FROM absence LIMIT 10;
+activate mysql
+mysql -->> AbsenceModel : Datos obtenidos
+deactivate mysql
+
+AbsenceModel -->> absence.controller : Retorno de datos de faltas.
+deactivate AbsenceModel
+
+absence.controller -> absence.ejs : render(absence)
+activate absence.ejs
+absence.ejs -> Navegador : Mostrar faltas
+activate Navegador
+deactivate absence.ejs
+deactivate absence.controller
+deactivate absence.routes
+
+Navegador -> absence.controller : POST /absence/requests/:response
+deactivate Navegador
+activate absence.controller
+absence.controller ->> AbsenceModel : saveResponse()
+
+activate AbsenceModel
+' absenceID, startDate, endDate, reason, justified, absenceUserIDFK
+AbsenceModel ->> mysql : INSERT INTO absence \nVALUES()
+activate mysql
+mysql -->> AbsenceModel : Datos obtenidos
+deactivate mysql
+AbsenceModel -->> absence.controller : Retorno modificiación de falta
+activate absence.ejs
+absence.controller -> absence.ejs : render()
+activate Navegador
+absence.ejs -> Navegador : Mostrar respuesta
+deactivate absence.ejs
+
+
+@enduml
