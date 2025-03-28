@@ -140,3 +140,22 @@ exports.getOneToOneGraphs = (req, res, next) => {
 exports.getOneToOneCheck = (req, res, next) => {
     res.render("oneToOneCheck");
 };
+
+exports.getFullName = (req, res, next) => {
+    OneToOne.getFullName(req.params.email)
+        .then(([rows]) => {
+            if (rows.length > 0) {
+                res.json({
+                    success: true,
+                    birthName: rows[0].birthName,
+                    surname: rows[0].surname,
+                });
+            } else {
+                res.json({ success: false });
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ success: false, error: err.message });
+        });
+};
