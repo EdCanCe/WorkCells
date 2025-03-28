@@ -4,7 +4,7 @@ const pool = mysql.createPool({
     host: "localhost",
     user: "root",
     database: "workcells",
-    password: "",
+    password: "1234",
 });
 
 module.exports = pool.promise();
