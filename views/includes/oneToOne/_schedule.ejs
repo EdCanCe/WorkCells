@@ -10,7 +10,13 @@
                 </h2>
             </div>
 
-            <% if (info != '') { %>
+            <% if (error && error !== '') { %>
+            <div
+                class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 text-center"
+            >
+                <%= error %>
+            </div>
+            <% } %> <% if (info != '') { %>
             <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
                 <%= info %>
             </div>

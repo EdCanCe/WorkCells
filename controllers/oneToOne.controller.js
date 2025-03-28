@@ -11,40 +11,46 @@ exports.getOneToOne = (req, res, next) => {
 };
 
 exports.getOneToOneSchedule = (req, res, next) => {
-    request.session.info = ""; // Limpiar la sesión después de usar el mensaje
-
     res.render("oneToOneAdd", {
         csrfToken: req.csrfToken(),
         info: req.session.info || "",
+        error: req.session.error || "",
     });
 };
 
 exports.postOneToOneSchedule = (req, res, next) => {
     console.log(req.body);
-    OneToOne.getID(req.body.email).then(([rows]) => {
-        if (rows.length == 0) {
-            res.send(400).status("USUARIO NO ENCONTRADO");
-        }
-        const oneOnOneUserIDFK = rows[0].userID;
-        const meetingDate = req.body.date + " " + req.body.time + ":00";
-        const meeting = new OneToOne(
-            req.body.expectedTime,
-            meetingDate,
-            req.body.meetingLink,
-            oneOnOneUserIDFK
-        );
+    req.session.error = "";
+    req.session.info = "";
+    OneToOne.getID(req.body.email)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                // El usuario no existe: se puede redirigir mostrando un error o enviar una respuesta
+                // Por ejemplo, redirigir a la misma vista con un mensaje de error:
+                req.session.error =
+                    "El correo ingresado no se encuentra registrado.";
+                return res.redirect("/oneToOne/schedule");
+            }
+            // Si el usuario está registrado, se obtiene su ID
+            const oneOnOneUserIDFK = rows[0].userID;
+            const meetingDate = req.body.date + " " + req.body.time + ":00";
 
-        meeting
-            .save()
-            .then(() => {
-                req.session.info = `Sesión de one to one para el 
-							${meetingDate} con ${req.body.name} creada`;
+            const meeting = new OneToOne(
+                req.body.expectedTime,
+                meetingDate,
+                req.body.meetingLink,
+                oneOnOneUserIDFK
+            );
+
+            return meeting.save().then(() => {
+                req.session.info = `Sesión de one to one para el ${meetingDate} con ${req.body.name} creada`;
                 res.redirect("/oneToOne/schedule");
-            })
-            .catch((err) => {
-                console.log(err);
             });
-    });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error interno del servidor");
+        });
 };
 
 exports.getOneToOneFill = (req, res, next) => {
