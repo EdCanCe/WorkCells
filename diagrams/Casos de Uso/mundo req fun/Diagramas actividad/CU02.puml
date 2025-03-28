@@ -4,10 +4,9 @@ start
 :Selecciona la categoría de “Calendario”;
 
 |Sistema|
-:Consulta la preferencia de vista (mensual o semanal) almacenada en una cookie;
+:Consulta la preferencia de vista (mensual o semanal)\nalmacenada en una cookie;
 if (¿Modo de vista es mensual?) then (Sí)
-    :Consulta los eventos (días feriados, vacaciones,
-    ausencias y sesiones One-On-One) del mes actual;
+    :Consulta los eventos del mes actual;
     :Renderiza los datos en un formato mensual;
 else (No)
     :Consulta los eventos de la semana actual;
