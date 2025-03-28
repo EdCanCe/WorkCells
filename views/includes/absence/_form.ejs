@@ -13,7 +13,7 @@
             action="/absence/add"
             method="POST"
             enctype="multipart/form-data"
-            class="w-full max-w-lg bg-neutral-800 p-6 rounded-lg shadow"
+            class="w-full max-w-lg bg-neutral-700/25 p-6 rounded-lg shadow"
         >
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="mb-6">
@@ -67,12 +67,12 @@
 
             <div class="mb-0 flex justify-evenly">
                 <input
-                    class="w-full md:w-1/3 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg cursor-pointer transition duration-200"
+                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
                     type="submit"
                     value="Enviar"
                 />
                 <a
-                    class="w-full md:w-1/3 bg-neutral-500 hover:bg-neutral-600 text-white font-semibold py-2 rounded-lg cursor-pointer transition duration-200 text-center"
+                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
                     href="/absence"
                 >
                     Cancel
