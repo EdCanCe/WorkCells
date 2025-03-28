@@ -25,8 +25,52 @@
                 <%= info %>
             </div>
             <% } %>
+            <div id="tablaAbsences"></div>
 
-            <table
+            <div class="flex justify-center mt-6">
+                <button
+                    id="prevPage"
+                    class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-l"
+                >
+                    Anterior
+                </button>
+                <button
+                    id="nextPage"
+                    class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-r"
+                >
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Calcular los días para cada fila una vez que la página se ha cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("#absences-table tbody tr");
+        rows.forEach((row) => {
+            const startDate = new Date(
+                row.querySelector(".total-days").getAttribute("data-start-date")
+            );
+            const endDate = new Date(
+                row.querySelector(".total-days").getAttribute("data-end-date")
+            );
+            const timeDifference = endDate - startDate;
+            const totalDays = 1 + timeDifference / (1000 * 3600 * 24);
+
+            // Asignar el total de días a la celda correspondiente
+            row.querySelector(".total-days").innerText = totalDays;
+        });
+    });
+
+    let currentPage = 1;
+
+    async function loadAbsences(page) {
+        const res = await fetch(`/absence/search?page=${page}`);
+        const data = await res.json();
+
+        let table = `<table
                 class="min-w-full divide-y divide-neutral-200"
                 id="absences-table"
             >
@@ -64,64 +108,65 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-neutral-800 divide-y divide-neutral-200">
-                    <% for(let ab of absences) { %>
-                    <tr>
+                <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
+        if (data.length == 0) {
+            table += `<tr><td colspan="" class="text-center">No hay datos</td></tr>`;
+        } else {
+            data.forEach((ab) => {
+                table += `<tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= ab.reason %>
+                            ${ab.reason}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= new
-                            Date(ab.startDate).toLocaleDateString('es-MX') %>
+                            ${new Date(ab.startDate).toLocaleDateString(
+                                "es-MX"
+                            )}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= new Date(ab.endDate).toLocaleDateString('es-MX')
-                            %>
+                            ${new Date(ab.endDate).toLocaleDateString("es-MX")}
+
                         </td>
                         <td
                             class="px-6 py-4 whitespace-nowrap text-sm total-days"
-                            data-start-date="<%= ab.startDate %>"
-                            data-end-date="<%= ab.endDate %>"
+                            data-start-date=" ${ab.startDate}"
+                            data-end-date="${ab.endDate}"
                         ></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <% if (ab.justified === 0) { %> Denyed <% } else if
-                            (ab.justified === 1) { %> Approved <% } else if
-                            (ab.justified === 2) { %> On wating <% } %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <% if (ab.mediaLink) { %>
-                            <a
-                                href="/uploads/<%= ab.mediaLink %>"
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">`;
+                if (ab.justified === 0) {
+                    table += `Denyed `;
+                } else if (ab.justified === 1) {
+                    table += `Approved `;
+                } else if (ab.justified === 2) {
+                    table += `On wating `;
+                }
+                table += `</td><td class="px-6 py-4 whitespace-nowrap text-sm">`;
+                if (ab.mediaLink) {
+                    table += `<a
+                                href="/uploads/${ab.mediaLink}"
                                 target="_blank"
                                 class="text-blue-600 hover:underline"
                                 >Ver evidencia</a
-                            >
-                            <% } else { %> Sin evidencia <% } %>
-                        </td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                            >`;
+                } else {
+                    table += `Sin evidencia`;
+                }
+                table += `</td></tr>`;
+            });
+        }
+        table += `</tbody></table>`;
+        document.getElementById("tablaAbsences").innerHTML = table;
+    }
 
-<script>
-    // Calcular los días para cada fila una vez que la página se ha cargado
-    document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll("#absences-table tbody tr");
-        rows.forEach((row) => {
-            const startDate = new Date(
-                row.querySelector(".total-days").getAttribute("data-start-date")
-            );
-            const endDate = new Date(
-                row.querySelector(".total-days").getAttribute("data-end-date")
-            );
-            const timeDifference = endDate - startDate;
-            const totalDays = 1 + timeDifference / (1000 * 3600 * 24);
-
-            // Asignar el total de días a la celda correspondiente
-            row.querySelector(".total-days").innerText = totalDays;
-        });
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadAbsences(currentPage);
+        }
     });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        loadAbsences(currentPage);
+    });
+    loadAbsences(currentPage);
 </script>
