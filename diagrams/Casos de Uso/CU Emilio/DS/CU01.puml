@@ -35,7 +35,7 @@ employee.controller -> employeeModelInstance : new EmployeeModel()
 employee.controller ->> employeeModelInstance : addEmployee(employeeData)
 activate employeeModelInstance
 
-employeeModelInstance ->> mysql : INSERT INTO user(userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK)
+employeeModelInstance ->> mysql : INSERT INTO user(userID, curp, rfc, birthName,\nsurname, mail, passwd, passwdFlag, zipCode,\nhouseNumber, streetName,colony, workModality,\nworkStatus, userRoleIDFK, countryUserIDFK)
 activate mysql
 mysql -->> employeeModelInstance : Insert OK
 deactivate mysql
