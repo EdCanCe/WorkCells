@@ -1,7 +1,7 @@
 <script src="/javascript/employeeValidator.js"></script>
 
 <div class="content p-4">
-    <div class="card bg-neutral-800 shadow-md rounded-lg p-4">
+    <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
         <div class="card-content">
             <h1 class="text-3xl font-semibold mb-4">Create New Employee</h1>
             <% if (info) { %>
@@ -95,6 +95,10 @@
                             required
                             disabled
                         />
+                        <div
+                            id="mailFormatError"
+                            class="text-red-600 text-sm mt-2"
+                        ></div>
                     </div>
                 </div>
 
@@ -230,6 +234,31 @@
                             <% roles.forEach(role => { %>
                             <option value="<%= role.roleID %>">
                                 <%= role.title %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label
+                            for="prioritaryDepartmentIDFK"
+                            class="block text-lg font-medium"
+                        >
+                            Prioritary Department
+                        </label>
+                        <select
+                            id="prioritaryDepartmentIDFK"
+                            name="prioritaryDepartmentIDFK"
+                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            required
+                            disabled
+                        >
+                            <option value="" selected disabled>
+                                Select Prioritary Department
+                            </option>
+                            <% departments.forEach(department => { %>
+                            <option value="<%= department.departmentID %>">
+                                <%= department.departmentTitle %> - <%=
+                                department.enterpriseTitle %>
                             </option>
                             <% }) %>
                         </select>

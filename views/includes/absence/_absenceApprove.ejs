@@ -1,59 +1,68 @@
 <div class="p-6">
-    <div class="bg-neutral-800 shadow-lg rounded-lg">
-      <div class="p-6">
-        <h2 class="text-2xl font-semibold mb-4">Solicitudes de Vacaciones</h2>
-      </div>
-      <div class="p-6">
-        <div class="overflow-x-auto bg-neutral-700/50 p-4 rounded-lg shadow">
-          <table class="min-w-full table-auto">
-            <thead class="bg-neutral-800">
-              <tr>
-                <th class="px-4 py-2 text-left">ID</th>
-                <th class="px-4 py-2 text-left">Motivo</th>
-                <th class="px-4 py-2 text-left">Fecha Inicio</th>
-                <th class="px-4 py-2 text-left">Fecha Fin</th>
-                <th class="px-4 py-2 text-left">Justificado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Iterar sobre las solicitudes de vacaciones -->
-              <% absences.forEach(absence => { %>
-              <tr class="border-b hover:bg-neutral-800">
-                <td class="px-4 py-2"><%= absence.absenceID %></td>
-                <td class="px-4 py-2"><%= absence.reason %></td>
-                <td class="px-4 py-2">
-                  <%= new Date(absence.startDate).toLocaleDateString('es-MX') %>
-                </td>
-                <td class="px-4 py-2">
-                  <%= new Date(absence.endDate).toLocaleDateString('es-MX') %>
-                </td>
-                <td class="px-4 py-2">
-                  <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                    <a
-                      href="/approve/<%= absence.id %>"
-                      class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 text-center"
-                    >
-                      Aprobar
-                    </a>
-                    <a
-                      href="/reject/<%= absence.id %>"
-                      class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-center"
-                    >
-                      Rechazar
-                    </a>
-                  </div>
-                </td>
-              </tr>
-              <% }) %>
-            </tbody>
-          </table>
+    <div class="card bg-neutral-700/25 shadow-md rounded-lg">
+        <div class="p-6">
+            <h2 class="text-2xl font-semibold mb-4">
+                Solicitudes de Vacaciones
+            </h2>
         </div>
-      </div>
+        <div class="p-6">
+            <div
+                class="overflow-x-auto bg-neutral-700/50 p-4 rounded-lg shadow"
+            >
+                <table class="min-w-full table-auto">
+                    <thead class="bg-neutral-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left">ID</th>
+                            <th class="px-4 py-2 text-left">Motivo</th>
+                            <th class="px-4 py-2 text-left">Fecha Inicio</th>
+                            <th class="px-4 py-2 text-left">Fecha Fin</th>
+                            <th class="px-4 py-2 text-left">Justificado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Iterar sobre las solicitudes de vacaciones -->
+                        <% absences.forEach(absence => { %>
+                        <tr class="border-b hover:bg-neutral-800">
+                            <td class="px-4 py-2"><%= absence.absenceID %></td>
+                            <td class="px-4 py-2"><%= absence.reason %></td>
+                            <td class="px-4 py-2">
+                                <%= new
+                                Date(absence.startDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="px-4 py-2">
+                                <%= new
+                                Date(absence.endDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="px-4 py-2">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                                >
+                                    <a
+                                        href="/approve/<%= absence.id %>"
+                                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                                    >
+                                        Aprobar
+                                    </a>
+                                    <a
+                                        href="/reject/<%= absence.id %>"
+                                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                                    >
+                                        Rechazar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <a
-      href="/absence"
-      class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      >Regresar</a
+        href="/absence"
+        class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >Regresar</a
     >
-  </div>
-  
+</div>

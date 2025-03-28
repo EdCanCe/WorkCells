@@ -6,39 +6,32 @@ document.addEventListener("DOMContentLoaded", function () {
     const rfcInput = document.getElementById("rfc");
     const rfcFormatError = document.getElementById("rfcFormatError");
 
-    // Campos adicionales que deben contener solo letras
     const nameFields = document.querySelectorAll("#birthName, #surname");
+
+    const mailInput = document.getElementById("mail");
+    const mailFormatError = document.getElementById("mailFormatError");
 
     // Campos adicionales del formulario
     const additionalFields = document.querySelectorAll(
-        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK"
+        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK, #prioritaryDepartmentIDFK"
     );
 
     // Expresiones regulares para validaciones
     const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
     const rfcRegex = /^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/;
     const lettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Solo letras y espacios
+    const mailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|nuclea\.solution)$/;
 
-    // Validación en tiempo real de los campos que solo deben contener letras
-    nameFields.forEach((field) => {
-        let errorSpan = document.createElement("span");
-        errorSpan.classList.add("error-message");
-        errorSpan.style.color = "red";
-        field.insertAdjacentElement("afterend", errorSpan);
-
-        field.addEventListener("input", function () {
-            const value = field.value;
-            if (!lettersRegex.test(value)) {
-                errorSpan.textContent =
-                    "It must not contain numbers or special characters.";
-                field.setCustomValidity(
-                    "It must not contain numbers or special characters."
-                );
-            } else {
-                errorSpan.textContent = "";
-                field.setCustomValidity(""); // Restablecer el mensaje si es válido
-            }
-        });
+    mailInput.addEventListener("input", function () {
+        const value = mailInput.value;
+        if (!mailRegex.test(value)) {
+            mailFormatError.textContent =
+                "The e-mail format or domain is wrong.";
+            mailInput.setCustomValidity("The e-mail format or domain is wrong");
+        } else {
+            mailFormatError.textContent = "";
+            mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
+        }
     });
 
     // Validar CURP en tiempo real
@@ -90,6 +83,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    nameFields.forEach((field) => {
+        let errorSpan = document.createElement("span");
+        errorSpan.classList.add("error-message");
+        errorSpan.style.color = "#DC2626";
+        field.insertAdjacentElement("afterend", errorSpan);
+
+        field.addEventListener("input", function () {
+            const value = field.value;
+            if (!lettersRegex.test(value)) {
+                errorSpan.textContent =
+                    "It must not contain numbers or special characters.";
+                field.setCustomValidity(
+                    "It must not contain numbers or special characters."
+                );
+            } else {
+                errorSpan.textContent = "";
+                field.setCustomValidity(""); // Restablecer el mensaje si es válido
+            }
+        });
+    });
+
     // Prevenir el envío del formulario si las validaciones no son correctas
     form.addEventListener("submit", function (event) {
         let isValid = true;
@@ -108,14 +122,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (rfcInput.value.length < 13 || !rfcRegex.test(rfcInput.value)) {
             rfcFormatError.textContent =
-                "RFC must be 18 characters long and in the correct format.";
+                "RFC must be 13 characters long and in the correct format.";
             rfcInput.setCustomValidity(
-                "RFC must be 18 characters long and in the correct format."
+                "RFC must be 13 characters long and in the correct format."
             );
             isValid = false;
         } else {
             rfcFormatError.textContent = "";
             rfcInput.setCustomValidity("");
+        }
+
+        if (!mailRegex.test(mailInput.value)) {
+            mailFormatError.textContent =
+                "The e-mail format or domain is wrong.";
+            mailInput.setCustomValidity("The e-mail format or domain is wrong");
+            isValid = false;
+        } else {
+            mailFormatError.textContent = "";
+            mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
         }
 
         nameFields.forEach((field) => {

@@ -3,18 +3,21 @@ const Employee = require("../models/employee.model");
 exports.getAdd = (request, response, next) => {
     const mensaje = request.session.info || ""; // Obtener mensaje de la sesión
 
-    Employee.fetchCountry()
-        .then(([countries]) => {
-            return Employee.fetchRoleID().then(([roles]) => {
-                // Limpiar el mensaje después de usarlo
-                request.session.info = "";
-                response.render("employeeAdd", {
-                    employees: countries, // Lista de países
-                    roles: roles, // Lista de roles
-                    isLoggedIn: request.session.isLoggedIn || false,
-                    info: mensaje, // Mensaje de sesión
-                    csrfToken: request.csrfToken(),
-                });
+    Promise.all([
+        Employee.fetchCountry(),
+        Employee.fetchRoleID(),
+        Employee.fetchDepartment(),
+    ])
+        .then(([[countries], [roles], [departments]]) => {
+            // Limpiar el mensaje después de usarlo
+            request.session.info = "";
+            response.render("employeeAdd", {
+                employees: countries, // Lista de países
+                roles: roles, // Lista de roles
+                departments: departments, // Lista de departamentos
+                isLoggedIn: request.session.isLoggedIn || false,
+                info: mensaje, // Mensaje de sesión
+                csrfToken: request.csrfToken(),
             });
         })
         .catch((error) => {
@@ -24,6 +27,7 @@ exports.getAdd = (request, response, next) => {
 };
 
 exports.postAdd = (request, response, next) => {
+    console.log("Datos del formulario:", request.body); // 👈 Depuración aquí
     const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
 
     // Limpiar el mensaje después de usarlo
@@ -44,7 +48,8 @@ exports.postAdd = (request, response, next) => {
         request.body.colony,
         request.body.workModality,
         request.body.userRoleIDFK,
-        request.body.countryUserIDFK
+        request.body.countryUserIDFK,
+        request.body.prioritaryDepartmentIDFK
     );
 
     // Intentar guardar el empleado
