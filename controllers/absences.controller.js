@@ -141,7 +141,7 @@ exports.getRoot = (request, response, next) => {
 
 exports.getListPaginated = async (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
-    const limit = 10;
+    const limit = 5;
     const offset = (page - 1) * limit;
 
     try {
