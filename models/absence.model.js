@@ -71,7 +71,7 @@ ORDER BY startDate DESC`);
         return db.execute(
             `(SELECT * FROM absence WHERE startDate BETWEEN ? AND ? AND absenceUserIDFK = ?)
     UNION
-    (SELECT * FROM absence WHERE startDate BETWEEN ? AND ? AND absenceUserIDFK = ?)`,
+    (SELECT * FROM absence WHERE endDate BETWEEN ? AND ? AND absenceUserIDFK = ?)`,
             [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
