@@ -63,44 +63,57 @@ exports.postRequestDeny = (request, response, next) => {
 exports.getRequest = (request, response, next) => {
     const mensaje = request.session.info || "";
     request.session.info = ""; // Limpiar la sesión después de usar el mensaje
-
-    Absence.fetchAllWithName()
+    const limit = 10;
+    const offset = 0;
+    Absence.fetchPaginated(limit, offset)
         .then(([rows, fieldData]) => {
-            // Asegúrate de pasar "rows" como "vacations"
             response.render("absenceRequests", {
                 isLoggedIn: request.session.isLoggedIn || false,
                 csrfToken: request.csrfToken(),
                 username: request.session.username || "",
-                absences: rows, // Pasar correctamente "rows" como "absence"
+                absences: rows,
                 info: mensaje,
             });
         })
-        .catch((error) => {
-            console.error(error); // Mejor manejo de error
-            response.status(500).send("Error al obtener los datos.");
-        });
-    console.log(request.session);
 };
 
-exports.postAdd = (req, res, next) => {
-    console.log(req.body);
-    Absence.getID(req.session.mail)
+
+exports.getRequestsPaginated = (request, response, next) => {
+    // Recibimos el parámetro "page" desde la query (por defecto 0)
+    const page = parseInt(request.query.page) || 0;
+    const limit = 10;
+    const offset = page * limit;
+    Absence.fetchPaginated(limit, offset)
+    .then(([rows, fieldData]) => {
+        // Se devuelve el arreglo de ausencias (si no hay resultados, se puede enviar un arreglo vacío)
+        response.status(200).json(rows);
+    })
+    .catch(error => {
+        console.error("Error al obtener solicitudes paginadas:", error);
+        response.status(500).json({ error: "Error al obtener los datos." });
+    });
+};
+
+
+exports.postAdd = (request, response, next) => {
+    console.log(request.body);
+    Absence.getID(request.session.mail)
         .then(([rows]) => {
             if (rows.length === 0) {
-                return res.sendStatus(500);
+                return response.sendStatus(500);
             }
             const userID = rows[0].userID;
             const absence = new Absence(
-                req.body.startDate,
-                req.body.endDate,
-                req.body.reason,
+                request.body.startDate,
+                request.body.endDate,
+                request.body.reason,
                 userID
             );
             return absence.save().then((absenceID) => {
-                req.session.info = `Absence from ${absence.startDate} to ${absence.endDate} created`;
-                if (req.file) {
+                request.session.info = `Absence from ${absence.startDate} to ${absence.endDate} created`;
+                if (request.file) {
                     const media = new AbsenceMedia(
-                        req.file.filename,
+                        request.file.filename,
                         absenceID
                     );
                     return media.save();
@@ -109,11 +122,11 @@ exports.postAdd = (req, res, next) => {
             });
         })
         .then(() => {
-            res.redirect("/absence");
+            response.redirect("/absence");
         })
         .catch((err) => {
             console.log(err);
-            res.send(500);
+            response.send(500);
         });
 };
 
