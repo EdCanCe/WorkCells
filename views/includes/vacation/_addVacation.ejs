@@ -1,5 +1,5 @@
 <div class="container mx-auto p-6 max-w-2xl">
-    <div class="bg-neutral-800 shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-neutral-700/25 shadow-lg rounded-lg overflow-hidden">
         <!-- Encabezado -->
         <h2 class="text-2xl font-semibold text-center">Request Vacation</h2>
 
@@ -39,7 +39,9 @@
                 <!-- Fechas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-lg font-medium text-neutral-100">
+                        <label
+                            class="block text-lg font-medium text-neutral-100"
+                        >
                             Start date
                         </label>
                         <input
@@ -52,7 +54,9 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-lg font-medium text-neutral-100">
+                        <label
+                            class="block text-lg font-medium text-neutral-100"
+                        >
                             End date
                         </label>
                         <input
@@ -82,13 +86,13 @@
                 <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4">
                     <a
                         href="/vacations"
-                        class="px-6 py-3 bg-neutral-700 text-white rounded-md hover:bg-neutral-800 transition duration-200 text-center"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
                     >
                         Cancel
                     </a>
                     <button
                         type="submit"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
                     >
                         Submit
                     </button>

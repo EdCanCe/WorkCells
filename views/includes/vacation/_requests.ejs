@@ -1,24 +1,24 @@
 <div class="flex-1 p-6">
     <div class="max-w-7xl mx-auto">
-        <div class="bg-neutral-800 shadow-lg rounded-lg">
+        <div class="bg-neutral-700/25 shadow-lg rounded-lg">
             <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    Vacation Requests
-                </h2>
+                <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
             </div>
             <div class="p-6">
-                <div class="overflow-x-auto bg-neutral-700/50 p-4 rounded-lg shadow">
+                <div
+                    class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
+                >
                     <table id="vacations-table" class="min-w-full table-auto">
                         <thead class="bg-neutral-800">
                             <tr>
                                 <th class="px-4 py-2 text-left">Full name</th>
                                 <th class="px-4 py-2 text-left">Reason</th>
-                                <th class="px-4 py-2 text-left">
-                                    Start Date
-                                </th>
+                                <th class="px-4 py-2 text-left">Start Date</th>
                                 <th class="px-4 py-2 text-left">End Date</th>
                                 <th class="px-4 py-2 text-left">Duration</th>
-                                <th class="px-4 py-2 text-center">Leader Status</th>
+                                <th class="px-4 py-2 text-center">
+                                    Leader Status
+                                </th>
                                 <th class="px-4 py-2 text-center">HR Status</th>
                                 <th class="px-4 py-2 text-center">Actions</th>
                             </tr>
@@ -27,7 +27,10 @@
                             <!-- Iterar sobre las solicitudes de vacaciones -->
                             <% vacations.forEach(vacation => { %>
                             <tr class="border-b hover:bg-neutral-800">
-                                <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
+                                <td class="px-4 py-2">
+                                    <%= vacation.birthName + " " +
+                                    vacation.surname %>
+                                </td>
                                 <td class="px-4 py-2">
                                     <%= vacation.reason %>
                                 </td>
@@ -41,26 +44,46 @@
                                     Date(vacation.endDate).toLocaleDateString('es-MX')
                                     %>
                                 </td>
-                                <td class="px-4 py-2 total-days" 
+                                <td
+                                    class="px-4 py-2 total-days"
                                     data-start-date="<%= vacation.startDate %>"
-                                    data-end-date="<%= vacation.endDate %>">
-                                </td>
+                                    data-end-date="<%= vacation.endDate %>"
+                                ></td>
                                 <td class="px-4 py-2">
                                     <% if (vacation.leaderStatus === 1) { %>
-                                        <span class="text-green-600 font-semibold text-center">Approved</span>
-                                    <% } else if (vacation.leaderStatus === 0) { %>
-                                        <span class="text-red-600 font-semibold text-center">Denied</span>
+                                    <span
+                                        class="text-green-600 font-semibold text-center"
+                                        >Approved</span
+                                    >
+                                    <% } else if (vacation.leaderStatus === 0) {
+                                    %>
+                                    <span
+                                        class="text-red-600 font-semibold text-center"
+                                        >Denied</span
+                                    >
                                     <% } else { %>
-                                        <span class="text-neutral-500 font-semibold text-center">Pending</span>
+                                    <span
+                                        class="text-neutral-500 font-semibold text-center"
+                                        >Pending</span
+                                    >
                                     <% } %>
                                 </td>
                                 <td class="px-4 py-2">
                                     <% if (vacation.hrStatus === 1) { %>
-                                        <span class="text-green-600 font-semibold text-center">Approved</span>
+                                    <span
+                                        class="text-green-600 font-semibold text-center"
+                                        >Approved</span
+                                    >
                                     <% } else if (vacation.hrStatus === 0) { %>
-                                        <span class="text-red-600 font-semibold text-center">Denied</span>
+                                    <span
+                                        class="text-red-600 font-semibold text-center"
+                                        >Denied</span
+                                    >
                                     <% } else { %>
-                                        <span class="text-neutral-500 font-semibold text-center">Pending</span>
+                                    <span
+                                        class="text-neutral-500 font-semibold text-center"
+                                        >Pending</span
+                                    >
                                     <% } %>
                                 </td>
                                 <td class="px-4 py-2">
@@ -69,7 +92,7 @@
                                     >
                                         <button
                                             href="/vacation/requests/approve/<%= vacation.vacationID %>"
-                                            class="approve-btn px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 text-center"
+                                            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
                                             data-url="/vacation/requests/approve/<%= vacation.vacationID %>"
                                             data-csrf="<%= csrfToken %>"
                                         >
@@ -77,7 +100,7 @@
                                         </button>
                                         <button
                                             href="/vacation/requests/deny/<%= vacation.vacationID %>"
-                                            class="deny-btn px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-center"
+                                            class="btn bg-[#830000] text-white px-6 py-2 rounded-md hover:bg-[#470000]/80"
                                             data-url="/vacation/requests/deny/<%= vacation.vacationID %>"
                                             data-csrf="<%= csrfToken %>"
                                         >
@@ -94,7 +117,7 @@
         </div>
         <a
             href="/vacation"
-            class="inline-block mt-6 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            class="inline-block mt-6 px-6 py-2 bg-[#1B3F43] text-white rounded-md hover:bg-[#1B3F43]"
             >Back</a
         >
     </div>
@@ -107,13 +130,18 @@
         rows.forEach((row) => {
             const totalDaysCell = row.querySelector(".total-days");
             if (totalDaysCell) {
-                const startDate = new Date(totalDaysCell.getAttribute("data-start-date"));
-                const endDate = new Date(totalDaysCell.getAttribute("data-end-date"));
-                
+                const startDate = new Date(
+                    totalDaysCell.getAttribute("data-start-date")
+                );
+                const endDate = new Date(
+                    totalDaysCell.getAttribute("data-end-date")
+                );
+
                 // Ajustar las fechas para incluir el día inicial y final
                 const timeDifference = endDate - startDate;
-                const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
-                
+                const totalDays =
+                    Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+
                 // Asignar el total de días a la celda correspondiente
                 totalDaysCell.innerText = totalDays;
             }
@@ -121,7 +149,7 @@
     });
 
     // Agregar event listener a todos los botones de "Approve"
-    
+
     document.querySelectorAll(".approve-btn").forEach((button) => {
         button.addEventListener("click", async function (event) {
             const url = this.dataset.url;
@@ -144,16 +172,18 @@
                 }
                 const data = await response.json();
                 // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest('td');
+                const tableCell = this.closest("td");
                 // Reemplazar el contenido con el nuevo estado
-                tableCell.innerHTML = '<span class="text-green-600 font-semibold text-center">Approved</span>';
-                
+                tableCell.innerHTML =
+                    '<span class="text-green-600 font-semibold text-center">Approved</span>';
             } catch (err) {
                 console.error("Error al aprobar:", err);
                 // Restaurar el estado del botón en caso de error
                 this.disabled = false;
                 this.innerText = originalText;
-                alert("Hubo un error al procesar la solicitud. Por favor, intente nuevamente.");
+                alert(
+                    "Hubo un error al procesar la solicitud. Por favor, intente nuevamente."
+                );
             }
         });
     });
@@ -177,12 +207,13 @@
                 }
                 const data = await response.json();
                 // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest('td');
+                const tableCell = this.closest("td");
                 // Reemplazar el contenido con el nuevo estado
-                tableCell.innerHTML = '<span class="text-red-600 font-semibold text-center">Denied</span>';
+                tableCell.innerHTML =
+                    '<span class="text-red-600 font-semibold text-center">Denied</span>';
             } catch (err) {
                 console.error("Error al denegar:", err);
-            } 
+            }
         });
     });
 </script>
