@@ -88,15 +88,17 @@
     </div>
 
     <!-- Días del calendario -->
-    <div class="grid grid-cols-7 gap-1">
+    <div id="calendarContainer" class="grid grid-cols-7 gap-1">
         
     </div>
+
 </div>
 
 <script>
 
     const currentDate = document.querySelector('[name="current-date"]');
     const typeOfRender = document.querySelector('[name="typeOfRender"]');
+    const calendarContainer = document.getElementById('calendarContainer');
 
     const formatDateForSQL = (date) => {
         return date.toISOString().split("T")[0];
@@ -116,7 +118,7 @@
         }).then(result => {
             return result.json(); //Regresa otra promesa
         }).then(data => {
-            // borrar tabla
+            calendarContainer.innerHTML = "";
             // añadir nueva tabla
             currentDate.setAttribute('content', usedDate);
             console.log(data);
