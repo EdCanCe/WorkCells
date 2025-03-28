@@ -90,8 +90,16 @@
         const startDateInput = document.getElementById("startInput");
         const endDateInput = document.getElementById("endInput");
         const reasonInput = document.getElementById("reason");
+        const date = new Date();
 
-        const today = new Date().toISOString().split("T")[0];
+        const now = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate()
+        );
+
+        const today = now.toISOString().split("T")[0];
+        console.log(today);
         startDateInput.min = today;
         endDateInput.min = today;
 
@@ -123,5 +131,21 @@
             calculateDays();
         });
         endDateInput.addEventListener("change", calculateDays);
+
+        const evidenceInput = document.getElementById("evidenceInput");
+
+        evidenceInput.addEventListener("change", function () {
+            const file = this.files[0]; // Obtiene el archivo seleccionado
+            const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+
+            if (file) {
+                if (file.size > maxSize) {
+                    alert(
+                        `El archivo es demasiado grande. El tamaño máximo permitido es 10 MB.`
+                    );
+                    this.value = ""; // Borra el archivo seleccionado
+                }
+            }
+        });
     });
 </script>
