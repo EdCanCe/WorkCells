@@ -204,7 +204,7 @@ exports.getRoot = (request, response, next) => {
                                         info: mensaje,
                                         isMonthView,
                                         days: daysArray,
-                                        weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                                        weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                                         formattedStart: formatDateWithOrdinal(startDate),
                                         formattedEnd: formatDateWithOrdinal(endDate),
                                         formattedMonth: startDate.toLocaleString('default', { month: 'long' }),
