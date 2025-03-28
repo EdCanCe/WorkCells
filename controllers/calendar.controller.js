@@ -277,7 +277,7 @@ exports.getFetch = (request, response, next) => {
                                         days: daysArray,
                                         formattedStart: formatDateWithOrdinal(startDate),
                                         formattedEnd: formatDateWithOrdinal(endDate),
-                                        formattedMonth: startDate.toLocaleString('default', { month: 'long' }),
+                                        formattedMonth: startDate.toLocaleString('default', { month: 'long' }) + ", " + startDate.getFullYear(),
                                     });
                                 })
                                 .catch((error) => {
