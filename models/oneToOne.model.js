@@ -56,4 +56,11 @@ module.exports = class OneToOne {
     					(SELECT COUNT(*) FROM oneOnOneQuestion) AS questionAmount,
     					(SELECT COUNT(*) FROM oneOnOneMeasurable) AS measurableAmount`);
     }
+
+    static getFullName(email) {
+        return db.execute(
+            `SELECT birthName, surname FROM user WHERE mail = ?`,
+            [email]
+        );
+    }
 };
