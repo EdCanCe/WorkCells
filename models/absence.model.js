@@ -1,3 +1,4 @@
+const { off } = require("process");
 const db = require("../util/database");
 const { v4: uuidv4 } = require("uuid");
 
@@ -66,7 +67,6 @@ ORDER BY startDate DESC`);
         return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email]);
     }
 
-
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(
             `(SELECT * FROM absence WHERE startDate BETWEEN ? AND ? AND absenceUserIDFK = ?)
@@ -80,6 +80,19 @@ ORDER BY startDate DESC`);
         return db.execute(
             "UPDATE absence SET justified = ? WHERE absenceID = ?",
             [status, absenceId]
+        );
+    }
+
+    static getPagination(limit, offset, id) {
+        return db.execute(
+            `SELECT a.*, am.mediaLink 
+                FROM absence AS a 
+                LEFT JOIN absenceMedia AS am 
+                ON a.absenceID = am.absenceIDFK 
+                WHERE a.absenceUserIDFK = ? 
+                ORDER BY a.startDate DESC 
+                LIMIT ? OFFSET ?`,
+            [id, limit, offset]
         );
     }
 };
