@@ -73,163 +73,13 @@ exports.getRoot = (request, response, next) => {
     //console.log(preSqlStartDate, preSqlEndDate);
     console.log(sqlStartDate, sqlEndDate);
 
-    Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
-        .then(([rows, fieldData]) => {
-            const holidayRows = rows;
-            Vacation.fetchByDateType(sqlStartDate, sqlEndDate, request.session.userID)
-                .then(([rows, fieldData]) => {
-                    const vacationRows = rows;
-                    Absence.fetchByDateType(sqlStartDate, sqlEndDate, request.session.userID)
-                        .then(([rows, fieldData]) => {
-                            const absenceRows = rows;
-                            OneToOne.fetchByDateType(sqlStartDate, sqlEndDate, request.session.userID)
-                                .then(([rows, fieldData]) => {
-                                    const oneToOneRows = rows;
+    response.render("calendar", {
+        today: formatDateForSQL(today),
+        info: mensaje,
+        weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        isMonthView,
+    });
 
-                                    // Lógica para hacer el arreglo a renderizar
-
-                                    const daysMap = new Map(); // Usamos Map para acceso rápido por fecha
-                                    const currentDate = new Date(preSqlStartDate); // Índice para recorrer cada uno de los días
-
-                                    // Genera un arreglo vacío para los eventos de cada día
-                                    while (currentDate <= preSqlEndDate) {
-                                        const dateStr = formatDateForSQL(currentDate);
-                                        daysMap.set(dateStr, { // La llave para los elementos del mapa es la fecha en string
-                                            date: new Date(currentDate),
-                                            dayNumber: currentDate.getDate(),
-                                            events: {
-                                                vacations: [],
-                                                absences: [],
-                                                holidays: [],
-                                                oneToOnes: []
-                                            },
-                                            isEmpty: false // Para saber si es un dato dentro del mes, o únicamente es para completar el grid
-                                        });
-                                        currentDate.setDate(currentDate.getDate() + 1);
-                                    }
-
-                                    // Procesar feriados (eventos de un día)
-                                    holidayRows.forEach(holiday => {
-                                        const date = new Date(holiday.usedDate);
-                                        const day = daysMap.get(formatDateForSQL(date));
-                                        if (day) {
-                                            day.events.holidays.push(holiday);
-                                        }
-                                    });
-
-                                    // Procesar on to ones (eventos de un día)
-                                    oneToOneRows.forEach(oneToOne => {
-                                        const date = new Date(oneToOne.meetingDate);
-                                        const day = daysMap.get(formatDateForSQL(date));
-                                        if (day) {
-                                            day.events.oneToOnes.push(oneToOne);
-                                        }
-                                    });
-
-                                    // Procesar vacaciones (eventos de múltiples días)
-                                    vacationRows.forEach(vacation => {
-                                        const start = new Date(vacation.startDate);
-                                        const end = new Date(vacation.endDate);
-                                        const current = new Date(start);
-
-                                        // Por cada día del que la vacación es parte le añade al mapa
-                                        while (current <= end) {
-                                            const dateStr = formatDateForSQL(current);
-                                            const day = daysMap.get(dateStr);
-                                            if (day) {
-                                                day.events.vacations.push({
-                                                    ...vacation, // Pasa los datos ya existentes
-                                                    isStart: dateStr === formatDateForSQL(vacation.startDate),
-                                                    isEnd: dateStr === formatDateForSQL(vacation.endDate)
-                                                });
-                                            }
-                                            current.setDate(current.getDate() + 1);
-                                        }
-                                    });
-
-                                    // Procesar ausencias (eventos de múltiples días)
-                                    absenceRows.forEach(absence => {
-                                        const start = new Date(absence.startDate);
-                                        const end = new Date(absence.endDate);
-                                        const current = new Date(start);
-
-                                        // Por cada día del que la ausencia es parte le añade al mapa
-                                        while (current <= end) {
-                                            const dateStr = formatDateForSQL(current);
-                                            const day = daysMap.get(dateStr);
-                                            if (day) {
-                                                day.events.absences.push({
-                                                    ...absence, // Pasa los datos ya existentes
-                                                    isStart: dateStr === formatDateForSQL(absence.startDate),
-                                                    isEnd: dateStr === formatDateForSQL(absence.endDate)
-                                                });
-                                            }
-                                            current.setDate(current.getDate() + 1);
-                                        }
-                                    });
-
-                                    // Convierte el mapa a array
-                                    let daysArray = Array.from(daysMap.values());
-
-                                    // En caso de ser mensual, le dice a los días extras que no son parte del mes
-                                    if (isMonthView) {
-                                        // Obtener el día de la semana del primer día del mes
-                                        const firstDayOfWeek = startDate.getDay();
-                                        
-                                        // Marcar días anteriores al mes como que están fuera
-                                        for (let i = 0; i < firstDayOfWeek; i++) {
-                                            daysArray[i] = {
-                                                ...daysArray[i],
-                                                isOutside: true,
-                                            };
-                                        }
-                                        
-                                        // Obtener el día de la semana del último día del mes
-                                        const totalDaysInMonth = endDate.getDate();
-                                        const totalCellsNeeded = Math.ceil((totalDaysInMonth + firstDayOfWeek) / 7) * 7;
-                                        const daysToAddAtEnd = totalCellsNeeded - (totalDaysInMonth + firstDayOfWeek);
-                                        
-                                        // Marcar días anteriores al mes como que están fuera
-                                        for (let i = daysArray.length - daysToAddAtEnd; i < daysArray.length; i++) {
-                                            daysArray[i] = {
-                                                ...daysArray[i],
-                                                isOutside: true,
-                                            };
-                                        }
-                                    }
-
-                                    // console.log(daysArray);
-
-                                    response.render("calendar", {
-                                        today: formatDateForSQL(today),
-                                        info: mensaje,
-                                        isMonthView,
-                                        days: daysArray,
-                                        weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                                        formattedStart: formatDateWithOrdinal(startDate),
-                                        formattedEnd: formatDateWithOrdinal(endDate),
-                                        formattedMonth: startDate.toLocaleString('default', { month: 'long' }),
-                                    });
-                                })
-                                .catch((error) => {
-                                    console.error(error); // Mejor manejo de error
-                                    response.status(500).send("Error al obtener los datos. 1");
-                                });
-                        })
-                        .catch((error) => {
-                            console.error(error); // Mejor manejo de error
-                            response.status(500).send("Error al obtener los datos. 2");
-                        });
-                })
-                .catch((error) => {
-                    console.error(error); // Mejor manejo de error
-                    response.status(500).send("Error al obtener los datos. 3");
-                });
-        })
-        .catch((error) => {
-            console.error(error); // Mejor manejo de error
-            response.status(500).send("Error al obtener los datos. 4");
-        });
 };
 
 exports.getFetch = (request, response, next) => {
@@ -325,7 +175,6 @@ exports.getFetch = (request, response, next) => {
                                                 holidays: [],
                                                 oneToOnes: []
                                             },
-                                            isEmpty: false // Para saber si es un dato dentro del mes, o únicamente es para completar el grid
                                         });
                                         currentDate.setDate(currentDate.getDate() + 1);
                                     }
@@ -426,7 +275,6 @@ exports.getFetch = (request, response, next) => {
                                         today: formatDateForSQL(today),
                                         isMonthView,
                                         days: daysArray,
-                                        weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                                         formattedStart: formatDateWithOrdinal(startDate),
                                         formattedEnd: formatDateWithOrdinal(endDate),
                                         formattedMonth: startDate.toLocaleString('default', { month: 'long' }),

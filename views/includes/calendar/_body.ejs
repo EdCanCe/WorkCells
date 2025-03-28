@@ -17,7 +17,7 @@
                 </svg>
             </button>
             
-            <button onclick="navigateCalendar('today')" class="px-3 py-1 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700">
+            <button onclick="navigateCalendar('today')" class="px-3 py-1 font-medium rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700">
                 Today
             </button>
             
@@ -27,12 +27,7 @@
                 </svg>
             </button>
             
-            <span class="ml-2 font-medium text-lg">
-                <% if(isMonthView) { %>
-                    <%= formattedMonth %>
-                <% } else { %>
-                    <%= formattedStart %> - <%= formattedEnd %>
-                <% } %>
+            <span id="dateTitle" class="ml-2 font-medium text-lg">
             </span>
         </div>
 
@@ -68,10 +63,10 @@
                 </div>
             </div>
             
-            <button onclick="setViewPreference(false)" class="px-4 py-2 rounded-md flex items-center <%= !isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>">
+            <button onclick="setViewPreference(false)" class="px-4 py-2 rounded-md flex bg-neutral-800 items-center hover:bg-neutral-700">
                 View by Week
             </button>
-            <button onclick="setViewPreference(true)" class="px-4 py-2 rounded-md flex items-center <%= isMonthView ? 'bg-blue-600 text-white' : 'bg-neutral-800 text-neutral-100' %>">
+            <button onclick="setViewPreference(true)" class="px-4 py-2 rounded-md flex bg-neutral-800 items-center hover:bg-neutral-700">
                 View by Month
             </button>
         </div>
@@ -99,15 +94,60 @@
     const currentDate = document.querySelector('[name="current-date"]');
     const typeOfRender = document.querySelector('[name="typeOfRender"]');
     const calendarContainer = document.getElementById('calendarContainer');
+    const dateTitle = document.getElementById('dateTitle');
+
+    const loadFilters = () => {
+        const checkboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
+        
+        checkboxes.forEach(checkbox => {
+            const eventType = checkbox.dataset.type;
+            const eventElements = document.querySelectorAll(`.${eventType}-event`);
+
+            if (checkbox.checked) {
+                eventElements.forEach(el => el.classList.remove('hidden'));
+            } else {
+                eventElements.forEach(el => el.classList.add('hidden'));
+            }
+        });
+    };
 
     const formatDateForSQL = (date) => {
         return date.toISOString().split("T")[0];
     };
 
     const fetchByDate = (usedDate) => {
+        const isMonthView = typeOfRender.content === "true";
 
-        const createDay = (dayData) => {
+        const createDay = (day) => {
+            return `
+            <div class="${isMonthView ? 'h-24 max-h-24' : 'h-[500px] max-h-[500px]'} p-1 overflow-auto rounded bg-neutral-800 border border-neutral-600/50 ${day.isOutside ? 'opacity-30' : ''}">
+                <div class="text-right font-medium mb-1">${day.dayNumber}</div>
 
+                ${day.events.vacations.map(vacation => `
+                <a href="/vacation/${vacation.vacationID}" class="vacation-event block w-full text-xs mb-1 p-1 rounded text-white bg-blue-500 ${vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : ''} ${vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : ''}">
+                    Vacation
+                </a>
+                `).join('')}
+
+                ${day.events.absences.map(absence => `
+                <a href="/absence/${absence.absenceID}" class="absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500 ${absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : ''} ${absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : ''}">
+                    Absence
+                </a>
+                `).join('')}
+
+                ${day.events.holidays.map(holiday => `
+                <p class="holiday-event block w-full text-xs mb-1 p-1 rounded text-white bg-green-500">
+                    ${holiday.title || 'Feriado'}
+                </p>
+                `).join('')}
+
+                ${day.events.oneToOnes.map(oneToOne => `
+                <a href="/oneToOne/${oneToOne.oneOnOneID}" class="oneToOne-event block w-full text-xs mb-1 p-1 rounded text-white bg-purple-500">
+                    One To One
+                </a>
+                `).join('')}
+            </div>
+            `;
         }
 
         fetch(`/calendar/${usedDate}`, {
@@ -119,8 +159,16 @@
             return result.json(); //Regresa otra promesa
         }).then(data => {
             calendarContainer.innerHTML = "";
-            // añadir nueva tabla
+            
+            data.days.forEach(day => {
+                calendarContainer.innerHTML = calendarContainer.innerHTML + createDay(day);
+            });
+
+            dateTitle.innerHTML = isMonthView ? data.formattedMonth : (data.formattedStart + " - " + data.formattedEnd);
+
             currentDate.setAttribute('content', usedDate);
+
+            loadFilters();
             console.log(data);
         }).catch(err => {
             console.log(err);
@@ -140,15 +188,17 @@
         document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${30 * 24 * 60 * 60}; path=/`;
         const thisDate = new Date(currentDate.content);
         if(isMonthView){
+            typeOfRender.setAttribute('content', "true");
             fetchByDate(new Date(thisDate.getFullYear(), thisDate.getMonth()));
         } else {
+            typeOfRender.setAttribute('content', "false");
             fetchByDate(thisDate);
         }
     }
 
     function navigateCalendar(navigation) {
         // Convertir el valor de la cookie a booleano
-        const isMonthView = typeOfRender.content;
+        const isMonthView = typeOfRender.content === "true";
         const thisDate = new Date(currentDate.content);
         console.log(currentDate.content);
 
@@ -174,20 +224,6 @@
     }
 
 
-    const loadFilters = () => {
-        const checkboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
-        
-        checkboxes.forEach(checkbox => {
-            const eventType = checkbox.dataset.type;
-            const eventElements = document.querySelectorAll(`.${eventType}-event`);
-
-            if (checkbox.checked) {
-                eventElements.forEach(el => el.classList.remove('hidden'));
-            } else {
-                eventElements.forEach(el => el.classList.add('hidden'));
-            }
-        });
-    };
 
     document.addEventListener('DOMContentLoaded', function() {
         const filterButton = document.getElementById('filterButton');
@@ -203,5 +239,7 @@
             checkbox.addEventListener('change', loadFilters);
         });
     });
+
+    fetchByDate(currentDate.content);
 
 </script>
