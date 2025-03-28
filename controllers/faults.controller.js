@@ -73,16 +73,16 @@ exports.getRoot = (request, response, next) => {
     });
 };
 
-exports.listPaginated = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
+exports.listPaginated = async (request, response) => {
+  const page = parseInt(request.query.page) || 1;
   const limit = 10;
   const offset = (page - 1) * limit;
 
   try {
     const [rows] = await Fault.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
+    response.json(rows);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error al obtener las faltas" });
   }
 };
