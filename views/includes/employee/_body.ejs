@@ -1,0 +1,78 @@
+<div class="content p-4">
+    <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
+        <div class="card-content">
+            <h1 class="text-3xl font-semibold mb-4">Empleados</h1>
+            <% if (info) { %>
+            <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+                <%= info %>
+                <!-- Aquí se muestra el mensaje de éxito -->
+            </div>
+            <% } %>
+            <p class="mb-6">
+                En esta vista, se le mostrará al super admin una lista con todos
+                los empleados.
+                <a
+                    href="/employee/add"
+                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 float-right"
+                    >Add New Employee</a
+                >
+                <a
+                    href="/employee/me"
+                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-4"
+                    >Mi perfil</a
+                >
+            </p>
+
+            <div class="list space-y-4">
+                <div class="list-item bg-neutral-700/50 p-4 rounded-md">
+                    <div class="list-item-content">
+                        <div
+                            class="list-item-title flex justify-between items-center"
+                        >
+                            <span>Empleado 1</span>
+                            <div>
+                                <a
+                                    href="/employee/check"
+                                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-2"
+                                    >Check</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-item bg-neutral-700/50 p-4 rounded-md">
+                    <div class="list-item-content">
+                        <div
+                            class="list-item-title flex justify-between items-center"
+                        >
+                            <span>Empleado 2</span>
+                            <div>
+                                <a
+                                    href="/employee/check"
+                                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-2"
+                                    >Check</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-item bg-neutral-700/50 p-4 rounded-md">
+                    <div class="list-item-content">
+                        <div
+                            class="list-item-title flex justify-between items-center"
+                        >
+                            <span>Empleado 3</span>
+                            <div>
+                                <a
+                                    href="/employee/check"
+                                    class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-2"
+                                    >Check</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

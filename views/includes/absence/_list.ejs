@@ -1,0 +1,172 @@
+<div class="container mx-auto p-4">
+    <div class="bg-neutral-700/25 shadow rounded-lg overflow-hidden">
+        <div class="px-6 py-4 flex justify-end">
+            <a
+                href="/home"
+                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 mr-4"
+                >Home</a
+            >
+            <a
+                href="/absence/requests"
+                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 mr-4"
+                >Request</a
+            >
+            <a
+                href="/absence/add"
+                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 mr-4"
+                >Add</a
+            >
+        </div>
+
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-4">Ausencias</h2>
+            <% if (info != '') { %>
+            <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+                <%= info %>
+            </div>
+            <% } %>
+            <div id="tablaAbsences"></div>
+
+            <div class="flex justify-center mt-6">
+                <button
+                    id="prevPage"
+                    class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-l"
+                >
+                    Anterior
+                </button>
+                <button
+                    id="nextPage"
+                    class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-r"
+                >
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Calcular los días para cada fila una vez que la página se ha cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("#absences-table tbody tr");
+        rows.forEach((row) => {
+            const startDate = new Date(
+                row.querySelector(".total-days").getAttribute("data-start-date")
+            );
+            const endDate = new Date(
+                row.querySelector(".total-days").getAttribute("data-end-date")
+            );
+            const timeDifference = endDate - startDate;
+            const totalDays = 1 + timeDifference / (1000 * 3600 * 24);
+
+            // Asignar el total de días a la celda correspondiente
+            row.querySelector(".total-days").innerText = totalDays;
+        });
+    });
+
+    let currentPage = 1;
+
+    async function loadAbsences(page) {
+        const res = await fetch(`/absence/search?page=${page}`);
+        const data = await res.json();
+
+        let table = `<table
+                class="min-w-full divide-y divide-neutral-200"
+                id="absences-table"
+            >
+                <thead class="bg-neutral-800/50">
+                    <tr>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                        >
+                            Reason
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                        >
+                            Fecha de inicio
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                        >
+                            Fecha final
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                        >
+                            Total de días
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                        >
+                            Status
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                        >
+                            Evidence
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
+        if (data.length == 0) {
+            table += `<tr><td colspan="" class="text-center">No hay datos</td></tr>`;
+        } else {
+            data.forEach((ab) => {
+                table += `<tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            ${ab.reason}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            ${new Date(ab.startDate).toLocaleDateString(
+                                "es-MX"
+                            )}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            ${new Date(ab.endDate).toLocaleDateString("es-MX")}
+
+                        </td>
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm total-days"
+                            data-start-date=" ${ab.startDate}"
+                            data-end-date="${ab.endDate}"
+                        ></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">`;
+                if (ab.justified === 0) {
+                    table += `Denyed `;
+                } else if (ab.justified === 1) {
+                    table += `Approved `;
+                } else if (ab.justified === 2) {
+                    table += `On wating `;
+                }
+                table += `</td><td class="px-6 py-4 whitespace-nowrap text-sm">`;
+                if (ab.mediaLink) {
+                    table += `<a
+                                href="/uploads/${ab.mediaLink}"
+                                target="_blank"
+                                class="text-blue-600 hover:underline"
+                                >Ver evidencia</a
+                            >`;
+                } else {
+                    table += `Sin evidencia`;
+                }
+                table += `</td></tr>`;
+            });
+        }
+        table += `</tbody></table>`;
+        document.getElementById("tablaAbsences").innerHTML = table;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadAbsences(currentPage);
+        }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        loadAbsences(currentPage);
+    });
+    loadAbsences(currentPage);
+</script>

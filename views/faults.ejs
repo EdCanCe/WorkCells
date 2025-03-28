@@ -1,66 +1,45 @@
-<%- include('includes/_header') %> <%- include('includes/_navbar') %>
-<div class="content">
-  <div class="card">
-    <div class="card-content">
-      <h2>Falta administrativa</h2>
-      <p>
-        En este apartado el superadmin podrá ver, añadir y filtrar faltas
-        administrativas y el colaborador podrá ver sus faltas
-      </p>
+<%- include('includes/_header') %>
+
+<div class="flex bg-neutral-800/50 min-h-screen">
+  <div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6">Faltas Administrativas</h1>
+
+    <% if (info === "Error al ingresar datos.") { %>
+        <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+          <%= info %>
+        </div>
+      <% } else if (info && info !== '') { %>
+        <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+          <%= info %>
+        </div>
+      <% } %>
+      <div id="faltasTable" class="overflow-x-auto rounded-lg shadow"></div>
+
+      <div class="mt-6 flex justify-between">
+        <button
+          id="prevBtn"
+          class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+        >
+          Anterior
+        </button>
+        <button
+          id="nextBtn"
+          class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+        >
+          Siguiente
+        </button>
+
+        <a
+          href="/fault/add"
+          class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+        >
+          Registrar Nueva Falta
+        </a>
+      </div>
     </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th><abbr title="id">id</abbr></th>
-          <th><abbr title="nombre">nombre</abbr></th>
-          <th>puesto</th>
-          <th><abbr title="num">núm de falta</abbr></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>2</th>
-          <td>
-            <a href="/fault/check" title="Luis Lopez">Luis Lopez</a>
-          </td>
-          <td>Lider de departamento</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <th>3</th>
-          <td>
-            <a href="/check" title="Andres Juarez">Andres Juarez</a>
-          </td>
-          <td>colaborador</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <th>7</th>
-          <td>
-            <a href="fault/check" title="Leo Cervantes">Leo Cervantes</a>
-          </td>
-          <td>Lider de departamento</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <th>4</th>
-          <td>
-            <a href="fault/check" title="Emilio Guzman">Emilio Guzman</a>
-          </td>
-          <td>colaborador</td>
-          <td>3</td>
-        </tr>
-        <tr>
-          <th>9</th>
-          <td>
-            <a href="fault/check" title="Juan Rivera">Juan Rivera</a>
-          </td>
-          <td>colaborador</td>
-          <td>1</td>
-        </tr>
-      </tbody>
-    </table>
-    <a class="button" href="/fault/add">Añadir falta administrativa</a>
+
+    <script src="/javascript/paginedFaults.js"></script>
   </div>
+
+  <%- include('includes/_footer') %>
 </div>
-<%- include('includes/_footer') %>

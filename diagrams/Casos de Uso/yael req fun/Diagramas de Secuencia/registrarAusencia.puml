@@ -1,0 +1,79 @@
+@startuml
+
+actor navegador
+boundary routes
+boundary "Vista add.ejs" as add
+boundary "Vista list.ejs" as list
+control controller
+
+autonumber
+navegador -> routes: GET /absences/add
+activate routes
+routes -> controller: get_add(req, res)
+deactivate routes
+activate controller
+controller -> add: res.render('add.ejs')
+deactivate controller
+activate add
+add -> navegador: HTML
+deactivate add
+activate navegador
+
+navegador -> routes: POST /absences/add (req, res)
+deactivate navegador
+activate routes
+routes -> controller: post_add(req, res)
+deactivate routes
+activate controller
+
+create entity absence
+controller -> absence: new Modelo(req.body.valor)
+activate absence
+controller ->> absence: save()
+
+entity Absences
+entity AbsencesMedia
+database mysql
+
+absence ->> mysql: execute("INSERT INTO absence(?)", this.valor)
+activate mysql
+mysql -->> absence: Query OK
+deactivate mysql
+absence -->> controller: promesa
+deactivate absence
+
+create entity absenceMedia
+controller ->> absenceMedia : save()
+activate absenceMedia
+absenceMedia ->> mysql: execute("INSERT INTO \nabsenceMedia(?)", this.valor)
+activate mysql
+mysql -->> absenceMedia: Query OK
+deactivate mysql
+absenceMedia -->> controller: promesa
+deactivate absenceMedia
+
+controller -> routes: res.redirect('/')
+deactivate controller
+
+activate routes
+routes -> controller: get_root(req, res)
+deactivate routes
+activate controller
+controller ->> Absences: fetchAll()
+activate Absences
+Absences ->> mysql: execute("SELECT * FROM absence \nJOIN absenceMedia")
+activate mysql
+mysql -->> Absences: rows
+deactivate mysql
+Absences -->> controller: rows
+deactivate Absences
+
+controller -> list: res.render('list.ejs', rows)
+deactivate controller
+activate list
+list -> navegador: HTML
+deactivate list
+activate navegador
+
+
+@enduml

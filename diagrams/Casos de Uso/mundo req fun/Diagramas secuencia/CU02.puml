@@ -1,0 +1,91 @@
+@startuml
+actor Usuario
+boundary "calendar.routes" as Routes
+boundary "calendar.routes" as Ejs
+control "calendar.controller" as Controller
+entity "holiday.model" as Holiday
+entity "absence.model" as Absence
+entity "vacation.model" as Vacation
+entity "oneToOne.model" as OneToOne
+database "mysql" as MySQL
+
+autonumber
+
+activate Usuario
+Usuario -> Routes: GET /calendar
+
+activate Routes
+Routes -> Controller: getRoot(request, response)
+
+activate Controller
+Controller --> Routes: response.render()
+
+deactivate Controller
+Routes --> Usuario: HTML
+
+deactivate Routes
+
+Usuario -> Usuario: fetchByDate(currentDate.content)
+
+Usuario ->> Routes: GET /calendar/:date
+activate Routes
+
+Routes -> Controller: getFetch(request, response)
+deactivate Routes
+
+activate Controller
+Controller ->> Holiday: fetchByDateType(startDate, endDate)
+activate Holiday
+Holiday ->> MySQL: db.execute(`SELECT usedDate, title\nFROM usedHoliday, templateHoliday WHERE \n usedHoliday.usedTemplateHolidayIDFK =\ntemplateHoliday.templateHolidayID\nAND usedDate BETWEEN ? AND ?;`, [startDate, endDate] )
+activate MySQL
+MySQL -->> Holiday: Datos obtenidos
+deactivate MySQL
+Holiday -->> Controller: Rows
+deactivate Holiday
+
+Controller ->> Absence: fetchByDateType(startDate, endDate, userID)
+activate Absence
+Absence ->> MySQL: db.execute(`(SELECT * FROM absence \nWHERE startDate BETWEEN ? AND ? AND absenceUserIDFK\n = ?) UNION (SELECT * FROM absence WHERE\nendDate BETWEEN ? AND ? AND absenceUserIDFK \n = ?)`, [startDate, endDate, userID, startDate,\nendDate, userID])
+activate MySQL
+MySQL -->> Absence: Datos obtenidos
+deactivate MySQL
+Absence -->> Controller: Rows
+deactivate Absence
+
+Controller ->> Vacation: fetchByDateType(startDate, endDate, userID)
+activate Vacation
+Vacation ->> MySQL: db.execute(`(SELECT * FROM vacation\nWHERE startDate BETWEEN ? AND ? ANDv\nacationUserIDFK = ?) UNION (SELECT * FROM vacation\nWHERE endDate BETWEEN ? AND ? AND vacationUserIDFK\n = ?)`, [startDate, endDate, userID, \n startDate, endDate, userID])
+activate MySQL
+MySQL -->> Vacation: Datos obtenidos
+deactivate MySQL
+Vacation -->> Controller: Rows
+deactivate Vacation
+
+Controller ->> OneToOne: fetchByDateType(startDate, endDate, userID)
+activate OneToOne
+OneToOne ->> MySQL: db.execute("SELECT * FROM oneOnOne\nWHERE meetingDate BETWEEN ? AND ? AND\noneOnOneUserIDFK = ?", [startDate,\nendDate, userID])
+activate MySQL
+MySQL -->> OneToOne: Datos obtenidos
+deactivate MySQL
+OneToOne -->> Controller: Rows
+
+deactivate OneToOne
+
+alt promesa_exitosa
+
+Controller -->> Usuario: result.json()
+
+Usuario -> Usuario: fetchByDate(usedDate)
+
+else excepción
+
+Controller -->> Usuario: status(500)
+Usuario -> Usuario: console.log(err)
+
+deactivate Controller
+
+end
+
+deactivate Usuario
+
+@enduml
