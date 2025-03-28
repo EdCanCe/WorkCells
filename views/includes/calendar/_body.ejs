@@ -4,6 +4,9 @@
     <div class="bg-blue-100 text-blue-800 p-4 rounded-lg mb-4"><%= info %></div>
     <% } %>
 
+    <meta name="current-date" content="<%= today %>">
+    <meta name="typeOfRender" content="<%= isMonthView %>">
+
     <!-- Controles de navegación y selector de vista -->
     <div class="flex justify-between items-center mb-4">
         <!-- Controles de navegación -->
@@ -86,79 +89,88 @@
 
     <!-- Días del calendario -->
     <div class="grid grid-cols-7 gap-1">
-        <% days.forEach((day, index) => { %>
-        <div class="<%= isMonthView ? 'h-24 max-h-24' : 'h-[500px] max-h-[500px]' %> p-1 overflow-auto rounded bg-neutral-800 border border-neutral-600/50 <%= day.isOutside ? 'opacity-30' : '' %>">
-            <div class="text-right font-medium mb-1"><%= day.dayNumber %></div>
-
-            <!-- Vacaciones - Add vacation-event class -->
-            <% day.events.vacations.forEach(vacation => { %>
-            <a href="/vacation/<%= vacation.vacationID %>" class="vacation-event block w-full text-xs mb-1 p-1 rounded text-white bg-blue-500 <%= vacation.isStart ? 'rounded-l-lg border-l-4 border-blue-700' : '' %> <%= vacation.isEnd ? 'rounded-r-lg border-r-4 border-blue-700' : '' %>">
-                Vacation
-            </a>
-            <% }); %>
-
-            <!-- Ausencias - Add absence-event class -->
-            <% day.events.absences.forEach(absence => { %>
-            <a href="/absence/<%= absence.absenceID %>" class="absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500 <%= absence.isStart ? 'rounded-l-lg border-l-4 border-red-700' : '' %> <%= absence.isEnd ? 'rounded-r-lg border-r-4 border-red-700' : '' %>">
-                Absence
-            </a>
-            <% }); %>
-
-            <!-- Feriados - Add holiday-event class -->
-            <% day.events.holidays.forEach(holiday => { %>
-            <p class="holiday-event block w-full text-xs mb-1 p-1 rounded text-white bg-green-500">
-                <%= holiday.title || 'Feriado' %>
-            </p>
-            <% }); %>
-
-            <!-- One-to-One - Add oneToOne-event class -->
-            <% day.events.oneToOnes.forEach(oneToOne => { %>
-            <a href="/oneToOne/<%= oneToOne.oneOnOneID %>" class="oneToOne-event block w-full text-xs mb-1 p-1 rounded text-white bg-purple-500">
-                One To One
-            </a>
-            <% }); %>
-        </div>
-        <% }); %>
+        
     </div>
 </div>
 
 <script>
+
+    const currentDate = document.querySelector('[name="current-date"]');
+    const typeOfRender = document.querySelector('[name="typeOfRender"]');
+
+    const formatDateForSQL = (date) => {
+        return date.toISOString().split("T")[0];
+    };
+
+    const fetchByDate = (usedDate) => {
+
+        const createDay = (dayData) => {
+
+        }
+
+        fetch(`/calendar/${usedDate}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(result => {
+            return result.json(); //Regresa otra promesa
+        }).then(data => {
+            // borrar tabla
+            // añadir nueva tabla
+            currentDate.setAttribute('content', usedDate);
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    const getCookieByName = (name) => {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) {
+            return match[2];
+        }
+        return null;
+    }
+
     // Función para establecer la preferencia de vista (mes o lista)
     function setViewPreference(isMonthView) {
         document.cookie = `isMonthView=${isMonthView ? "1" : "0"}; max-age=${30 * 24 * 60 * 60}; path=/`;
-        window.location.reload();
+        const thisDate = new Date(currentDate.content);
+        if(isMonthView){
+            fetchByDate(new Date(thisDate.getFullYear(), thisDate.getMonth()));
+        } else {
+            fetchByDate(thisDate);
+        }
     }
 
-    // Función para navegar entre semanas/meses
-    function navigateCalendar(direction) {
-        const currentParams = new URLSearchParams(window.location.search);
-        let dateParam = currentParams.get('date') || new Date().toISOString().split('T')[0];
-        let currentDate = new Date(dateParam);
+    function navigateCalendar(navigation) {
+        // Convertir el valor de la cookie a booleano
+        const isMonthView = typeOfRender.content;
+        const thisDate = new Date(currentDate.content);
+        console.log(currentDate.content);
+
+        console.log(isMonthView);
         
-        if (direction === 'today') {
-            window.location.search = '';
-            return;
-        }
-        
-        if (<%= isMonthView %>) {
-            // Navegación por meses
-            if (direction === 'prev') {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-            } else if (direction === 'next') {
-                currentDate.setMonth(currentDate.getMonth() + 1);
+        if (navigation === 'prev') {
+            if (isMonthView) {
+                thisDate.setMonth(thisDate.getMonth() - 1, 1);
+            } else { // Week view: retrocede 7 días
+                thisDate.setDate(thisDate.getDate() - 7);
             }
-        } else {
-            // Navegación por semanas
-            if (direction === 'prev') {
-                currentDate.setDate(currentDate.getDate() - 7);
-            } else if (direction === 'next') {
-                currentDate.setDate(currentDate.getDate() + 7);
+        } else if (navigation === 'today') {
+            thisDate.setTime(Date.now());
+        } else if (navigation === 'next') {
+            if (isMonthView) {
+                thisDate.setMonth(thisDate.getMonth() + 1, 1);
+            } else { // Week view: avanza 7 días
+                thisDate.setDate(thisDate.getDate() + 7);
             }
         }
         
-        currentParams.set('date', currentDate.toISOString().split('T')[0]);
-        window.location.search = currentParams.toString();
+        fetchByDate(thisDate);
     }
+
 
     const loadFilters = () => {
         const checkboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');

@@ -201,7 +201,7 @@ exports.getRoot = (request, response, next) => {
                                     // console.log(daysArray);
 
                                     response.render("calendar", {
-                                        today,
+                                        today: formatDateForSQL(today),
                                         info: mensaje,
                                         isMonthView,
                                         days: daysArray,
@@ -423,7 +423,7 @@ exports.getFetch = (request, response, next) => {
                                     // console.log(daysArray);
 
                                     response.status(200).json({
-                                        today,
+                                        today: formatDateForSQL(today),
                                         isMonthView,
                                         days: daysArray,
                                         weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
