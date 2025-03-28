@@ -3,6 +3,8 @@ const Absence = require("../models/absence.model");
 const OneToOne = require("../models/oneToOne.model");
 const Holiday = require("../models/holiday.model");
 const { end } = require("../util/database");
+const { formatDateWithOrdinal } = require('../util/formatDate');
+
 
 exports.getRoot = (request, response, next) => {
 
@@ -203,8 +205,9 @@ exports.getRoot = (request, response, next) => {
                                         isMonthView,
                                         days: daysArray,
                                         weekDays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                                        startDate,
-                                        endDate
+                                        formattedStart: formatDateWithOrdinal(startDate),
+                                        formattedEnd: formatDateWithOrdinal(endDate),
+                                        formattedMonth: startDate.toLocaleString('default', { month: 'long' }),
                                     });
                                 })
                                 .catch((error) => {
