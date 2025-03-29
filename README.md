@@ -11,7 +11,7 @@ npm install
 Para la ejecución de la aplicación usar:
 
 ```
-npm start
+npm run dev
 ```
 
 ## Avance 2
