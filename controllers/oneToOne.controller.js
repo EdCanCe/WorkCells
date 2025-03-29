@@ -19,14 +19,17 @@ exports.getOneToOneSchedule = (req, res, next) => {
 };
 
 exports.postOneToOneSchedule = (req, res, next) => {
-    console.log(req.body);
-    req.session.error = "";
-    req.session.info = "";
+    // console.log(req.body);
+    if (req.session.info) {
+        req.session.info = "";
+    }
+    if (req.session.error) {
+        req.session.error = "";
+    }
+
     OneToOne.getID(req.body.email)
         .then(([rows]) => {
             if (rows.length === 0) {
-                // El usuario no existe: se puede redirigir mostrando un error o enviar una respuesta
-                // Por ejemplo, redirigir a la misma vista con un mensaje de error:
                 req.session.error =
                     "El correo ingresado no se encuentra registrado.";
                 return res.redirect("/oneToOne/schedule");
