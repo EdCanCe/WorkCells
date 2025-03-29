@@ -1,7 +1,7 @@
 const db = require("../util/database");
 module.exports = class Measure {
 
-    constructor (evaluation, oneOnOneID, measurableID) {
+    constructor(evaluation, oneOnOneID, measurableID) {
         this.evaluation = evaluation;
         this.oneOnOneID = oneOnOneID;
         this.measurableID = measurableID;

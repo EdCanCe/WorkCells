@@ -1,7 +1,7 @@
 const db = require("../util/database");
 module.exports = class Answer {
 
-    constructor (answer, oneOnOneID, questionID) {
+    constructor(answer, oneOnOneID, questionID) {
         this.answer = answer;
         this.oneOnOneID = oneOnOneID;
         this.questionID = questionID;

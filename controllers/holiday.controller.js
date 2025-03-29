@@ -84,11 +84,11 @@ exports.listPaginated = async (request, response) => {
   const offset = (page - 1) * limit;
 
   try {
-      const [rows] = await Holiday.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
-      response.json(rows);
+    const [rows] = await Holiday.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
+    response.json(rows);
   } catch (err) {
-      console.error(err);
-      response.status(500).json({ error: "Error al obtener los días registrados." });
+    console.error(err);
+    response.status(500).json({ error: "Error al obtener los días registrados." });
   }
 };
 

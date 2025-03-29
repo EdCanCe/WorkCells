@@ -9,7 +9,7 @@ class Vacation {
     this.reason = reason;
   }
 
-  save(){
+  save() {
     const saveQuery = "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
     return db.execute(saveQuery, [this.userID, this.startDate, this.endDate, this.reason])
       .catch((error) => {
@@ -42,7 +42,7 @@ AND u.userID IN (
 );`, [userID]
     );
   }
-  
+
   static fetchAllWithNames(userID) {
     return db.execute(
       `SELECT 

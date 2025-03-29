@@ -15,11 +15,11 @@ periodSelect.addEventListener("change", () => {
     };
 
     const startDateISO = convertToISODate(periodSelect.value);
-    
+
     // Calcular fecha final (sumar 1 año)
     const [year, month, day] = periodSelect.value.split('/');
     const endDateISO = convertToISODate(`${parseInt(year) + 1}/${month}/${day}`);
-    
+
     startDateInput.min = startDateISO;
     startDateInput.max = endDateISO;
     endDateInput.min = startDateISO;

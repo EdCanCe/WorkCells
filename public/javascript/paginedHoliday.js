@@ -23,9 +23,9 @@ async function loadHolidays(page) {
         <tr class="hover:bg-neutral-700 border-b border-gray-600">
           <td class="px-6 py-4">${holiday.nombre}</td>
           <td class="px-6 py-4">${new Date(holiday.fecha).toLocaleDateString(
-            "es-MX",
-            { weekday: "long", year: "numeric", month: "long", day: "numeric" }
-          )}</td>
+        "es-MX",
+        { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+      )}</td>
         </tr>
       `;
     });

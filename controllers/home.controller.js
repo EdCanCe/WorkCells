@@ -4,6 +4,6 @@ exports.getHomepage = (request, response, next) => {
 
 exports.getLogout = (request, response, next) => {
     request.session.destroy(() => {
-        response.redirect('/login'); 
+        response.redirect('/login');
     });
 }

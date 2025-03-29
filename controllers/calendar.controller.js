@@ -56,14 +56,14 @@ exports.getRoot = (request, response, next) => {
 
     let preSqlStartDate = startDate;
     let preSqlEndDate = endDate
-    if(isMonthView) {
+    if (isMonthView) {
         preSqlStartDate = getWeekDays(startDate).startingDate;
         preSqlEndDate = getWeekDays(endDate).endingDate;
     }
 
     preSqlStartDate = new Date(preSqlStartDate);
     preSqlEndDate = new Date(preSqlEndDate);
-    
+
     // Obtiene las fechas en formato SQL para hacer queries
     const sqlStartDate = formatDateForSQL(preSqlStartDate);
     const sqlEndDate = formatDateForSQL(preSqlEndDate);
@@ -128,14 +128,14 @@ exports.getFetch = (request, response, next) => {
 
     let preSqlStartDate = startDate;
     let preSqlEndDate = endDate
-    if(isMonthView) {
+    if (isMonthView) {
         preSqlStartDate = getWeekDays(startDate).startingDate;
         preSqlEndDate = getWeekDays(endDate).endingDate;
     }
 
     preSqlStartDate = new Date(preSqlStartDate);
     preSqlEndDate = new Date(preSqlEndDate);
-    
+
     // Obtiene las fechas en formato SQL para hacer queries
     const sqlStartDate = formatDateForSQL(preSqlStartDate);
     const sqlEndDate = formatDateForSQL(preSqlEndDate);
@@ -246,7 +246,7 @@ exports.getFetch = (request, response, next) => {
                                     if (isMonthView) {
                                         // Obtener el día de la semana del primer día del mes
                                         const firstDayOfWeek = startDate.getDay();
-                                        
+
                                         // Marcar días anteriores al mes como que están fuera
                                         for (let i = 0; i < firstDayOfWeek; i++) {
                                             daysArray[i] = {
@@ -254,12 +254,12 @@ exports.getFetch = (request, response, next) => {
                                                 isOutside: true,
                                             };
                                         }
-                                        
+
                                         // Obtener el día de la semana del último día del mes
                                         const totalDaysInMonth = endDate.getDate();
                                         const totalCellsNeeded = Math.ceil((totalDaysInMonth + firstDayOfWeek) / 7) * 7;
                                         const daysToAddAtEnd = totalCellsNeeded - (totalDaysInMonth + firstDayOfWeek);
-                                        
+
                                         // Marcar días anteriores al mes como que están fuera
                                         for (let i = daysArray.length - daysToAddAtEnd; i < daysArray.length; i++) {
                                             daysArray[i] = {

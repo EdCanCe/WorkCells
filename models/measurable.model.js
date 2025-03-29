@@ -3,7 +3,7 @@ module.exports = class Measurable {
 
 	static fetchAll() {
 		return db.execute(
-		`SELECT * FROM oneOnOneMeasurable`
+			`SELECT * FROM oneOnOneMeasurable`
 		);
 	}
 
