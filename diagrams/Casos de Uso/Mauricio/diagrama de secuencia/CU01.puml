@@ -1,60 +1,203 @@
-@startuml CU01 - Líder registra respuesta hacia ausencia de colaborador - Diagrama de secuencia
-actor Navegador
-boundary absence.ejs
-boundary absence.routes
-control absence.controller
-entity AbsenceModel
-database mysql
-
+@startuml
+actor "Líder" as Leader
+boundary "Interfaz (AJAX)" as UI
+boundary "absence.routes" as Router
+control "absences.controller" as Controller
+entity "absence.model" as Absence
+database "myPhpAdmin (MySQL)" as MySQL
 
 autonumber
-' Inicio del flujo
-activate Navegador
-Navegador -> absence.routes : GET /absence/requests
-deactivate Navegador
-activate absence.routes
-absence.routes -> absence.controller : getFaults(req, res)
-deactivate absence.routes
-activate absence.controller
 
+' El líder inicia la acción desde la vista
+activate Leader
+Leader -> UI: Click en botón "Approve" o "Deny"
+deactivate Leader
 
-' Se utiliza la instancia para obtener los datos
-absence.controller ->> AbsenceModel : fetchTop10()
-activate AbsenceModel
+' La interfaz envía la petición AJAX al router
+activate UI
+UI -> Router: POST /absence/requests/approve/:absenceID\n(o deny)
+deactivate UI
 
-AbsenceModel ->> mysql : SELECT * FROM absence LIMIT 10;
-activate mysql
-mysql -->> AbsenceModel : Datos obtenidos
-deactivate mysql
+' El router invoca el método correspondiente del controlador
+activate Router
+Router -> Controller: postRequestApprove(request, response)\n(o postRequestDeny)
+deactivate Router
 
-AbsenceModel -->> absence.controller : Retorno de datos de faltas.
-deactivate AbsenceModel
+' El controlador actualiza el estado de la ausencia
+activate Controller
+Controller -> Absence: updateStatus(absenceID, status)
+activate Absence
+Absence -> MySQL: db.execute("UPDATE absence SET justified = ? WHERE absenceID = ?", [status, absenceID])
+activate MySQL
+MySQL -->> Absence: Confirmación de actualización
+deactivate MySQL
+Absence -->> Controller: Resultado de la actualización
+deactivate Absence
 
-absence.controller -> absence.ejs : render(absence)
-activate absence.ejs
-absence.ejs -> Navegador : Mostrar faltas
-activate Navegador
-deactivate absence.ejs
-deactivate absence.controller
-deactivate absence.routes
+' Se envía la respuesta al cliente
+alt Promesa exitosa
+    Controller -->> Router: JSON { success: true, message: "Request approved" }\n(o "denied")
+else Error en la actualización
+    Controller -->> Router: JSON { success: false, message: "Error processing request" }
+end
+deactivate Controller
 
-Navegador -> absence.controller : POST /absence/requests/:response
-deactivate Navegador
-activate absence.controller
-absence.controller ->> AbsenceModel : saveResponse()
+' El router reenvía la respuesta a la interfaz AJAX
+activate Router
+Router -->> UI: Respuesta JSON
+deactivate Router
 
-activate AbsenceModel
-' absenceID, startDate, endDate, reason, justified, absenceUserIDFK
-AbsenceModel ->> mysql : INSERT INTO absence \nVALUES()
-activate mysql
-mysql -->> AbsenceModel : Datos obtenidos
-deactivate mysql
-AbsenceModel -->> absence.controller : Retorno modificiación de falta
-activate absence.ejs
-absence.controller -> absence.ejs : render()
-activate Navegador
-absence.ejs -> Navegador : Mostrar respuesta
-deactivate absence.ejs
-
-
+' La interfaz AJAX actualiza la vista en el navegador
+activate UI
+UI -> UI: Actualiza la vista mostrando el estado ("Approved"/"Denied")
+deactivate UI
 @enduml
+
+
+' @startuml CU - Líder registra respuesta hacia ausencia de colaborador - Diagrama de secuencia
+
+' actor Navegador as Leader
+' boundary "AJAX (JavaScript)" as AJAX
+' boundary "absences.routes" as Routes
+' control "absences.controller" as Controller
+' entity "Absence (Model)" as Absence
+' database "mysql (myPhpAdmin)" as MySQL
+
+' autonumber
+
+' ' Inicio del flujo: El líder interactúa con la vista en el navegador.
+' activate Leader
+' Leader -> AJAX: Clic en "Approve" o "Deny"
+' deactivate Leader
+
+' ' La llamada AJAX envía una solicitud POST al router
+' activate AJAX
+' AJAX -> Routes: POST /absence/requests/approve/:absenceID\n(o /deny/:absenceID)
+' deactivate AJAX
+
+' ' El router redirige la solicitud al controlador correspondiente
+' activate Routes
+' Routes -> Controller: postRequestApprove()/postRequestDeny(req, res)
+' deactivate Routes
+
+' ' El controlador procesa la solicitud y llama al modelo para actualizar el estado
+' activate Controller
+' Controller ->> Absence: updateStatus(absenceID, status)
+' activate Absence
+
+' ' El modelo ejecuta la consulta SQL para actualizar la ausencia
+' Absence ->> MySQL: UPDATE absence SET justified = ? WHERE absenceID = ?
+' activate MySQL
+' MySQL -->> Absence: Resultado de la actualización
+' deactivate MySQL
+
+' ' El modelo retorna la confirmación al controlador
+' Absence -->> Controller: Confirmación de actualización
+' deactivate Absence
+
+' ' El controlador envía la respuesta JSON a través de AJAX
+' Controller -> AJAX: JSON { success: true, message: "Request approved/denied" }
+' deactivate Controller
+
+' ' La respuesta es recibida por la llamada AJAX y se actualiza la vista en el navegador
+' activate AJAX
+' AJAX -> Leader: Actualiza estado en la interfaz (UI)
+' deactivate AJAX
+
+' @enduml
+
+
+' @startuml
+' actor "Líder" as Lider
+' participant "Navegador" as Browser
+' participant "Vista (absenceRequests.ejs)" as Vista
+' participant "AJAX (fetch)" as AJAX
+' participant "Router (absences.routes.js)" as Router
+' participant "Controlador\n(absences.controller.js)" as Controller
+' participant "Modelo\n(Absence)" as Model
+' database "Base de datos\n(myPhpAdmin)" as DB
+
+' == Inicio: Interacción en la vista ==
+' Lider -> Browser: Accede a la aplicación
+' Browser -> Vista: Solicita la vista de solicitudes de ausencia
+' Vista --> Browser: Renderiza tabla con botones (Approve/Deny)
+
+' == Acción del Líder ==
+' Lider -> Browser: Hace clic en "Approve"
+' Browser -> AJAX: Invoca función handleAction()
+' note right: Se obtiene la URL y csrf-token desde los atributos
+' AJAX -> Router: POST /absence/requests/approve/:absenceID
+' Router -> Controller: postRequestApprove(request)
+' Controller -> Model: updateStatus(absenceID, 1)
+' Model -> DB: Ejecuta consulta UPDATE en tabla absence
+' DB --> Model: Resultado de actualización
+' Model --> Controller: Confirma actualización
+' Controller --> Router: Responde con JSON { success: true, message: "Request approved" }
+' Router --> AJAX: Retorna respuesta JSON
+
+' == Actualización de la Interfaz ==
+' AJAX -> Browser: Callback: Actualiza UI (muestra "Approved")
+' Browser -> Vista: Renderiza cambio en la tabla
+
+' @enduml
+
+' @startuml CU01 - Líder registra respuesta hacia ausencia de colaborador - Diagrama de secuencia
+' actor Navegador
+' boundary absence.ejs
+' boundary absence.routes
+' control absence.controller
+' entity AbsenceModel
+' database mysql
+
+
+' autonumber
+' ' Inicio del flujo
+' activate Navegador
+' Navegador -> absence.routes : GET /absence/requests
+' deactivate Navegador
+' activate absence.routes
+' absence.routes -> absence.controller : getFaults(req, res)
+' deactivate absence.routes
+' activate absence.controller
+
+
+' ' Se utiliza la instancia para obtener los datos
+' absence.controller ->> AbsenceModel : fetchTop10()
+' activate AbsenceModel
+
+' AbsenceModel ->> mysql : SELECT * FROM absence LIMIT 10;
+' activate mysql
+' mysql -->> AbsenceModel : Datos obtenidos
+' deactivate mysql
+
+' AbsenceModel -->> absence.controller : Retorno de datos de faltas.
+' deactivate AbsenceModel
+
+' absence.controller -> absence.ejs : render(absence)
+' activate absence.ejs
+' absence.ejs -> Navegador : Mostrar faltas
+' activate Navegador
+' deactivate absence.ejs
+' deactivate absence.controller
+' deactivate absence.routes
+
+' Navegador -> absence.controller : POST /absence/requests/:response
+' deactivate Navegador
+' activate absence.controller
+' absence.controller ->> AbsenceModel : saveResponse()
+
+' activate AbsenceModel
+' ' absenceID, startDate, endDate, reason, justified, absenceUserIDFK
+' AbsenceModel ->> mysql : INSERT INTO absence \nVALUES()
+' activate mysql
+' mysql -->> AbsenceModel : Datos obtenidos
+' deactivate mysql
+' AbsenceModel -->> absence.controller : Retorno modificiación de falta
+' activate absence.ejs
+' absence.controller -> absence.ejs : render()
+' activate Navegador
+' absence.ejs -> Navegador : Mostrar respuesta
+' deactivate absence.ejs
+
+
+' @enduml
