@@ -2,25 +2,25 @@ const db = require("../util/database"); // Asegúrate de importar tu módulo de 
 
 class Vacation {
 
-  constructor(userID, startDate, endDate, reason) {
-    this.userID = userID;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.reason = reason;
-  }
+    constructor(userID, startDate, endDate, reason) {
+        this.userID = userID;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.reason = reason;
+    }
 
-  save() {
-    const saveQuery = "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
-    return db.execute(saveQuery, [this.userID, this.startDate, this.endDate, this.reason])
-      .catch((error) => {
-        console.error("Error al añadir vacación:", error.message);
-        throw error;
-      });
-  }
+    save() {
+        const saveQuery = "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
+        return db.execute(saveQuery, [this.userID, this.startDate, this.endDate, this.reason])
+            .catch((error) => {
+                console.error("Error al añadir vacación:", error.message);
+                throw error;
+            });
+    }
 
-  static fetchAll(userID) {
-    return db.execute(
-      `SELECT 
+    static fetchAll(userID) {
+        return db.execute(
+            `SELECT 
   u.mail, 
   v.reason, 
   v.startDate, 
@@ -40,12 +40,12 @@ AND u.userID IN (
     
   )
 );`, [userID]
-    );
-  }
+        );
+    }
 
-  static fetchAllWithNames(userID) {
-    return db.execute(
-      `SELECT 
+    static fetchAllWithNames(userID) {
+        return db.execute(
+            `SELECT 
   u.mail, 
   v.reason, 
   v.startDate, 
@@ -69,30 +69,30 @@ AND u.userID IN (
     
   )
   );`, [userID]
-    );
+        );
 
-  }
+    }
 
-  static updateStatusLeader(vacationId, status) {
-    return db.execute(
-      "UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?",
-      [status, vacationId]
-    );
-  }
+    static updateStatusLeader(vacationId, status) {
+        return db.execute(
+            "UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?",
+            [status, vacationId]
+        );
+    }
 
-  static updateStatusHR(vacationId, status) {
-    return db.execute(
-      "UPDATE vacation SET hrStatus = ? WHERE vacationID = ?",
-      [status, vacationId]
-    );
-  }
+    static updateStatusHR(vacationId, status) {
+        return db.execute(
+            "UPDATE vacation SET hrStatus = ? WHERE vacationID = ?",
+            [status, vacationId]
+        );
+    }
 
-  static fetchByDateType(startDate, endDate, userID) {
-    return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
+    static fetchByDateType(startDate, endDate, userID) {
+        return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
 UNION
 (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`, [startDate, endDate, userID, startDate, endDate, userID]
-    );
-  }
+        );
+    }
 }
 
 module.exports = Vacation;
