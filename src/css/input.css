@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@custom-variant dark (&:where(.dark, .dark *));
+
+/** Fuentes */
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Book.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-BookItalic.otf") format("opentype");
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-MediumItalic.otf") format("opentype");
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Bold.otf") format("opentype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Black.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+* {
+    font-family: "Gotham";
+}
+
+/** Colores */
+
+:root {
+    /* Backgrounds */
+
+    /* Botones */
+    --lightBtnNormal: #1dd2b4;
+    --darkBtnNormal: #1b3f43;
+
+    --lightBtnYes: #30e16e;
+    --darkBtnYes: #156d34;
+
+    --lightBtnNo: #ef325e;
+    --darkBtnNo: #561427;
+}
+
+/** Clases usadas */
+
+/* General */
+
+.btnNormal {
+    @apply px-6 py-2 rounded-md cursor-pointer
+         bg-(--lightBtnNormal) hover:bg-(--lightBtnNormal)/80 text-black
+         dark:bg-(--darkBtnNormal) dark:hover:bg-(--darkBtnNormal)/80 dark:text-white;
+}
+
+.btnYes {
+    @apply px-6 py-2 rounded-md cursor-pointer
+         bg-(--lightBtnYes) hover:bg-(--lightBtnYes)/80 text-black
+         dark:bg-(--darkBtnYes) dark:hover:bg-(--darkBtnYes)/80 dark:text-white;
+}
+
+.btnNo {
+    @apply px-6 py-2 rounded-md cursor-pointer
+    bg-(--lightBtnNo) hover:bg-(--lightBtnNo)/80 text-black
+    dark:bg-(--darkBtnNo) dark:hover:bg-(--darkBtnNo)/80 dark:text-white;
+}

@@ -1,45 +1,44 @@
 <%- include('includes/_header') %>
 
 <div class="flex bg-neutral-800/50 min-h-screen">
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6">Faltas Administrativas</h1>
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Faltas Administrativas</h1>
 
-    <% if (info === "Error al ingresar datos.") { %>
+        <% if (info === "Error al ingresar datos.") { %>
         <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-          <%= info %>
+            <%= info %>
         </div>
-      <% } else if (info && info !== '') { %>
+        <% } else if (info && info !== '') { %>
         <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-          <%= info %>
+            <%= info %>
         </div>
-      <% } %>
-      <div id="faltasTable" class="overflow-x-auto rounded-lg shadow"></div>
+        <% } %>
+        <div id="faltasTable" class="overflow-x-auto rounded-lg shadow"></div>
 
-      <div class="mt-6 flex justify-between">
-        <button
-          id="prevBtn"
-          class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-        >
-          Anterior
-        </button>
-        <button
-          id="nextBtn"
-          class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-        >
-          Siguiente
-        </button>
+        <div class="mt-6 flex justify-between">
+            <button
+                id="prevBtn"
+                class="btnNormal"
+            >
+                Anterior
+            </button>
+            <button
+                id="nextBtn"
+                class="btnNormal"
+            >
+                Siguiente
+            </button>
 
-        <a
-          href="/fault/add"
-          class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-        >
-          Registrar Nueva Falta
-        </a>
-      </div>
+            <a
+                href="/fault/add"
+                class="btnNormal"
+            >
+                Registrar Nueva Falta
+            </a>
+        </div>
     </div>
 
     <script src="/javascript/paginedFaults.js"></script>
-  </div>
-
-  <%- include('includes/_footer') %>
 </div>
+
+<%- include('includes/_footer') %>
