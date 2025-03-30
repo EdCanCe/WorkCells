@@ -1,0 +1,21 @@
+@startuml
+|Usuario|
+start
+:Accede a ver perfil;
+
+|Sistema|
+:Obtiene la información del colaborador de la base de datos;
+
+|Sistema|
+:Verifica si el colaborador existe;
+if (colaborador existe) then (si)
+:Muestra la interfaz con la información del colaborador;
+else (no)
+    :Muestra mensaje de colaborador no registrado;
+endif
+
+
+
+|Usuario|
+stop
+@enduml

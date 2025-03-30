@@ -1,5 +1,5 @@
 @startuml
-actor navegador
+actor Navegador
 boundary vacation.routes
 boundary vacation.ejs
 control vacation.controller
@@ -7,22 +7,21 @@ entity vacation.model
 database mysql
 
 autonumber
-activate navegador
 ' Inicio del flujo
-navegador -> vacation.routes : GET /vacations request
-deactivate navegador
+activate Navegador
+Navegador -> vacation.routes : GET /vacations requests
+deactivate Navegador
 activate vacation.routes
 
-vacation.routes -> vacation.controller : get_vacations(req, res)
+vacation.routes -> vacation.controller : getRequests(req, res)
 deactivate vacation.routes
 activate vacation.controller
 
-vacation.controller ->> vacation.model : fetch_vacations_by_team(navegador_id)
+vacation.controller ->> vacation.model : fetchAll(id)
 activate vacation.model
 
 ' Consulta mejorada considerando solo colaboradores del mismo departamento
-vacation.model ->> mysql : (Consulta sql)
-
+vacation.model ->> mysql : Consulta sql
 activate mysql
 mysql -->> vacation.model : Resultados (solicitudes)
 deactivate mysql
@@ -31,10 +30,40 @@ vacation.model -->> vacation.controller : Lista de solicitudes
 deactivate vacation.model
 
 vacation.controller -> vacation.routes : res.render(vacations request)
-deactivate vacation.controller
+' Verifica si hay peticiones
+alt Si hay peticiones
+    deactivate vacation.controller
+    activate vacation.routes
+    vacation.routes -> Navegador : HTML con solicitudes
+   activate Navegador
+
+else No hay peticiones
+    vacation.routes -> Navegador : HTML con mensaje de "No hay solicitudes"
+    deactivate vacation.routes
+    deactivate vacation.routes
+end
+
+' Cargar las solicitudes con paginación
+Navegador -> vacation.routes : GET /vacations/search?page=1
 activate vacation.routes
-vacation.routes -> navegador : HTML
+
+vacation.routes -> vacation.controller : listPaginated(req, res)
 deactivate vacation.routes
-activate navegador
-deactivate navegador
+activate vacation.controller
+
+vacation.controller ->> vacation.model : getVacationsPaginated(limit, offset)
+activate vacation.model
+
+vacation.model ->> mysql : SELECT * FROM vacations ORDER BY request_date DESC LIMIT 10 OFFSET ?
+activate mysql
+mysql -->> vacation.model : Datos obtenidos
+deactivate mysql
+
+vacation.model -->> vacation.controller : Retorna solicitudes
+deactivate vacation.model
+
+vacation.controller -->> Navegador : JSON con solicitudes
+deactivate vacation.controller
+deactivate Navegador
+
 @enduml

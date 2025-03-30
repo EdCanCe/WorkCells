@@ -84,7 +84,7 @@ exports.listPaginated = async (request, response) => {
     const offset = (page - 1) * limit;
 
     try {
-        const [rows] = await Holiday.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
+        const [rows] = await Holiday.getHolidayPaginated(limit, offset); // <== AQUÍ EL CAMBIO
         response.json(rows);
     } catch (err) {
         console.error(err);
