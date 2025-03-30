@@ -1,73 +1,55 @@
 @startuml
 actor Navegador
-boundary calendar.ejs
-boundary calendar.routes
-control calendar.controller
-entity CalendarModel
+boundary holiday.ejs
+boundary holiday.routes
+control holiday.controller
+entity HolidayModel
 database mysql
-
 
 autonumber
 ' Inicio del flujo
 activate Navegador
-Navegador -> calendar.routes : GET /calendar
+Navegador -> holiday.routes : GET /holiday/used
+activate holiday.routes
+
+holiday.routes -> holiday.controller : getUsedHoliday(req, res)
+deactivate holiday.routes
+activate holiday.controller
+
+' Se renderiza la vista de días feriados
+holiday.controller -> holiday.ejs : render(usedHoliday)
+deactivate holiday.controller
+activate holiday.ejs
+holiday.ejs -> Navegador : HTML
 deactivate Navegador
-activate calendar.routes
-
-calendar.routes -> calendar.controller : get_calendar(req, res)
-activate calendar.controller
+deactivate holiday.ejs
 
 
-' Se utiliza la instancia para obtener los datos
-calendar.controller ->> CalendarModel : get_usedHoliday()
-activate CalendarModel
+' Cargar los días feriados con paginación
 
-CalendarModel ->> mysql : SELECT * FROM usedHoliday
+Navegador -> holiday.routes : GET /holiday/search?page=1
+activate Navegador
+activate holiday.routes
+
+holiday.routes -> holiday.controller : listPaginated(req, res)
+deactivate holiday.routes
+activate holiday.controller
+
+holiday.controller ->> HolidayModel : getFaltasPaginated(limit, offset)
+activate HolidayModel
+
+HolidayModel ->> mysql : consulta sql
 activate mysql
-mysql -->> CalendarModel : Datos obtenidos
+mysql -->> HolidayModel : Datos obtenidos
 deactivate mysql
 
-CalendarModel -->> calendar.controller : Retorna datos de días feriados
-deactivate CalendarModel
+HolidayModel -->> holiday.controller : Retorna días feriados
+deactivate HolidayModel
 
-calendar.controller -> calendar.ejs : render(calendar)
-activate calendar.ejs
-calendar.ejs -> Navegador : Mostrar calendario con días feriados
-activate Navegador
-deactivate calendar.ejs
-deactivate calendar.controller
-deactivate calendar.routes
 
-' Filtrar por días feriados
-Navegador -> calendar.routes : POST /calendar/filterHolidays
+holiday.controller -->> Navegador : json
+deactivate holiday.controller
 deactivate Navegador
-activate calendar.routes
 
-calendar.routes -> calendar.controller : (req, res)
-activate calendar.controller
 
-calendar.controller -> calendar.ejs : render(calendar)
-activate calendar.ejs
-calendar.ejs -> Navegador : Muestra solo días feriados
-activate Navegador
-deactivate calendar.ejs
-deactivate calendar.controller
-deactivate calendar.routes
-
-' Cambiar la vista (semana)
-Navegador -> calendar.routes : POST /calendar/weekend
-deactivate Navegador
-activate calendar.routes
-
-calendar.routes -> calendar.controller : change_view(req, res)
-activate calendar.controller
-
-calendar.controller -> calendar.ejs : render(calendar)
-activate calendar.ejs
-activate Navegador
-calendar.ejs -> Navegador : Muestra la vista semanal
-deactivate Navegador
-deactivate calendar.ejs
-deactivate calendar.controller
-deactivate calendar.routes
 @enduml

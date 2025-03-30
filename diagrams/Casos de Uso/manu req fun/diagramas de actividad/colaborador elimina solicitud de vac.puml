@@ -1,0 +1,33 @@
+@startuml
+
+|Colaborador|
+start
+:Ingresa en "Eliminar solicitud de vacaciones";
+
+|Sistema|
+:Obtiene las peticiones que no han sido aprobadas o denegadas;
+
+if (¿Hay solicitudes sin responder?) then (Sí)
+    :Muestra las solicitudes eliminables;
+else (No)
+    :Muestra mensaje indicando que no hay solicitudes para eliminar;
+    stop
+endif
+
+|Colaborador|
+:Selecciona la solicitud a eliminar;
+
+|Sistema|
+:Muestra alerta de confirmación;
+
+if (¿Está seguro?) then (Sí)
+    :Elimina la solicitud;
+    :Muestra notificación de eliminación exitosa;
+else (No)
+    :Regresa a la vista de solicitudes;
+endif
+
+|Colaborador|
+stop
+
+@enduml

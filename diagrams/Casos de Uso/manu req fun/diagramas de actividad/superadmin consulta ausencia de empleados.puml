@@ -1,0 +1,22 @@
+@startuml
+
+|Super Admin|
+start
+:Ingresa al apartado de "Request";
+
+|Sistema|
+:Obtiene las ausencias sin aprobar o denegar de la base de datos;
+
+if (¿Hay ausencias sin responder?) then (Sí)
+    :Muestra las ausencias pendientes;
+else (No)
+    :Muestra mensaje indicando que no hay ausencias por contestar;
+    stop
+endif
+
+|Super Admin|
+:Visualiza las ausencias pendientes;
+
+stop
+
+@enduml
