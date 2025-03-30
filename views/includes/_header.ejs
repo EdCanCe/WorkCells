@@ -27,39 +27,12 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body
-    class="max-w-screen-xl m-0 p-0 bg-neutral-950 max-h-screen overflow-hidden text-sm text-neutral-100"
+    class="max-w-screen-xl m-0 p-0 bg-neutral-50 dark:bg-neutral-950 max-h-screen overflow-hidden text-sm text-neutral-900 dark:text-neutral-100"
 >
     <div class="flex flex-row m-0 p-0 w-screen h-screen max-h-screen">
         <%- include('_navbar') %>
 
         <div class="block w-full h-screen max-h-screen overflow-auto">
-            <button id="toggleMode">O</button>
+            <%- include('_toggleDark.ejs') %>
 
-            <script>
-                const toggleModeButton = document.getElementById("toggleMode");
-
-                const html = document.documentElement;
-
-                // Verifica si hay una preferencia guardada
-                if (
-                    localStorage.theme === "dark" ||
-                    (!("theme" in localStorage) &&
-                        window.matchMedia("(prefers-color-scheme: dark)")
-                            .matches)
-                ) {
-                    html.classList.add("dark");
-                } else {
-                    html.classList.remove("dark");
-                }
-
-                // Alternar al hacer clic
-                toggleModeButton.addEventListener("click", () => {
-                    html.classList.toggle("dark");
-                    localStorage.theme = html.classList.contains("dark")
-                        ? "dark"
-                        : "light";
-                    console.log(html.classList.contains("dark"));
-                });
-            </script>
-
-            <!-- !CUIDADO AL USAR PRETTIER EN ESTE ARCHIVO -->  
+            <!-- !CUIDADO AL USAR PRETTIER EN ESTE ARCHIVO -->

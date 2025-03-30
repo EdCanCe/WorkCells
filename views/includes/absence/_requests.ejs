@@ -61,14 +61,14 @@
                                         class="flex flex-col sm:flex-row sm:items-center sm:gap-4 justify-center"
                                     >
                                         <button
-                                            class="approve-btn btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                                            class="btnSuccess"
                                             data-url="/absence/requests/approve/<%= ab.absenceID %>"
                                             data-csrf="<%= csrfToken %>"
                                         >
                                             Approve
                                         </button>
                                         <button
-                                            class="deny-btn btn bg-[#830000] text-white px-6 py-2 rounded-md hover:bg-[#470000]/80"
+                                            class="btnDanger"
                                             data-url="/absence/requests/deny/<%= ab.absenceID %>"
                                             data-csrf="<%= csrfToken %>"
                                         >
@@ -84,23 +84,23 @@
                 </div>
             </div>
         </div>
-        <div class="pagination-controls mt-4 flex justify-between">
+        <div class="pagination-controls mt-4 mb-4 flex justify-between">
             <button
                 id="prev-button"
-                class="btn bg-gray-600 text-white px-4 py-2 rounded"
+                class="btnPrimary"
             >
                 Anterior
             </button>
             <button
                 id="next-button"
-                class="btn bg-[#1B3F43] text-white px-4 py-2 rounded"
+                class="btnPrimary"
             >
                 Siguiente
             </button>
         </div>
         <a
             href="/absence"
-            class="inline-block mt-6 px-6 py-2 bg-[#1B3F43] text-white rounded-md hover:bg-[#1B3F43]"
+            class="btnPrimary inline-block"
             >Regresar</a
         >
     </div>
@@ -170,8 +170,8 @@
         } else if (ab.justified === 2) {
             return `
                 <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4 justify-center">
-                    <button class="approve-btn btn bg-[#1B3F43] text-white px-6 py-2 rounded" data-url="/absence/requests/approve/${ab.absenceID}" data-csrf="<%= csrfToken %>">Approve</button>
-                    <button class="deny-btn btn bg-[#830000] text-white px-6 py-2 rounded" data-url="/absence/requests/deny/${ab.absenceID}" data-csrf="<%= csrfToken %>">Deny</button>
+                    <button class="btnSuccess" data-url="/absence/requests/approve/${ab.absenceID}" data-csrf="<%= csrfToken %>">Approve</button>
+                    <button class="btnDanger" data-url="/absence/requests/deny/${ab.absenceID}" data-csrf="<%= csrfToken %>">Deny</button>
                 </div>`;
         }
         return "";

@@ -48,44 +48,66 @@
     font-style: normal;
 }
 
-* {
-    font-family: "Gotham";
-}
-
 /** Colores */
 
 :root {
     /* Backgrounds */
 
     /* Botones */
-    --lightBtnNormal: #1dd2b4;
-    --darkBtnNormal: #1b3f43;
+    --lightBtnPrimary: #1dd2b4;
+    --darkBtnPrimary: #1b3f43;
 
-    --lightBtnYes: #30e16e;
-    --darkBtnYes: #156d34;
+    --lightBtnSuccess: #30e16e;
+    --darkBtnSuccess: #029033;
 
-    --lightBtnNo: #ef325e;
-    --darkBtnNo: #561427;
+    --lightBtnDanger: #ef325e;
+    --darkBtnDanger: #9a0000;
+
+    --lightHover: 
 }
 
 /** Clases usadas */
 
 /* General */
 
-.btnNormal {
-    @apply px-6 py-2 rounded-md cursor-pointer
-         bg-(--lightBtnNormal) hover:bg-(--lightBtnNormal)/80 text-black
-         dark:bg-(--darkBtnNormal) dark:hover:bg-(--darkBtnNormal)/80 dark:text-white;
+* {
+    transition: background-color 0.2s, color 0.2s;
+    font-family: "Gotham";
 }
 
-.btnYes {
-    @apply px-6 py-2 rounded-md cursor-pointer
-         bg-(--lightBtnYes) hover:bg-(--lightBtnYes)/80 text-black
-         dark:bg-(--darkBtnYes) dark:hover:bg-(--darkBtnYes)/80 dark:text-white;
+.btnPrimary {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+         bg-(--lightBtnPrimary) hover:bg-(--lightBtnPrimary)/80 text-black
+         dark:bg-(--darkBtnPrimary) dark:hover:bg-(--darkBtnPrimary)/50 dark:text-white;
 }
 
-.btnNo {
-    @apply px-6 py-2 rounded-md cursor-pointer
-    bg-(--lightBtnNo) hover:bg-(--lightBtnNo)/80 text-black
-    dark:bg-(--darkBtnNo) dark:hover:bg-(--darkBtnNo)/80 dark:text-white;
+.btnSuccess {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+         bg-(--lightBtnSuccess) hover:bg-(--lightBtnSuccess)/80 text-black
+         dark:bg-(--darkBtnSuccess) dark:hover:bg-(--darkBtnSuccess)/50 dark:text-white;
+}
+
+.btnDanger {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+    bg-(--lightBtnDanger) hover:bg-(--lightBtnDanger)/80 text-black
+    dark:bg-(--darkBtnDanger) dark:hover:bg-(--darkBtnDanger)/50 dark:text-white;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555; 
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
 }
