@@ -1,0 +1,113 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@custom-variant dark (&:where(.dark, .dark *));
+
+/** Fuentes */
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Book.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-BookItalic.otf") format("opentype");
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-MediumItalic.otf") format("opentype");
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Bold.otf") format("opentype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Gotham";
+    src: url("/fonts/Gotham-Black.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+/** Colores */
+
+:root {
+    /* Backgrounds */
+
+    /* Botones */
+    --lightBtnPrimary: #1dd2b4;
+    --darkBtnPrimary: #1b3f43;
+
+    --lightBtnSuccess: #30e16e;
+    --darkBtnSuccess: #029033;
+
+    --lightBtnDanger: #ef325e;
+    --darkBtnDanger: #9a0000;
+
+    --lightHover: 
+}
+
+/** Clases usadas */
+
+/* General */
+
+* {
+    transition: background-color 0.2s, color 0.2s;
+    font-family: "Gotham";
+}
+
+.btnPrimary {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+         bg-(--lightBtnPrimary) hover:bg-(--lightBtnPrimary)/80 text-black
+         dark:bg-(--darkBtnPrimary) dark:hover:bg-(--darkBtnPrimary)/50 dark:text-white;
+}
+
+.btnSuccess {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+         bg-(--lightBtnSuccess) hover:bg-(--lightBtnSuccess)/80 text-black
+         dark:bg-(--darkBtnSuccess) dark:hover:bg-(--darkBtnSuccess)/50 dark:text-white;
+}
+
+.btnDanger {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+    bg-(--lightBtnDanger) hover:bg-(--lightBtnDanger)/80 text-black
+    dark:bg-(--darkBtnDanger) dark:hover:bg-(--darkBtnDanger)/50 dark:text-white;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555; 
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}

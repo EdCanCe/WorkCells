@@ -13,7 +13,7 @@
         <div class="flex items-center gap-2">
             <button
                 onclick="navigateCalendar('prev')"
-                class="p-2 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
+                class="btnPrimary"
             >
                 <svg
                     class="w-5 h-5"
@@ -32,14 +32,14 @@
 
             <button
                 onclick="navigateCalendar('today')"
-                class="px-3 py-1 font-medium rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
+                class="btnPrimary"
             >
                 Today
             </button>
 
             <button
                 onclick="navigateCalendar('next')"
-                class="p-2 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
+                class="btnPrimary"
             >
                 <svg
                     class="w-5 h-5"
@@ -65,7 +65,7 @@
             <div class="relative">
                 <button
                     id="filterButton"
-                    class="px-4 py-2 rounded-md bg-neutral-800 text-neutral-100 hover:bg-neutral-700 flex items-center gap-1"
+                    class="btnPrimary !flex items-center gap-1"
                 >
                     <svg
                         class="w-5 h-5"
@@ -137,13 +137,13 @@
 
             <button
                 onclick="setViewPreference(false)"
-                class="px-4 py-2 rounded-md flex bg-neutral-800 items-center hover:bg-neutral-700"
+                class="btnPrimary"
             >
                 View by Week
             </button>
             <button
                 onclick="setViewPreference(true)"
-                class="px-4 py-2 rounded-md flex bg-neutral-800 items-center hover:bg-neutral-700"
+                class="btnPrimary"
             >
                 View by Month
             </button>
