@@ -6,6 +6,8 @@ exports.getAdd = (request, response, next) => {
         isLoggedIn: request.session.isLoggedIn || false,
         info: request.session.info || "",
         csrfToken: request.csrfToken(),
+        privilegios: request.session.privilegios || [],
+
     });
 };
 
@@ -65,6 +67,8 @@ exports.getRoot = (request, response, next) => {
                 username: request.session.username || "",
                 fault: rows,
                 info: mensaje,
+                privilegios: request.session.privilegios || [],
+
             });
         })
         .catch((error) => {

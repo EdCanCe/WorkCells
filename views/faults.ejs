@@ -29,12 +29,16 @@
           Siguiente
         </button>
 
+        <% for (let privilegio of privilegios) { %>
+         <% if(privilegio.nombre == "Superadmin registra falta administrativa	") { %>
         <a
           href="/fault/add"
           class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
         >
           Registrar Nueva Falta
         </a>
+        <% } %>
+       <% } %>
       </div>
     </div>
 
