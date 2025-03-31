@@ -7,6 +7,8 @@ const csrf = require("csurf");
 const csrfProtection = csrf();
 const multer = require("multer");
 
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
@@ -45,6 +47,21 @@ const fileStorage = multer.diskStorage({
 app.use(multer({ storage: fileStorage }).single("evidence"));
 
 app.use(csrfProtection);
+
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: GOOGLE_CLIENT_ID,
+            clientSecret: GOOGLE_CLIENT_SECRET,
+            callbackURL: "http://www.example.com/auth/google/callback",
+        },
+        function (accessToken, refreshToken, profile, cb) {
+            User.findOrCreate({ googleId: profile.id }, function (err, user) {
+                return cb(err, user);
+            });
+        }
+    )
+);
 
 const usersRouter = require("./routes/user.routes");
 app.use("/login", usersRouter);
