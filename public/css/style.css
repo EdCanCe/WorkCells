@@ -36,7 +36,6 @@
     --color-gray-700: oklch(0.373 0.034 259.733);
     --color-gray-800: oklch(0.278 0.033 256.848);
     --color-gray-900: oklch(0.21 0.034 264.665);
-    --color-neutral-50: oklch(0.985 0 0);
     --color-neutral-100: oklch(0.97 0 0);
     --color-neutral-200: oklch(0.922 0 0);
     --color-neutral-300: oklch(0.87 0 0);
@@ -46,8 +45,6 @@
     --color-neutral-700: oklch(0.371 0 0);
     --color-neutral-800: oklch(0.269 0 0);
     --color-neutral-900: oklch(0.205 0 0);
-    --color-neutral-950: oklch(0.145 0 0);
-    --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
     --breakpoint-xl: 80rem;
@@ -622,15 +619,11 @@
     border-right-style: var(--tw-border-style);
     border-right-width: 4px;
   }
-  .border-r-\[1px\] {
-    border-right-style: var(--tw-border-style);
-    border-right-width: 1px;
-  }
   .border-b {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
-  .border-b-\[1px\] {
+  .border-b-1 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
@@ -662,9 +655,6 @@
   .border-neutral-600\/50 {
     border-color: color-mix(in oklab, var(--color-neutral-600) 50%, transparent);
   }
-  .border-neutral-700 {
-    border-color: var(--color-neutral-700);
-  }
   .border-red-700 {
     border-color: var(--color-red-700);
   }
@@ -694,9 +684,6 @@
   }
   .bg-green-900 {
     background-color: var(--color-green-900);
-  }
-  .bg-neutral-50 {
-    background-color: var(--color-neutral-50);
   }
   .bg-neutral-600\/50 {
     background-color: color-mix(in oklab, var(--color-neutral-600) 50%, transparent);
@@ -739,6 +726,9 @@
   }
   .object-cover {
     object-fit: cover;
+  }
+  .\!p-3 {
+    padding: calc(var(--spacing) * 3) !important;
   }
   .p-0 {
     padding: calc(var(--spacing) * 0);
@@ -850,9 +840,6 @@
     --tw-tracking: var(--tracking-wider);
     letter-spacing: var(--tracking-wider);
   }
-  .text-nowrap {
-    text-wrap: nowrap;
-  }
   .whitespace-nowrap {
     white-space: nowrap;
   }
@@ -904,9 +891,6 @@
   .text-neutral-700 {
     color: var(--color-neutral-700);
   }
-  .text-neutral-900 {
-    color: var(--color-neutral-900);
-  }
   .text-purple-500 {
     color: var(--color-purple-500);
   }
@@ -956,11 +940,6 @@
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
-  .transition-\[opacity\,width\] {
-    transition-property: opacity,width;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
   .transition-all {
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
@@ -979,28 +958,10 @@
     --tw-duration: 300ms;
     transition-duration: 300ms;
   }
-  .duration-\[1s\] {
-    --tw-duration: 1s;
-    transition-duration: 1s;
-  }
-  .hover\:bg-blue-600 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-blue-600);
-      }
-    }
-  }
   .hover\:bg-gray-300 {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-300);
-      }
-    }
-  }
-  .hover\:bg-neutral-600 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-neutral-600);
       }
     }
   }
@@ -1097,16 +1058,6 @@
       background-color: var(--color-gray-700);
     }
   }
-  .dark\:bg-neutral-950 {
-    &:where(.dark, .dark *) {
-      background-color: var(--color-neutral-950);
-    }
-  }
-  .dark\:text-neutral-100 {
-    &:where(.dark, .dark *) {
-      color: var(--color-neutral-100);
-    }
-  }
   .dark\:hover\:bg-gray-600 {
     &:where(.dark, .dark *) {
       &:hover {
@@ -1154,17 +1105,109 @@
   font-style: normal;
 }
 :root {
+  --lightColorNavBase: #e5e5e5;
+  --darkColorNavBase: #171717;
+  --lightColorNavOne: #a1a1a1;
+  --darkColorNavOne: #404040;
+  --lightColorNavTwo: #d4d4d4;
+  --darkColorNavTwo: #262626;
+  --lightColorBase: #fafafa;
+  --darkColorBase: #0a0a0a;
   --lightBtnPrimary: #1dd2b4;
   --darkBtnPrimary: #1b3f43;
   --lightBtnSuccess: #30e16e;
   --darkBtnSuccess: #029033;
   --lightBtnDanger: #ef325e;
   --darkBtnDanger: #9a0000;
-  --lightHover: ;
 }
 * {
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.3s, width 0.3s, opacity 0.3s, filter 0.3s, color 0.3s;
+}
+* * {
   font-family: "Gotham";
+}
+.noMargin {
+  margin: calc(var(--spacing) * 0);
+  padding: calc(var(--spacing) * 0);
+}
+.navItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  overflow: hidden;
+  text-wrap: nowrap;
+}
+.navIcon {
+  &:where(.dark, .dark *) {
+    --tw-invert: invert(100%);
+    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+  }
+}
+.bgNav {
+  border-right-style: var(--tw-border-style);
+  border-right-width: 1px;
+  border-color: var(--lightColorNavOne);
+  background-color: var(--lightColorNavBase);
+  &:where(.dark, .dark *) {
+    border-color: var(--darkColorNavOne);
+  }
+  &:where(.dark, .dark *) {
+    background-color: var(--darkColorNavBase);
+  }
+}
+.bgNavOne {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--lightColorNavOne);
+    }
+  }
+  &:where(.dark, .dark *) {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--darkColorNavOne);
+      }
+    }
+  }
+}
+.bgNavTwo {
+  border-color: var(--lightColorNavOne);
+  background-color: var(--lightColorNavTwo);
+  &:where(.dark, .dark *) {
+    border-color: var(--darkColorNavOne);
+  }
+  &:where(.dark, .dark *) {
+    background-color: var(--darkColorNavTwo);
+  }
+}
+.bgNavHead {
+  &:hover {
+    @media (hover: hover) {
+      background-color: var(--color-neutral-500);
+    }
+  }
+  &:where(.dark, .dark *) {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-neutral-600);
+      }
+    }
+  }
+}
+.bgBase {
+  background-color: var(--lightColorBase);
+  color: var(--darkColorBase);
+  &:where(.dark, .dark *) {
+    background-color: var(--darkColorBase);
+  }
+  &:where(.dark, .dark *) {
+    color: var(--lightColorBase);
+  }
+}
+.invertText {
+  color: var(--lightColorBase);
+  &:where(.dark, .dark *) {
+    color: var(--darkColorBase);
+  }
 }
 .btnPrimary {
   display: inline-block;
@@ -1173,7 +1216,7 @@
   background-color: var(--lightBtnPrimary);
   padding-inline: calc(var(--spacing) * 6);
   padding-block: calc(var(--spacing) * 2);
-  color: var(--color-black);
+  color: var(--darkColorBase);
   &:hover {
     @media (hover: hover) {
       background-color: color-mix(in oklab, var(--lightBtnPrimary) 80%, transparent);
@@ -1183,7 +1226,7 @@
     background-color: var(--darkBtnPrimary);
   }
   &:where(.dark, .dark *) {
-    color: var(--color-white);
+    color: var(--lightColorBase);
   }
   &:where(.dark, .dark *) {
     &:hover {
@@ -1200,7 +1243,7 @@
   background-color: var(--lightBtnSuccess);
   padding-inline: calc(var(--spacing) * 6);
   padding-block: calc(var(--spacing) * 2);
-  color: var(--color-black);
+  color: var(--darkColorBase);
   &:hover {
     @media (hover: hover) {
       background-color: color-mix(in oklab, var(--lightBtnSuccess) 80%, transparent);
@@ -1210,7 +1253,7 @@
     background-color: var(--darkBtnSuccess);
   }
   &:where(.dark, .dark *) {
-    color: var(--color-white);
+    color: var(--lightColorBase);
   }
   &:where(.dark, .dark *) {
     &:hover {
@@ -1227,7 +1270,7 @@
   background-color: var(--lightBtnDanger);
   padding-inline: calc(var(--spacing) * 6);
   padding-block: calc(var(--spacing) * 2);
-  color: var(--color-black);
+  color: var(--darkColorBase);
   &:hover {
     @media (hover: hover) {
       background-color: color-mix(in oklab, var(--lightBtnDanger) 80%, transparent);
@@ -1237,7 +1280,7 @@
     background-color: var(--darkBtnDanger);
   }
   &:where(.dark, .dark *) {
-    color: var(--color-white);
+    color: var(--lightColorBase);
   }
   &:where(.dark, .dark *) {
     &:hover {
@@ -1359,6 +1402,46 @@
   initial-value: 0 0 #0000;
 }
 @property --tw-duration {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow {
   syntax: "*";
   inherits: false;
 }
