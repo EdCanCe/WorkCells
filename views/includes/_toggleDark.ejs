@@ -43,17 +43,6 @@
     const sunIcon = document.getElementById("sunIcon");
     const moonIcon = document.getElementById("moonIcon");
 
-    // Verificar preferencia guardada o del sistema
-    if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-        html.classList.add("dark");
-    } else {
-        html.classList.remove("dark");
-    }
-
     // Alternar al hacer clic
     toggleModeButton.addEventListener("click", () => {
         html.classList.toggle("dark");
