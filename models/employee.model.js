@@ -35,25 +35,31 @@ module.exports = class Employee {
 
     save() {
         // Validación de CURP
-        if (
-            !/^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/.test(
-                this.curp.toUpperCase()
-            )
-        ) {
-            return Promise.reject(
-                new Error(
-                    "CURP inválido. Debe contener 18 caracteres alfanuméricos."
+        if (this.curp && this.curp.trim() !== "") {
+            // Verifica si curp existe y no está vacío
+            if (
+                !/^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/.test(
+                    this.curp.toUpperCase()
                 )
-            );
+            ) {
+                return Promise.reject(
+                    new Error(
+                        "CURP inválido. Debe contener 18 caracteres alfanuméricos."
+                    )
+                );
+            }
         }
 
         // Validación de RFC (12 o 13 caracteres)
-        if (!/^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/.test(this.rfc.toUpperCase())) {
-            return Promise.reject(
-                new Error(
-                    "RFC inválido. Debe contener 13 caracteres alfanuméricos."
-                )
-            );
+        if (this.rfc && this.rfc.trim() !== "") {
+            // Verifica si rfc existe y no está vacío
+            if (!/^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/.test(this.rfc.toUpperCase())) {
+                return Promise.reject(
+                    new Error(
+                        "RFC inválido. Debe contener 13 caracteres alfanuméricos."
+                    )
+                );
+            }
         }
 
         const userID = uuidv4();
