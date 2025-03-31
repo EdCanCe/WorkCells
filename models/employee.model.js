@@ -18,8 +18,8 @@ module.exports = class Employee {
         countryUserIDFK,
         prioritaryDepartmentIDFK
     ) {
-        this.curp = curp;
-        this.rfc = rfc;
+        this.curp = curp && curp.trim() !== "" ? curp.toUpperCase() : null;
+        this.rfc = rfc && rfc.trim() !== "" ? rfc.toUpperCase() : null;
         this.birthName = birthName;
         this.surname = surname;
         this.mail = mail;
@@ -34,14 +34,8 @@ module.exports = class Employee {
     }
 
     save() {
-        // Validación de CURP
-        if (this.curp && this.curp.trim() !== "") {
-            // Verifica si curp existe y no está vacío
-            if (
-                !/^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/.test(
-                    this.curp.toUpperCase()
-                )
-            ) {
+        if (this.curp) {
+            if (!/^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/.test(this.curp)) {
                 return Promise.reject(
                     new Error(
                         "CURP inválido. Debe contener 18 caracteres alfanuméricos."
@@ -50,10 +44,8 @@ module.exports = class Employee {
             }
         }
 
-        // Validación de RFC (12 o 13 caracteres)
-        if (this.rfc && this.rfc.trim() !== "") {
-            // Verifica si rfc existe y no está vacío
-            if (!/^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/.test(this.rfc.toUpperCase())) {
+        if (this.rfc) {
+            if (!/^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/.test(this.rfc)) {
                 return Promise.reject(
                     new Error(
                         "RFC inválido. Debe contener 13 caracteres alfanuméricos."
@@ -63,37 +55,35 @@ module.exports = class Employee {
         }
 
         const userID = uuidv4();
-        const passwd = "1234"; // Considera usar un hash para seguridad
+        const passwd = "1234";
         const passwdFlag = false;
         const workStatus = true;
 
-        const checkUserQuery = `SELECT userID FROM user WHERE curp = ? OR rfc = ? OR mail = ?`;
+        const checkUserQuery = `SELECT userID FROM user WHERE (curp = ? AND curp IS NOT NULL) OR (rfc = ? AND rfc IS NOT NULL) OR (mail = ? AND mail IS NOT NULL);`;
 
         return db
             .execute(checkUserQuery, [this.curp, this.rfc, this.mail])
             .then(([rows]) => {
                 if (rows.length > 0) {
-                    // El usuario ya existe, evitar el registro
                     throw new Error(
-                        "El usuario que intento registrar ya está registrado."
+                        "El usuario que intenta registrar ya está registrado."
                     );
                 }
 
-                // Si no existe, proceder con la inserción
                 const query = `
-          INSERT INTO user(
-            userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, 
-            streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
-          ) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
+                INSERT INTO user(
+                    userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, 
+                    streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
+                ) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
                 return bcrypt
                     .hash(passwd, 12)
                     .then((passwdCifrado) => {
                         return db.execute(query, [
                             userID,
-                            this.curp.toUpperCase(),
-                            this.rfc.toUpperCase(),
+                            this.curp,
+                            this.rfc,
                             this.birthName,
                             this.surname,
                             this.mail,
@@ -117,12 +107,15 @@ module.exports = class Employee {
                 throw error;
             });
     }
+
     static fetchCountry() {
         return db.execute(`SELECT * FROM country`);
     }
+
     static fetchRoleID() {
         return db.execute(`SELECT * FROM role`);
     }
+
     static fetchDepartment() {
         return db.execute(`SELECT d.departmentID, d.title AS departmentTitle, e.title AS enterpriseTitle 
                         FROM department d, enterprise e 
