@@ -116,11 +116,14 @@
                 >Modificar Solicitud</a
             >
         </div>
-
+        <% for (let privilegio of privilegios) { %>
+        <% if(privilegio.nombre == "Líder registra respuesta hacia solicitud de vacaciones de colaborador") { %>
         <div class="flex justify-center mt-6">
             <a href="/vacation/requests" class="btnPrimary"
                 >Revisar Solicitudes de Vacaciones</a
             >
         </div>
+        <% } %>
+        <% } %>
     </div>
 </div>
