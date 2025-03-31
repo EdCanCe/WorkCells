@@ -1,48 +1,48 @@
 <section class="p-6">
-  <% if (warning != '') { %>
-  <div
-    class="bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500 p-4 mb-4"
-  >
-    <%= warning %>
-  </div>
-  <% } %>
-
-  <form
-    class="max-w-sm mx-auto bg-white p-6 rounded-lg shadow-md"
-    action="/login"
-    method="POST"
-  >
-    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-
-    <label for="email" class="block text-lg font-medium text-gray-700"
-      >Email</label
+    <% if (warning != '') { %>
+    <div
+        class="bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500 p-4 mb-4"
     >
-    <input
-      class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      type="text"
-      placeholder="Groot"
-      id="email"
-      name="email"
-      required
-    />
-    <br /><br />
+        <%= warning %>
+    </div>
+    <% } %>
 
-    <label for="password" class="block text-lg font-medium text-gray-700"
-      >Password</label
+    <form
+        class="max-w-sm mx-auto bg-neutral-800 p-6 rounded-lg shadow-md"
+        action="/login"
+        method="POST"
     >
-    <input
-      class="w-full p-3 mt-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      type="password"
-      id="password"
-      name="password"
-      required
-    />
-    <br /><br />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-    <input
-      class="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-      type="submit"
-      value="Entrar"
-    />
-  </form>
+        <label for="email" class="block text-lg font-medium text-neutral-100"
+            >Email</label
+        >
+        <input
+            class="w-full p-3 mt-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+            type="text"
+            placeholder="Groot"
+            id="email"
+            name="email"
+            required
+        />
+        <br /><br />
+
+        <label for="password" class="block text-lg font-medium text-neutral-100"
+            >Password</label
+        >
+        <input
+            class="w-full p-3 mt-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+            type="password"
+            id="password"
+            name="password"
+            required
+        />
+        <br /><br />
+
+        <input
+            class="w-full btnPrimary !p-3"
+            type="submit"
+            value="Entrar"
+        />
+    </form>
 </section>

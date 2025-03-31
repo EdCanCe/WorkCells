@@ -1,5 +1,11 @@
 const express = require("express");
 const app = express();
+const path = require("path");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
+const csrfProtection = csrf();
+const multer = require("multer");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -8,24 +14,18 @@ const session = require("express-session");
 
 app.use(
     session({
-        secret: "mi string secreto que debe ser un string aleatorio muy largo, no como éste",
+        secret: crypto.randomUUID(),
         resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
         saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
     })
 );
 
-const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
 
-const bodyParser = require("body-parser");
-
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(bodyParser.json());
 
-const cookieParser = require("cookie-parser");
 app.use(cookieParser());
-const multer = require("multer");
 //fileStorage: Es nuestra constante de configuración para manejar el almacenamiento
 const fileStorage = multer.diskStorage({
     destination: (request, file, callback) => {
@@ -44,15 +44,10 @@ const fileStorage = multer.diskStorage({
 //'archivo' es el nombre del input tipo file de la forma
 app.use(multer({ storage: fileStorage }).single("evidence"));
 
-const csrf = require("csurf");
-const csrfProtection = csrf();
 app.use(csrfProtection);
 
-const usersRoutes = require("./routes/user.routes");
-app.use("/login", usersRoutes);
-const homeRouter = require("./routes/home.routes");
-app.use("/home", homeRouter);
-app.use("/", homeRouter);
+const usersRouter = require("./routes/user.routes");
+app.use("/login", usersRouter);
 
 const calendarRouter = require("./routes/calendar.routes");
 app.use("/calendar", calendarRouter);
@@ -60,28 +55,34 @@ app.use("/calendar", calendarRouter);
 const departmentRouter = require("./routes/department.routes");
 app.use("/department", departmentRouter);
 
-const faults_routers = require("./routes/faults.routes");
-const absences_routers = require("./routes/absences.routes");
-const employeeRouter = require("./routes/employee.routes");
-const vacationRouter = require("./routes/vacation.routes");
+const faultsRouters = require("./routes/faults.routes");
+app.use("/fault", faultsRouters);
 
-app.use("/department", departmentRouter);
-app.use("/home", homeRouter);
-app.use("/fault", faults_routers);
-app.use("/absence", absences_routers);
+const absencesRouter = require("./routes/absences.routes");
+app.use("/absence", absencesRouter);
+
+const employeeRouter = require("./routes/employee.routes");
 app.use("/employee", employeeRouter);
+
+const vacationRouter = require("./routes/vacation.routes");
 app.use("/vacation", vacationRouter);
 
-app.use("/", homeRouter);
 const holidayRouter = require("./routes/holiday.routes.js");
 app.use("/holiday", holidayRouter);
 
 const oneToOneRouter = require("./routes/oneToOne.routes.js");
 app.use("/oneToOne", oneToOneRouter);
 
+const reportRouter = require("./routes/report.routes.js");
+app.use("/reports", reportRouter);
+
+const homeRouter = require("./routes/home.routes");
+app.use("/home", homeRouter);
+app.use("/", homeRouter);
+
 app.use((request, response, next) => {
     response.statusCode = 404;
     response.render("notFound");
 });
 
-app.listen(3001);
+app.listen(3000);

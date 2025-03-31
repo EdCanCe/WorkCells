@@ -1,62 +1,65 @@
 <div class="flex">
-  <aside class="w-64"><%- include('../_navbar') %></aside>
+    <aside class="w-64"></aside>
 
-  <div class="p-6 w-full">
-    <!-- Contenido principal -->
-    <div class="bg-white shadow-md rounded-lg mb-6">
-      <div class="p-6">
-        <h2 class="text-2xl font-semibold mb-4">Lista de los One To One</h2>
-        <p class="text-lg">
-          En esta ruta, el usuario podrá ver los One To One de los que forma
-          parte.
-        </p>
-      </div>
-    </div>
+    <div class="p-6 w-full">
+        <!-- Contenido principal -->
+        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">
+                    Lista de los One To One
+                </h2>
+                <p class="text-lg">
+                    En esta ruta, el usuario podrá ver los One To One de los que
+                    forma parte.
+                </p>
+            </div>
+        </div>
 
-    <!-- Recuadros / Tarjetas -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold mb-4">Agendar</h3>
-          <p class="text-lg mb-4">Se agenda una sesión One To One</p>
-          <a
-            href="/oneToOne/schedule"
-            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >Agendar</a
-          >
+        <!-- Recuadros / Tarjetas -->
+        <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-neutral-800/50 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Agendar</h3>
+                    <p class="text-lg mb-4">Se agenda una sesión One To One</p>
+                    <a
+                        href="/oneToOne/schedule"
+                        class="btnPrimary"
+                        >Agendar</a
+                    >
+                </div>
+                <div class="bg-neutral-700/20 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Sesión</h3>
+                    <p class="text-lg mb-4">Consultar sesión de One To One</p>
+                    <a
+                        href="/oneToOne/check"
+                        class="btnPrimary"
+                        >Consultar</a
+                    >
+                </div>
+                <div class="bg-neutral-700/25 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Rellenar</h3>
+                    <p class="text-lg mb-4">
+                        Se rellenan las preguntas de la sesión del one to one
+                    </p>
+                    <a
+                        href="/oneToOne/check/fill"
+                        class="btnPrimary"
+                        >Rellenar</a
+                    >
+                </div>
+                <div class="bg-neutral-700/25 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Gráficas</h3>
+                    <p class="text-lg mb-4">
+                        Se pueden filtrar y seleccionar datos para generar
+                        gráficas.
+                    </p>
+                    <a
+                        href="/oneToOne/graphs"
+                        class="btnPrimary"
+                        >Gráficas</a
+                    >
+                </div>
+            </div>
         </div>
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold mb-4">Sesión</h3>
-          <p class="text-lg mb-4">Consultar sesión de One To One</p>
-          <a
-            href="/oneToOne/check"
-            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >Consultar</a
-          >
-        </div>
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold mb-4">Rellenar</h3>
-          <p class="text-lg mb-4">
-            Se rellenan las preguntas de la sesión del one to one
-          </p>
-          <a
-            href="/oneToOne/check/fill"
-            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >Rellenar</a
-          >
-        </div>
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold mb-4">Gráficas</h3>
-          <p class="text-lg mb-4">
-            Se pueden filtrar y seleccionar datos para generar gráficas.
-          </p>
-          <a
-            href="/oneToOne/graphs"
-            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >Gráficas</a
-          >
-        </div>
-      </div>
     </div>
-  </div>
 </div>

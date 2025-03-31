@@ -36,15 +36,40 @@ module.exports = class Holiday {
     return db.execute(`SELECT * FROM templateHoliday`);
   }
 
+  static fetchUsedHoliday() {
+    return db.execute(
+      `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID`
+    );
+  }
+
   static fetchByDateType(startDate, endDate) {
+<<<<<<< HEAD
     return db.execute(      
       `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayID = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
+=======
+    return db.execute(
+      `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
+>>>>>>> develop
       [startDate, endDate]
     );
   }
-  static fetchAllMundo() {
+  static fetchAllUsed() {
     return db.execute(
       "SELECT t.title , u.usedDate FROM templateholiday t, usedholiday u WHERE t.templateHolidayID = u.usedTemplateHolidayID;"
+    );
+  }
+
+  static getHolidayPaginated(limit, offset) {
+    return db.execute(
+      `SELECT 
+    t.title AS nombre, 
+    u.usedDate AS fecha 
+    FROM templateHoliday t, usedHoliday u
+    WHERE u.usedTemplateHolidayIDFK = t.templateHolidayID
+    ORDER BY u.usedDate DESC
+    LIMIT ? OFFSET ?;
+`,
+      [limit, offset]
     );
   }
 };

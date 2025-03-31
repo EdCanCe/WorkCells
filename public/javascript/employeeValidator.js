@@ -1,88 +1,161 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("registerForm");
-  const curpInput = document.getElementById("curp");
-  const curpFormatError = document.getElementById("curpFormatError");
+    const form = document.getElementById("registerForm");
+    const curpInput = document.getElementById("curp");
+    const curpFormatError = document.getElementById("curpFormatError");
 
-  const rfcInput = document.getElementById("rfc");
-  const rfcFormatError = document.getElementById("rfcFormatError");
+    const rfcInput = document.getElementById("rfc");
+    const rfcFormatError = document.getElementById("rfcFormatError");
 
-  // Campos adicionales
-  const additionalFields = document.querySelectorAll(
-    "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK"
-  );
-  const submitButton = form.querySelector("button[type='submit']");
+    const nameFields = document.querySelectorAll("#birthName, #surname");
 
-  // Expresiones regulares para validaciones
-  const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
-  const rfcRegex = /^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/;
+    const mailInput = document.getElementById("mail");
+    const mailFormatError = document.getElementById("mailFormatError");
 
-  // Validar CURP en tiempo real
-  curpInput.addEventListener("input", function () {
-    const curpValue = curpInput.value.toUpperCase();
-    curpInput.value = curpValue; // Convertir automáticamente a mayúsculas
+    // Campos adicionales del formulario
+    const additionalFields = document.querySelectorAll(
+        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK, #prioritaryDepartmentIDFK"
+    );
 
-    // Validación de formato
-    if (curpValue.length < 18) {
-      curpFormatError.textContent = "CURP debe tener 18 caracteres.";
-    } else if (!curpRegex.test(curpValue)) {
-      curpFormatError.textContent = "Formato incorrecto de CURP.";
-    } else {
-      curpFormatError.textContent = "";
-      // Habilitar el RFC solo después de que el CURP sea correcto
-      rfcInput.removeAttribute("disabled");
-    }
+    // Expresiones regulares para validaciones
+    const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
+    const rfcRegex = /^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/;
+    const lettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Solo letras y espacios
+    const mailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|nuclea\.solution)$/;
 
-    // Si el CURP no es válido, deshabilitar el RFC
-    if (!curpRegex.test(curpValue) || curpValue.length < 18) {
-      rfcInput.setAttribute("disabled", true);
-    }
-  });
+    mailInput.addEventListener("input", function () {
+        const value = mailInput.value;
+        if (!mailRegex.test(value)) {
+            mailFormatError.textContent =
+                "The e-mail format or domain is wrong.";
+            mailInput.setCustomValidity("The e-mail format or domain is wrong");
+        } else {
+            mailFormatError.textContent = "";
+            mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
+        }
+    });
 
-  // Validar RFC en tiempo real
-  rfcInput.addEventListener("input", function () {
-    const rfcValue = rfcInput.value.toUpperCase();
-    rfcInput.value = rfcValue; // Convertir automáticamente a mayúsculas
+    // Validar CURP en tiempo real
+    curpInput.addEventListener("input", function () {
+        const curpValue = curpInput.value.toUpperCase();
+        curpInput.value = curpValue; // Convertir automáticamente a mayúsculas
 
-    // Validación de formato
-    if (rfcValue.length < 13) {
-      rfcFormatError.textContent = "RFC debe tener 13 caracteres.";
-    } else if (!rfcRegex.test(rfcValue)) {
-      rfcFormatError.textContent = "Formato incorrecto de RFC.";
-    } else {
-      rfcFormatError.textContent = "";
-    }
+        if (curpValue.length < 18) {
+            curpFormatError.textContent = "CURP must be 18 characters long.";
+            curpInput.setCustomValidity("CURP must be 18 characters long.");
+        } else if (!curpRegex.test(curpValue)) {
+            curpFormatError.textContent = "Incorrect CURP format.";
+            curpInput.setCustomValidity("Incorrect CURP format.");
+        } else {
+            curpFormatError.textContent = "";
+            curpInput.setCustomValidity("");
+            rfcInput.removeAttribute("disabled");
+        }
 
-    // Habilitar o deshabilitar los campos y el botón de envío según el RFC
-    if (rfcRegex.test(rfcValue) && rfcValue.length === 13) {
-      additionalFields.forEach((field) => field.removeAttribute("disabled"));
-      submitButton.removeAttribute("disabled");
-    } else {
-      additionalFields.forEach((field) => field.setAttribute("disabled", true));
-      submitButton.setAttribute("disabled", true);
-    }
-  });
+        if (!curpRegex.test(curpValue) || curpValue.length < 18) {
+            rfcInput.setAttribute("disabled", true);
+        }
+    });
 
-  // Prevenir el envío del formulario si las validaciones no son correctas
-  form.addEventListener("submit", function (event) {
-    let isValid = true;
+    // Validar RFC en tiempo real
+    rfcInput.addEventListener("input", function () {
+        const rfcValue = rfcInput.value.toUpperCase();
+        rfcInput.value = rfcValue; // Convertir automáticamente a mayúsculas
 
-    // Validación del CURP
-    if (curpInput.value.length < 18 || !curpRegex.test(curpInput.value)) {
-      curpFormatError.textContent =
-        "CURP debe tener 18 caracteres y el formato correcto.";
-      isValid = false;
-    }
+        if (rfcValue.length < 13) {
+            rfcFormatError.textContent = "RFC must be 13 characters long.";
+            rfcInput.setCustomValidity("RFC must be 13 characters long.");
+        } else if (!rfcRegex.test(rfcValue)) {
+            rfcFormatError.textContent = "Incorrect RFC format.";
+            rfcInput.setCustomValidity("Incorrect RFC format.");
+        } else {
+            rfcFormatError.textContent = "";
+            rfcInput.setCustomValidity("");
+        }
 
-    // Validación del RFC
-    if (rfcInput.value.length < 13 || !rfcRegex.test(rfcInput.value)) {
-      rfcFormatError.textContent =
-        "RFC debe tener 13 caracteres y el formato correcto.";
-      isValid = false;
-    }
+        if (rfcRegex.test(rfcValue) && rfcValue.length === 13) {
+            additionalFields.forEach((field) =>
+                field.removeAttribute("disabled")
+            );
+        } else {
+            additionalFields.forEach((field) =>
+                field.setAttribute("disabled", true)
+            );
+        }
+    });
 
-    // Si no es válido, prevenir el envío del formulario
-    if (!isValid) {
-      event.preventDefault();
-    }
-  });
+    nameFields.forEach((field) => {
+        let errorSpan = document.createElement("span");
+        errorSpan.classList.add("error-message");
+        errorSpan.style.color = "#DC2626";
+        field.insertAdjacentElement("afterend", errorSpan);
+
+        field.addEventListener("input", function () {
+            const value = field.value;
+            if (!lettersRegex.test(value)) {
+                errorSpan.textContent =
+                    "It must not contain numbers or special characters.";
+                field.setCustomValidity(
+                    "It must not contain numbers or special characters."
+                );
+            } else {
+                errorSpan.textContent = "";
+                field.setCustomValidity(""); // Restablecer el mensaje si es válido
+            }
+        });
+    });
+
+    // Prevenir el envío del formulario si las validaciones no son correctas
+    form.addEventListener("submit", function (event) {
+        let isValid = true;
+
+        if (curpInput.value.length < 18 || !curpRegex.test(curpInput.value)) {
+            curpFormatError.textContent =
+                "CURP must be 18 characters long and in the correct format.";
+            curpInput.setCustomValidity(
+                "CURP must be 18 characters long and in the correct format."
+            );
+            isValid = false;
+        } else {
+            curpFormatError.textContent = "";
+            curpInput.setCustomValidity("");
+        }
+
+        if (rfcInput.value.length < 13 || !rfcRegex.test(rfcInput.value)) {
+            rfcFormatError.textContent =
+                "RFC must be 13 characters long and in the correct format.";
+            rfcInput.setCustomValidity(
+                "RFC must be 13 characters long and in the correct format."
+            );
+            isValid = false;
+        } else {
+            rfcFormatError.textContent = "";
+            rfcInput.setCustomValidity("");
+        }
+
+        if (!mailRegex.test(mailInput.value)) {
+            mailFormatError.textContent =
+                "The e-mail format or domain is wrong.";
+            mailInput.setCustomValidity("The e-mail format or domain is wrong");
+            isValid = false;
+        } else {
+            mailFormatError.textContent = "";
+            mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
+        }
+
+        nameFields.forEach((field) => {
+            let errorSpan = field.nextElementSibling;
+            if (!lettersRegex.test(field.value)) {
+                errorSpan.textContent = "Only letters and spaces are allowed.";
+                field.setCustomValidity("Only letters and spaces are allowed.");
+                isValid = false;
+            } else {
+                errorSpan.textContent = "";
+                field.setCustomValidity("");
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
 });

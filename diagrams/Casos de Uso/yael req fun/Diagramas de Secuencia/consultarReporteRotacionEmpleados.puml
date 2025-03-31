@@ -17,50 +17,24 @@ routes -> controller: get_reports(req, res)
 deactivate routes
 
 activate controller
-controller -> Report: getIDActivos(inicio, final)
-deactivate controller
+controller ->> Report: getInfoActivos(start, end)
 activate Report
-Report ->> mysql: execute("SELECT id FROM user u, workStatus w, \nWHERE u.userID = w.userStatusIDFK AND \nu.workstatus = 1 AND w.startDate BETWEEN \n? AND ?", [inicio, final])
-activate mysql
-mysql -->> Report: Query OK
+Report ->> mysql: SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol,\n d.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r ON u.userRoleIDFK = r.roleID \nJOIN country c ON u.countryUserIDFK = c.countryID\n WHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK WHERE u2.workStatus = 1 \nAND w.startDate BETWEEN '2025-03-01' AND '2025-03-31') GROUP BY u.curp ORDER BY d.title;
+mysql -->> Report: activeUsers
 deactivate mysql
-Report --> controller: Promesa
+Report -->> controller: Promesa
 deactivate Report
 
-activate controller
-controller -> Report: getInfoActivos(IDs_activos)
-deactivate controller
+controller ->> Report: getInfoInactivos(start, end)
 activate Report
-Report ->> mysql: execute("SELECT u.* FROM user u, userDepartment ud, department d, \nWHERE u.userID = ud.userIDFK AND ud.deparmentIDFK = d.departmentID \nAND u.userID IN (?) ORDER BY d.name", IDs_activos)
+Report ->> mysql: SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol, \nd.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r ON u.userRoleIDFK = r.roleID JOIN \ncountry c ON u.countryUserIDFK = c.countryID \nWHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK WHERE u2.workStatus = 0 \nAND w.endDate BETWEEN '2025-03-01' AND '2025-03-31') GROUP BY u.curp ORDER BY d.title;
 activate mysql
-mysql -->> Report: rows
+mysql -->> Report: inactiveUsers
 deactivate mysql
-Report --> controller: Promesa
+Report -->> controller: Promesa
 deactivate Report
 
-activate controller
-controller -> Report: getIDInactivos(inicio, final)
-deactivate controller
-activate Report
-Report ->> mysql: execute("SELECT id FROM user u, workStatus w, \nWHERE u.userID = w.userStatusIDFK AND \nu.workstatus = 0 AND w.endDate BETWEEN \n? AND ?", [inicio, final])
-activate mysql
-mysql -->> Report: Query OK
-deactivate mysql
-Report --> controller: Promesa
-deactivate Report
 
-activate controller
-controller -> Report: getInfoInactivos(IDs_inactivos)
-deactivate controller
-activate Report
-Report ->> mysql: execute("SELECT u.* FROM user u, userDepartment ud, department d, \nWHERE u.userID = ud.userIDFK AND ud.deparmentIDFK = d.departmentID \nAND u.userID IN (?) ORDER BY d.name", IDs_inactivos)
-activate mysql
-mysql -->> Report: rows
-deactivate mysql
-Report --> controller: Promesa
-deactivate Report
-
-activate controller
 controller -> list: res.render('rotacion.ejs', data)
 deactivate controller
 activate list

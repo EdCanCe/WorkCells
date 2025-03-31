@@ -66,8 +66,8 @@ CREATE TABLE user (
     CONSTRAINT userRoleIDFK FOREIGN KEY (userRoleIDFK) REFERENCES role(roleID),
     countryUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
-    prioritaryDepartmentFK VARCHAR(40),
-    CONSTRAINT prioritaryDepartmentFK FOREIGN KEY (prioritaryDepartmentFK) REFERENCES department(departmentID)
+    prioritaryDepartmentIDFK VARCHAR(40),
+    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID)
 );
 
 CREATE TABLE workStatus (
@@ -90,8 +90,8 @@ CREATE TABLE vacation (
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
-    leaderStatus TINYINT NOT NULL,
-    hrStatus TINYINT NOT NULL,
+    leaderStatus TINYINT DEFAULT 0,
+    hrStatus TINYINT DEFAULT 0,
     vacationUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT vacationUserIDFK FOREIGN KEY (vacationUserIDFK) REFERENCES user(userID)
 );

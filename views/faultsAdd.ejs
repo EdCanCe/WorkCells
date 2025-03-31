@@ -1,0 +1,100 @@
+<%- include('includes/_header') %>
+<div class="flex">
+    <form
+        action="/fault"
+        method="POST"
+        class="max-w-lg mx-auto p-6 bg-neutral-700/25 rounded-xl shadow-md space-y-6"
+        enctype="multipart/form-data"
+    >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div>
+            <label class="block text-neutral-100 font-semibold mb-2"
+                >Fecha de la falta</label
+            >
+            <div class="relative">
+                <input
+                    class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
+                    type="date"
+                    name="doneDate"
+                    required
+                />
+                <div
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
+                >
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-neutral-100 font-semibold mb-2"
+                >Razón de la falta</label
+            >
+            <div class="relative">
+                <input
+                    class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
+                    type="text"
+                    name="reason"
+                    placeholder="Razón de la falta"
+                    required
+                />
+                <div
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
+                >
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-neutral-100 font-semibold mb-2"
+                >Correo del colaborador</label
+            >
+            <div class="relative">
+                <input
+                    class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
+                    type="email"
+                    name="email"
+                    placeholder="Correo del colaborador"
+                    required
+                />
+                <div
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
+                >
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campo para subir archivos -->
+        <div class="mb-6">
+            <label class="block text-neutral-100 font-semibold mb-2">
+                Evidencia (opcional):
+            </label>
+            <input
+                class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
+                type="file"
+                name="evidence"
+                accept=".jpg, .png, .docx, .jpeg, .pdf"
+            />
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button
+                type="submit"
+                class="btnPrimary"
+            >
+                Enviar
+            </button>
+            <a
+                href="/fault"
+                class="btnPrimary"
+            >
+                Regresar
+            </a>
+        </div>
+    </form>
+
+    <%- include('includes/_footer') %>
+</div>

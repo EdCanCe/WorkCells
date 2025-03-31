@@ -1,13 +1,39 @@
 <!DOCTYPE html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WorkCells</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/css/style.css" />
-</head>
-<body class="max-w-screen-xl mx-auto p-6">
-  <section class="p-6">
-    <h1 class="text-4xl font-bold">WorkCells</h1>
-  </section>
-</body>
+<html <% //Aquí añadir expresión para verificar si de base es modo oscuro o ne %> class="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>WorkCells</title>
+
+        <!-- Favicon -->
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/icons/favicon_io/apple-touch-icon.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/icons/favicon_io/favicon-32x32.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/icons/favicon_io/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/icons/favicon_io/site.webmanifest" />
+
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body
+        class="noMargin bgBase max-w-screen-xl max-h-screen overflow-hidden"
+    >
+        <div class="noMargin w-screen h-screen max-h-screen flex flex-row">
+            <%- include('_navbar') %>
+
+            <div class="block w-full h-screen max-h-screen overflow-auto">
+                <%- include('_toggleDark.ejs') %>
+
+                <!-- !CUIDADO AL USAR PRETTIER EN ESTE ARCHIVO -->

@@ -5,8 +5,8 @@ async function loadFaltas(page) {
   const data = await res.json();
 
   let table = `
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-100 text-gray-700 text-left text-lg">
+    <table class="min-w-full divide-y divide-emerald-200">
+      <thead class="bg-neutral-800  text-left text-lg">
         <tr>
           <th class="px-6 py-4">Nombre</th>
           <th class="px-6 py-4">Correo</th>
@@ -14,7 +14,7 @@ async function loadFaltas(page) {
           <th class="px-6 py-4">Número de Faltas</th>
         </tr>
       </thead>
-      <tbody class="text-gray-800">
+      <tbody class="">
   `;
 
   if (data.length === 0) {
@@ -22,12 +22,12 @@ async function loadFaltas(page) {
   } else {
     data.forEach((falta) => {
       table += `
-        <tr class="hover:bg-gray-50 border-b">
+        <tr class="hover:bg-neutral-800 border-b">
           <td class="px-6 py-4">${falta.nombre}</td>
           <td class="px-6 py-4">${falta.correo}</td>
           <td class="px-6 py-4">${new Date(
-            falta.fecha_falta
-          ).toLocaleDateString("es-MX")}</td>
+        falta.fecha_falta
+      ).toLocaleDateString("es-MX")}</td>
           <td class="px-6 py-4 font-semibold">${falta.num_faltas}</td>
         </tr>
       `;

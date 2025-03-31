@@ -1,55 +1,60 @@
 <div class="flex">
-  <aside class="w-64"><%- include('../_navbar') %></aside>
+    <aside class="w-64"></aside>
 
-<div class="p-6">
-  <div class="bg-white shadow-md rounded-lg mb-6">
     <div class="p-6">
-      <div class="bg-gray-50 p-6 rounded-lg mb-4">
-        <% if (info) { %>
-        <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-          <%= info %>
-        </div>
-        <% } %>
-        <h3 class="text-xl font-semibold mb-4">Añadir</h3>
-        <p class="text-lg mb-4">Añadir día feriado</p>
-        <a
-          href="/holiday/add"
-          class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-          >Agregar</a
-        >
-      </div>
-    </div>
+        <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
+            <!-- Nuevo contenido movido dentro -->
+            <div class="bg-neutral-800/50 p-6 rounded-lg mb-4">
+                <% if (info) { %>
+                <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+                    <%= info %>
+                </div>
+                <% } %>
+                <h3 class="text-xl font-semibold mb-4">Añadir</h3>
+                <p class="text-lg mb-4">Añadir día feriado</p>
+                <a
+                    href="/holiday/add"
+                    class="btnPrimary"
+                >
+                    Agregar
+                </a>
+            </div>
 
-    <!-- Acciones -->
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Añadir -->
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold mb-4">Añadir</h3>
-          <p class="text-lg mb-4">Añadir día feriado</p>
-          <a
-            href="/holiday/add"
-            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-            >Agregar</a
-          >
-        </div>
+            <!-- Acciones -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Día específico -->
+                <div class="bg-neutral-800/50 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Día específico</h3>
+                    <p class="text-lg mb-4">Entrar a un día en específico</p>
+                    <a
+                        href="/holiday/check"
+                        class="btnPrimary m-2"
+                    >
+                        Consultar
+                    </a>
+                    <a
+                        href="/holiday/check/modify"
+                        class="btnPrimary"
+                    >
+                        Modificar
+                    </a>
+                </div>
 
-        <!-- Día específico -->
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-          <h3 class="text-xl font-semibold mb-4">Día específico</h3>
-          <p class="text-lg mb-4">Entrar a un día en específico</p>
-          <a
-            href="/holiday/check"
-            class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 mr-4"
-            >Consultar</a
-          >
-          <a
-            href="/holiday/check/modify"
-            class="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
-            >Modificar</a
-          >
+                <div class="bg-neutral-800/50 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">
+                        Checar días feriados
+                    </h3>
+                    <p class="text-lg mb-4">
+                        Mostrar una lista de días feriados
+                    </p>
+                    <a
+                        href="/holiday/used"
+                        class="btnPrimary"
+                    >
+                        Ver
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

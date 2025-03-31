@@ -1,0 +1,219 @@
+<div class="flex-1 p-6">
+    <div class="max-w-7xl mx-auto">
+        <div class="bg-neutral-700/25 shadow-lg rounded-lg">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
+            </div>
+            <div class="p-6">
+                <div
+                    class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
+                >
+                    <table id="vacations-table" class="min-w-full table-auto">
+                        <thead class="bg-neutral-800">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Full name</th>
+                                <th class="px-4 py-2 text-left">Reason</th>
+                                <th class="px-4 py-2 text-left">Start Date</th>
+                                <th class="px-4 py-2 text-left">End Date</th>
+                                <th class="px-4 py-2 text-left">Duration</th>
+                                <th class="px-4 py-2 text-center">
+                                    Leader Status
+                                </th>
+                                <th class="px-4 py-2 text-center">HR Status</th>
+                                <th class="px-4 py-2 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Iterar sobre las solicitudes de vacaciones -->
+                            <% vacations.forEach(vacation => { %>
+                            <tr class="border-b hover:bg-neutral-800">
+                                <td class="px-4 py-2">
+                                    <%= vacation.birthName + " " +
+                                    vacation.surname %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= vacation.reason %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= new
+                                    Date(vacation.startDate).toLocaleDateString('es-MX')
+                                    %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= new
+                                    Date(vacation.endDate).toLocaleDateString('es-MX')
+                                    %>
+                                </td>
+                                <td
+                                    class="px-4 py-2 total-days"
+                                    data-start-date="<%= vacation.startDate %>"
+                                    data-end-date="<%= vacation.endDate %>"
+                                ></td>
+                                <td class="px-4 py-2">
+                                    <% if (vacation.leaderStatus === 1) { %>
+                                    <span
+                                        class="text-green-600 font-semibold text-center"
+                                        >Approved</span
+                                    >
+                                    <% } else if (vacation.leaderStatus === 0) {
+                                    %>
+                                    <span
+                                        class="text-red-600 font-semibold text-center"
+                                        >Denied</span
+                                    >
+                                    <% } else { %>
+                                    <span
+                                        class="text-neutral-500 font-semibold text-center"
+                                        >Pending</span
+                                    >
+                                    <% } %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <% if (vacation.hrStatus === 1) { %>
+                                    <span
+                                        class="text-green-600 font-semibold text-center"
+                                        >Approved</span
+                                    >
+                                    <% } else if (vacation.hrStatus === 0) { %>
+                                    <span
+                                        class="text-red-600 font-semibold text-center"
+                                        >Denied</span
+                                    >
+                                    <% } else { %>
+                                    <span
+                                        class="text-neutral-500 font-semibold text-center"
+                                        >Pending</span
+                                    >
+                                    <% } %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                                    >
+                                        <button
+                                            href="/vacation/requests/approve/<%= vacation.vacationID %>"
+                                            class="btnSuccess"
+                                            data-url="/vacation/requests/approve/<%= vacation.vacationID %>"
+                                            data-csrf="<%= csrfToken %>"
+                                        >
+                                            Approve
+                                        </button>
+                                        <button
+                                            href="/vacation/requests/deny/<%= vacation.vacationID %>"
+                                            class="btnDanger"
+                                            data-url="/vacation/requests/deny/<%= vacation.vacationID %>"
+                                            data-csrf="<%= csrfToken %>"
+                                        >
+                                            Deny
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <a
+            href="/vacation"
+            class="btnPrimary"
+            >Back</a
+        >
+    </div>
+</div>
+
+<script>
+    // Calcular los días para cada fila una vez que la página se ha cargado
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("#vacations-table tbody tr");
+        rows.forEach((row) => {
+            const totalDaysCell = row.querySelector(".total-days");
+            if (totalDaysCell) {
+                const startDate = new Date(
+                    totalDaysCell.getAttribute("data-start-date")
+                );
+                const endDate = new Date(
+                    totalDaysCell.getAttribute("data-end-date")
+                );
+
+                // Ajustar las fechas para incluir el día inicial y final
+                const timeDifference = endDate - startDate;
+                const totalDays =
+                    Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+
+                // Asignar el total de días a la celda correspondiente
+                totalDaysCell.innerText = totalDays;
+            }
+        });
+    });
+
+    // Agregar event listener a todos los botones de "Approve"
+
+    document.querySelectorAll(".approve-btn").forEach((button) => {
+        button.addEventListener("click", async function (event) {
+            const url = this.dataset.url;
+            const csrf = this.dataset.csrf;
+            // Deshabilitar el botón y mostrar estado de carga
+            this.disabled = true;
+            const originalText = this.innerText;
+            this.innerText = "Processing...";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "csrf-token": csrf,
+                    },
+                    body: JSON.stringify({}),
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                // Obtener la celda de la tabla que contiene los botones
+                const tableCell = this.closest("td");
+                // Reemplazar el contenido con el nuevo estado
+                tableCell.innerHTML =
+                    '<span class="text-green-600 font-semibold text-center">Approved</span>';
+            } catch (err) {
+                console.error("Error al aprobar:", err);
+                // Restaurar el estado del botón en caso de error
+                this.disabled = false;
+                this.innerText = originalText;
+                alert(
+                    "Hubo un error al procesar la solicitud. Por favor, intente nuevamente."
+                );
+            }
+        });
+    });
+
+    // Agregar event listener a todos los botones de "Deny"
+    document.querySelectorAll(".deny-btn").forEach((button) => {
+        button.addEventListener("click", async function (event) {
+            const url = this.dataset.url;
+            const csrf = this.dataset.csrf;
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "csrf-token": csrf,
+                    },
+                    body: JSON.stringify({}),
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                // Obtener la celda de la tabla que contiene los botones
+                const tableCell = this.closest("td");
+                // Reemplazar el contenido con el nuevo estado
+                tableCell.innerHTML =
+                    '<span class="text-red-600 font-semibold text-center">Denied</span>';
+            } catch (err) {
+                console.error("Error al denegar:", err);
+            }
+        });
+    });
+</script>
