@@ -1,0 +1,67 @@
+@startuml
+actor Navegador
+boundary vacation.ejs
+boundary vacation.routes
+control vacation.controller
+entity vacation.modelInstance
+entity vacation.model
+database mysql
+
+autonumber
+' Inicio del flujo
+
+activate Navegador
+
+Navegador -> vacation.routes : POST /vacation/delete/:vacationID
+deactivate Navegador
+activate vacation.routes
+vacation.routes -> vacation.controller : postDeleteVacation(req, res)
+activate vacation.controller
+deactivate vacation.routes
+
+
+vacation.controller -> vacation.ejs : Mostrar alerta de confirmación
+deactivate vacation.controller
+activate vacation.ejs
+vacation.ejs -> Navegador : Alerta si está seguro de eliminar
+activate Navegador
+
+deactivate vacation.ejs
+alt Confirmación positiva
+    Navegador->vacation.routes:POST /vacation/yes
+    activate vacation.routes
+    vacation.routes->vacation.controller: postYes(req,res)
+    deactivate vacation.routes
+    activate vacation.controller
+    vacation.controller ->> vacation.modelInstance : deleteVacation(vacationID)
+    deactivate vacation.controller
+    activate vacation.modelInstance
+    vacation.modelInstance ->> mysql : DELETE FROM vacation WHERE vacation_id=?
+    activate mysql
+    mysql -->> vacation.modelInstance : Solicitud eliminada
+deactivate mysql
+    vacation.modelInstance -->> vacation.controller : Éxito
+    activate vacation.controller
+    deactivate vacation.modelInstance
+    vacation.controller -> vacation.ejs : Mostrar mensaje de eliminación exitosa
+    deactivate vacation.controller
+    activate vacation.ejs
+else Cancelación
+    Navegador->vacation.routes:POST /vacation/no
+    activate vacation.routes
+    deactivate Navegador
+    vacation.routes->vacation.controller : postNo(req,res)
+    deactivate vacation.routes
+    activate vacation.controller
+    vacation.controller -> vacation.ejs : Regresar a vista de solicitudes
+    deactivate vacation.controller
+end
+
+activate vacation.ejs
+vacation.ejs -> Navegador : Mostrar mensaje correspondiente
+deactivate vacation.ejs
+activate Navegador
+deactivate Navegador
+
+@enduml
+
