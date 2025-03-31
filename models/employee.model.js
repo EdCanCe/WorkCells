@@ -87,27 +87,30 @@ module.exports = class Employee {
           ) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-                return bcrypt.hash(passwd, 12).then((passwdCifrado) => {
-                    return db.execute(query, [
-                        userID,
-                        this.curp.toUpperCase(),
-                        this.rfc.toUpperCase(),
-                        this.birthName,
-                        this.surname,
-                        this.mail,
-                        passwdCifrado,
-                        passwdFlag,
-                        this.zipCode,
-                        this.houseNumber,
-                        this.streetName,
-                        this.colony,
-                        this.workModality,
-                        workStatus,
-                        this.userRoleIDFK,
-                        this.countryUserIDFK,
-                        this.prioritaryDepartmentIDFK,
-                    ]);
-                });
+                return bcrypt
+                    .hash(passwd, 12)
+                    .then((passwdCifrado) => {
+                        return db.execute(query, [
+                            userID,
+                            this.curp.toUpperCase(),
+                            this.rfc.toUpperCase(),
+                            this.birthName,
+                            this.surname,
+                            this.mail,
+                            passwdCifrado,
+                            passwdFlag,
+                            this.zipCode,
+                            this.houseNumber,
+                            this.streetName,
+                            this.colony,
+                            this.workModality,
+                            workStatus,
+                            this.userRoleIDFK,
+                            this.countryUserIDFK,
+                            this.prioritaryDepartmentIDFK,
+                        ]);
+                    })
+                    .then(() => userID);
             })
             .catch((error) => {
                 console.error("Error al guardar el usuario:", error.message);
