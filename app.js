@@ -6,6 +6,9 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfProtection = csrf();
 const multer = require("multer");
+const passport = require("passport");
+require("dotenv").config();
+require("./util/google-auth.js");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -76,7 +79,13 @@ app.use("/oneToOne", oneToOneRouter);
 const reportRouter = require("./routes/report.routes.js");
 app.use("/reports", reportRouter);
 
+app.get(
+    "/auth/google",
+    passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
 const homeRouter = require("./routes/home.routes");
+const { profile } = require("console");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
 
