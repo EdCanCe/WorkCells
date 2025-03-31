@@ -27,7 +27,7 @@ module.exports = class Usuario {
             `
             SELECT DISTINCT p.title
             FROM workcells.privilege p
-            JOIN workcells.roleprivilege rp ON p.privilegeID = rp.privilegeIDFK
+            JOIN workcells.rolePrivilege rp ON p.privilegeID = rp.privilegeIDFK
             JOIN workcells.role r ON rp.roleIDFK = r.roleID
             JOIN workcells.user u ON u.userRoleIDFK = r.roleID
             WHERE u.mail = ?`,
