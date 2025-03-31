@@ -24,13 +24,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     mailInput.addEventListener("input", function () {
         const value = mailInput.value;
-        if (!mailRegex.test(value)) {
-            mailFormatError.textContent =
-                "The e-mail format or domain is wrong.";
-            mailInput.setCustomValidity("The e-mail format or domain is wrong");
-        } else {
+        if (value.length === 0) {
             mailFormatError.textContent = "";
-            mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
+            mailInput.setCustomValidity("");
+        } else {
+            if (!mailRegex.test(value)) {
+                mailFormatError.textContent =
+                    "The e-mail format or domain is wrong.";
+                mailInput.setCustomValidity(
+                    "The e-mail format or domain is wrong"
+                );
+            } else {
+                mailFormatError.textContent = "";
+                mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
+            }
         }
     });
 
@@ -101,15 +108,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         field.addEventListener("input", function () {
             const value = field.value;
-            if (!lettersRegex.test(value)) {
-                errorSpan.textContent =
-                    "It must not contain numbers or special characters.";
-                field.setCustomValidity(
-                    "It must not contain numbers or special characters."
-                );
-            } else {
+            if (value.length === 0) {
                 errorSpan.textContent = "";
-                field.setCustomValidity(""); // Restablecer el mensaje si es válido
+                field.setCustomValidity("");
+            } else {
+                if (!lettersRegex.test(value)) {
+                    errorSpan.textContent =
+                        "It must not contain numbers or special characters.";
+                    field.setCustomValidity(
+                        "It must not contain numbers or special characters."
+                    );
+                } else {
+                    errorSpan.textContent = "";
+                    field.setCustomValidity(""); // Restablecer el mensaje si es válido
+                }
             }
         });
     });
