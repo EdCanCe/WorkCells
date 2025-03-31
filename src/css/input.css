@@ -52,6 +52,15 @@
 
 :root {
     /* Backgrounds & Text */
+    --lightColorNavBase: #e5e5e5;
+    --darkColorNavBase: #171717;
+
+    --lightColorNavOne: #a1a1a1;
+    --darkColorNavOne: #404040;
+
+    --lightColorNavTwo: #d4d4d4;
+    --darkColorNavTwo: #262626;
+
     --lightColorBase: #fafafa;
     --darkColorBase: #0a0a0a;
 
@@ -71,7 +80,7 @@
 /* General */
 
 * {
-    transition: background-color 0.2s, color 0.2s, width 0.3s, opacity 0.3s;
+    transition: background-color 0.2s, color 0.3s, width 0.3s, opacity 0.3s, filter 0.3s, color 0.3s;
 }
 
 * * {
@@ -83,6 +92,30 @@
 }
 
 /* Backgrounds & Text */
+
+.navIcon {
+    @apply dark:invert;
+}
+
+.bgNav {
+    @apply border-r-[1px]
+           bg-(--lightColorNavBase) border-(--lightColorNavOne)
+           dark:bg-(--darkColorNavBase) dark:border-(--darkColorNavOne);
+}
+
+.bgNavOne {
+    @apply hover:bg-(--lightColorNavOne)
+           dark:hover:bg-(--darkColorNavOne);
+}
+
+.bgNavTwo {
+    @apply bg-(--lightColorNavTwo) border-(--lightColorNavOne)
+           dark:bg-(--darkColorNavTwo) dark:border-(--darkColorNavOne);
+}
+
+.bgNavThree {
+
+}
 
 .bgBase {
     @apply bg-(--lightColorBase) text-(--darkColorBase)
