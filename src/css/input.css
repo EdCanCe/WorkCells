@@ -91,6 +91,10 @@
     @apply m-0 p-0;
 }
 
+.navItem {
+    @apply flex flex-row justify-center overflow-hidden text-nowrap;
+}
+
 /* Backgrounds & Text */
 
 .navIcon {
@@ -113,8 +117,9 @@
            dark:bg-(--darkColorNavTwo) dark:border-(--darkColorNavOne);
 }
 
-.bgNavThree {
-
+.bgNavHead {
+    @apply hover:bg-neutral-500
+           dark:hover:bg-neutral-600
 }
 
 .bgBase {
