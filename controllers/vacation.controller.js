@@ -20,6 +20,7 @@ exports.getRequests = (request, response, next) => {
                 csrfToken: request.csrfToken(),
                 vacations: rows, // Pasar correctamente "rows" como "vacations"
                 info: mensaje,
+                privilegios: request.session.privilegios || [],
             });
         })
         .catch((error) => {
@@ -72,6 +73,7 @@ exports.getAddVacation = (request, response, next) => {
                 lastDate: lastDate,
                 info: mensaje,
                 csrfToken: request.csrfToken(),
+                privilegios: request.session.privilegios || [],
             });
         })
         .catch((error) => {
@@ -155,5 +157,10 @@ exports.postRequestDeny = (request, response, next) => {
 };
 
 exports.getRoot = (request, response, next) => {
-    response.render("ownVacation");
+    response.render("ownVacation", {
+        isLoggedIn: request.session.isLoggedIn || false,
+        userID: request.session.userID || 0,
+        csrfToken: request.csrfToken(),
+        privilegios: request.session.privilegios || [],
+    });
 };

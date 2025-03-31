@@ -1,5 +1,6 @@
 const db = require("../util/database"); // Importar la conexión
 const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcryptjs");
 
 module.exports = class Employee {
     constructor(
@@ -80,26 +81,27 @@ module.exports = class Employee {
           ) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-
-                return db.execute(query, [
-                    userID,
-                    this.curp.toUpperCase(),
-                    this.rfc.toUpperCase(),
-                    this.birthName,
-                    this.surname,
-                    this.mail,
-                    passwd,
-                    passwdFlag,
-                    this.zipCode,
-                    this.houseNumber,
-                    this.streetName,
-                    this.colony,
-                    this.workModality,
-                    workStatus,
-                    this.userRoleIDFK,
-                    this.countryUserIDFK,
-                    this.prioritaryDepartmentIDFK,
-                ]);
+                return bcrypt.hash(passwd, 12).then((passwdCifrado) => {
+                    return db.execute(query, [
+                        userID,
+                        this.curp.toUpperCase(),
+                        this.rfc.toUpperCase(),
+                        this.birthName,
+                        this.surname,
+                        this.mail,
+                        passwdCifrado,
+                        passwdFlag,
+                        this.zipCode,
+                        this.houseNumber,
+                        this.streetName,
+                        this.colony,
+                        this.workModality,
+                        workStatus,
+                        this.userRoleIDFK,
+                        this.countryUserIDFK,
+                        this.prioritaryDepartmentIDFK,
+                    ]);
+                });
             })
             .catch((error) => {
                 console.error("Error al guardar el usuario:", error.message);
