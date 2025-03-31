@@ -51,7 +51,9 @@
 /** Colores */
 
 :root {
-    /* Backgrounds */
+    /* Backgrounds & Text */
+    --lightColorBase: #fafafa;
+    --darkColorBase: #0a0a0a;
 
     /* Botones */
     --lightBtnPrimary: #1dd2b4;
@@ -62,8 +64,6 @@
 
     --lightBtnDanger: #ef325e;
     --darkBtnDanger: #9a0000;
-
-    --lightHover: 
 }
 
 /** Clases usadas */
@@ -71,26 +71,47 @@
 /* General */
 
 * {
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, color 0.2s, width 0.3s, opacity 0.3s;
+}
+
+* * {
     font-family: "Gotham";
 }
 
+.noMargin {
+    @apply m-0 p-0;
+}
+
+/* Backgrounds & Text */
+
+.bgBase {
+    @apply bg-(--lightColorBase) text-(--darkColorBase)
+           dark:bg-(--darkColorBase) dark:text-(--lightColorBase);
+}
+
+.invertText {
+    @apply text-(--lightColorBase)
+           dark:text-(--darkColorBase);
+}
+
+/* Botones */
+
 .btnPrimary {
     @apply px-6 py-2 rounded-md cursor-pointer inline-block
-         bg-(--lightBtnPrimary) hover:bg-(--lightBtnPrimary)/80 text-black
-         dark:bg-(--darkBtnPrimary) dark:hover:bg-(--darkBtnPrimary)/50 dark:text-white;
+           bg-(--lightBtnPrimary) hover:bg-(--lightBtnPrimary)/80 text-(--darkColorBase)
+           dark:bg-(--darkBtnPrimary) dark:hover:bg-(--darkBtnPrimary)/50 dark:text-(--lightColorBase);
 }
 
 .btnSuccess {
     @apply px-6 py-2 rounded-md cursor-pointer inline-block
-         bg-(--lightBtnSuccess) hover:bg-(--lightBtnSuccess)/80 text-black
-         dark:bg-(--darkBtnSuccess) dark:hover:bg-(--darkBtnSuccess)/50 dark:text-white;
+           bg-(--lightBtnSuccess) hover:bg-(--lightBtnSuccess)/80 text-(--darkColorBase)
+           dark:bg-(--darkBtnSuccess) dark:hover:bg-(--darkBtnSuccess)/50 dark:text-(--lightColorBase);
 }
 
 .btnDanger {
     @apply px-6 py-2 rounded-md cursor-pointer inline-block
-    bg-(--lightBtnDanger) hover:bg-(--lightBtnDanger)/80 text-black
-    dark:bg-(--darkBtnDanger) dark:hover:bg-(--darkBtnDanger)/50 dark:text-white;
+           bg-(--lightBtnDanger) hover:bg-(--lightBtnDanger)/80 text-(--darkColorBase)
+           dark:bg-(--darkBtnDanger) dark:hover:bg-(--darkBtnDanger)/50 dark:text-(--lightColorBase);
 }
 
 /* Scrollbar */
@@ -100,12 +121,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #888; 
+    background-color: #888;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #555; 
+    background-color: #555;
 }
 
 ::-webkit-scrollbar-track {
