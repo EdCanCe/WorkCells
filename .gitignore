@@ -8,5 +8,5 @@
 node_modules/
 util/database.js
 uploads/
-/public/css/style.css
+public/css/style.css
 *.x
