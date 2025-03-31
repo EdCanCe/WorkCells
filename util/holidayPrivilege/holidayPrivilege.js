@@ -1,7 +1,7 @@
 module.exports = (request, response, next) => {
     for (let privilegio of request.session.privilegios) {
         console.log(privilegio);
-        if (privilegio.nombre == "Superadmin registra día feriado") {
+        if (privilegio.title == "Superadmin registra día feriado") {
             return next();
         }
     }

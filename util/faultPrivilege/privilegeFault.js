@@ -1,12 +1,12 @@
 module.exports = (request, response, next) => {
     for (let privilegio of request.session.privilegios) {
-        if (privilegio.nombre == "Superadmin elimina falta administrativa") {
+        if (privilegio.title == "Superadmin elimina falta administrativa") {
             return next();
         }
-        if (privilegio.nombre == "Superadmin modifica falta administrativa") {
+        if (privilegio.title == "Superadmin modifica falta administrativa") {
             return next();
         }
-        if (privilegio.nombre == "Superadmin registra falta administrativa") {
+        if (privilegio.title == "Superadmin registra falta administrativa") {
             return next();
         }
     }

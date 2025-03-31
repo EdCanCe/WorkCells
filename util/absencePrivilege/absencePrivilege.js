@@ -1,28 +1,21 @@
 module.exports = (request, response, next) => {
     for (let privilegio of request.session.privilegios) {
-        console.log(privilegio);
         if (
             privilegio.title ==
-            "Líder consulta solicitudes de vacaciones de colaborador"
+            "Superadmin registra respuesta hacia ausencia de empleado"
         ) {
             return next();
         }
         if (
             privilegio.title ==
-            "Líder registra respuesta hacia solicitud de vacaciones de colaborador"
+            "Líder registra respuesta hacia ausencia de colaborador"
         ) {
             return next();
         }
-        if (
-            privilegio.title ==
-            "Superadmin consulta solicitudes de vacaciones de empleado"
-        ) {
+        if (privilegio.title == "Líder consulta ausencias de colaborador") {
             return next();
         }
-        if (
-            privilegio.title ==
-            "Superadmin registra respuesta hacia solicitud de vacaciones de empleado"
-        ) {
+        if (privilegio.title == "Superadmin consulta ausencias de empleado") {
             return next();
         }
     }

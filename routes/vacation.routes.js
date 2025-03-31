@@ -6,12 +6,7 @@ const isAuth = require("../util/is-auth");
 const vacationPrivilege = require("../util/vacationPrivilege/vacationPrivilege");
 
 router.get("/check", isAuth, vacationController.getCheckVacation);
-router.get(
-    "/check/modify",
-    isAuth,
-    vacationPrivilege,
-    vacationController.getModifyVacation
-);
+router.get("/check/modify", isAuth, vacationController.getModifyVacation);
 router.get("/add", isAuth, vacationController.getAddVacation);
 router.post("/add", isAuth, vacationController.postAddVacation);
 router.get(
