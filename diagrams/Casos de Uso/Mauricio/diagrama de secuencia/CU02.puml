@@ -1,59 +1,44 @@
-@startuml CU02 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
+@startuml CU02 - Superadmin registra respuesta hacia solicitud de vacaciones de empleado - Diagrama de secuencia
 actor Navegador
-boundary vacations.ejs
-boundary vacations.routes
-control vacations.controller
-entity VacationsModel
-database mysql
-
+boundary "vacation.routes" as Routes
+boundary "vacation.view" as View
+control "vacation.controller" as Controller
+entity "vacation.model" as Model
+database "myPhpAdmin" as DB
 
 autonumber
-' Inicio del flujo
+
+' El SuperAdmin (HR) envía la respuesta a través de AJAX
 activate Navegador
-Navegador -> vacations.routes : GET /vacations/requests
+Navegador -> Routes: POST /vacation/registerResponse (AJAX)
+
+activate Routes
+Routes -> Controller: registerResponse(request, response)
+activate Controller
+
+' El controlador actualiza la respuesta de la solicitud en el modelo
+Controller ->> Model: updateVacationResponse(responseData, vacationID)
+activate Model
+Model ->> DB: db.execute("\nUPDATE vacation_requests \nSET response = ? \nWHERE vacationID = ?", \n[responseData, vacationID])
+activate DB
+DB -->> Model: confirmación de actualización
+deactivate DB
+Model -->> Controller: updateResult
+deactivate Model
+
+' Se prepara la respuesta para el cliente a través de la vista
+Controller ->> View: renderResponse(updateResult)
+activate View
+View --> Controller: fragmento HTML/JSON
+deactivate View
+
+Controller -->> Routes: response.json()
+deactivate Controller
+
+Routes -->> Navegador: respuesta AJAX
+deactivate Routes
+
+Navegador -> Navegador: Callback actualiza la interfaz
 deactivate Navegador
-activate vacations.routes
-vacations.routes -> vacations.controller : getVacations(req, res)
-deactivate vacations.routes
-activate vacations.controller
-
-
-' Se utiliza la instancia para obtener los datos
-vacations.controller ->> VacationsModel : fetchTop10()
-activate VacationsModel
-
-VacationsModel ->> mysql : SELECT * FROM vacations LIMIT 10;
-activate mysql
-mysql -->> VacationsModel : Datos obtenidos
-deactivate mysql
-
-VacationsModel -->> vacations.controller : Retorno de datos de vacaciones.
-deactivate VacationsModel
-
-vacations.controller -> vacations.ejs : render(vacations)
-activate vacations.ejs
-vacations.ejs -> Navegador : Mostrar vacaciones
-activate Navegador
-deactivate vacations.ejs
-deactivate vacations.controller
-deactivate vacations.routes
-
-Navegador -> vacations.controller : POST /vacations/requests/:response
-deactivate Navegador
-activate vacations.controller
-vacations.controller ->> VacationsModel : saveResponse()
-activate VacationsModel
-' vacationsID, startDate, endDate, reason, justified, vacationsUserIDFK
-VacationsModel ->> mysql : INSERT INTO vacations \nVALUES()
-activate mysql
-mysql -->> VacationsModel : Datos obtenidos
-deactivate mysql
-VacationsModel -->> vacations.controller : Retorno modificiación de falta
-activate vacations.ejs
-vacations.controller -> vacations.ejs : render()
-activate Navegador
-vacations.ejs -> Navegador : Mostrar respuesta
-deactivate vacations.ejs
-
 
 @enduml
