@@ -63,21 +63,6 @@ exports.getUsedHoliday = (request, response, next) => {
     // Limpiar la sesión después de usar el mensaje
     request.session.info = "";
 
-<<<<<<< HEAD
-  Holiday.fetchAll()
-    .then(([rows, fieldData]) => {
-      res.render("usedHoliday", {
-        isLoggedIn: req.session.isLoggedIn || false,
-        username: req.session.username || "",
-        holidays: rows, // Cambio aquí por claridad semántica
-        info: mensaje,
-      });
-    })
-    .catch((error) => {
-      console.error(error); // Mejor manejo de error
-      res.status(500).send("Error al obtener los días feriados.");
-    });
-=======
     Holiday.fetchUsedHoliday()
         .then(([rows, fieldData]) => {
             response.render("usedHoliday", {
@@ -105,7 +90,6 @@ exports.listPaginated = async (request, response) => {
         console.error(err);
         response.status(500).json({ error: "Error al obtener los días registrados." });
     }
->>>>>>> develop
 };
 
 exports.getHolidayModify = (request, response, next) => {

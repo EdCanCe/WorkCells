@@ -1,7 +1,7 @@
 <div class="flex">
     <aside class="w-64"></aside>
     <div class="p-6">
-        <!-- Historial de Vacaciones -->
+        <!-- Historial de Vacaciones (Aprobadas) -->
         <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
             <div class="p-6">
                 <h2 class="text-2xl font-semibold mb-4">
@@ -18,46 +18,51 @@
                                 <th class="px-4 py-2">Fecha Inicio</th>
                                 <th class="px-4 py-2">Fecha Fin</th>
                                 <th class="px-4 py-2">Estatus RH</th>
-                                <th class="px-4 py-2">Estatus Lider</th>
+                                <th class="px-4 py-2">Estatus Líder</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <% approvedVacations.forEach(vacation => { %>
                             <tr class="border-b">
-                                <td class="px-4 py-2">01</td>
                                 <td class="px-4 py-2">
-                                    <a
-                                        href="/vacation/check"
-                                        class="text-blue-500"
-                                        >Ir a la playa con mi familia</a
+                                    <%= vacation.vacationID %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= vacation.reason %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= vacation.startDate %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= vacation.endDate %>
+                                </td>
+                                <!-- Estado de RH -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.hrStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.hrStatus === 0) { %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500"
+                                        >Pending...</span
                                     >
+                                    <% } %>
                                 </td>
-                                <td class="px-4 py-2">10/08/2024</td>
-                                <td class="px-4 py-2">20/08/2024</td>
-                                <td class="px-4 py-2 text-green-500">
-                                    Approved
-                                </td>
-                                <td class="px-4 py-2 text-green-500">
-                                    Approved
+                                <!-- Estado del Líder -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.leaderStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.leaderStatus === 0) {
+                                    %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500"
+                                        >Pending...</span
+                                    >
+                                    <% } %>
                                 </td>
                             </tr>
-                            <tr class="border-b">
-                                <td class="px-4 py-2">02</td>
-                                <td class="px-4 py-2">
-                                    <a
-                                        href="/vacation/check"
-                                        class="text-blue-500"
-                                        >Voy a ir a visitar a mi familia</a
-                                    >
-                                </td>
-                                <td class="px-4 py-2">25/12/2024</td>
-                                <td class="px-4 py-2">05/01/2025</td>
-                                <td class="px-4 py-2 text-green-500">
-                                    Approved
-                                </td>
-                                <td class="px-4 py-2 text-green-500">
-                                    Approved
-                                </td>
-                            </tr>
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
@@ -72,7 +77,6 @@
                 </h2>
             </div>
             <div class="p-6">
-
                 <div class="content has-text-centered box">
                     <table class="table w-full text-sm text-left">
                         <thead class="bg-neutral-700/50">
@@ -82,28 +86,56 @@
                                 <th class="px-4 py-2">Fecha Inicio</th>
                                 <th class="px-4 py-2">Fecha Fin</th>
                                 <th class="px-4 py-2">Estatus RH</th>
-                                <th class="px-4 py-2">Estatus Lider</th>
+                                <th class="px-4 py-2">Estatus Líder</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <% pendingVacations.forEach(vacation => { %>
                             <tr class="border-b">
-                                <td class="px-4 py-2">03</td>
+                                <td class="px-4 py-2">
+                                    <%= vacation.vacationID %>
+                                </td>
                                 <td class="px-4 py-2">
                                     <a
-                                        href="/vacation/check"
+                                        href="/vacation/check/<%= vacation.vacationID %>"
                                         class="text-blue-500"
-                                        >Quiero ir a Grecia en Semana Santa</a
                                     >
+                                        <%= vacation.reason %>
+                                    </a>
                                 </td>
-                                <td class="px-4 py-2">13/04/2025</td>
-                                <td class="px-4 py-2">20/04/2025</td>
-                                <td class="px-4 py-2 text-yellow-500">
-                                    Pending...
+                                <td class="px-4 py-2">
+                                    <%= vacation.startDate %>
                                 </td>
-                                <td class="px-4 py-2 text-yellow-500">
-                                    Pending...
+                                <td class="px-4 py-2">
+                                    <%= vacation.endDate %>
+                                </td>
+                                <!-- Estado de RH -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.hrStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.hrStatus === 0) { %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500"
+                                        >Pending...</span
+                                    >
+                                    <% } %>
+                                </td>
+                                <!-- Estado del Líder -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.leaderStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.leaderStatus === 0) {
+                                    %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500"
+                                        >Pending...</span
+                                    >
+                                    <% } %>
                                 </td>
                             </tr>
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
@@ -111,13 +143,7 @@
         </div>
 
         <!-- Botones -->
-        <div class="flex space-x-4 justify-center">
-            <a href="/vacation/add" class="btnPrimary">Nueva Solicitud</a>
-            <a href="/vacation/check/modify" class="btnPrimary"
-                >Modificar Solicitud</a
-            >
-        </div>
-        <% for (let privilegio of privilegios) { %> <% if(privilegio.title ==
+        <% privilegios.forEach(privilegio => { %> <% if (privilegio.title ===
         "Líder registra respuesta hacia solicitud de vacaciones de colaborador")
         { %>
         <div class="flex justify-center mt-6">
@@ -125,6 +151,6 @@
                 >Revisar Solicitudes de Vacaciones</a
             >
         </div>
-        <% } %> <% } %>
+        <% } %> <% }) %>
     </div>
 </div>

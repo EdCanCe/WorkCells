@@ -1,7 +1,6 @@
 const db = require("../util/database"); // Asegúrate de importar tu módulo de conexión
 
 class Vacation {
-
     constructor(userID, startDate, endDate, reason) {
         this.userID = userID;
         this.startDate = startDate;
@@ -10,8 +9,15 @@ class Vacation {
     }
 
     save() {
-        const saveQuery = "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
-        return db.execute(saveQuery, [this.userID, this.startDate, this.endDate, this.reason])
+        const saveQuery =
+            "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
+        return db
+            .execute(saveQuery, [
+                this.userID,
+                this.startDate,
+                this.endDate,
+                this.reason,
+            ])
             .catch((error) => {
                 console.error("Error al añadir vacación:", error.message);
                 throw error;
@@ -39,7 +45,8 @@ AND u.userID IN (
     WHERE userIDFK = ?
     
   )
-);`, [userID]
+);`,
+            [userID]
         );
     }
 
@@ -68,9 +75,19 @@ AND u.userID IN (
     WHERE userIDFK = ?
     
   )
-  );`, [userID]
+  );`,
+            [userID]
         );
+    }
 
+    static fetchAllVacation(userID) {
+        return db.execute(
+            `SELECT v.vacationID,v.reason,v.startDate, v.endDate,
+            v.leaderStatus, v.hrStatus 
+            FROM vacation v
+            WHERE vacationUserIDFK = ?`,
+            [userID]
+        );
     }
 
     static updateStatusLeader(vacationId, status) {
@@ -88,9 +105,11 @@ AND u.userID IN (
     }
 
     static fetchByDateType(startDate, endDate, userID) {
-        return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
+        return db.execute(
+            `(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
 UNION
-(SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`, [startDate, endDate, userID, startDate, endDate, userID]
+(SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`,
+            [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
 }

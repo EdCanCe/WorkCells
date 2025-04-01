@@ -43,13 +43,8 @@ module.exports = class Holiday {
   }
 
   static fetchByDateType(startDate, endDate) {
-<<<<<<< HEAD
-    return db.execute(      
-      `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayID = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
-=======
     return db.execute(
       `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID AND usedDate BETWEEN ? AND ?;`,
->>>>>>> develop
       [startDate, endDate]
     );
   }
