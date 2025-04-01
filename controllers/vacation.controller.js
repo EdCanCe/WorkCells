@@ -4,9 +4,7 @@ const sessionVars = require('../util/sessionVars');
 
 exports.getRequests = (request, response, next) => {
     // console.log("Session:", request.session);
-    // console.log("UserID from session:", request.session.userID);
     const employeedId = request.session.userID;
-    // console.log(employeedId);
 
     Vacation.fetchAllWithNames(employeedId)
         .then(([rows, fieldData]) => {

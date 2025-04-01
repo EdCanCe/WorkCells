@@ -16,10 +16,6 @@
                                 <th class="px-4 py-2 text-left">Start Date</th>
                                 <th class="px-4 py-2 text-left">End Date</th>
                                 <th class="px-4 py-2 text-left">Duration</th>
-                                <th class="px-4 py-2 text-center">
-                                    Leader Status
-                                </th>
-                                <th class="px-4 py-2 text-center">HR Status</th>
                                 <th class="px-4 py-2 text-center">Actions</th>
                             </tr>
                         </thead>
@@ -49,43 +45,6 @@
                                     data-start-date="<%= vacation.startDate %>"
                                     data-end-date="<%= vacation.endDate %>"
                                 ></td>
-                                <td class="px-4 py-2">
-                                    <% if (vacation.leaderStatus === 1) { %>
-                                    <span
-                                        class="text-green-600 font-semibold text-center"
-                                        >Approved</span
-                                    >
-                                    <% } else if (vacation.leaderStatus === 0) {
-                                    %>
-                                    <span
-                                        class="text-red-600 font-semibold text-center"
-                                        >Denied</span
-                                    >
-                                    <% } else { %>
-                                    <span
-                                        class="text-neutral-500 font-semibold text-center"
-                                        >Pending</span
-                                    >
-                                    <% } %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <% if (vacation.hrStatus === 1) { %>
-                                    <span
-                                        class="text-green-600 font-semibold text-center"
-                                        >Approved</span
-                                    >
-                                    <% } else if (vacation.hrStatus === 0) { %>
-                                    <span
-                                        class="text-red-600 font-semibold text-center"
-                                        >Denied</span
-                                    >
-                                    <% } else { %>
-                                    <span
-                                        class="text-neutral-500 font-semibold text-center"
-                                        >Pending</span
-                                    >
-                                    <% } %>
-                                </td>
                                 <td class="px-4 py-2">
                                     <div
                                         class="flex flex-col sm:flex-row sm:items-center sm:gap-4"

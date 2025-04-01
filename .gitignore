@@ -11,3 +11,4 @@ uploads/
 public/css/style.css
 *.x
 *.env
+*.txt
