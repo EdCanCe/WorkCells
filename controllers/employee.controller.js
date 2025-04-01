@@ -1,5 +1,6 @@
 const Employee = require("../models/employee.model");
-const sessionVars = require('../util/sessionVars');
+const sessionVars = require("../util/sessionVars");
+const WorkStatus = require("../models/workStatus.model");
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -47,14 +48,20 @@ exports.postAdd = (request, response, next) => {
     // Intentar guardar el empleado
     employee
         .save()
+        .then((userID) => {
+            console.log("Empleado creado con ID:", userID);
+
+            // Crear y guardar el estado de trabajo asociado al usuario
+            const workStatus = new WorkStatus(new Date(), null, userID);
+            return workStatus.save();
+        })
         .then(() => {
             // Si la inserción fue exitosa, redirigir con mensaje
             request.session.info = "Empleado creado correctamente.";
             response.redirect("/employee");
         })
         .catch((error) => {
-            // Si ocurre un error (como que el CURP ya exista), mostrar el mensaje
-            console.error(error);
+            console.error("Error al registrar el empleado:", error.message);
             request.session.info =
                 error.message || "Error al registrar el empleado.";
             response.redirect("/employee/add");
