@@ -10,11 +10,11 @@
                 </h2>
             </div>
 
-            <% if (error && error !== '') { %>
+            <% if (warning && warning !== '') { %>
             <div
                 class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 text-center"
             >
-                <%= error %>
+                <%= warning %>
             </div>
             <% } %> <% if (info != '') { %>
             <div class="bg-green-900 text-green-300 p-4 rounded-lg mb-4">
@@ -138,16 +138,8 @@
                 </div>
 
                 <div class="text-center">
-                    <input
-                        class="btnPrimary"
-                        type="submit"
-                        value="Enviar"
-                    />
-                    <a
-                        href="/oneToOne"
-                        class="btnPrimary ml-2"
-                        >Cancelar</a
-                    >
+                    <input class="btnPrimary" type="submit" value="Enviar" />
+                    <a href="/oneToOne" class="btnPrimary ml-2">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -163,9 +155,7 @@
                         <p class="text-lg mb-4 text-neutral-300">
                             Consultar sesión de One To One
                         </p>
-                        <a
-                            href="/oneToOne/check"
-                            class="btnPrimary"
+                        <a href="/oneToOne/check" class="btnPrimary"
                             >Consultar</a
                         >
                     </div>
