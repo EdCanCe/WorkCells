@@ -10,8 +10,4 @@ util/database.js
 uploads/
 /public/css/style.css
 *.x
-<<<<<<< HEAD
 .env
-=======
-.env
->>>>>>> yael/inicioGoogle
