@@ -9,16 +9,16 @@ passport.use(
             clientSecret: process.env.CLIENT_SECRET,
             // Se agrega /auth/google antes de la ruta de inicio
             callbackURL: "http://localhost:3000/google/callback",
+            passReqToCallback: true,
         },
-        async (accessToken, refreshToken, profile, cb) => {
+        async (request, accessToken, refreshToken, profile, cb) => {
             try {
                 const email = profile.emails[0].value;
                 const [rows] = await User.fetchOne(email);
 
                 if (rows.length == 0) {
-                    return cb(null, false, {
-                        message: "Usuario no encontrado",
-                    });
+                    request.session.warning = "Correo no encontrado";
+                    return cb(null, false);
                 }
                 return cb(null, profile);
             } catch (err) {

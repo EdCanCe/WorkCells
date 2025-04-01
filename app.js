@@ -84,7 +84,10 @@ app.use("/reports", reportRouter);
 
 app.get(
     "/auth/google",
-    passport.authenticate("google", { scope: ["email", "profile"] })
+    passport.authenticate("google", {
+        scope: ["email", "profile"],
+        prompt: "select_account",
+    })
 );
 
 app.get(
