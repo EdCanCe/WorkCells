@@ -138,35 +138,34 @@ exports.getCheckVacation = (request, response, next) => {
         });
 };
 
-exports.getModifyVacation = (request, response, next) => {
-    const vacationID = request.params.vacationID; // Obtener el ID de la vacación desde la URL
-    const userID = request.session.userID; // Suponiendo que el usuario está en sesión
+exports.getModifyVacation = async (request, response, next) => {
+    try {
+        const vacationID = request.params.vacationID;
+        const userID = request.session.userID;
 
-    Vacation.fetchAllVacation(userID)
-        .then(([rows]) => {
-            // Buscar la vacación específica por ID
-            const selectedVacation = rows.find(
-                (vacation) => vacation.vacationID == vacationID
-            );
+        console.log("vacation id", vacationID);
+        // Si existe un método más eficiente, como fetchById, sería mejor usarlo
+        const [rows] = await Vacation.fetchAllVacation(userID);
+        const selectedVacation = rows.find(
+            (vacation) => vacation.vacationID === vacationID
+        );
 
-            if (!selectedVacation) {
-                return response.status(404).send("Vacación no encontrada.");
-            }
-
-            response.render("checkVacation", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                username: request.session.username || "",
-                vacation: selectedVacation, // Solo se envía la vacación seleccionada
-                info: "",
-                privilegios: request.session.privilegios || [],
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+        if (!selectedVacation) {
+            return response.status(404).send("Vacación no encontrada.");
+        }
+        
+        response.render("modifyVacation", {
+            isLoggedIn: request.session.isLoggedIn || false,
+            username: request.session.username || "",
+            vacation: selectedVacation,
+            info: "",
+            privilegios: request.session.privilegios || [],
         });
+    } catch (error) {
+        console.error("Error al obtener la vacación:", error);
+        response.status(500).send("Error interno del servidor.");
+    }
 };
-
 // TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
 
 exports.postRequestApprove = (request, response, next) => {

@@ -80,6 +80,13 @@ AND u.userID IN (
         );
     }
 
+    static fetchOneVacation(vacationID){
+        return db.execute(`SELECT v.vacationID, v.reason, v.startDate, v.endDate, v.leaderStatus, v.hrStatus
+         FROM vacation v
+         WHERE v.vacationID = ?`,
+        [vacationID])
+    }
+
     static fetchAllVacation(userID) {
         return db.execute(
             `SELECT v.vacationID,v.reason,v.startDate, v.endDate,
@@ -89,6 +96,8 @@ AND u.userID IN (
             [userID]
         );
     }
+
+
 
     static updateStatusLeader(vacationId, status) {
         return db.execute(
