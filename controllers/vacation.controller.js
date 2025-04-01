@@ -3,20 +3,37 @@ const User = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
 
 exports.getRequests = (request, response, next) => {
-    // console.log("Session:", request.session);
     const employeedId = request.session.userID;
+    console.log(employeedId);
+    const esSuperAdmin = request.session.privilegios.some((p) =>
+        p.title.includes("Superadmin")
+    );
 
-    Vacation.fetchAllWithNames(employeedId)
-        .then(([rows, fieldData]) => {
-            console.log(rows);
-            // Asegúrate de pasar "rows" como "vacations"
+    console.log("privilegios: ", request.session.privilegios);
+    console.log("Tipo de privilegios:", typeof request.session.privilegios);
+    console.log("Valor de privilegios:", request.session.privilegios);
+    console.log(esSuperAdmin);
+    // Verificar si es superAdmin
+
+    const mensaje = request.session.info || "";
+    request.session.info = ""; // Limpiar la sesión después de usar el mensaje
+
+    let fetchPromise;
+
+    if (esSuperAdmin) {
+        fetchPromise = Vacation.fetchAllSuperAdmin();
+    } else {
+        fetchPromise = Vacation.fetchAllWithNames(employeedId);
+    }
+    fetchPromise
+        .then(([rows]) => {
             response.render("vacationRequests", {
                 ...sessionVars(request),
                 vacations: rows, // Pasar correctamente "rows" como "vacations"
             });
         })
         .catch((error) => {
-            console.error(error); // Mejor manejo de error
+            console.error(error);
             response.status(500).send("Error al obtener los datos.");
         });
 };
@@ -93,17 +110,55 @@ exports.postAddVacation = (request, response, next) => {
 };
 
 exports.getCheckVacation = (request, response, next) => {
-    response.render("checkVacation", {
-        ...sessionVars(request),
-    });
+    const vacationID = request.params.vacationID; // Obtener el ID de la vacación desde la URL
+    const userID = request.session.userID;
+
+    Vacation.fetchAllVacation(userID)
+        .then(([rows]) => {
+            const selectedVacation = rows.find(
+                (vacation) => vacation.vacationID == vacationID
+            );
+
+            if (!selectedVacation) {
+                return response
+                    .status(404)
+                    .send("Solicitud de vacaciones no encontrada.");
+            }
+
+            response.render("checkVacation", {
+                ...sessionVars(request),
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send("Error al obtener los datos.");
+        });
 };
 
-exports.getModifyVacation = (request, response, next) => {
-    response.render("modifyVacation", {
-        ...sessionVars(request),
-    });
-};
+exports.getModifyVacation = async (request, response, next) => {
+    try {
+        const vacationID = request.params.vacationID;
+        const userID = request.session.userID;
 
+        console.log("vacation id", vacationID);
+        // Si existe un método más eficiente, como fetchById, sería mejor usarlo
+        const [rows] = await Vacation.fetchAllVacation(userID);
+        const selectedVacation = rows.find(
+            (vacation) => vacation.vacationID === vacationID
+        );
+
+        if (!selectedVacation) {
+            return response.status(404).send("Vacación no encontrada.");
+        }
+
+        response.render("modifyVacation", {
+            ...sessionVars(request),
+        });
+    } catch (error) {
+        console.error("Error al obtener la vacación:", error);
+        response.status(500).send("Error interno del servidor.");
+    }
+};
 // TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
 
 exports.postRequestApprove = (request, response, next) => {
@@ -145,7 +200,28 @@ exports.postRequestDeny = (request, response, next) => {
 };
 
 exports.getRoot = (request, response, next) => {
-    response.render("ownVacation", {
-        ...sessionVars(request),
-    });
+    const userID = request.session.userID;
+
+    Vacation.fetchAllVacation(userID)
+        .then(([rows]) => {
+            // Vacaciones aprobadas: ambas aprobadas (valor 1)
+            const approvedVacations = rows.filter(
+                (vacation) =>
+                    vacation.leaderStatus === 1 && vacation.hrStatus === 1
+            );
+
+            // Vacaciones pendientes: si alguno está pendiente (valor 2)
+            const pendingVacations = rows.filter(
+                (vacation) =>
+                    vacation.leaderStatus === 2 || vacation.hrStatus === 2
+            );
+
+            response.render("ownVacation", {
+                ...sessionVars(request),
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send("Error al obtener los datos.");
+        });
 };
