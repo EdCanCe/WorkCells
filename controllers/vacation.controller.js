@@ -3,33 +3,26 @@ const User = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
 
 exports.getRequests = (request, response, next) => {
-    const employeedId = request.session.userID;
-    console.log(employeedId);
-    const esSuperAdmin = request.session.privilegios.some((p) =>
-        p.title.includes("Superadmin")
-    );
-
-    console.log("privilegios: ", request.session.privilegios);
-    console.log("Tipo de privilegios:", typeof request.session.privilegios);
-    console.log("Valor de privilegios:", request.session.privilegios);
-    console.log(esSuperAdmin);
-    // Verificar si es superAdmin
-
-    const mensaje = request.session.info || "";
-    request.session.info = ""; // Limpiar la sesión después de usar el mensaje
-
+    const userId = request.session.userID;
+    const userRole = request.session.role;
     let fetchPromise;
 
-    if (esSuperAdmin) {
+    if (userRole === "Human Resources") {
+        // Recursos Humanos: cargar solicitudes de todos los departamentos
         fetchPromise = Vacation.fetchAllSuperAdmin();
+    } else if (userRole === "Leader") {
+        // Líder: cargar solo solicitudes de su propio departamento
+        fetchPromise = Vacation.fetchAllWithNames(userId);
     } else {
-        fetchPromise = Vacation.fetchAllWithNames(employeedId);
+        // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
+        fetchPromise = Vacation.fetchAllVacation(userId);
     }
+
     fetchPromise
         .then(([rows]) => {
             response.render("vacationRequests", {
                 ...sessionVars(request),
-                vacations: rows, // Pasar correctamente "rows" como "vacations"
+                vacations: rows, // Se pasan las solicitudes al template
             });
         })
         .catch((error) => {
@@ -37,6 +30,9 @@ exports.getRequests = (request, response, next) => {
             response.status(500).send("Error al obtener los datos.");
         });
 };
+
+
+
 
 exports.getAddVacation = (request, response, next) => {
     User.fetchStartDate(request.session.userID)
@@ -218,6 +214,8 @@ exports.getRoot = (request, response, next) => {
 
             response.render("ownVacation", {
                 ...sessionVars(request),
+                approvedVacations,
+                pendingVacations,
             });
         })
         .catch((error) => {

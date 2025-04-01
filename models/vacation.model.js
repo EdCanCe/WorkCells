@@ -70,27 +70,30 @@ AND u.userID IN (
     static fetchAllWithNames(userID) {
         return db.execute(
             `SELECT 
+                u.birthName, 
+                u.surname,
                 u.mail, 
                 v.reason, 
                 v.startDate, 
                 v.endDate, 
-                v.leaderStatus
-                FROM vacation v, user u
-                WHERE v.vacationUserIDFK = u.userID 
-                AND u.userID IN (
-                -- Subconsulta: Usuarios del mismo departamento del líder
+                v.leaderStatus,
+                v.hrStatus,
+                v.vacationID
+            FROM vacation v, user u
+            WHERE v.vacationUserIDFK = u.userID 
+            AND u.userID IN (
                 SELECT ud.userIDFK
                 FROM userDepartment ud
                 WHERE ud.departmentIDFK IN (
-                    -- Subconsulta: Departamento del líder
                     SELECT departmentIDFK
                     FROM userDepartment, user
                     WHERE userIDFK = ?
-  )
-  );`,
+                )
+            );`,
             [userID]
         );
     }
+    
 
     static fetchOneVacation(vacationID) {
         return db.execute(

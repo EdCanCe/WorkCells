@@ -5,9 +5,13 @@
                 <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
             </div>
             <div class="p-6">
-                <div
-                    class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
-                >
+                <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
+                    <% if (vacations.length === 0) { %>
+                    <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
+                        <p class="text-center text-gray-400 text-xl">No vacation requests available.</p>
+                    </div>
+                    <% } else { %>
+                    
                     <table id="vacations-table" class="min-w-full table-auto">
                         <thead class="bg-neutral-800">
                             <tr>
@@ -20,16 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (vacations.length === 0) { %>
-                            <tr>
-                                <td
-                                    colspan="8"
-                                    class="text-center text-gray-500"
-                                >
-                                    No vacation requests available.
-                                </td>
-                            </tr>
-                            <% } else { %> <% vacations.forEach(vacation => { %>
+                            <% vacations.forEach(vacation => { %>
                             <tr class="border-b hover:bg-neutral-800">
                                 <td class="px-4 py-2">
                                     <%= vacation.birthName + " " +
@@ -74,9 +69,10 @@
                                     </div>
                                 </td>
                             </tr>
-                            <% }) %> <% } %>
+                            <% }) %>
                         </tbody>
                     </table>
+                    <% } %>
                 </div>
             </div>
         </div>
