@@ -2,29 +2,41 @@ const Vacation = require("../models/vacation.model");
 const User = require("../models/user.model");
 
 exports.getRequests = (request, response, next) => {
-    // console.log("Session:", request.session);
-    // console.log("UserID from session:", request.session.userID);
     const employeedId = request.session.userID;
-    // console.log(employeedId);
+    console.log(employeedId);
+    const esSuperAdmin = request.session.privilegios.some((p) =>
+        p.title.includes("Superadmin")
+    );
+
+    console.log("privilegios: ", request.session.privilegios);
+    console.log("Tipo de privilegios:", typeof request.session.privilegios);
+    console.log("Valor de privilegios:", request.session.privilegios);
+    console.log(esSuperAdmin);
+    // Verificar si es superAdmin
 
     const mensaje = request.session.info || "";
     request.session.info = ""; // Limpiar la sesión después de usar el mensaje
 
-    Vacation.fetchAllWithNames(employeedId)
-        .then(([rows, fieldData]) => {
-            console.log(rows);
-            // Asegúrate de pasar "rows" como "vacations"
+    let fetchPromise;
+
+    if (esSuperAdmin) {
+        fetchPromise = Vacation.fetchAllSuperAdmin();
+    } else {
+        fetchPromise = Vacation.fetchAllWithNames(employeedId);
+    }
+    fetchPromise
+        .then(([rows]) => {
             response.render("vacationRequests", {
                 isLoggedIn: request.session.isLoggedIn || false,
                 username: request.session.username || "",
                 csrfToken: request.csrfToken(),
-                vacations: rows, // Pasar correctamente "rows" como "vacations"
+                vacations: rows, // Pasar la lista filtrada de vacaciones
                 info: mensaje,
                 privilegios: request.session.privilegios || [],
             });
         })
         .catch((error) => {
-            console.error(error); // Mejor manejo de error
+            console.error(error);
             response.status(500).send("Error al obtener los datos.");
         });
 };
@@ -153,7 +165,7 @@ exports.getModifyVacation = async (request, response, next) => {
         if (!selectedVacation) {
             return response.status(404).send("Vacación no encontrada.");
         }
-        
+
         response.render("modifyVacation", {
             isLoggedIn: request.session.isLoggedIn || false,
             username: request.session.username || "",

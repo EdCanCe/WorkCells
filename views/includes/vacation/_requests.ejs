@@ -24,8 +24,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Iterar sobre las solicitudes de vacaciones -->
-                            <% vacations.forEach(vacation => { %>
+                            <% if (vacations.length === 0) { %>
+                            <tr>
+                                <td
+                                    colspan="8"
+                                    class="text-center text-gray-500"
+                                >
+                                    No vacation requests available.
+                                </td>
+                            </tr>
+                            <% } else { %> <% vacations.forEach(vacation => { %>
                             <tr class="border-b hover:bg-neutral-800">
                                 <td class="px-4 py-2">
                                     <%= vacation.birthName + " " +
@@ -91,16 +99,14 @@
                                         class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
                                     >
                                         <button
-                                            href="/vacation/requests/approve/<%= vacation.vacationID %>"
-                                            class="btnSuccess"
+                                            class="btnSuccess approve-btn"
                                             data-url="/vacation/requests/approve/<%= vacation.vacationID %>"
                                             data-csrf="<%= csrfToken %>"
                                         >
                                             Approve
                                         </button>
                                         <button
-                                            href="/vacation/requests/deny/<%= vacation.vacationID %>"
-                                            class="btnDanger"
+                                            class="btnDanger deny-btn"
                                             data-url="/vacation/requests/deny/<%= vacation.vacationID %>"
                                             data-csrf="<%= csrfToken %>"
                                         >
@@ -109,17 +115,13 @@
                                     </div>
                                 </td>
                             </tr>
-                            <% }) %>
+                            <% }) %> <% } %>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <a
-            href="/vacation"
-            class="btnPrimary"
-            >Back</a
-        >
+        <a href="/vacation" class="btnPrimary">Back</a>
     </div>
 </div>
 

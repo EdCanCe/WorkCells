@@ -50,41 +50,55 @@ AND u.userID IN (
         );
     }
 
+    static fetchAllSuperAdmin() {
+        return db.execute(
+            `SELECT 
+                u.birthname,
+                u.surname, 
+                v.reason, 
+                v.startDate, 
+                v.endDate, 
+                v.leaderStatus,
+                v.hrStatus,
+                v.vacationID,
+                u.birthName,
+                u.surname
+            FROM vacation v, user u;`
+        );
+    }
+
     static fetchAllWithNames(userID) {
         return db.execute(
             `SELECT 
-  u.mail, 
-  v.reason, 
-  v.startDate, 
-  v.endDate, 
-  v.leaderStatus,
-  v.hrStatus,
-  v.vacationID,
-  u.birthName,
-  u.surname
-  FROM vacation v, user u
-  WHERE v.vacationUserIDFK = u.userID
-  AND u.userID IN (
-  -- Subconsulta: Usuarios del mismo departamento del líder
-  SELECT ud.userIDFK
-  FROM userDepartment ud
-  WHERE ud.departmentIDFK IN (
-    -- Subconsulta: Departamento del líder
-    SELECT departmentIDFK
-    FROM userDepartment, user
-    WHERE userIDFK = ?
-    
+                u.mail, 
+                v.reason, 
+                v.startDate, 
+                v.endDate, 
+                v.leaderStatus
+                FROM vacation v, user u
+                WHERE v.vacationUserIDFK = u.userID 
+                AND u.userID IN (
+                -- Subconsulta: Usuarios del mismo departamento del líder
+                SELECT ud.userIDFK
+                FROM userDepartment ud
+                WHERE ud.departmentIDFK IN (
+                    -- Subconsulta: Departamento del líder
+                    SELECT departmentIDFK
+                    FROM userDepartment, user
+                    WHERE userIDFK = ?
   )
   );`,
             [userID]
         );
     }
 
-    static fetchOneVacation(vacationID){
-        return db.execute(`SELECT v.vacationID, v.reason, v.startDate, v.endDate, v.leaderStatus, v.hrStatus
+    static fetchOneVacation(vacationID) {
+        return db.execute(
+            `SELECT v.vacationID, v.reason, v.startDate, v.endDate, v.leaderStatus, v.hrStatus
          FROM vacation v
          WHERE v.vacationID = ?`,
-        [vacationID])
+            [vacationID]
+        );
     }
 
     static fetchAllVacation(userID) {
@@ -96,8 +110,6 @@ AND u.userID IN (
             [userID]
         );
     }
-
-
 
     static updateStatusLeader(vacationId, status) {
         return db.execute(
