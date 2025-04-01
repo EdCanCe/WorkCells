@@ -163,7 +163,7 @@ exports.getModifyVacation = async (request, response, next) => {
 
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
-
+    const vacationRole = request.session.role;
     Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
         .then(() => {
             response.status(200).json({
