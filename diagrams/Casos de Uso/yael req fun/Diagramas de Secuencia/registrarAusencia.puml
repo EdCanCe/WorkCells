@@ -26,16 +26,25 @@ routes -> controller: post_add(req, res)
 deactivate routes
 activate controller
 
+entity Absences
+database mysql
+controller ->> Absences: getID(req.session.mail)
+activate Absences
+Absences ->> mysql: execute(SELECT userID \nFROM user WHERE mail = ?, [email])
+activate mysql
+mysql -->> Absences: ID del usuario
+deactivate mysql
+Absences -->> controller: Promesa
+deactivate Absences
+
 create entity absence
-controller -> absence: new Modelo(req.body.valor)
+controller -> absence: new Absence(req.body.startDate, req.body.endDate, req.body.reason, userID)
 activate absence
 controller ->> absence: save()
 
-entity Absences
 entity AbsencesMedia
-database mysql
 
-absence ->> mysql: execute("INSERT INTO absence(?)", this.valor)
+absence ->> mysql: execute("INSERT INTO absence(?,?,?,?,?,?)",\nabsenceID, this.startDate, this.endDate, \nthis.reason, this.justified, this.absenceUserID )
 activate mysql
 mysql -->> absence: Query OK
 deactivate mysql
@@ -43,9 +52,10 @@ absence -->> controller: promesa
 deactivate absence
 
 create entity absenceMedia
-controller ->> absenceMedia : save()
+controller -> absenceMedia: new AbsenceMedia(req.file.filename, absenceID)
 activate absenceMedia
-absenceMedia ->> mysql: execute("INSERT INTO \nabsenceMedia(?)", this.valor)
+controller ->> absenceMedia : save()
+absenceMedia ->> mysql: execute("INSERT INTO absenceMedia(?,?,?)", \nabsenceMediaID, this.mediaLink, this.absenceIDFK)
 activate mysql
 mysql -->> absenceMedia: Query OK
 deactivate mysql
@@ -59,9 +69,9 @@ activate routes
 routes -> controller: get_root(req, res)
 deactivate routes
 activate controller
-controller ->> Absences: fetchAll()
+controller ->> Absences: fetchAllByID(req.session.mail)
 activate Absences
-Absences ->> mysql: execute("SELECT * FROM absence \nJOIN absenceMedia")
+Absences ->> mysql: execute("SELECT a.*, am.mediaLink \nFROM absence AS a LEFT JOIN absenceMedia AS am \nON a.absenceID = am.absenceIDFK \nWHERE a.absenceUserIDFK = ? \nORDER BY a.startDate DESC", [id])
 activate mysql
 mysql -->> Absences: rows
 deactivate mysql
@@ -74,6 +84,4 @@ activate list
 list -> navegador: HTML
 deactivate list
 activate navegador
-
-
 @enduml
