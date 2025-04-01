@@ -5,8 +5,12 @@ const vacationController = require("../controllers/vacation.controller");
 const isAuth = require("../util/is-auth");
 const vacationPrivilege = require("../util/vacationPrivilege/vacationPrivilege");
 
-router.get("/check", isAuth, vacationController.getCheckVacation);
-router.get("/check/modify", isAuth, vacationController.getModifyVacation);
+router.get("/check/:vacationID", isAuth, vacationController.getCheckVacation);
+
+router.get(
+    "/check/modify/:vacationID",isAuth,
+    vacationController.getModifyVacation
+);
 router.get("/add", isAuth, vacationController.getAddVacation);
 router.post("/add", isAuth, vacationController.postAddVacation);
 router.get(
@@ -27,6 +31,14 @@ router.post(
     vacationPrivilege,
     vacationController.postRequestDeny
 );
+
+
+router.get("/requests/paginated", 
+    isAuth, 
+    vacationPrivilege,
+    vacationController.getRequestsPaginated);
+
+
 router.get("/", isAuth, vacationController.getRoot);
 
 module.exports = router;

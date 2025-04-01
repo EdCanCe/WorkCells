@@ -5,9 +5,12 @@
                 <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
             </div>
             <div class="p-6">
-                <div
-                    class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
-                >
+                <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
+                    <% if (vacations.length === 0) { %>
+                    <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
+                        <p class="text-center text-gray-400 text-xl">No vacation requests available.</p>
+                    </div>
+                    <% } else { %>
                     <table id="vacations-table" class="min-w-full table-auto">
                         <thead class="bg-neutral-800">
                             <tr>
@@ -16,204 +19,242 @@
                                 <th class="px-4 py-2 text-left">Start Date</th>
                                 <th class="px-4 py-2 text-left">End Date</th>
                                 <th class="px-4 py-2 text-left">Duration</th>
-                                <th class="px-4 py-2 text-center">
-                                    Leader Status
-                                </th>
-                                <th class="px-4 py-2 text-center">HR Status</th>
                                 <th class="px-4 py-2 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Iterar sobre las solicitudes de vacaciones -->
                             <% vacations.forEach(vacation => { %>
                             <tr class="border-b hover:bg-neutral-800">
+                                <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
+                                <td class="px-4 py-2"><%= vacation.reason %></td>
+                                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                                <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                                 <td class="px-4 py-2">
-                                    <%= vacation.birthName + " " +
-                                    vacation.surname %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <%= vacation.reason %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <%= new
-                                    Date(vacation.startDate).toLocaleDateString('es-MX')
-                                    %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <%= new
-                                    Date(vacation.endDate).toLocaleDateString('es-MX')
-                                    %>
-                                </td>
-                                <td
-                                    class="px-4 py-2 total-days"
-                                    data-start-date="<%= vacation.startDate %>"
-                                    data-end-date="<%= vacation.endDate %>"
-                                ></td>
-                                <td class="px-4 py-2">
-                                    <% if (vacation.leaderStatus === 1) { %>
-                                    <span
-                                        class="text-green-600 font-semibold text-center"
-                                        >Approved</span
-                                    >
-                                    <% } else if (vacation.leaderStatus === 0) {
-                                    %>
-                                    <span
-                                        class="text-red-600 font-semibold text-center"
-                                        >Denied</span
-                                    >
-                                    <% } else { %>
-                                    <span
-                                        class="text-neutral-500 font-semibold text-center"
-                                        >Pending</span
-                                    >
-                                    <% } %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <% if (vacation.hrStatus === 1) { %>
-                                    <span
-                                        class="text-green-600 font-semibold text-center"
-                                        >Approved</span
-                                    >
-                                    <% } else if (vacation.hrStatus === 0) { %>
-                                    <span
-                                        class="text-red-600 font-semibold text-center"
-                                        >Denied</span
-                                    >
-                                    <% } else { %>
-                                    <span
-                                        class="text-neutral-500 font-semibold text-center"
-                                        >Pending</span
-                                    >
-                                    <% } %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
-                                    >
-                                        <button
-                                            href="/vacation/requests/approve/<%= vacation.vacationID %>"
-                                            class="btnSuccess"
-                                            data-url="/vacation/requests/approve/<%= vacation.vacationID %>"
-                                            data-csrf="<%= csrfToken %>"
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            href="/vacation/requests/deny/<%= vacation.vacationID %>"
-                                            class="btnDanger"
-                                            data-url="/vacation/requests/deny/<%= vacation.vacationID %>"
-                                            data-csrf="<%= csrfToken %>"
-                                        >
-                                            Deny
-                                        </button>
+                                    <% if (vacation.leaderStatus === 0) { %>
+                                    <span class="text-red-600 font-semibold">Denied</span>
+                                    <% } else if (vacation.leaderStatus === 1) { %>
+                                    <span class="text-green-600 font-semibold">Approved</span>
+                                    <% } else if (vacation.leaderStatus === 2) { %>
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
                                     </div>
+                                    <% } %>
                                 </td>
                             </tr>
                             <% }) %>
                         </tbody>
                     </table>
+                    <% } %>
                 </div>
             </div>
         </div>
-        <a
-            href="/vacation"
-            class="btnPrimary"
-            >Back</a
-        >
+        <!-- Controles de paginación -->
+        <div class="pagination-controls mt-4 mb-4 flex justify-between">
+            <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Anterior</button>
+            <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Siguiente</button>
+        </div>
+        <a href="/vacation" class="btnPrimary">Back</a>
     </div>
 </div>
 
 <script>
-    // Calcular los días para cada fila una vez que la página se ha cargado
+    // Variable para seguir la página actual
+    let currentPage = 0;
+    const limit = 10;
+
+    // Función para calcular el total de días
+    function calculateTotalDays(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const timeDifference = end - start;
+        return Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+    }
+
+    // Función para construir el contenido de la tabla con los datos de vacaciones
+    function updateTable(data) {
+        const noDataContainer = document.querySelector(".no-requests-container");
+        const tableContainer = document.querySelector("#vacations-table");
+        
+        // Si no hay datos y no hay tabla, crear un mensaje
+        if (data.length === 0) {
+            if (noDataContainer) {
+                return; // Ya existe el contenedor de "no hay datos"
+            }
+            
+            // Si hay tabla pero no hay datos, ocultarla y mostrar mensaje
+            if (tableContainer) {
+                tableContainer.style.display = "none";
+                
+                const newNoDataContainer = document.createElement("div");
+                newNoDataContainer.className = "no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg";
+                newNoDataContainer.innerHTML = '<p class="text-center text-gray-400 text-xl">No vacation requests available.</p>';
+                
+                tableContainer.parentNode.appendChild(newNoDataContainer);
+            }
+            
+            document.getElementById("prev-button").disabled = currentPage === 0;
+            document.getElementById("next-button").disabled = true;
+            return;
+        }
+        
+        // Si hay datos y existe el mensaje de "no hay datos", quitarlo
+        if (noDataContainer) {
+            noDataContainer.remove();
+        }
+        
+        // Asegurarse que la tabla sea visible
+        if (tableContainer) {
+            tableContainer.style.display = "";
+        }
+
+        const tbody = document.querySelector("#vacations-table tbody");
+        tbody.innerHTML = "";
+
+        data.forEach((vac) => {
+            const tr = document.createElement("tr");
+            tr.classList.add("border-b", "hover:bg-neutral-800");
+            
+            let actionCell = '';
+            if (vac.leaderStatus === 0) {
+                actionCell = '<span class="text-red-600 font-semibold">Denied</span>';
+            } else if (vac.leaderStatus === 1) {
+                actionCell = '<span class="text-green-600 font-semibold">Approved</span>';
+            } else if (vac.leaderStatus === 2) {
+                actionCell = `
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                    </div>`;
+            }
+            
+            tr.innerHTML = `
+                <td class="px-4 py-2">${vac.birthName} ${vac.surname}</td>
+                <td class="px-4 py-2">${vac.reason}</td>
+                <td class="px-4 py-2">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${calculateTotalDays(vac.startDate, vac.endDate)}</td>
+                <td class="px-4 py-2 text-center">${actionCell}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Habilitar/deshabilitar botones de paginación según corresponda
+        document.getElementById("prev-button").disabled = currentPage === 0;
+        document.getElementById("next-button").disabled = data.length < limit;
+
+        // Vuelve a asignar los event listeners para los botones de Approve y Deny
+        assignActionListeners();
+    }
+
+    // Función para cargar una página de solicitudes mediante AJAX
+    async function loadPage(page) {
+        try {
+            const response = await fetch(`/vacation/requests/paginated?page=${page}`);
+            if (!response.ok) throw new Error(`Error al cargar la página: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error("Error en loadPage:", error);
+            return [];
+        }
+    }
+
+    // Asigna event listeners para acciones de aprobar y denegar
+    function assignActionListeners() {
+        document.querySelectorAll(".approve-btn").forEach((button) => {
+            button.addEventListener("click", async function () {
+                const url = this.dataset.url;
+                const csrf = this.dataset.csrf;
+                this.disabled = true;
+                const originalText = this.innerText;
+                this.innerText = "Processing...";
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "csrf-token": csrf,
+                        },
+                        body: JSON.stringify({}),
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    // Actualizar la celda de acciones con el estado aprobado
+                    this.closest("td").innerHTML = '<span class="text-green-600 font-semibold">Approved</span>';
+                } catch (err) {
+                    console.error("Error al aprobar:", err);
+                    this.disabled = false;
+                    this.innerText = originalText;
+                    alert("Error al procesar la solicitud. Intente nuevamente.");
+                }
+            });
+        });
+
+        document.querySelectorAll(".deny-btn").forEach((button) => {
+            button.addEventListener("click", async function () {
+                const url = this.dataset.url;
+                const csrf = this.dataset.csrf;
+                this.disabled = true;
+                const originalText = this.innerText;
+                this.innerText = "Processing...";
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "csrf-token": csrf,
+                        },
+                        body: JSON.stringify({}),
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    // Actualizar la celda de acciones con el estado denegado
+                    this.closest("td").innerHTML = '<span class="text-red-600 font-semibold">Denied</span>';
+                } catch (err) {
+                    console.error("Error al denegar:", err);
+                    this.disabled = false;
+                    this.innerText = originalText;
+                    alert("Error al procesar la solicitud. Intente nuevamente.");
+                }
+            });
+        });
+    }
+
+    // Manejadores para los botones de paginación
+    document.getElementById("next-button").addEventListener("click", async () => {
+        const nextPage = currentPage + 1;
+        const data = await loadPage(nextPage);
+        if (data.length > 0) {
+            currentPage = nextPage;
+            updateTable(data);
+        } else {
+            alert("No hay más solicitudes disponibles.");
+        }
+    });
+
+    document.getElementById("prev-button").addEventListener("click", async () => {
+        if (currentPage === 0) return;
+        const prevPage = currentPage - 1;
+        const data = await loadPage(prevPage);
+        currentPage = prevPage;
+        updateTable(data);
+    });
+
+    // Calcular los días totales en las filas existentes (al cargar la página)
     document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll("#vacations-table tbody tr");
-        rows.forEach((row) => {
-            const totalDaysCell = row.querySelector(".total-days");
-            if (totalDaysCell) {
-                const startDate = new Date(
-                    totalDaysCell.getAttribute("data-start-date")
-                );
-                const endDate = new Date(
-                    totalDaysCell.getAttribute("data-end-date")
-                );
-
-                // Ajustar las fechas para incluir el día inicial y final
-                const timeDifference = endDate - startDate;
-                const totalDays =
-                    Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
-
-                // Asignar el total de días a la celda correspondiente
-                totalDaysCell.innerText = totalDays;
-            }
+        // Calcular duración para cada vacación inicialmente cargada
+        const totalDaysCells = document.querySelectorAll(".total-days");
+        totalDaysCells.forEach((cell) => {
+            const startDate = cell.getAttribute("data-start-date");
+            const endDate = cell.getAttribute("data-end-date");
+            cell.textContent = calculateTotalDays(startDate, endDate);
         });
-    });
-
-    // Agregar event listener a todos los botones de "Approve"
-
-    document.querySelectorAll(".approve-btn").forEach((button) => {
-        button.addEventListener("click", async function (event) {
-            const url = this.dataset.url;
-            const csrf = this.dataset.csrf;
-            // Deshabilitar el botón y mostrar estado de carga
-            this.disabled = true;
-            const originalText = this.innerText;
-            this.innerText = "Processing...";
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "csrf-token": csrf,
-                    },
-                    body: JSON.stringify({}),
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest("td");
-                // Reemplazar el contenido con el nuevo estado
-                tableCell.innerHTML =
-                    '<span class="text-green-600 font-semibold text-center">Approved</span>';
-            } catch (err) {
-                console.error("Error al aprobar:", err);
-                // Restaurar el estado del botón en caso de error
-                this.disabled = false;
-                this.innerText = originalText;
-                alert(
-                    "Hubo un error al procesar la solicitud. Por favor, intente nuevamente."
-                );
-            }
-        });
-    });
-
-    // Agregar event listener a todos los botones de "Deny"
-    document.querySelectorAll(".deny-btn").forEach((button) => {
-        button.addEventListener("click", async function (event) {
-            const url = this.dataset.url;
-            const csrf = this.dataset.csrf;
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "csrf-token": csrf,
-                    },
-                    body: JSON.stringify({}),
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest("td");
-                // Reemplazar el contenido con el nuevo estado
-                tableCell.innerHTML =
-                    '<span class="text-red-600 font-semibold text-center">Denied</span>';
-            } catch (err) {
-                console.error("Error al denegar:", err);
-            }
-        });
+        
+        // Configuración inicial de botones de paginación
+        document.getElementById("prev-button").disabled = currentPage === 0;
+        const noVacations = document.querySelector(".no-requests-container") !== null;
+        document.getElementById("next-button").disabled = noVacations || (document.querySelectorAll("#vacations-table tbody tr").length < limit);
+        
+        // Asigna los listeners para los botones existentes
+        assignActionListeners();
     });
 </script>

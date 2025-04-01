@@ -1,7 +1,6 @@
 const db = require("../util/database"); // Asegúrate de importar tu módulo de conexión
 
 class Vacation {
-
     constructor(userID, startDate, endDate, reason) {
         this.userID = userID;
         this.startDate = startDate;
@@ -10,8 +9,15 @@ class Vacation {
     }
 
     save() {
-        const saveQuery = "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
-        return db.execute(saveQuery, [this.userID, this.startDate, this.endDate, this.reason])
+        const saveQuery =
+            "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
+        return db
+            .execute(saveQuery, [
+                this.userID,
+                this.startDate,
+                this.endDate,
+                this.reason,
+            ])
             .catch((error) => {
                 console.error("Error al añadir vacación:", error.message);
                 throw error;
@@ -39,38 +45,105 @@ AND u.userID IN (
     WHERE userIDFK = ?
     
   )
-);`, [userID]
+);`,
+            [userID]
+        );
+    }
+
+    static fetchAllSuperAdmin() {
+        return db.execute(
+            `SELECT 
+                u.birthname,
+                u.surname, 
+                v.reason, 
+                v.startDate, 
+                v.endDate, 
+                v.leaderStatus,
+                v.hrStatus,
+                v.vacationID,
+                u.birthName,
+                u.surname
+            FROM vacation v, user u;`
         );
     }
 
     static fetchAllWithNames(userID) {
         return db.execute(
             `SELECT 
-  u.mail, 
-  v.reason, 
-  v.startDate, 
-  v.endDate, 
-  v.leaderStatus,
-  v.hrStatus,
-  v.vacationID,
-  u.birthName,
-  u.surname
-  FROM vacation v, user u
-  WHERE v.vacationUserIDFK = u.userID
-  AND u.userID IN (
-  -- Subconsulta: Usuarios del mismo departamento del líder
-  SELECT ud.userIDFK
-  FROM userDepartment ud
-  WHERE ud.departmentIDFK IN (
-    -- Subconsulta: Departamento del líder
-    SELECT departmentIDFK
-    FROM userDepartment, user
-    WHERE userIDFK = ?
-    
-  )
-  );`, [userID]
+                u.birthName, 
+                u.surname,
+                u.mail, 
+                v.reason, 
+                v.startDate, 
+                v.endDate, 
+                v.leaderStatus,
+                v.hrStatus,
+                v.vacationID
+            FROM vacation v, user u
+            WHERE v.vacationUserIDFK = u.userID 
+            AND u.userID IN (
+                SELECT ud.userIDFK
+                FROM userDepartment ud
+                WHERE ud.departmentIDFK IN (
+                    SELECT departmentIDFK
+                    FROM userDepartment, user
+                    WHERE userIDFK = ?
+                )
+            );`,
+            [userID]
         );
+    }
+    
+    static fetchPaginated(limit, offset) {
+        return db.execute(
+            `SELECT v.*, u.birthName, u.surname 
+             FROM vacation AS v
+             JOIN user AS u ON u.userID = v.vacationUserIDFK
+             WHERE v.leaderStatus = 2
+             ORDER BY v.startDate DESC
+             LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    }
+    
+    static fetchDepartmentPaginated(leaderID, limit, offset) {
+        return db.execute(
+            `SELECT v.*, u.birthName, u.surname 
+             FROM vacation AS v
+             JOIN user AS u ON u.userID = v.vacationUserIDFK
+             WHERE v.leaderStatus = 2
+             AND u.userID IN (
+                SELECT ud.userIDFK
+                FROM userDepartment ud
+                WHERE ud.departmentIDFK IN (
+                    SELECT departmentIDFK
+                    FROM userDepartment
+                    WHERE userIDFK = ?
+                )
+             )
+             ORDER BY v.startDate DESC
+             LIMIT ? OFFSET ?`,
+            [leaderID, limit, offset]
+        );
+    }
 
+    static fetchOneVacation(vacationID) {
+        return db.execute(
+            `SELECT v.vacationID, v.reason, v.startDate, v.endDate, v.leaderStatus, v.hrStatus
+         FROM vacation v
+         WHERE v.vacationID = ?`,
+            [vacationID]
+        );
+    }
+
+    static fetchAllVacation(userID) {
+        return db.execute(
+            `SELECT v.vacationID,v.reason,v.startDate, v.endDate,
+            v.leaderStatus, v.hrStatus 
+            FROM vacation v
+            WHERE vacationUserIDFK = ?`,
+            [userID]
+        );
     }
 
     static updateStatusLeader(vacationId, status) {
@@ -88,9 +161,11 @@ AND u.userID IN (
     }
 
     static fetchByDateType(startDate, endDate, userID) {
-        return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
+        return db.execute(
+            `(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
 UNION
-(SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`, [startDate, endDate, userID, startDate, endDate, userID]
+(SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`,
+            [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
 }
