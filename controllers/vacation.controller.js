@@ -127,6 +127,7 @@ exports.getCheckVacation = (request, response, next) => {
 
             response.render("checkVacation", {
                 ...sessionVars(request),
+                vacation: selectedVacation,
             });
         })
         .catch((error) => {
@@ -153,6 +154,7 @@ exports.getModifyVacation = async (request, response, next) => {
 
         response.render("modifyVacation", {
             ...sessionVars(request),
+            vacation: selectedVacation,
         });
     } catch (error) {
         console.error("Error al obtener la vacación:", error);
@@ -218,6 +220,8 @@ exports.getRoot = (request, response, next) => {
 
             response.render("ownVacation", {
                 ...sessionVars(request),
+                approvedVacations,
+                pendingVacations,
             });
         })
         .catch((error) => {

@@ -18,6 +18,7 @@
                     id="reason"
                     class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
                     placeholder="<%=vacation.reason %>"
+                    required
                 />
             </div>
             <div class="p-6">
@@ -30,8 +31,9 @@
                     type="text"
                     id="startDate"
                     class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                    placeholder= "<%= new
+                    placeholder="<%= new
                     Date(vacation.startDate).toLocaleDateString('es-MX') %>"
+                    required
                 />
             </div>
             <div class="p-6">
@@ -44,7 +46,9 @@
                     type="text"
                     id="endDate"
                     class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                    placeholder="02/02/2025"
+                    placeholder="<%= new
+                    Date(vacation.endDate).toLocaleDateString('es-MX') %>"
+                    required
                 />
             </div>
         </div>
