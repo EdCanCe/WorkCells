@@ -3,11 +3,11 @@ const User = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
 
 exports.getRequests = (request, response, next) => {
-    // console.log("Session:", request.session);
+    console.log("Session:", request.session);
     // console.log("UserID from session:", request.session.userID);
     const employeedId = request.session.userID;
     // console.log(employeedId);
-
+    
     Vacation.fetchAllWithNames(employeedId)
         .then(([rows, fieldData]) => {
             console.log(rows);
@@ -110,7 +110,7 @@ exports.getModifyVacation = (request, response, next) => {
 
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
-
+    const vacationRole = request.session.role;
     Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
         .then(() => {
             response.status(200).json({
