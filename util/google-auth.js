@@ -10,8 +10,20 @@ passport.use(
             // Se agrega /auth/google antes de la ruta de inicio
             callbackURL: "http://localhost:3000/google/callback",
         },
-        function (accessToken, refreshToken, profile, cb) {
-            return cb(null, profile);
+        async (accessToken, refreshToken, profile, cb) => {
+            try {
+                const email = profile.emails[0].value;
+                const [rows] = await User.fetchOne(email);
+
+                if (rows.length == 0) {
+                    return cb(null, false, {
+                        message: "Usuario no encontrado",
+                    });
+                }
+                return cb(null, profile);
+            } catch (err) {
+                return cb(err);
+            }
         }
     )
 );
