@@ -4,6 +4,8 @@ const router = express.Router();
 const vacationController = require("../controllers/vacation.controller");
 const isAuth = require("../util/is-auth");
 const vacationPrivilege = require("../util/vacationPrivilege/vacationPrivilege");
+const methodOverride = require("method-override");
+router.use(methodOverride("_method"));
 
 router.get("/check/:vacationID", isAuth, vacationController.getCheckVacation);
 
@@ -21,11 +23,8 @@ router.get(
     vacationController.getRequests
 );
 
-router.post(
-    "/update/:vacationID",
-    isAuth,
-    vacationController.postUpdateVacation
-);
+router.post("/update/:vacationID",isAuth, vacationController.updateVacation);
+
 
 router.post(
     "/requests/approve/:vacationID",
