@@ -58,10 +58,10 @@ controller -> routes: res.redirect('/')
 deactivate controller
 
 activate routes
-routes -> controller: get_root(req, res)
+routes -> controller: get_root(req, res) 
 deactivate routes
 activate controller
-controller ->> Absences: fetchAllByID(req.session.mail)
+controller ->> Absences: fetchAllByID(req.session.userID)
 activate Absences
 Absences ->> mysql: execute("SELECT a.*, am.mediaLink \nFROM absence AS a LEFT JOIN absenceMedia AS am \nON a.absenceID = am.absenceIDFK \nWHERE a.absenceUserIDFK = ? \nORDER BY a.startDate DESC", [id])
 activate mysql
