@@ -139,6 +139,7 @@ exports.getFetch = (request, response, next) => {
     console.log(startDate, endDate);
     //console.log(preSqlStartDate, preSqlEndDate);
     console.log(sqlStartDate, sqlEndDate);
+    console.log("Intento id?", request.session.userID);
 
     Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
         .then(([rows, fieldData]) => {
