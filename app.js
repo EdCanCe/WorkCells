@@ -23,6 +23,9 @@ app.use(
     })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -88,7 +91,7 @@ app.get(
     "/google/callback",
     passport.authenticate("google", {
         successRedirect: "/home",
-        failureRedirect: "/err",
+        failureRedirect: "/login",
     })
 );
 
