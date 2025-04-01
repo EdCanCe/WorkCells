@@ -6,6 +6,9 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfProtection = csrf();
 const multer = require("multer");
+const passport = require("passport");
+require("dotenv").config();
+require("./util/google-auth.js");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -19,6 +22,9 @@ app.use(
         saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
     })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -76,6 +82,22 @@ app.use("/oneToOne", oneToOneRouter);
 
 const reportRouter = require("./routes/report.routes.js");
 app.use("/reports", reportRouter);
+
+app.get(
+    "/auth/google",
+    passport.authenticate("google", {
+        scope: ["email", "profile"],
+        prompt: "select_account",
+    })
+);
+
+app.get(
+    "/google/callback",
+    passport.authenticate("google", {
+        successRedirect: "/home",
+        failureRedirect: "/login",
+    })
+);
 
 const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);

@@ -1,40 +1,44 @@
-@startuml CU02 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
+@startuml CU03 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de secuencia
 actor Navegador
-boundary vacations.ejs
-boundary vacations.routes
-control vacations.controller
-entity VacationsModel
-database mysql
-
+boundary "vacation.routes" as Routes
+boundary "vacation.view" as View
+control "vacation.controller" as Controller
+entity "vacation.model" as Model
+database "myPhpAdmin" as DB
 
 autonumber
-' Inicio del flujo
+
+' El SuperAdmin (HR) inicia la consulta de solicitudes de vacaciones
 activate Navegador
-Navegador -> vacations.routes : GET /vacations/requests
+Navegador -> Routes: GET /vacation/requests
+
+activate Routes
+Routes -> Controller: getVacationRequests(request, response)
+activate Controller
+
+' El controlador consulta el modelo para obtener las solicitudes de vacaciones
+Controller ->> Model: fetchRequests(collaboratorID)
+activate Model
+Model ->> DB: db.execute("\nSELECT * \nFROM vacation_requests \nWHERE collaboratorID = ?", \n[collaboratorID])
+activate DB
+DB -->> Model: vacationRequests data
+deactivate DB
+Model -->> Controller: data
+deactivate Model
+
+' El controlador procesa la respuesta y delega la renderización a la vista
+Controller ->> View: renderVacationRequests(data)
+activate View
+View --> Controller: HTML/JSON result
+deactivate View
+
+Controller -->> Routes: response.render()
+deactivate Controller
+
+Routes -->> Navegador: HTML/JSON response
+deactivate Routes
+
+Navegador -> Navegador: Actualiza interfaz con solicitudes
 deactivate Navegador
-activate vacations.routes
-vacations.routes -> vacations.controller : getVacations(req, res)
-deactivate vacations.routes
-activate vacations.controller
-
-
-' Se utiliza la instancia para obtener los datos
-vacations.controller ->> VacationsModel : fetchTop10()
-activate VacationsModel
-
-VacationsModel ->> mysql : SELECT * FROM vacations LIMIT 10;
-activate mysql
-mysql -->> VacationsModel : Datos obtenidos
-deactivate mysql
-
-VacationsModel -->> vacations.controller : Retorno de datos de vacaciones.
-deactivate VacationsModel
-
-vacations.controller -> vacations.ejs : render(vacations)
-activate vacations.ejs
-vacations.ejs -> Navegador : Mostrar vacaciones
-deactivate vacations.ejs
-activate Navegador
-
 
 @enduml

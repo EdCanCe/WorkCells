@@ -1,60 +1,49 @@
 @startuml CU01 - Líder registra respuesta hacia ausencia de colaborador - Diagrama de secuencia
 actor Navegador
-boundary absence.ejs
-boundary absence.routes
-control absence.controller
-entity AbsenceModel
-database mysql
-
+boundary "absence.routes" as Routes
+boundary "absence.view" as View
+control "absence.controller" as Controller
+entity "absence.model" as Model
+database "myPhpAdmin" as DB
 
 autonumber
-' Inicio del flujo
+
+' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador -> absence.routes : GET /absence/requests
+Navegador -> Routes: POST /absence/registerResponse
+
+activate Routes
+Routes -> Controller: registerResponse(request, response)
+activate Controller
+
+' El controlador invoca al modelo para actualizar la respuesta de la ausencia
+Controller ->> Model: updateResponse(responseData, absenceID)
+activate Model
+
+' El modelo ejecuta la consulta en la base de datos
+Model ->> DB: db.execute(\n"UPDATE absence \nSET response = ? \nWHERE absenceID = ?", \n[responseData, absenceID])
+activate DB
+DB -->> Model: confirmación de actualización
+deactivate DB
+
+Model -->> Controller: resultado_update
+deactivate Model
+
+' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
+Controller ->> View: renderResponse(resultado_update)
+activate View
+View --> Controller: fragmento HTML/JSON
+deactivate View
+
+' El controlador envía la respuesta al router
+Controller -->> Routes: response.json()
+deactivate Controller
+
+Routes -->> Navegador: respuesta AJAX
+deactivate Routes
+
+' El Navegador procesa la respuesta y actualiza la interfaz
+Navegador -> Navegador: callback, actualiza UI
 deactivate Navegador
-activate absence.routes
-absence.routes -> absence.controller : getFaults(req, res)
-deactivate absence.routes
-activate absence.controller
-
-
-' Se utiliza la instancia para obtener los datos
-absence.controller ->> AbsenceModel : fetchTop10()
-activate AbsenceModel
-
-AbsenceModel ->> mysql : SELECT * FROM absence LIMIT 10;
-activate mysql
-mysql -->> AbsenceModel : Datos obtenidos
-deactivate mysql
-
-AbsenceModel -->> absence.controller : Retorno de datos de faltas.
-deactivate AbsenceModel
-
-absence.controller -> absence.ejs : render(absence)
-activate absence.ejs
-absence.ejs -> Navegador : Mostrar faltas
-activate Navegador
-deactivate absence.ejs
-deactivate absence.controller
-deactivate absence.routes
-
-Navegador -> absence.controller : POST /absence/requests/:response
-deactivate Navegador
-activate absence.controller
-absence.controller ->> AbsenceModel : saveResponse()
-
-activate AbsenceModel
-' absenceID, startDate, endDate, reason, justified, absenceUserIDFK
-AbsenceModel ->> mysql : INSERT INTO absence \nVALUES()
-activate mysql
-mysql -->> AbsenceModel : Datos obtenidos
-deactivate mysql
-AbsenceModel -->> absence.controller : Retorno modificiación de falta
-activate absence.ejs
-absence.controller -> absence.ejs : render()
-activate Navegador
-absence.ejs -> Navegador : Mostrar respuesta
-deactivate absence.ejs
-
 
 @enduml
