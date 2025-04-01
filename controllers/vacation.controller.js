@@ -5,14 +5,17 @@ const sessionVars = require('../util/sessionVars');
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
     const userRole = request.session.role;
+    const limit = 10;
+    const offset = 0;
+    
     let fetchPromise;
 
     if (userRole === "Human Resources") {
         // Recursos Humanos: cargar solicitudes de todos los departamentos
-        fetchPromise = Vacation.fetchAllSuperAdmin();
+        fetchPromise = Vacation.fetchPaginated(limit, offset);
     } else if (userRole === "Leader") {
         // Líder: cargar solo solicitudes de su propio departamento
-        fetchPromise = Vacation.fetchAllWithNames(userId);
+        fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
     } else {
         // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
         fetchPromise = Vacation.fetchAllVacation(userId);
@@ -31,8 +34,36 @@ exports.getRequests = (request, response, next) => {
         });
 };
 
-
-
+exports.getRequestsPaginated = (request, response, next) => {
+    // Se recibe "page" desde la query, por defecto 0
+    const page = parseInt(request.query.page) || 0;
+    const limit = 10;
+    const offset = page * limit;
+    const userId = request.session.userID;
+    const userRole = request.session.role;
+    
+    let fetchPromise;
+    
+    if (userRole === "Human Resources") {
+        // Recursos Humanos: cargar solicitudes de todos los departamentos
+        fetchPromise = Vacation.fetchPaginated(limit, offset);
+    } else if (userRole === "Leader") {
+        // Líder: cargar solo solicitudes de su propio departamento
+        fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
+    } else {
+        // Como fallback, retornar un arreglo vacío o una respuesta adecuada
+        fetchPromise = Promise.resolve([[]]);
+    }
+    
+    fetchPromise
+        .then(([rows]) => {
+            response.status(200).json(rows);
+        })
+        .catch((error) => {
+            console.error("Error al obtener solicitudes paginadas:", error);
+            response.status(500).json({ error: "Error al obtener los datos." });
+        });
+};
 
 exports.getAddVacation = (request, response, next) => {
     User.fetchStartDate(request.session.userID)
@@ -155,11 +186,9 @@ exports.getModifyVacation = async (request, response, next) => {
         response.status(500).send("Error interno del servidor.");
     }
 };
-// TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
 
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
-    const vacationRole = request.session.role;
     Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
         .then(() => {
             response.status(200).json({

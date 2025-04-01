@@ -94,6 +94,38 @@ AND u.userID IN (
         );
     }
     
+    static fetchPaginated(limit, offset) {
+        return db.execute(
+            `SELECT v.*, u.birthName, u.surname 
+             FROM vacation AS v
+             JOIN user AS u ON u.userID = v.vacationUserIDFK
+             WHERE v.leaderStatus = 2
+             ORDER BY v.startDate DESC
+             LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    }
+    
+    static fetchDepartmentPaginated(leaderID, limit, offset) {
+        return db.execute(
+            `SELECT v.*, u.birthName, u.surname 
+             FROM vacation AS v
+             JOIN user AS u ON u.userID = v.vacationUserIDFK
+             WHERE v.leaderStatus = 2
+             AND u.userID IN (
+                SELECT ud.userIDFK
+                FROM userDepartment ud
+                WHERE ud.departmentIDFK IN (
+                    SELECT departmentIDFK
+                    FROM userDepartment
+                    WHERE userIDFK = ?
+                )
+             )
+             ORDER BY v.startDate DESC
+             LIMIT ? OFFSET ?`,
+            [leaderID, limit, offset]
+        );
+    }
 
     static fetchOneVacation(vacationID) {
         return db.execute(

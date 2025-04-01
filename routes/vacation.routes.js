@@ -31,6 +31,14 @@ router.post(
     vacationPrivilege,
     vacationController.postRequestDeny
 );
+
+
+router.get("/requests/paginated", 
+    isAuth, 
+    vacationPrivilege,
+    vacationController.getRequestsPaginated);
+
+
 router.get("/", isAuth, vacationController.getRoot);
 
 module.exports = router;
