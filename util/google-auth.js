@@ -9,7 +9,6 @@ passport.use(
             clientSecret: process.env.CLIENT_SECRET,
             // Se agrega /auth/google antes de la ruta de inicio
             callbackURL: "http://localhost:3000/google/callback",
-            passReqToCallback: true,
         },
         function (accessToken, refreshToken, profile, cb) {
             return cb(null, profile);

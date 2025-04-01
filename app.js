@@ -84,8 +84,15 @@ app.get(
     passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
+app.get(
+    "/google/callback",
+    passport.authenticate("google", {
+        successRedirect: "/home",
+        failureRedirect: "/err",
+    })
+);
+
 const homeRouter = require("./routes/home.routes");
-const { profile } = require("console");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
 
