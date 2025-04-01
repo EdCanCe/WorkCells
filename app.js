@@ -81,11 +81,11 @@ const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
 
+const sessionVars = require('./util/sessionVars');
 app.use((request, response, next) => {
     response.statusCode = 404;
     response.render("notFound", {
-        isLoggedIn: request.session.isLoggedIn || false,
-        role: request.session.role || "none",
+        ...sessionVars(request),
     });
 });
 

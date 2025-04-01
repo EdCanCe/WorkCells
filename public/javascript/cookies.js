@@ -1,3 +1,4 @@
+// Obtiene una cookie por su nombre
 const getCookieByName = (name) => {
     const match = document.cookie.match(
         new RegExp("(^| )" + name + "=([^;]+)")
