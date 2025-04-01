@@ -60,20 +60,20 @@
                                     <div
                                         class="flex flex-col sm:flex-row sm:items-center sm:gap-4 justify-center"
                                     >
-                                    <button
-                                    class="approve-btn btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-                                    data-url="/absence/requests/approve/<%= ab.absenceID %>"
-                                    data-csrf="<%= csrfToken %>"
-                                    >
-                                    Approve
-                                    </button>
-                                    <button
-                                        class="deny-btn btn bg-[#830000] text-white px-6 py-2 rounded-md hover:bg-[#470000]/80"
-                                        data-url="/absence/requests/deny/<%= ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Deny
-                                    </button>
+                                        <button
+                                            class="btnSuccess"
+                                            data-url="/absence/requests/approve/<%= ab.absenceID %>"
+                                            data-csrf="<%= csrfToken %>"
+                                        >
+                                            Approve
+                                        </button>
+                                        <button
+                                            class="btnDanger"
+                                            data-url="/absence/requests/deny/<%= ab.absenceID %>"
+                                            data-csrf="<%= csrfToken %>"
+                                        >
+                                            Deny
+                                        </button>
                                     </div>
                                     <% } %>
                                 </td>
@@ -84,13 +84,23 @@
                 </div>
             </div>
         </div>
-        <div class="pagination-controls mt-4 flex justify-between">
-            <button id="prev-button" class="btn bg-gray-600 text-white px-4 py-2 rounded">Anterior</button>
-            <button id="next-button" class="btn bg-[#1B3F43] text-white px-4 py-2 rounded">Siguiente</button>
+        <div class="pagination-controls mt-4 mb-4 flex justify-between">
+            <button
+                id="prev-button"
+                class="btnPrimary"
+            >
+                Anterior
+            </button>
+            <button
+                id="next-button"
+                class="btnPrimary"
+            >
+                Siguiente
+            </button>
         </div>
         <a
             href="/absence"
-            class="inline-block mt-6 px-6 py-2 bg-[#1B3F43] text-white rounded-md hover:bg-[#1B3F43]"
+            class="btnPrimary inline-block"
             >Regresar</a
         >
     </div>
@@ -126,15 +136,19 @@
                         "csrf-token": csrfToken,
                     },
                 });
-                
+
                 if (!response.ok) throw new Error("Error en la respuesta");
 
-                button.closest("td").innerHTML = `<span class="${statusClass} font-semibold">${statusText}</span>`;
+                button.closest(
+                    "td"
+                ).innerHTML = `<span class="${statusClass} font-semibold">${statusText}</span>`;
             } catch (error) {
                 console.error("Error al procesar la solicitud:", error);
                 button.disabled = false;
                 button.innerText = originalText;
-                alert("Hubo un error al procesar la solicitud. Intente nuevamente.");
+                alert(
+                    "Hubo un error al procesar la solicitud. Intente nuevamente."
+                );
             }
         }
     });
@@ -156,11 +170,11 @@
         } else if (ab.justified === 2) {
             return `
                 <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4 justify-center">
-                    <button class="approve-btn btn bg-[#1B3F43] text-white px-6 py-2 rounded" data-url="/absence/requests/approve/${ab.absenceID}" data-csrf="<%= csrfToken %>">Approve</button>
-                    <button class="deny-btn btn bg-[#830000] text-white px-6 py-2 rounded" data-url="/absence/requests/deny/${ab.absenceID}" data-csrf="<%= csrfToken %>">Deny</button>
+                    <button class="btnSuccess" data-url="/absence/requests/approve/${ab.absenceID}" data-csrf="<%= csrfToken %>">Approve</button>
+                    <button class="btnDanger" data-url="/absence/requests/deny/${ab.absenceID}" data-csrf="<%= csrfToken %>">Deny</button>
                 </div>`;
         }
-        return '';
+        return "";
     }
 
     // Función para actualizar la tabla con nuevos datos
@@ -168,15 +182,22 @@
         const tbody = document.querySelector("#absences-table tbody");
         tbody.innerHTML = "";
 
-        data.forEach(ab => {
+        data.forEach((ab) => {
             const tr = document.createElement("tr");
             tr.classList.add("border-b", "hover:bg-neutral-800");
             tr.innerHTML = `
                 <td class="px-4 py-2">${ab.birthName} ${ab.surname}</td>
                 <td class="px-4 py-2">${ab.title}</td>
-                <td class="px-4 py-2">${new Date(ab.startDate).toLocaleDateString('es-MX')}</td>
-                <td class="px-4 py-2">${new Date(ab.endDate).toLocaleDateString('es-MX')}</td>
-                <td class="px-4 py-2">${calculateTotalDays(ab.startDate, ab.endDate)}</td>
+                <td class="px-4 py-2">${new Date(
+                    ab.startDate
+                ).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(ab.endDate).toLocaleDateString(
+                    "es-MX"
+                )}</td>
+                <td class="px-4 py-2">${calculateTotalDays(
+                    ab.startDate,
+                    ab.endDate
+                )}</td>
                 <td class="px-4 py-2">${ab.reason}</td>
                 <td class="px-4 py-2 text-center">${getStatusCell(ab)}</td>
             `;
@@ -187,7 +208,9 @@
     // Función para cargar una página de solicitudes mediante AJAX
     async function loadPage(page) {
         try {
-            const response = await fetch(`/absence/requests/paginated?page=${page}`);
+            const response = await fetch(
+                `/absence/requests/paginated?page=${page}`
+            );
             if (!response.ok) throw new Error("Error al cargar la página");
             return await response.json();
         } catch (error) {
@@ -197,24 +220,27 @@
     }
 
     // Manejador para botón "Siguiente"
-    document.getElementById("next-button").addEventListener("click", async () => {
-        const nextPage = currentPage + 1;
-        const data = await loadPage(nextPage);
-        if (data.length > 0) {
-            currentPage = nextPage;
-            updateTable(data);
-        } else {
-            alert("No hay más solicitudes disponibles.");
-        }
-    });
+    document
+        .getElementById("next-button")
+        .addEventListener("click", async () => {
+            const nextPage = currentPage + 1;
+            const data = await loadPage(nextPage);
+            if (data.length > 0) {
+                currentPage = nextPage;
+                updateTable(data);
+            } else {
+                alert("No hay más solicitudes disponibles.");
+            }
+        });
 
     // Manejador para botón "Anterior"
-    document.getElementById("prev-button").addEventListener("click", async () => {
-        if (currentPage === 0) return;
-        const prevPage = currentPage - 1;
-        const data = await loadPage(prevPage);
-        currentPage = prevPage;
-        updateTable(data);
-    });
-
+    document
+        .getElementById("prev-button")
+        .addEventListener("click", async () => {
+            if (currentPage === 0) return;
+            const prevPage = currentPage - 1;
+            const data = await loadPage(prevPage);
+            currentPage = prevPage;
+            updateTable(data);
+        });
 </script>

@@ -1,0 +1,39 @@
+@startuml
+actor SuperAdmin
+boundary absence.ejs
+boundary absence.routes
+control absence.controller
+entity absence.model
+entity absence.modelInstance
+database mysql
+
+autonumber
+' Inicio del flujo
+activate SuperAdmin
+SuperAdmin -> absence.routes : GET /absence/request
+
+deactivate SuperAdmin
+activate absence.routes
+absence.routes -> absence.controller : getPendingAbsences(req, res)
+deactivate absence.routes
+activate absence.controller
+
+absence.controller ->> absence.model : fetchPendingAbsences()
+activate absence.model
+absence.model ->> mysql : consulta sql
+activate mysql
+mysql -->> absence.model : Retorna ausencias pendientes
+deactivate mysql
+absence.model -->> absence.controller : Lista de ausencias
+deactivate absence.model
+
+absence.controller -> absence.ejs : render(Absences)
+deactivate absence.controller
+activate absence.ejs
+absence.ejs -> SuperAdmin : Mostrar ausencias pendientes
+deactivate absence.ejs
+activate SuperAdmin
+
+deactivate SuperAdmin
+
+@enduml

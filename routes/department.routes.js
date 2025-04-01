@@ -4,9 +4,9 @@ const router = express.Router();
 const departmentController = require("../controllers/department.controller");
 const isAuth = require("../util/is-auth");
 
-router.get("/check",isAuth, departmentController.getCheckDepartment);
-router.get("/check/modify",isAuth, departmentController.getModifyDepartment);
-router.get("/add",isAuth, departmentController.getAddDepartment);
-router.get("/", isAuth,departmentController.getDepartments);
+router.get("/check", isAuth, departmentController.getCheckDepartment);
+router.get("/check/modify", isAuth, departmentController.getModifyDepartment);
+router.get("/add", isAuth, departmentController.getAddDepartment);
+router.get("/", isAuth, departmentController.getDepartments);
 
 module.exports = router;

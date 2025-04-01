@@ -1,0 +1,34 @@
+@startuml
+
+|Colaborador|
+start
+:Ingresa en "Modificar solicitud de vacaciones";
+
+|Sistema|
+:Obtiene las peticiones que no han sido aprobadas o denegadas;
+
+if (¿Hay solicitudes sin responder?) then (Sí)
+    :Muestra las solicitudes modificables;
+else (No)
+    :Muestra mensaje indicando que no hay solicitudes para modificar;
+    stop
+endif
+
+|Colaborador|
+:Selecciona la solicitud a modificar;
+:Ingresa los datos modificados;
+
+|Sistema|
+:Verifica que los campos estén completos y válidos;
+while (¿datos inválidos?) is (si)
+:Muestra mensaje de error indicando datos faltantes o inválidos
+  y pide que vuelva a llenar los campos; 
+endwhile (no)
+    :Permite subir los datos actualizados;
+    :Actualiza la solicitud de vacaciones;
+    :Muestra notificación de actualización exitosa;
+
+|Colaborador|
+stop
+
+@enduml

@@ -41,12 +41,12 @@ class Fault {
       GROUP BY  u.userId 
       ORDER BY num_faltas desc 
       limit 10;`
-    );
-  }
+        );
+    }
 
-  static getFaltasPaginated(limit, offset) {
-    return db.execute(
-      `SELECT 
+    static getFaltasPaginated(limit, offset) {
+        return db.execute(
+            `SELECT 
     u.birthName AS nombre, 
     u.mail AS correo, 
     MAX(f.doneDate) AS fecha_falta, 
@@ -58,9 +58,9 @@ GROUP BY u.userId
 ORDER BY num_faltas DESC
 LIMIT ? OFFSET ?;
 `,
-      [limit, offset]
-    );
-  }
+            [limit, offset]
+        );
+    }
 }
 
 module.exports = Fault;

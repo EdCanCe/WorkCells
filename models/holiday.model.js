@@ -54,16 +54,17 @@ module.exports = class Holiday {
     );
   }
 
-  static getFaltasPaginated(limit, offset) {
+  static getHolidayPaginated(limit, offset) {
     return db.execute(
-    `SELECT 
+      `SELECT 
     t.title AS nombre, 
     u.usedDate AS fecha 
     FROM templateHoliday t, usedHoliday u
     WHERE u.usedTemplateHolidayIDFK = t.templateHolidayID
     ORDER BY u.usedDate DESC
     LIMIT ? OFFSET ?;
-`, [limit, offset]
+`,
+      [limit, offset]
     );
   }
 };

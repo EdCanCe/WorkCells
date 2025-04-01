@@ -1,0 +1,33 @@
+@startuml
+
+|Super Admin|
+start
+:Presiona el botón para modificar la falta administrativa;
+
+|Sistema|
+:Muestra alerta de confirmación;
+
+if (¿Está seguro?) then (Sí)
+    :Muestra el formulario para ingresar nuevos datos;
+else (No)
+    :Redirige a la vista de faltas del colaborador;
+    stop
+endif
+
+|Super Admin|
+:Ingresa los datos nuevos en el formulario;
+
+|Sistema|
+:Verifica si al menos un campo ha sido llenado;
+
+while (ningun campo lleno) is (si)
+:Solicita que se llene al menos un campo;
+endwhile (no)
+:Permite guardar las modificaciones;
+    :Actualiza la falta administrativa;
+    :Muestra notificación de actualización exitosa;
+
+|Super Admin|
+stop
+
+@enduml
