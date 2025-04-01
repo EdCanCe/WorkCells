@@ -53,6 +53,10 @@ app.use(multer({ storage: fileStorage }).single("evidence"));
 
 app.use(csrfProtection);
 
+const authRouter = require("./routes/auth.routes");
+app.use("/auth", authRouter);
+app.use("/google", authRouter);
+
 const usersRouter = require("./routes/user.routes");
 app.use("/login", usersRouter);
 
@@ -82,22 +86,6 @@ app.use("/oneToOne", oneToOneRouter);
 
 const reportRouter = require("./routes/report.routes.js");
 app.use("/reports", reportRouter);
-
-app.get(
-    "/auth/google",
-    passport.authenticate("google", {
-        scope: ["email", "profile"],
-        prompt: "select_account",
-    })
-);
-
-app.get(
-    "/google/callback",
-    passport.authenticate("google", {
-        successRedirect: "/home",
-        failureRedirect: "/login",
-    })
-);
 
 const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);

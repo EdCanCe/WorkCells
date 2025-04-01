@@ -3,7 +3,7 @@ const router = express.Router();
 
 const faultControllers = require("../controllers/faults.controller");
 const isAuth = require("../util/is-auth");
-const faultPrivilege = require("../util/FaultPrivilege/privilegeFault");
+const faultPrivilege = require("../util/faultPrivilege/privilegeFault");
 
 //: para indicar que es una variable
 router.get("/search", isAuth, faultPrivilege, faultControllers.listPaginated);
