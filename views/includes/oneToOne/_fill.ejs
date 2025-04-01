@@ -73,7 +73,7 @@
                     >
                         <% for (let i = 1; i <= 5; i++) { %>
                         <div
-                            class="flex-1 h-10 bg-neutral-700/50 rounded-md cursor-pointer transition-all duration-100 rating-button border border-blue-300 <%= i <= 3 ? 'bg-blue-500 border-blue-600' : '' %>"
+                            class="flex-1 h-10 bg-neutral-700/50 rounded-md cursor-pointer rating-button border border-blue-300 <%= i <= 3 ? 'bg-blue-500 border-blue-600' : '' %>"
                             data-value="<%= i %>"
                             onclick="updateRating(this)"
                             onmouseover="previewRating(this)"
