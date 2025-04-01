@@ -1,5 +1,6 @@
 const Vacation = require("../models/vacation.model");
 const User = require("../models/user.model");
+const sessionVars = require('../util/sessionVars');
 
 exports.getRequests = (request, response, next) => {
     // console.log("Session:", request.session);
@@ -7,20 +8,13 @@ exports.getRequests = (request, response, next) => {
     const employeedId = request.session.userID;
     // console.log(employeedId);
 
-    const mensaje = request.session.info || "";
-    request.session.info = ""; // Limpiar la sesión después de usar el mensaje
-
     Vacation.fetchAllWithNames(employeedId)
         .then(([rows, fieldData]) => {
             console.log(rows);
             // Asegúrate de pasar "rows" como "vacations"
             response.render("vacationRequests", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                username: request.session.username || "",
-                csrfToken: request.csrfToken(),
+                ...sessionVars(request),
                 vacations: rows, // Pasar correctamente "rows" como "vacations"
-                info: mensaje,
-                privilegios: request.session.privilegios || [],
             });
         })
         .catch((error) => {
@@ -30,10 +24,6 @@ exports.getRequests = (request, response, next) => {
 };
 
 exports.getAddVacation = (request, response, next) => {
-    const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
-    // Limpiar el mensaje después de usarlo
-    request.session.info = "";
-
     User.fetchStartDate(request.session.userID)
         .then(([rows]) => {
             // Obtiene una fecha inicial para ver si ya pasó, o aún no.
@@ -66,14 +56,10 @@ exports.getAddVacation = (request, response, next) => {
             const lastDate = lastYear + "/" + rows[0].month + "/" + rows[0].day;
 
             response.render("addVacation", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                userID: request.session.userID || 0,
+                ...sessionVars(request),
                 firstDate: firstDate,
                 midDate: midDate,
                 lastDate: lastDate,
-                info: mensaje,
-                csrfToken: request.csrfToken(),
-                privilegios: request.session.privilegios || [],
             });
         })
         .catch((error) => {
@@ -109,11 +95,15 @@ exports.postAddVacation = (request, response, next) => {
 };
 
 exports.getCheckVacation = (request, response, next) => {
-    response.render("checkVacation");
+    response.render("checkVacation", {
+        ...sessionVars(request),
+    });
 };
 
 exports.getModifyVacation = (request, response, next) => {
-    response.render("modifyVacation");
+    response.render("modifyVacation", {
+        ...sessionVars(request),
+    });
 };
 
 // TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
@@ -158,9 +148,6 @@ exports.postRequestDeny = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     response.render("ownVacation", {
-        isLoggedIn: request.session.isLoggedIn || false,
-        userID: request.session.userID || 0,
-        csrfToken: request.csrfToken(),
-        privilegios: request.session.privilegios || [],
+        ...sessionVars(request),
     });
 };

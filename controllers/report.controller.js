@@ -1,7 +1,10 @@
 const Report = require("../models/report.model");
+const sessionVars = require('../util/sessionVars');
 
 exports.getRoot = (request, response, next) => {
-    response.render("reportsMenu");
+    response.render("reportsMenu", {
+        ...sessionVars(request),
+    });
 };
 
 exports.getEmployeeRotation = (request, response, next) => {
@@ -22,6 +25,7 @@ exports.getEmployeeRotation = (request, response, next) => {
                         // console.log(activeUsers.length);
                         // console.log(inactiveUsers.length);
                         response.render("reportRotation", {
+                            ...sessionVars(request),
                             activeUsers: activeUsers,
                             inactiveUsers: inactiveUsers,
                             departments: departments,

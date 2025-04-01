@@ -154,12 +154,12 @@
     <!-- Encabezados de días -->
     <div class="grid grid-cols-7 gap-1 mb-2">
         <% weekDays.forEach(day => { %>
-        <div class="text-center font-bold py-2 bg-neutral-700/50 rounded">
-            <%= day %>
-        </div>
-        <% }); %>
+            <div class="text-center font-bold py-2 bg-neutral-700/50 rounded">
+                <%= day %>
+            </div>
+            <% }); %>
     </div>
-
+    
     <!-- Días del calendario -->
     <div id="calendarContainer" class="grid grid-cols-7 gap-1"></div>
 </div>
@@ -188,11 +188,11 @@
             }
         });
     };
-
+    
     const formatDateForSQL = (date) => {
         return date.toISOString().split("T")[0];
     };
-
+    
     const fetchByDate = (usedDate) => {
         const isMonthView = typeOfRender.content === "true";
 
@@ -299,15 +299,6 @@
             });
     };
 
-    const getCookieByName = (name) => {
-        const match = document.cookie.match(
-            new RegExp("(^| )" + name + "=([^;]+)")
-        );
-        if (match) {
-            return match[2];
-        }
-        return null;
-    };
 
     // Función para establecer la preferencia de vista (mes o lista)
     function setViewPreference(isMonthView) {

@@ -1,13 +1,10 @@
 const Fault = require("../models/faults.model");
 const FaultMedia = require("../models/faultsMedia.model");
+const sessionVars = require('../util/sessionVars');
 
 exports.getAdd = (request, response, next) => {
     response.render("faultsAdd", {
-        isLoggedIn: request.session.isLoggedIn || false,
-        info: request.session.info || "",
-        csrfToken: request.csrfToken(),
-        privilegios: request.session.privilegios || [],
-
+        ...sessionVars(request),
     });
 };
 
@@ -51,24 +48,17 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getCheck = (request, response, next) => {
-    response.render("check_fault");
+    response.render("check_fault", {
+        ...sessionVars(request),
+    });
 };
 
 exports.getRoot = (request, response, next) => {
-    const mensaje = request.session.info || "";
-
-    // Limpiar la sesión después de usar el mensaje
-    request.session.info = "";
-
     Fault.fetchAll()
         .then(([rows, fieldData]) => {
             response.render("faults", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                username: request.session.username || "",
+                ...sessionVars(request),
                 fault: rows,
-                info: mensaje,
-                privilegios: request.session.privilegios || [],
-
             });
         })
         .catch((error) => {

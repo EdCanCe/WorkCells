@@ -44,6 +44,7 @@ const fileStorage = multer.diskStorage({
         callback(null, new Date().getTime() + file.originalname);
     },
 });
+
 //En el registro, pasamos la constante de configuración y
 //usamos single porque es un sólo archivo el que vamos a subir,
 //pero hay diferentes opciones si se quieren subir varios archivos.
@@ -102,9 +103,12 @@ const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
 
+const sessionVars = require('./util/sessionVars');
 app.use((request, response, next) => {
     response.statusCode = 404;
-    response.render("notFound");
+    response.render("notFound", {
+        ...sessionVars(request),
+    });
 });
 
 app.listen(3000);

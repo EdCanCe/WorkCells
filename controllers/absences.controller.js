@@ -1,17 +1,19 @@
 const Absence = require("../models/absence.model");
 const AbsenceMedia = require("../models/absenceMedia.model");
+const sessionVars = require('../util/sessionVars');
 
 exports.getCheck = (request, response, next) => {
-    response.render("absence_check");
+    response.render("absence_check", {
+        ...sessionVars(request),
+    });
 };
 
 exports.getAdd = (request, response, next) => {
     Absence.fetchAll()
         .then(([absences, fieldData]) => {
             response.render("absencesAdd", {
-                csrfToken: request.csrfToken(),
+                ...sessionVars(request),
                 absences: absences,
-                info: request.session.info || "",
             });
         })
         .catch((err) => {
@@ -58,18 +60,13 @@ exports.postRequestDeny = (request, response, next) => {
 };
 
 exports.getRequest = (request, response, next) => {
-    const mensaje = request.session.info || "";
-    request.session.info = ""; // Limpiar la sesión después de usar el mensaje
     const limit = 10;
     const offset = 0;
     Absence.fetchPaginated(limit, offset)
         .then(([rows, fieldData]) => {
             response.render("absenceRequests", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                csrfToken: request.csrfToken(),
-                username: request.session.username || "",
+                ...sessionVars(request),
                 absences: rows,
-                info: mensaje,
                 today: new Date(),
             });
         })
@@ -131,10 +128,6 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getRoot = (request, response, next) => {
-    const mensaje = request.session.info || "";
-    if (request.session.info) {
-        request.session.info = "";
-    }
     Absence.getID(request.session.mail).then(([rows]) => {
         if (rows.length == 0) {
             response.send(500);
@@ -145,8 +138,8 @@ exports.getRoot = (request, response, next) => {
                 console.log(fieldData);
                 console.log(rows);
                 response.render("absencesList", {
+                    ...sessionVars(request),
                     absences: rows,
-                    info: mensaje,
                 });
             })
             .catch((err) => {

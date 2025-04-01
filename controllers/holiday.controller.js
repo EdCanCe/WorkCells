@@ -1,40 +1,23 @@
 const { error } = require("console");
 const Holiday = require("../models/holiday.model");
+const sessionVars = require('../util/sessionVars');
 
 exports.getHolidays = (request, response, next) => {
-    const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
-
-    // Limpiar el mensaje después de usarlo
-    request.session.info = "";
-
     response.render("holiday", {
-        isLoggedIn: request.session.isLoggedIn || false,
-        info: mensaje, // Pasamos el mensaje de la sesión
-        csrfToken: request.csrfToken(),
+        ...sessionVars(request),
     });
 };
 
 exports.getHolidaysAdd = (request, response, next) => {
-    const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
-
     Holiday.fetchAll().then(([rows]) => {
-        // Limpiar el mensaje después de usarlo
-        request.session.info = "";
         response.render("holidayAdd", {
+            ...sessionVars(request),
             holidays: rows,
-            isLoggedIn: request.session.isLoggedIn || false,
-            info: mensaje, // Pasamos el mensaje de la sesión
-            csrfToken: request.csrfToken(),
         });
     });
 };
 
 exports.postHolidaysAdd = (request, response, next) => {
-    const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
-
-    // Limpiar el mensaje después de usarlo
-    request.session.info = "";
-
     const holiday = new Holiday(
         request.body.usedDate,
         request.body.usedTemplateHolidayIDFK
@@ -54,22 +37,17 @@ exports.postHolidaysAdd = (request, response, next) => {
 };
 
 exports.getHoliday = (request, response, next) => {
-    response.render("holidayCheck");
+    response.render("holidayCheck", {
+        ...sessionVars(request),
+    });
 };
 
 exports.getUsedHoliday = (request, response, next) => {
-    const mensaje = request.session.info || "";
-
-    // Limpiar la sesión después de usar el mensaje
-    request.session.info = "";
-
     Holiday.fetchUsedHoliday()
         .then(([rows, fieldData]) => {
             response.render("usedHoliday", {
-                isLoggedIn: request.session.isLoggedIn || false,
-                username: request.session.username || "",
+                ...sessionVars(request),
                 holidays: rows, // Cambio aquí por claridad semántica
-                info: mensaje,
             });
         })
         .catch((error) => {
@@ -93,5 +71,7 @@ exports.listPaginated = async (request, response) => {
 };
 
 exports.getHolidayModify = (request, response, next) => {
-    response.render("holidayModify");
+    response.render("holidayModify", {
+        ...sessionVars(request),
+    });
 };

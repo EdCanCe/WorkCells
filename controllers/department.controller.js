@@ -1,15 +1,25 @@
-exports.getDepartments = (req, res, next) => {
-    res.render('checkDepartment');
+const sessionVars = require('../util/sessionVars');
+
+exports.getDepartments = (request, response, next) => {
+    response.render('checkDepartment', {
+        ...sessionVars(request),
+    });
 }
 
-exports.getAddDepartment = (req, res, next) => {
-    res.render('addDepartment');
+exports.getAddDepartment = (request, response, next) => {
+    response.render('addDepartment', {
+        ...sessionVars(request),
+    });
 };
 
-exports.getCheckDepartment = (req, res, next) => {
-    res.render('checkOneDpmt')
+exports.getCheckDepartment = (request, response, next) => {
+    response.render('checkOneDpmt', {
+        ...sessionVars(request),
+    })
 };
 
-exports.getModifyDepartment = (req, res, next) => {
-    res.render('modifyDepartment')
+exports.getModifyDepartment = (request, response, next) => {
+    response.render('modifyDepartment', {
+        ...sessionVars(request),
+    })
 };

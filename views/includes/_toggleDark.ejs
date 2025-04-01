@@ -53,9 +53,15 @@
         if (isDark) {
             sunIcon.classList.add("hidden");
             moonIcon.classList.remove("hidden");
+            document.cookie = `darkMode=1; max-age=${
+                30 * 24 * 60 * 60
+            }; path=/`;
         } else {
             moonIcon.classList.add("hidden");
             sunIcon.classList.remove("hidden");
+            document.cookie = `darkMode=0; max-age=${
+                30 * 24 * 60 * 60
+            }; path=/`;
         }
     });
 </script>

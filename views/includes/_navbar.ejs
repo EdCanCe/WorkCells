@@ -4,7 +4,7 @@
     >
         <a
             href="/"
-            class="bgNavHead flex h-full w-0 items-center overflow-hidden opacity-0 toggleText"
+            class="bgNavHead flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %> toggleText"
         >
             <span
                 class="text-xl font-semibold inline-block w-full whitespace-nowrap text-center"
@@ -13,7 +13,7 @@
         </a>
         <div
             id="openAndCloseNav"
-            class="bgNavHead z-10 inline-block aspect-square h-full cursor-pointer p-3"
+            class="bgNavHead z-10 inline-block aspect-square h-full cursor-pointer p-3 <%= navIsOpen == true ? 'rotate-180' : '' %>"
         >
             <img src="/icons/openArrow.svg" class="navIcon size-full" />
         </div>
@@ -29,7 +29,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Calendar</span
@@ -46,7 +46,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Departments</span
@@ -63,7 +63,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Vacations</span
@@ -80,7 +80,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Absences</span
@@ -97,7 +97,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Holidays</span
@@ -114,7 +114,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >One To One</span
@@ -131,7 +131,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Faults</span
@@ -148,7 +148,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Employees</span
@@ -165,7 +165,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Reports</span
@@ -182,7 +182,7 @@
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Logout</span

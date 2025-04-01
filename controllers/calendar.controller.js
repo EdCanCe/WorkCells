@@ -2,9 +2,8 @@ const Vacation = require("../models/vacation.model");
 const Absence = require("../models/absence.model");
 const OneToOne = require("../models/oneToOne.model");
 const Holiday = require("../models/holiday.model");
-const { end } = require("../util/database");
 const { formatDateWithOrdinal } = require('../util/formatDate');
-
+const sessionVars = require('../util/sessionVars');
 
 exports.getRoot = (request, response, next) => {
 
@@ -28,10 +27,6 @@ exports.getRoot = (request, response, next) => {
             endingDate,
         }
     }
-
-    const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
-    // Limpiar el mensaje después de usarlo
-    request.session.info = "";
 
     // Lee la cookie y la pone en una variable
     let isMonthView = (request.cookies.isMonthView === '1') ? true : false; // Convertir a booleano con '1' o '0'
@@ -74,8 +69,8 @@ exports.getRoot = (request, response, next) => {
     console.log(sqlStartDate, sqlEndDate);
 
     response.render("calendar", {
+        ...sessionVars(request),
         today: formatDateForSQL(today),
-        info: mensaje,
         weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         isMonthView,
     });

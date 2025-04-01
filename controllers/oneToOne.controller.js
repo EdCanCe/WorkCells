@@ -5,28 +5,21 @@ const Measurable = require("../models/measurable.model");
 const Answer = require("../models/answer.model");
 const Measure = require("../models/measure.model");
 const { formatDateWithOrdinal } = require("../util/formatDate");
+const sessionVars = require('../util/sessionVars');
 
 exports.getOneToOne = (req, res, next) => {
-    res.render("oneToOne");
+    res.render("oneToOne", {
+        ...sessionVars(req),
+    });
 };
 
 exports.getOneToOneSchedule = (req, res, next) => {
     res.render("oneToOneAdd", {
-        csrfToken: req.csrfToken(),
-        info: req.session.info || "",
-        error: req.session.error || "",
+        ...sessionVars(req),
     });
 };
 
 exports.postOneToOneSchedule = (req, res, next) => {
-    // console.log(req.body);
-    if (req.session.info) {
-        req.session.info = "";
-    }
-    if (req.session.error) {
-        req.session.error = "";
-    }
-
     OneToOne.getID(req.body.email)
         .then(([rows]) => {
             if (rows.length === 0) {
@@ -57,10 +50,6 @@ exports.postOneToOneSchedule = (req, res, next) => {
 };
 
 exports.getOneToOneFill = (req, res, next) => {
-    const mensaje = req.session.info || ""; // Obtén el mensaje de la sesión
-    // Limpiar el mensaje después de usarlo
-    req.session.info = "";
-
     OneToOne.fetchBySession(req.params.sessionID)
         .then(([rows]) => {
             if (rows.length === 0) {
@@ -70,9 +59,7 @@ exports.getOneToOneFill = (req, res, next) => {
             Question.fetchAll().then(([questions]) => {
                 Measurable.fetchAll().then(([measurables]) => {
                     res.render("oneToOneFill", {
-                        isLoggedIn: req.session.isLoggedIn || false,
-                        info: mensaje,
-                        csrfToken: req.csrfToken(),
+                        ...sessionVars(req),
                         name: rows[0].birthName + " " + rows[0].surname,
                         meetingDate: formatDateWithOrdinal(rows[0].meetingDate),
                         meetingLink: rows[0].meetingLink,
@@ -137,11 +124,15 @@ AND o.oneOnOneID = '0301111b-9bfc-43d0-8d73-098f03b3a583';
  */
 
 exports.getOneToOneGraphs = (req, res, next) => {
-    res.render("oneToOneGraphs");
+    res.render("oneToOneGraphs", {
+        ...sessionVars(req),
+    });
 };
 
 exports.getOneToOneCheck = (req, res, next) => {
-    res.render("oneToOneCheck");
+    res.render("oneToOneCheck", {
+        ...sessionVars(req),
+    });
 };
 
 exports.getFullName = (req, res, next) => {

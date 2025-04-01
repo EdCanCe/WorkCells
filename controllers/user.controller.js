@@ -1,14 +1,10 @@
 const Usuario = require("../models/user.model");
+const sessionVars = require('../util/sessionVars');
 
 // Renderiza la vista de login
 exports.get_login = (request, response, next) => {
-    const warning = request.session.warning || "";
-    if (request.session.warning) request.session.warning = "";
-
     response.render("login.ejs", {
-        isLoggedIn: request.session.isLoggedIn || false,
-        warning: warning,
-        csrfToken: request.csrfToken(),
+        ...sessionVars(request),
     });
 };
 
