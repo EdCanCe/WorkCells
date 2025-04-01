@@ -11,8 +11,8 @@ navegador -> holiday.routes : GET /holiday/add
 activate holiday.routes
 
 holiday.routes -> holiday.controller: getHolidaysAdd(req, res)
-activate holiday.controller
 deactivate holiday.routes
+activate holiday.controller
 
 holiday.controller -> holidayAdd.ejs: render(holidayAdd)
 deactivate holiday.controller
@@ -35,7 +35,7 @@ holiday.controller -> holidayModelInstance : new HolidayModel()
 holiday.controller ->> holidayModelInstance : insertar_diaFeriado(holidayData)
 activate holidayModelInstance
 
-holidayModelInstance ->> mysql : INSERT INTO usedHoliday (...)
+holidayModelInstance ->> mysql : INSERT INTO usedHoliday(usedHolidayID, \nusedDate, usedTemplateHolidayIDFK)
 activate mysql
 mysql -->> holidayModelInstance : Insert OK
 deactivate mysql
@@ -43,11 +43,11 @@ holidayModelInstance -->> holiday.controller : Dia Feriado registrado
 deactivate holidayModelInstance
 
 holiday.controller -> holidayAdd.ejs : Mostrar mensaje "Dia Feriado creado exitosamente"
-activate holidayAdd.ejs
-activate navegador
-holidayAdd.ejs -> navegador : Mostrar notificación
-deactivate navegador
-deactivate holidayAdd.ejs
 deactivate holiday.controller
+activate holidayAdd.ejs
+holidayAdd.ejs -> navegador : Mostrar notificación
+deactivate holidayAdd.ejs
+activate navegador
+deactivate navegador
 deactivate holiday.routes
 @enduml
