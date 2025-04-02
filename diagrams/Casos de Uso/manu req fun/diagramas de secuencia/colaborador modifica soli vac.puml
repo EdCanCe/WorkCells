@@ -3,7 +3,6 @@ actor Navegador
 boundary vacationModify.ejs
 boundary vacation.routes
 control vacation.controller
-entity vacation.modelInstance
 entity vacation.model
 database mysql
 
@@ -48,19 +47,20 @@ deactivate vacation.routes
 activate vacation.controller
 
 
-vacation.controller ->> vacation.modelInstance : New Vacation(reason, startDate,endDate)
-activate vacation.modelInstance
-vacation.controller ->> vacation.modelInstance : updateVacation()
+vacation.controller ->> vacation.model : New Vacation(reason, startDate,endDate)
+activate vacation.model
+vacation.controller ->> vacation.model : updateVacation()
 deactivate vacation.controller
 
-vacation.modelInstance ->> mysql : UPDATE vacation SET ... WHERE vacation_id = ?
+vacation.model ->> mysql : UPDATE vacation SET ... WHERE vacation_id = ?
 activate mysql
-mysql -->> vacation.modelInstance : Solicitud de vacaciones actualizada
+mysql -->> vacation.model : Solicitud de vacaciones actualizada
 deactivate mysql
 
-vacation.modelInstance -->> vacation.controller : Retorna éxito
+vacation.model -->> vacation.controller : Retorna éxito
+deactivate vacation.model
 activate vacation.controller
-deactivate vacation.modelInstance
+
 
 vacation.controller -> vacationModify.ejs : mensaje de actualización exitosa
 deactivate vacation.controller
