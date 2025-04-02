@@ -44,6 +44,11 @@ Routes -> Controller : postAdd(request, response)
 deactivate Routes
 
 activate Controller
+
+alt (requestDays > availableDays) || (startDate > endDate)
+    Controller -> Routes : response.redirect("vacation/add")
+end
+
 create Model1
 Controller -> Model1 : new Vacation(...)
 
