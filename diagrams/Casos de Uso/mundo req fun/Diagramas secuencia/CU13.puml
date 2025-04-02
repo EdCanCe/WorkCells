@@ -1,75 +1,64 @@
 @startuml
 actor Navegador
-boundary vacation.routes
-boundary calendar.routes
-boundary addVacation.ejs
-control vacation.controller
-entity vacation.model
-database mysql
+boundary "vacation.routes" as Routes
+boundary "addVacation.ejs" as Ejs
+control "vacation.controller" as Controller
+entity "vacation" as Model1
+entity "vacation.model" as Model
+database "mysql" as MySQL
 
 autonumber
 
 activate Navegador
-Navegador -> vacation.routes : GET /vacation/add
+Navegador -> Routes : GET /vacation/add
 deactivate Navegador
 
-activate vacation.routes
-vacation.routes -> vacation.controller : getAdd(req, res)
-deactivate vacation.routes
+activate Routes
+Routes -> Controller : getAdd(request, response)
+deactivate Routes
 
-activate vacation.controller
+activate Controller
 
-vacation.controller ->> vacation.model : fetchAvailableDays(req.session.userID)
-activate vacation.model
-    vacation.model ->> mysql : execute(QUERY)
-    activate mysql
-        mysql -->> vacation.model : rows
-    deactivate mysql
-    vacation.model -->> vacation.controller : rows
-deactivate vacation.model
+Controller ->> Model : fetchAvailableDays(request.session.userID)
+activate Model
+    Model ->> MySQL : execute(...);
+    activate MySQL
+        MySQL -->> Model : rows
+    deactivate MySQL
+    Model -->> Controller : rows
+deactivate Model
 
-vacation.controller -> addVacation.ejs : res.render('addVacation.ejs', rows)
-deactivate vacation.controller
+Controller -> Ejs : response.render("addVacation.ejs", {...})
+deactivate Controller
 
-activate addVacation.ejs
-addVacation.ejs -> Navegador : HTML
-deactivate addVacation.ejs
+activate Ejs
+Ejs -> Navegador : HTML
+deactivate Ejs
 
 activate Navegador
-
-alt AJAX: availableDays < 1
-
-Navegador -> calendar.routes : window.location.replace('/calendar')
-
-activate calendar.routes
-deactivate calendar.routes
-
-else
-
-Navegador -> vacation.routes: POST /vacation/add
+Navegador -> Routes : POST /vacation/add
 deactivate Navegador
 
-activate vacation.routes
-vacation.routes -> vacation.controller : postAdd(req, res)
-deactivate vacation.routes
+activate Routes
+Routes -> Controller : postAdd(request, response)
+deactivate Routes
 
-activate vacation.controller
+activate Controller
+create Model1
+Controller -> Model1 : new Vacation(...)
 
-vacation.controller -> vacation.model : new Vacation(VARIABLES)
+activate Model1
+Controller ->> Model1 : save()
+Model1 ->> MySQL : execute(...)
 
-vacation.controller ->> vacation.model : save()
-activate vacation.model
-    vacation.model ->> mysql : execute(QUERY)
-    activate mysql
-        mysql -->> vacation.model : Query OK
-    deactivate mysql
-    vacation.model -->> vacation.controller : promise
-deactivate vacation.model
+activate MySQL
+MySQL -->> Model1 : query OK
+deactivate MySQL
 
-vacation.controller -> calendar.routes : res.redirect('/calendar')
-deactivate vacation.controller
+Model1 -->> Controller : promesa
+deactivate Model1
 
-activate calendar.routes
-deactivate calendar.routes
+Controller -> Routes : response.redirect("/vacation")
+deactivate Controller
 
-end
+@enduml

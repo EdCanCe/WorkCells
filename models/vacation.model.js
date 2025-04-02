@@ -88,9 +88,7 @@ AND u.userID IN (
     }
 
     static fetchByDateType(startDate, endDate, userID) {
-        return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?)
-UNION
-(SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`, [startDate, endDate, userID, startDate, endDate, userID]
+        return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?) UNION (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`, [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
 }
