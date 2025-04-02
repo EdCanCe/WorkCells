@@ -15,6 +15,10 @@ app.set("views", "views");
 
 const session = require("express-session");
 
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
+
 app.use(
     session({
         secret: crypto.randomUUID(),
@@ -30,6 +34,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+    console.log(`Solicitud recibida: ${req.method} ${req.url}`);
+    next();
+});
+
 
 app.use(cookieParser());
 //fileStorage: Es nuestra constante de configuración para manejar el almacenamiento

@@ -1,6 +1,7 @@
 const Vacation = require("../models/vacation.model");
 const User = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
+const { request } = require("http");
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -154,6 +155,7 @@ exports.getCheckVacation = (request, response, next) => {
 
             response.render("checkVacation", {
                 ...sessionVars(request),
+                vacation: selectedVacation,
             });
         })
         .catch((error) => {
@@ -171,8 +173,9 @@ exports.getModifyVacation = async (request, response, next) => {
         // Si existe un método más eficiente, como fetchById, sería mejor usarlo
         const [rows] = await Vacation.fetchAllVacation(userID);
         const selectedVacation = rows.find(
-            (vacation) => vacation.vacationID === vacationID
+            (vacation) => String(vacation.vacationID).trim() === vacationID.trim()
         );
+        
 
         if (!selectedVacation) {
             return response.status(404).send("Vacación no encontrada.");
@@ -180,6 +183,7 @@ exports.getModifyVacation = async (request, response, next) => {
 
         response.render("modifyVacation", {
             ...sessionVars(request),
+            vacation: selectedVacation,
         });
     } catch (error) {
         console.error("Error al obtener la vacación:", error);
@@ -187,8 +191,45 @@ exports.getModifyVacation = async (request, response, next) => {
     }
 };
 
+
+
+exports.updateVacation  = (request, response, next) => {
+    console.log("Entrando en updateVacation..."); // <-- Debug
+    console.log("Datos recibidos:", request.body); // <-- Debug
+    const vacationId = request.params.vacationID;
+    const { startDate, endDate, reason } = request.body;
+
+    console.log("vacationId recibido en postUpdateVacation:", request.params.vacationID);
+    console.log("vacationId recibido:", vacationId);
+
+    if (!startDate || !endDate || !reason) {
+        return response.status(400).json({
+            success: false,
+            message: "Todos los campos son obligatorios.",
+        });
+    }
+    Vacation.updateVacation(vacationId, startDate, endDate, reason)
+    .then(() => {
+            response.status(200).json({
+                success: true,
+                message: "Solicitud de vacaciones actualizada exitosamente.",
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).json({
+                success: false,
+                message: "Error al actualizar la solicitud.",
+            });
+        });
+};
+
+// TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
+
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
+    const vacationRole = request.session.role;
+
     Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
         .then(() => {
             response.status(200).json({
