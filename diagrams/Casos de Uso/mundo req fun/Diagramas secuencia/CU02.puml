@@ -1,7 +1,7 @@
 @startuml
 actor Usuario
 boundary "calendar.routes" as Routes
-boundary "calendar.routes" as Ejs
+boundary "calendar.ejs" as Ejs
 control "calendar.controller" as Controller
 entity "holiday.model" as Holiday
 entity "absence.model" as Absence
@@ -13,17 +13,20 @@ autonumber
 
 activate Usuario
 Usuario -> Routes: GET /calendar
+deactivate Usuario
 
 activate Routes
 Routes -> Controller: getRoot(request, response)
+deactivate Routes
 
 activate Controller
-Controller --> Routes: response.render()
-
+Controller -> Ejs: response.render(...)
 deactivate Controller
-Routes --> Usuario: HTML
 
-deactivate Routes
+activate Ejs
+Ejs -> Usuario: HTML
+deactivate Ejs
+activate Usuario
 
 Usuario -> Usuario: fetchByDate(currentDate.content)
 
@@ -75,14 +78,14 @@ alt promesa_exitosa
 
 Controller -->> Usuario: result.json()
 
-Usuario -> Usuario: fetchByDate(usedDate)
+Usuario -> Usuario: .then(data)
 
 else excepción
 
 Controller -->> Usuario: status(500)
+deactivate Controller
 Usuario -> Usuario: console.log(err)
 
-deactivate Controller
 
 end
 
