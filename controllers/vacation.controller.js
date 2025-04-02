@@ -154,6 +154,7 @@ exports.getCheckVacation = (request, response, next) => {
 
             response.render("checkVacation", {
                 ...sessionVars(request),
+                vacation: selectedVacation,
             });
         })
         .catch((error) => {
@@ -180,6 +181,7 @@ exports.getModifyVacation = async (request, response, next) => {
 
         response.render("modifyVacation", {
             ...sessionVars(request),
+            vacation: selectedVacation,
         });
     } catch (error) {
         console.error("Error al obtener la vacación:", error);
@@ -187,8 +189,39 @@ exports.getModifyVacation = async (request, response, next) => {
     }
 };
 
+exports.postUpdateVacation = (request, response, next) => {
+    const vacationId = request.params.vacationID;
+    const { startDate, endDate, reason } = request.body;
+
+    if (!startDate || !endDate || !reason) {
+        return response.status(400).json({
+            success: false,
+            message: "Todos los campos son obligatorios.",
+        });
+    }
+    const vacationInstance = new Vacation(vacationId, startDate, endDate, reason);
+    vacationInstance.updateVacation(vacationId, startDate, endDate, reason)
+    .then(() => {
+            response.status(200).json({
+                success: true,
+                message: "Solicitud de vacaciones actualizada exitosamente.",
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).json({
+                success: false,
+                message: "Error al actualizar la solicitud.",
+            });
+        });
+};
+
+// TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
+
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
+    const vacationRole = request.session.role;
+
     Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
         .then(() => {
             response.status(200).json({

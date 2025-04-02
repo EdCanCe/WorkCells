@@ -67,6 +67,19 @@ AND u.userID IN (
         );
     }
 
+    updateVacation(vacationId, startDate, endDate, reason) {
+        return db.execute(
+            `
+            UPDATE vacation
+            SET startDate = ?,
+            endDate = ?,
+            reason = ?
+            WHERE vacationID = ?;
+            `,
+            [startDate, endDate, reason, vacationId]
+        );
+    }
+
     static fetchAllWithNames(userID) {
         return db.execute(
             `SELECT 
