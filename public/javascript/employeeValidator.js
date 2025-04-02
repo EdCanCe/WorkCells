@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const rfcRegex = /^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/;
     const lettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Solo letras y espacios
     const mailRegex =
-        /^[a-zA-Z0-9._%+-]+@(nuclea\.solution|zogzag\.house|we\.page|moca\.app|maya\.protocol)$/;
+        /^[a-zA-Z0-9._%+-]+@(nuclea\.solutions|zogzag\.house|we\.page|moca\.app|maya\.protocol)$/;
 
     mailInput.addEventListener("input", function () {
         const value = mailInput.value;

@@ -1,77 +1,124 @@
 <div class="content p-4">
     <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
         <div class="card-content">
-            <h1 class="text-3xl font-semibold mb-4">Empleados</h1>
+            <h1 class="shadow-md rounded-lg p-4 text-3xl font-semibold mb-4">
+                List of all Employee
+            </h1>
             <% if (info) { %>
             <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
                 <%= info %>
                 <!-- Aquí se muestra el mensaje de éxito -->
             </div>
             <% } %>
-            <p class="mb-6">
-                En esta vista, se le mostrará al super admin una lista con todos
-                los empleados.
-                <a
-                    href="/employee/add"
-                    class="btnPrimary float-right"
+            <div class="flex justify-center w-full">
+                <div
+                    class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
+                >
+                    <img
+                        src="/icons/search.svg"
+                        alt="search"
+                        class="navIcon absolute w-6 h-6 text-white"
+                    />
+                    <input
+                        id="search"
+                        name="search"
+                        type="text"
+                        placeholder="Buscar empleado..."
+                        class="w-full pl-10 p-3 bg-neutral-700/50 text-white rounded-md outline-none"
+                    />
+                </div>
+            </div>
+            <div class="p-4 rounded-md">
+                <a href="/employee/active" class="btnPrimary float-left"
+                    >Show Active Employee</a
+                >
+                <a href="/employee/idle" class="btnPrimary"
+                    >Show Idle Employee</a
+                >
+                <a href="/employee/add" class="btnPrimary float-right"
                     >Add New Employee</a
                 >
-                <a
-                    href="/employee/me"
-                    class="btnPrimary ml-4"
-                    >Mi perfil</a
-                >
-            </p>
+            </div>
 
-            <div class="list space-y-4">
-                <div class="list-item bg-neutral-700/50 p-4 rounded-md">
-                    <div class="list-item-content">
-                        <div
-                            class="list-item-title flex justify-between items-center"
-                        >
-                            <span>Empleado 1</span>
-                            <div>
+            <div
+                class="flex content justify-center p-4 rounded-md list space-y-4"
+            >
+                <table
+                    class="w-full max-w-3xl divide-y divide-neutral-200 text-center"
+                    id="employee-table"
+                >
+                    <thead class="bg-neutral-800/50">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
+                            >
+                                Full Name
+                            </th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
+                            >
+                                Role
+                            </th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
+                            >
+                                Department
+                            </th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
+                            >
+                                Check
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-neutral-800 divide-y divide-neutral-200">
+                        <tr>
+                            <td class="px-6 py-4 text-white">John Doe</td>
+                            <td class="px-6 py-4 text-white">
+                                Software Engineer
+                            </td>
+                            <td class="px-6 py-4 text-white">IT</td>
+                            <td class="px-6 py-4 text-white">
                                 <a
                                     href="/employee/check"
-                                    class="btnPrimary ml-2"
+                                    class="btnPrimary ml-2 float-center"
                                     >Check</a
                                 >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="list-item bg-neutral-700/50 p-4 rounded-md">
-                    <div class="list-item-content">
-                        <div
-                            class="list-item-title flex justify-between items-center"
-                        >
-                            <span>Empleado 2</span>
-                            <div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-white">Jane Smith</td>
+                            <td class="px-6 py-4 text-white">
+                                Product Manager
+                            </td>
+                            <td class="px-6 py-4 text-white">Marketing</td>
+                            <td class="px-6 py-4 text-white">
                                 <a
                                     href="/employee/check"
-                                    class="btnPrimary ml-2"
+                                    class="btnPrimary ml-2 float-center"
                                     >Check</a
                                 >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="list-item bg-neutral-700/50 p-4 rounded-md">
-                    <div class="list-item-content">
-                        <div
-                            class="list-item-title flex justify-between items-center"
-                        >
-                            <span>Empleado 3</span>
-                            <div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 text-white">Carlos López</td>
+                            <td class="px-6 py-4 text-white">UX Designer</td>
+                            <td class="px-6 py-4 text-white">Design</td>
+                            <td class="px-6 py-4 text-white">
                                 <a
                                     href="/employee/check"
-                                    class="btnPrimary ml-2"
+                                    class="btnPrimary ml-2 float-center"
                                     >Check</a
                                 >
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-center gap-3 mt-6">
+                <button id="prevPage" class="btnPrimary">Anterior</button>
+                <button id="nextPage" class="btnPrimary">Siguiente</button>
             </div>
         </div>
     </div>

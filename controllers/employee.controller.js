@@ -80,6 +80,18 @@ exports.getCheck = (request, response, next) => {
     });
 };
 
+exports.getActive = (request, response, next) => {
+    response.render("employeeCheckActive", {
+        ...sessionVars(request),
+    });
+};
+
+exports.getIdle = (request, response, next) => {
+    response.render("employeeCheckIdle", {
+        ...sessionVars(request),
+    });
+};
+
 exports.getMe = (request, response, next) => {
     response.render("employeeMe", {
         ...sessionVars(request),
