@@ -172,8 +172,9 @@ exports.getModifyVacation = async (request, response, next) => {
         // Si existe un método más eficiente, como fetchById, sería mejor usarlo
         const [rows] = await Vacation.fetchAllVacation(userID);
         const selectedVacation = rows.find(
-            (vacation) => vacation.vacationID === vacationID
+            (vacation) => String(vacation.vacationID).trim() === vacationID.trim()
         );
+        
 
         if (!selectedVacation) {
             return response.status(404).send("Vacación no encontrada.");
@@ -189,9 +190,16 @@ exports.getModifyVacation = async (request, response, next) => {
     }
 };
 
-exports.postUpdateVacation = (request, response, next) => {
+
+
+exports.updateVacation  = (request, response, next) => {
+    console.log("Entrando en updateVacation..."); // <-- Debug
+    console.log("Datos recibidos:", request.body); // <-- Debug
     const vacationId = request.params.vacationID;
     const { startDate, endDate, reason } = request.body;
+
+    console.log("vacationId recibido en postUpdateVacation:", request.params.vacationID);
+    console.log("vacationId recibido:", vacationId);
 
     if (!startDate || !endDate || !reason) {
         return response.status(400).json({
@@ -199,8 +207,7 @@ exports.postUpdateVacation = (request, response, next) => {
             message: "Todos los campos son obligatorios.",
         });
     }
-    const vacationInstance = new Vacation(vacationId, startDate, endDate, reason);
-    vacationInstance.updateVacation(vacationId, startDate, endDate, reason)
+    Vacation.updateVacation(vacationId, startDate, endDate, reason)
     .then(() => {
             response.status(200).json({
                 success: true,

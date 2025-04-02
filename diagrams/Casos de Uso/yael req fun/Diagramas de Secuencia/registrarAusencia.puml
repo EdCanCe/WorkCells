@@ -12,7 +12,7 @@ activate routes
 routes -> controller: get_add(req, res)
 deactivate routes
 activate controller
-controller -> add: res.render('add.ejs')
+controller -> add: res.render('add.ejs', sessionVars)
 deactivate controller
 activate add
 add -> navegador: HTML

@@ -9,16 +9,7 @@ exports.getCheck = (request, response, next) => {
 };
 
 exports.getAdd = (request, response, next) => {
-    Absence.fetchAll()
-        .then(([absences, fieldData]) => {
-            response.render("absencesAdd", {
-                ...sessionVars(request),
-                absences: absences,
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    response.render("absencesAdd", { ...sessionVars(request) });
 };
 
 exports.postRequestApprove = (request, response, next) => {
