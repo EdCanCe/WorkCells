@@ -1,5 +1,4 @@
 @startuml
-
 actor navegador
 boundary routes
 boundary "Vista add.ejs" as add
@@ -31,9 +30,9 @@ entity OneOnOne
 database mysql
 
 activate controller
-controller -> OneOnOne: get_id(nombre, email)
+controller ->> OneOnOne: get_id(req.body.email)
 activate OneOnOne
-OneOnOne ->> mysql: execute("SELECT id FROM usuarios \nWHERE nombre = ? AND correo = ?", \n[nombre, email])
+OneOnOne ->> mysql: execute("SELECT userID FROM user \nWHERE mail = ?", \n[email])
 activate mysql
 mysql -->> OneOnOne: ID del usuario
 deactivate mysql
@@ -41,21 +40,27 @@ OneOnOne -->> controller: Promesa
 deactivate OneOnOne
 
 create entity oneonone
-
-controller ->> oneonone: save(duracion, fechaHora, idUsuario)
+controller -> oneonone : new OneOnOne(req.body.expectedTime, meetingDate, req.body.meetingLink, oneOnOneUserIDFK)
+controller ->> oneonone: save()
 activate oneonone
-oneonone ->> mysql: execute("INSERT INTO OneOnOne \n(?, ?, ?)", [duracion, fechaHora, \nidUsuario])
+oneonone ->> mysql: execute("INSERT INTO OneOnOne \n(?, ?, ?, ?, ?)", [oneToOneID, \nthis.expectedTime, this.meetingDate, \nthis.meetingLink, this.OneOnOneUserIDFK])
 activate mysql
 mysql --> oneonone: Query OK
 deactivate mysql
 oneonone -->> controller: promesa
 deactivate oneonone
 
-controller -> add: res.redirect('/oneonone/add', info)
+controller -> routes: res.redirect('/oneonone/add', info)
+deactivate controller
+activate routes
+routes -> controller: get_add(req, res)
+deactivate routes
+activate controller
+controller -> add: res.render("add.js", mensaje)
 deactivate controller
 activate add
 add -> navegador: HTML
-deactivate add
+deactivate add 
 activate navegador
 
 @enduml

@@ -73,6 +73,7 @@
                 Evidencia (opcional):
             </label>
             <input
+                id="faultEvidenceInput"
                 class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                 type="file"
                 name="evidence"
@@ -95,6 +96,27 @@
             </a>
         </div>
     </form>
+
+    <script>
+
+const evidenceInput = document.getElementById("faultEvidenceInput");
+
+evidenceInput.addEventListener("change", function () {
+    const file = this.files[0]; // Obtiene el archivo seleccionado
+    const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+
+    if (file) {
+        if (file.size > maxSize) {
+            alert(
+                `El archivo es demasiado grande. El tamaño máximo permitido es 10 MB.`
+            );
+            this.value = ""; // Borra el archivo seleccionado
+        }
+    }
+});
+
+
+    </script>
 
     <%- include('includes/_footer') %>
 </div>

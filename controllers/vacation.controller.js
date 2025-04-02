@@ -1,25 +1,68 @@
 const Vacation = require("../models/vacation.model");
 const User = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
+const { request } = require("http");
 
 exports.getRequests = (request, response, next) => {
-    // console.log("Session:", request.session);
-    // console.log("UserID from session:", request.session.userID);
-    const employeedId = request.session.userID;
-    // console.log(employeedId);
+    const userId = request.session.userID;
+    const userRole = request.session.role;
+    const limit = 10;
+    const offset = 0;
+    
+    let fetchPromise;
 
-    Vacation.fetchAllWithNames(employeedId)
-        .then(([rows, fieldData]) => {
-            console.log(rows);
-            // Asegúrate de pasar "rows" como "vacations"
+    if (userRole === "Human Resources") {
+        // Recursos Humanos: cargar solicitudes de todos los departamentos
+        fetchPromise = Vacation.fetchPaginated(limit, offset);
+    } else if (userRole === "Leader") {
+        // Líder: cargar solo solicitudes de su propio departamento
+        fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
+    } else {
+        // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
+        fetchPromise = Vacation.fetchAllVacation(userId);
+    }
+
+    fetchPromise
+        .then(([rows]) => {
             response.render("vacationRequests", {
                 ...sessionVars(request),
-                vacations: rows, // Pasar correctamente "rows" como "vacations"
+                vacations: rows, // Se pasan las solicitudes al template
             });
         })
         .catch((error) => {
-            console.error(error); // Mejor manejo de error
+            console.error(error);
             response.status(500).send("Error al obtener los datos.");
+        });
+};
+
+exports.getRequestsPaginated = (request, response, next) => {
+    // Se recibe "page" desde la query, por defecto 0
+    const page = parseInt(request.query.page) || 0;
+    const limit = 10;
+    const offset = page * limit;
+    const userId = request.session.userID;
+    const userRole = request.session.role;
+    
+    let fetchPromise;
+    
+    if (userRole === "Human Resources") {
+        // Recursos Humanos: cargar solicitudes de todos los departamentos
+        fetchPromise = Vacation.fetchPaginated(limit, offset);
+    } else if (userRole === "Leader") {
+        // Líder: cargar solo solicitudes de su propio departamento
+        fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
+    } else {
+        // Como fallback, retornar un arreglo vacío o una respuesta adecuada
+        fetchPromise = Promise.resolve([[]]);
+    }
+    
+    fetchPromise
+        .then(([rows]) => {
+            response.status(200).json(rows);
+        })
+        .catch((error) => {
+            console.error("Error al obtener solicitudes paginadas:", error);
+            response.status(500).json({ error: "Error al obtener los datos." });
         });
 };
 
@@ -95,21 +138,97 @@ exports.postAddVacation = (request, response, next) => {
 };
 
 exports.getCheckVacation = (request, response, next) => {
-    response.render("checkVacation", {
-        ...sessionVars(request),
-    });
+    const vacationID = request.params.vacationID; // Obtener el ID de la vacación desde la URL
+    const userID = request.session.userID;
+
+    Vacation.fetchAllVacation(userID)
+        .then(([rows]) => {
+            const selectedVacation = rows.find(
+                (vacation) => vacation.vacationID == vacationID
+            );
+
+            if (!selectedVacation) {
+                return response
+                    .status(404)
+                    .send("Solicitud de vacaciones no encontrada.");
+            }
+
+            response.render("checkVacation", {
+                ...sessionVars(request),
+                vacation: selectedVacation,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send("Error al obtener los datos.");
+        });
 };
 
-exports.getModifyVacation = (request, response, next) => {
-    response.render("modifyVacation", {
-        ...sessionVars(request),
-    });
+exports.getModifyVacation = async (request, response, next) => {
+    try {
+        const vacationID = request.params.vacationID;
+        const userID = request.session.userID;
+
+        console.log("vacation id", vacationID);
+        // Si existe un método más eficiente, como fetchById, sería mejor usarlo
+        const [rows] = await Vacation.fetchAllVacation(userID);
+        const selectedVacation = rows.find(
+            (vacation) => String(vacation.vacationID).trim() === vacationID.trim()
+        );
+        
+
+        if (!selectedVacation) {
+            return response.status(404).send("Vacación no encontrada.");
+        }
+
+        response.render("modifyVacation", {
+            ...sessionVars(request),
+            vacation: selectedVacation,
+        });
+    } catch (error) {
+        console.error("Error al obtener la vacación:", error);
+        response.status(500).send("Error interno del servidor.");
+    }
+};
+
+
+
+exports.updateVacation  = (request, response, next) => {
+    console.log("Entrando en updateVacation..."); // <-- Debug
+    console.log("Datos recibidos:", request.body); // <-- Debug
+    const vacationId = request.params.vacationID;
+    const { startDate, endDate, reason } = request.body;
+
+    console.log("vacationId recibido en postUpdateVacation:", request.params.vacationID);
+    console.log("vacationId recibido:", vacationId);
+
+    if (!startDate || !endDate || !reason) {
+        return response.status(400).json({
+            success: false,
+            message: "Todos los campos son obligatorios.",
+        });
+    }
+    Vacation.updateVacation(vacationId, startDate, endDate, reason)
+    .then(() => {
+            response.status(200).json({
+                success: true,
+                message: "Solicitud de vacaciones actualizada exitosamente.",
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).json({
+                success: false,
+                message: "Error al actualizar la solicitud.",
+            });
+        });
 };
 
 // TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
 
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
+    const vacationRole = request.session.role;
 
     Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
         .then(() => {
@@ -147,7 +266,30 @@ exports.postRequestDeny = (request, response, next) => {
 };
 
 exports.getRoot = (request, response, next) => {
-    response.render("ownVacation", {
-        ...sessionVars(request),
-    });
+    const userID = request.session.userID;
+
+    Vacation.fetchAllVacation(userID)
+        .then(([rows]) => {
+            // Vacaciones aprobadas: ambas aprobadas (valor 1)
+            const approvedVacations = rows.filter(
+                (vacation) =>
+                    vacation.leaderStatus === 1 && vacation.hrStatus === 1
+            );
+
+            // Vacaciones pendientes: si alguno está pendiente (valor 2)
+            const pendingVacations = rows.filter(
+                (vacation) =>
+                    vacation.leaderStatus === 2 || vacation.hrStatus === 2
+            );
+
+            response.render("ownVacation", {
+                ...sessionVars(request),
+                approvedVacations,
+                pendingVacations,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send("Error al obtener los datos.");
+        });
 };

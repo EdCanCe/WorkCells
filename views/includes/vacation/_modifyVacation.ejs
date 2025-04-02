@@ -1,63 +1,72 @@
 <div class="flex">
     <aside class="w-64"></aside>
     <div class="p-6">
+        <% if (info) { %>
+            <div class="alert alert-info p-4 rounded-md mb-4">
+                <%= info %>
+            </div>
+        <% } %>
         <div class="bg-neutral-700/25 shadow-lg rounded-lg">
             <div class="p-6">
                 <h2 class="text-2xl font-semibold mb-4">
                     Modificar Solicitud de Vacaciones
                 </h2>
             </div>
-            <div class="p-6">
-                <label
-                    for="reason"
-                    class="block text-sm font-medium text-neutral-100 mb-2"
-                    >Motivo</label
-                >
-                <input
-                    type="text"
-                    id="reason"
-                    class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                    placeholder="Quiero ir a la playa."
-                />
-            </div>
-            <div class="p-6">
-                <label
-                    for="startDate"
-                    class="block text-sm font-medium text-neutral-100 mb-2"
-                    >Fecha Inicio</label
-                >
-                <input
-                    type="text"
-                    id="startDate"
-                    class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                    placeholder="01/02/2025"
-                />
-            </div>
-            <div class="p-6">
-                <label
-                    for="endDate"
-                    class="block text-sm font-medium text-neutral-100 mb-2"
-                    >Fecha Fin</label
-                >
-                <input
-                    type="text"
-                    id="endDate"
-                    class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                    placeholder="02/02/2025"
-                />
-            </div>
-        </div>
-        <div class="flex space-x-4 mt-6">
-            <a
-                href=""
-                class="btnPrimary"
-                >Confirmar Cambios</a
-            >
-            <a
-                href="/vacation"
-                class="btnPrimary"
-                >Cancelar</a
-            >
+
+            <!-- Formulario para enviar los datos -->
+            <form action="/vacation/update/<%= vacation.vacationID %>" method="POST">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <div class="p-6">
+                    <label for="reason" class="block text-sm font-medium text-neutral-100 mb-2">
+                        Motivo
+                    </label>
+                    <input
+                        type="text"
+                        id="reason"
+                        name="reason"
+                        class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        value="<%= vacation.reason %>"
+                        required
+                    />
+                </div>
+
+                <div class="p-6">
+                    <label for="startDate" class="block text-sm font-medium text-neutral-100 mb-2">
+                        Fecha Inicio
+                    </label>
+                    <input
+                        type="date"
+                        id="startDate"
+                        name="startDate"
+                        class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        value="<%= vacation.startDate ? new Date(vacation.startDate).toISOString().split('T')[0] : '' %>"
+                        required
+                    />
+                </div>
+
+                <div class="p-6">
+                    <label for="endDate" class="block text-sm font-medium text-neutral-100 mb-2">
+                        Fecha Fin
+                    </label>
+                    <input
+                        type="date"
+                        id="endDate"
+                        name="endDate"
+                        class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        value="<%= vacation.endDate ? new Date(vacation.endDate).toISOString().split('T')[0] : '' %>"
+                        required
+                    />
+                </div>
+
+                <!-- Botón de envío -->
+                <div class="flex space-x-4 mt-6">
+                    <button type="submit" class="btnPrimary">
+                        Confirmar Cambios
+                    </button>
+                    <a href="/vacation" class="btnPrimary">Cancelar</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
