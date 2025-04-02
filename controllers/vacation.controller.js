@@ -47,7 +47,7 @@ exports.getRequestsPaginated = (request, response, next) => {
     if (userRole === "Human Resources") {
         // Recursos Humanos: cargar solicitudes de todos los departamentos
         fetchPromise = Vacation.fetchPaginated(limit, offset);
-    } else if (userRole === "Leader") {
+    } else if (userRole === "Department Leader") {
         // Líder: cargar solo solicitudes de su propio departamento
         fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
     } else {

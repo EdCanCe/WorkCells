@@ -111,7 +111,7 @@ AND u.userID IN (
             `SELECT v.*, u.birthName, u.surname 
              FROM vacation AS v
              JOIN user AS u ON u.userID = v.vacationUserIDFK
-             WHERE v.leaderStatus = 2
+             WHERE v.hrStatus = 2
              ORDER BY v.startDate DESC
              LIMIT ? OFFSET ?`,
             [limit, offset]
