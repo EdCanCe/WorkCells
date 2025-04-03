@@ -1,7 +1,6 @@
 const Vacation = require("../models/vacation.model");
 const User = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
-const { request } = require("http");
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -11,12 +10,9 @@ exports.getRequests = (request, response, next) => {
     
     let fetchPromise;
 
-    if (userRole === "Human Resources") {
-        // Recursos Humanos: cargar solicitudes de todos los departamentos
-        fetchPromise = Vacation.fetchPaginated(limit, offset);
-    } else if (userRole === "Leader") {
-        // Líder: cargar solo solicitudes de su propio departamento
-        fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
+    if (userRole === "Human Resources" || userRole === "Leader") {
+        // Usar el método fetchPaginated actualizado que maneja ambos roles
+        fetchPromise = Vacation.fetchPaginated(limit, offset, userRole, userId);
     } else {
         // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
         fetchPromise = Vacation.fetchAllVacation(userId);
@@ -26,7 +22,8 @@ exports.getRequests = (request, response, next) => {
         .then(([rows]) => {
             response.render("vacationRequests", {
                 ...sessionVars(request),
-                vacations: rows, // Se pasan las solicitudes al template
+                vacations: rows,
+                role: userRole
             });
         })
         .catch((error) => {
@@ -36,35 +33,27 @@ exports.getRequests = (request, response, next) => {
 };
 
 exports.getRequestsPaginated = (request, response, next) => {
-    // Se recibe "page" desde la query, por defecto 0
     const page = parseInt(request.query.page) || 0;
     const limit = 10;
     const offset = page * limit;
     const userId = request.session.userID;
     const userRole = request.session.role;
-    
-    let fetchPromise;
-    
-    if (userRole === "Human Resources") {
-        // Recursos Humanos: cargar solicitudes de todos los departamentos
-        fetchPromise = Vacation.fetchPaginated(limit, offset);
-    } else if (userRole === "Leader") {
-        // Líder: cargar solo solicitudes de su propio departamento
-        fetchPromise = Vacation.fetchDepartmentPaginated(userId, limit, offset);
-    } else {
-        // Como fallback, retornar un arreglo vacío o una respuesta adecuada
-        fetchPromise = Promise.resolve([[]]);
-    }
-    
-    fetchPromise
+
+    Vacation.fetchPaginated(limit, offset, userRole, userId)
         .then(([rows]) => {
-            response.status(200).json(rows);
+            // Asegurarse de que rows es un array antes de enviarlo
+            const vacations = Array.isArray(rows) ? rows : [];
+            response.status(200).json(vacations);
         })
         .catch((error) => {
-            console.error("Error al obtener solicitudes paginadas:", error);
-            response.status(500).json({ error: "Error al obtener los datos." });
+            console.error("Error fetching paginated requests:", error);
+            response.status(500).json({ 
+                success: false, 
+                message: "Error al cargar las solicitudes." 
+            });
         });
 };
+
 
 exports.getAddVacation = (request, response, next) => {
     User.fetchStartDate(request.session.userID)
@@ -228,39 +217,104 @@ exports.updateVacation  = (request, response, next) => {
 
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
-    const vacationRole = request.session.role;
+    const userRole = request.session.role;
+    const userId = request.session.userID;
 
-    Vacation.updateStatusLeader(vacationId, 1) // 1 = Aprobado
+    // Verificar si el usuario tiene permiso para aprobar esta solicitud
+    Vacation.fetchOneVacation(vacationId)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).json({
+                    success: false,
+                    message: "Solicitud no encontrada"
+                });
+            }
+
+            const vacation = rows[0];
+            
+            // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
+            if (userRole === "Human Resources") {
+                // Elimina la restricción de verificar el estado del líder
+                return Vacation.updateStatusHR(vacationId, 1); // 1 = Aprobado
+            }
+            // Si es líder, actualiza el estado del líder
+            else if (userRole === "Leader") {
+                return Vacation.fetchDepartmentPaginated(userId, 1, 0)
+                    .then(([departmentVacations]) => {
+                        const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
+                        if (!hasPermission) {
+                            throw new Error("No tienes permiso para aprobar esta solicitud");
+                        }
+                        return Vacation.updateStatusLeader(vacationId, 1);
+                    });
+            }
+            else {
+                throw new Error("Rol no autorizado");
+            }
+        })
         .then(() => {
             response.status(200).json({
                 success: true,
-                message: "Request approved",
+                message: "Solicitud aprobada exitosamente"
             });
         })
         .catch((error) => {
             console.error(error);
             response.status(500).json({
                 success: false,
-                message: "Error processing request",
+                message: error.message || "Error al procesar la solicitud"
             });
         });
 };
 
 exports.postRequestDeny = (request, response, next) => {
     const vacationId = request.params.vacationID;
+    const userRole = request.session.role;
+    const userId = request.session.userID;
 
-    Vacation.updateStatusLeader(vacationId, 0) // 0 = Denegado
+    // Verificar si el usuario tiene permiso para denegar esta solicitud
+    Vacation.fetchOneVacation(vacationId)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).json({
+                    success: false,
+                    message: "Solicitud no encontrada"
+                });
+            }
+
+            const vacation = rows[0];
+            
+            // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
+            if (userRole === "Human Resources") {
+                // Elimina la restricción de verificar el estado del líder
+                return Vacation.updateStatusHR(vacationId, 0); // 0 = Denegado
+            }
+            // Si es líder, actualiza el estado del líder
+            else if (userRole === "Leader") {
+                return Vacation.fetchDepartmentPaginated(userId, 1, 0)
+                    .then(([departmentVacations]) => {
+                        const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
+                        if (!hasPermission) {
+                            throw new Error("No tienes permiso para denegar esta solicitud");
+                        }
+                        return Vacation.updateStatusLeader(vacationId, 0);
+                    });
+            }
+            else {
+                throw new Error("Rol no autorizado");
+            }
+        })
         .then(() => {
             response.status(200).json({
                 success: true,
-                message: "Request denied",
+                message: "Solicitud denegada exitosamente"
             });
         })
         .catch((error) => {
             console.error(error);
             response.status(500).json({
                 success: false,
-                message: "Error processing request",
+                message: error.message || "Error al procesar la solicitud"
             });
         });
 };

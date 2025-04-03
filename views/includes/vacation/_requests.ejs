@@ -31,15 +31,21 @@
                                 <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
                                 <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                                 <td class="px-4 py-2">
-                                    <% if (vacation.leaderStatus === 0) { %>
-                                    <span class="text-red-600 font-semibold">Denied</span>
-                                    <% } else if (vacation.leaderStatus === 1) { %>
-                                    <span class="text-green-600 font-semibold">Approved</span>
-                                    <% } else if (vacation.leaderStatus === 2) { %>
-                                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                    </div>
+                                    <% if (role === "Human Resources") { %>
+                                        <!-- RRHH: Mostrar botones independientemente del estado del líder -->
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Aprobar</button>
+                                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Denegar</button>
+                                        </div>
+                                        <% if (vacation.leaderStatus === 2) { %>
+                                            <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
+                                        <% } %>
+                                    <% } else if (role === "Leader" && vacation.leaderStatus === 2) { %>
+                                        <!-- Líder: Solicitud pendiente de aprobación -->
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Aprobar</button>
+                                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Denegar</button>
+                                        </div>
                                     <% } %>
                                 </td>
                             </tr>
@@ -60,201 +66,176 @@
 </div>
 
 <script>
-    // Variable para seguir la página actual
     let currentPage = 0;
     const limit = 10;
+    let isLoading = false;
+    const role = "<%= role %>"; // Asegurarse de que role está disponible
 
-    // Función para calcular el total de días
+    // Calcula el total de días entre dos fechas
     function calculateTotalDays(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
-        const timeDifference = end - start;
-        return Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+        return Math.ceil((end - start) / (1000 * 3600 * 24)) + 1;
     }
 
-    // Función para construir el contenido de la tabla con los datos de vacaciones
+    // Actualiza la función assignActionListeners para eliminar la confirmación
+    function assignActionListeners() {
+        document.querySelectorAll(".approve-btn, .deny-btn").forEach((button) => {
+            button.onclick = async function() {
+                if (this.disabled) return;
+                
+                const url = this.dataset.url;
+                const csrf = this.dataset.csrf;
+                
+                this.disabled = true;
+                
+                try {
+                    const res = await fetch(url, {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/json", 
+                            "csrf-token": csrf 
+                        },
+                        body: JSON.stringify({})
+                    });
+                    
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.message || "Error en la operación");
+                    }
+                    
+                    // Recargar la página actual después de la acción
+                    await loadPage(currentPage);
+                } catch (err) {
+                    console.error("Error al procesar la solicitud:", err);
+                    alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
+                } finally {
+                    this.disabled = false;
+                }
+            };
+        });
+    }
+
+    // Actualiza la función updateTable para manejar mejor la tabla vacía
     function updateTable(data) {
-        const noDataContainer = document.querySelector(".no-requests-container");
-        const tableContainer = document.querySelector("#vacations-table");
+        const table = document.getElementById("vacations-table");
+        const tbody = table.querySelector("tbody");
         
-        // Si no hay datos y no hay tabla, crear un mensaje
-        if (data.length === 0) {
-            if (noDataContainer) {
-                return; // Ya existe el contenedor de "no hay datos"
+        // Limpiar el contenido de la tabla
+        tbody.innerHTML = "";
+        
+        // Si no hay datos
+        if (!data || data.length === 0) {
+            if (currentPage === 0) {
+                // Es la primera página y no hay solicitudes
+                const noRequestsRow = document.createElement("tr");
+                noRequestsRow.innerHTML = `<td colspan="6" class="text-center py-4">No vacation requests available.</td>`;
+                tbody.appendChild(noRequestsRow);
+            } else {
+                // No es la primera página, mostrar alerta y volver a la página anterior
+                alert("No existen más solicitudes.");
+                currentPage--;
+                loadPage(currentPage);
             }
             
-            // Si hay tabla pero no hay datos, ocultarla y mostrar mensaje
-            if (tableContainer) {
-                tableContainer.style.display = "none";
-                
-                const newNoDataContainer = document.createElement("div");
-                newNoDataContainer.className = "no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg";
-                newNoDataContainer.innerHTML = '<p class="text-center text-gray-400 text-xl">No vacation requests available.</p>';
-                
-                tableContainer.parentNode.appendChild(newNoDataContainer);
-            }
-            
+            // Actualizar estado de botones
             document.getElementById("prev-button").disabled = currentPage === 0;
             document.getElementById("next-button").disabled = true;
             return;
         }
         
-        // Si hay datos y existe el mensaje de "no hay datos", quitarlo
-        if (noDataContainer) {
-            noDataContainer.remove();
-        }
-        
-        // Asegurarse que la tabla sea visible
-        if (tableContainer) {
-            tableContainer.style.display = "";
-        }
-
-        const tbody = document.querySelector("#vacations-table tbody");
-        tbody.innerHTML = "";
-
+        // Si hay datos, mostrarlos en la tabla
         data.forEach((vac) => {
-            const tr = document.createElement("tr");
-            tr.classList.add("border-b", "hover:bg-neutral-800");
+            const totalDays = calculateTotalDays(vac.startDate, vac.endDate);
+            let actionCell = "";
             
-            let actionCell = '';
-            if (vac.leaderStatus === 0) {
-                actionCell = '<span class="text-red-600 font-semibold">Denied</span>';
-            } else if (vac.leaderStatus === 1) {
-                actionCell = '<span class="text-green-600 font-semibold">Approved</span>';
-            } else if (vac.leaderStatus === 2) {
+            if (role === "Human Resources") {
+                // RRHH: Siempre mostrar botones, independientemente del estado del líder
                 actionCell = `
                     <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
-                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Aprobar</button>
+                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Denegar</button>
+                    </div>`;
+                
+                if (vac.leaderStatus === 2) {
+                    actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
+                }
+            } else if (role === "Leader" && vac.leaderStatus === 2) {
+                actionCell = `
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Aprobar</button>
+                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Denegar</button>
                     </div>`;
             }
+
+            const row = document.createElement("tr");
+            row.className = "border-b hover:bg-neutral-800";
             
-            tr.innerHTML = `
+            row.innerHTML = `
                 <td class="px-4 py-2">${vac.birthName} ${vac.surname}</td>
                 <td class="px-4 py-2">${vac.reason}</td>
                 <td class="px-4 py-2">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
                 <td class="px-4 py-2">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${calculateTotalDays(vac.startDate, vac.endDate)}</td>
-                <td class="px-4 py-2 text-center">${actionCell}</td>
+                <td class="px-4 py-2">${totalDays}</td>
+                <td class="px-4 py-2">${actionCell}</td>
             `;
-            tbody.appendChild(tr);
+            
+            tbody.appendChild(row);
         });
-
-        // Habilitar/deshabilitar botones de paginación según corresponda
+        
+        // Actualizar estado de botones de paginación
         document.getElementById("prev-button").disabled = currentPage === 0;
         document.getElementById("next-button").disabled = data.length < limit;
-
-        // Vuelve a asignar los event listeners para los botones de Approve y Deny
-        assignActionListeners();
+        
+        assignActionListeners(); // Reasigna los listeners
     }
 
-    // Función para cargar una página de solicitudes mediante AJAX
+    // Mejora la función loadPage para garantizar que los botones siempre funcionen
     async function loadPage(page) {
+        if (isLoading) return;
+        isLoading = true;
+        
         try {
             const response = await fetch(`/vacation/requests/paginated?page=${page}`);
-            if (!response.ok) throw new Error(`Error al cargar la página: ${response.status}`);
-            return await response.json();
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error en la respuesta del servidor");
+            }
+            
+            const data = await response.json();
+            currentPage = page;
+            updateTable(data);
         } catch (error) {
             console.error("Error en loadPage:", error);
-            return [];
+            alert("Error al cargar las solicitudes. Por favor, intente nuevamente.");
+        } finally {
+            isLoading = false;
         }
-    }
-
-    // Asigna event listeners para acciones de aprobar y denegar
-    function assignActionListeners() {
-        document.querySelectorAll(".approve-btn").forEach((button) => {
-            button.addEventListener("click", async function () {
-                const url = this.dataset.url;
-                const csrf = this.dataset.csrf;
-                this.disabled = true;
-                const originalText = this.innerText;
-                this.innerText = "Processing...";
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "csrf-token": csrf,
-                        },
-                        body: JSON.stringify({}),
-                    });
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    // Actualizar la celda de acciones con el estado aprobado
-                    this.closest("td").innerHTML = '<span class="text-green-600 font-semibold">Approved</span>';
-                } catch (err) {
-                    console.error("Error al aprobar:", err);
-                    this.disabled = false;
-                    this.innerText = originalText;
-                    alert("Error al procesar la solicitud. Intente nuevamente.");
-                }
-            });
-        });
-
-        document.querySelectorAll(".deny-btn").forEach((button) => {
-            button.addEventListener("click", async function () {
-                const url = this.dataset.url;
-                const csrf = this.dataset.csrf;
-                this.disabled = true;
-                const originalText = this.innerText;
-                this.innerText = "Processing...";
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "csrf-token": csrf,
-                        },
-                        body: JSON.stringify({}),
-                    });
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    // Actualizar la celda de acciones con el estado denegado
-                    this.closest("td").innerHTML = '<span class="text-red-600 font-semibold">Denied</span>';
-                } catch (err) {
-                    console.error("Error al denegar:", err);
-                    this.disabled = false;
-                    this.innerText = originalText;
-                    alert("Error al procesar la solicitud. Intente nuevamente.");
-                }
-            });
-        });
     }
 
     // Manejadores para los botones de paginación
     document.getElementById("next-button").addEventListener("click", async () => {
-        const nextPage = currentPage + 1;
-        const data = await loadPage(nextPage);
-        if (data.length > 0) {
-            currentPage = nextPage;
-            updateTable(data);
-        } else {
-            alert("No hay más solicitudes disponibles.");
+        if (!document.getElementById("next-button").disabled) {
+            await loadPage(currentPage + 1);
+        }
+    });
+    
+    document.getElementById("prev-button").addEventListener("click", async () => {
+        if (currentPage > 0 && !document.getElementById("prev-button").disabled) {
+            await loadPage(currentPage - 1);
         }
     });
 
-    document.getElementById("prev-button").addEventListener("click", async () => {
-        if (currentPage === 0) return;
-        const prevPage = currentPage - 1;
-        const data = await loadPage(prevPage);
-        currentPage = prevPage;
-        updateTable(data);
-    });
-
-    // Calcular los días totales en las filas existentes (al cargar la página)
-    document.addEventListener("DOMContentLoaded", function () {
-        // Calcular duración para cada vacación inicialmente cargada
-        const totalDaysCells = document.querySelectorAll(".total-days");
-        totalDaysCells.forEach((cell) => {
-            const startDate = cell.getAttribute("data-start-date");
-            const endDate = cell.getAttribute("data-end-date");
+    // Inicialización al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+        loadPage(0);
+        
+        // Inicializar los totales de días para los elementos que ya están en el DOM
+        document.querySelectorAll(".total-days").forEach(cell => {
+            const startDate = cell.dataset.startDate;
+            const endDate = cell.dataset.endDate;
             cell.textContent = calculateTotalDays(startDate, endDate);
         });
-        
-        // Configuración inicial de botones de paginación
-        document.getElementById("prev-button").disabled = currentPage === 0;
-        const noVacations = document.querySelector(".no-requests-container") !== null;
-        document.getElementById("next-button").disabled = noVacations || (document.querySelectorAll("#vacations-table tbody tr").length < limit);
-        
-        // Asigna los listeners para los botones existentes
-        assignActionListeners();
     });
 </script>

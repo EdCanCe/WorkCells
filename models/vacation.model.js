@@ -106,16 +106,42 @@ AND u.userID IN (
         );
     }
     
-    static fetchPaginated(limit, offset) {
-        return db.execute(
-            `SELECT v.*, u.birthName, u.surname 
-             FROM vacation AS v
-             JOIN user AS u ON u.userID = v.vacationUserIDFK
-             WHERE v.leaderStatus = 2
-             ORDER BY v.startDate DESC
-             LIMIT ? OFFSET ?`,
-            [limit, offset]
-        );
+    static fetchPaginated(limit, offset, userRole, userId) {
+        if (userRole === "Human Resources") {
+            // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2), sin importar el estado del líder
+            return db.execute(
+                `SELECT v.*, u.birthName, u.surname 
+                 FROM vacation AS v
+                 JOIN user AS u ON u.userID = v.vacationUserIDFK
+                 WHERE v.hrStatus = 2
+                 ORDER BY v.startDate DESC
+                 LIMIT ? OFFSET ?`,
+                [limit, offset]
+            );
+        } else if (userRole === "Leader") {
+            // Líder: Ver solo solicitudes pendientes de su departamento
+            return db.execute(
+                `SELECT v.*, u.birthName, u.surname 
+                 FROM vacation AS v
+                 JOIN user AS u ON u.userID = v.vacationUserIDFK
+                 WHERE v.leaderStatus = 2
+                 AND u.userID IN (
+                    SELECT ud.userIDFK
+                    FROM userDepartment ud
+                    WHERE ud.departmentIDFK IN (
+                        SELECT departmentIDFK
+                        FROM userDepartment
+                        WHERE userIDFK = ?
+                    )
+                 )
+                 ORDER BY v.startDate DESC
+                 LIMIT ? OFFSET ?`,
+                [userId, limit, offset]
+            );
+        } else {
+            // Para otros roles, retornar un array vacío
+            return Promise.resolve([[]]);
+        }
     }
     
     static fetchDepartmentPaginated(leaderID, limit, offset) {
@@ -123,7 +149,7 @@ AND u.userID IN (
             `SELECT v.*, u.birthName, u.surname 
              FROM vacation AS v
              JOIN user AS u ON u.userID = v.vacationUserIDFK
-             WHERE v.leaderStatus = 2
+             WHERE v.leaderStatus = 2 AND v.hrStatus = 2
              AND u.userID IN (
                 SELECT ud.userIDFK
                 FROM userDepartment ud
