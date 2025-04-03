@@ -1,6 +1,13 @@
-const db = require("../util/database"); // Asegúrate de importar tu módulo de conexión
-
+const db = require('../util/database');
 class Vacation {
+    /**
+     * Constructor de una solicitud de vacaciones.
+     * 
+     * @param text userID       El ID del usuario.
+     * @param text startDate    La fecha de inicio.
+     * @param text endDate      La fecha de final.
+     * @param text reason       Razón por la que se solicitaron.
+     */
     constructor(userID, startDate, endDate, reason) {
         this.userID = userID;
         this.startDate = startDate;
@@ -8,9 +15,13 @@ class Vacation {
         this.reason = reason;
     }
 
+    /**
+     * Guarda la solicitud de vacaciones en la base de datos.
+     * @returns El ID de la solicitud recién registrada.
+     */
     save() {
         const saveQuery =
-            "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
+            'INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )';
         return db
             .execute(saveQuery, [
                 this.userID,
@@ -19,7 +30,7 @@ class Vacation {
                 this.reason,
             ])
             .catch((error) => {
-                console.error("Error al añadir vacación:", error.message);
+                console.error('Error al añadir vacación:', error.message);
                 throw error;
             });
     }
@@ -68,7 +79,7 @@ AND u.userID IN (
     }
 
     static updateVacation(vacationId, startDate, endDate, reason) {
-        console.log("Ejecutando UPDATE con:", vacationId, startDate, endDate, reason); // Agregar log
+        console.log('Ejecutando UPDATE con:', vacationId, startDate, endDate, reason); // Agregar log
     
         return db.execute(
             `UPDATE vacation
@@ -107,7 +118,7 @@ AND u.userID IN (
     }
     
     static fetchPaginated(limit, offset, userRole, userId) {
-        if (userRole === "Human Resources") {
+        if (userRole === 'Human Resources') {
             // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2), sin importar el estado del líder
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
@@ -118,7 +129,7 @@ AND u.userID IN (
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
             );
-        } else if (userRole === "Department Leader") {
+        } else if (userRole === 'Department Leader') {
             // Líder: Ver solo solicitudes pendientes de su departamento
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
@@ -186,20 +197,30 @@ AND u.userID IN (
 
     static updateStatusLeader(vacationId, status) {
         return db.execute(
-            "UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?",
+            'UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?',
             [status, vacationId]
         );
     }
 
     static updateStatusHR(vacationId, status) {
         return db.execute(
-            "UPDATE vacation SET hrStatus = ? WHERE vacationID = ?",
+            'UPDATE vacation SET hrStatus = ? WHERE vacationID = ?',
             [status, vacationId]
         );
     }
 
+    /**
+     * Regresa las vacaciones entre 2 fechas para un usuario.
+     * 
+     * @param string startDate  La fecha inicial
+     * @param string endDate    La fecha final 
+     * @param string userID     El usuario al que le pertenecen las vacaciones
+     * @returns Las vacaciones en esas fechass
+     */
     static fetchByDateType(startDate, endDate, userID) {
-        return db.execute(`(SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?) UNION (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`, [startDate, endDate, userID, startDate, endDate, userID]
+        return db.execute(`
+            (SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?) UNION (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`,
+            [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
 }

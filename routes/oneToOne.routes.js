@@ -16,7 +16,8 @@ router.post("/:sessionID/fill", isAuth, OTO, oneToOneController.postOneToOneFill
 
 router.get("/graphs", isAuth, oneToOneController.getOneToOneGraphs);
 
-router.get("/check", isAuth, oneToOneController.getOneToOneCheck);
+// Muestra los datos de una sesión
+router.get("/:sessionID", isAuth, oneToOneController.getOneToOneCheck);
 
 router.get("/getFullName/:email", isAuth, oneToOneController.getFullName);
 
