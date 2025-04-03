@@ -139,19 +139,14 @@ exports.postAddVacation = (request, response, next) => {
 
 exports.getCheckVacation = (request, response, next) => {
     const vacationID = request.params.vacationID; // Obtener el ID de la vacación desde la URL
-    const userID = request.session.userID;
 
-    Vacation.fetchAllVacation(userID)
+    Vacation.fetchOneVacation(vacationID)
         .then(([rows]) => {
-            const selectedVacation = rows.find(
-                (vacation) => vacation.vacationID == vacationID
-            );
-
-            if (!selectedVacation) {
-                return response
-                    .status(404)
-                    .send("Solicitud de vacaciones no encontrada.");
+            if (rows.length === 0) {
+                return response.status(404).send("Solicitud de vacaciones no encontrada.");
             }
+            
+            const selectedVacation = rows[0];
 
             response.render("checkVacation", {
                 ...sessionVars(request),
@@ -164,22 +159,17 @@ exports.getCheckVacation = (request, response, next) => {
         });
 };
 
+
 exports.getModifyVacation = async (request, response, next) => {
     try {
         const vacationID = request.params.vacationID;
-        const userID = request.session.userID;
+        const [rows] = await Vacation.fetchOneVacation(vacationID);
 
-        console.log("vacation id", vacationID);
-        // Si existe un método más eficiente, como fetchById, sería mejor usarlo
-        const [rows] = await Vacation.fetchAllVacation(userID);
-        const selectedVacation = rows.find(
-            (vacation) => String(vacation.vacationID).trim() === vacationID.trim()
-        );
-        
-
-        if (!selectedVacation) {
+        if (rows.length === 0) {
             return response.status(404).send("Vacación no encontrada.");
         }
+
+        const selectedVacation = rows[0];
 
         response.render("modifyVacation", {
             ...sessionVars(request),
@@ -193,36 +183,61 @@ exports.getModifyVacation = async (request, response, next) => {
 
 
 
-exports.updateVacation  = (request, response, next) => {
-    console.log("Entrando en updateVacation..."); // <-- Debug
-    console.log("Datos recibidos:", request.body); // <-- Debug
+exports.updateVacation = async (request, response, next) => {
+    console.log("Entrando en updateVacation...");
+    console.log("Datos recibidos:", request.body);
+    
     const vacationId = request.params.vacationID;
     const { startDate, endDate, reason } = request.body;
 
-    console.log("vacationId recibido en postUpdateVacation:", request.params.vacationID);
-    console.log("vacationId recibido:", vacationId);
+    console.log("vacationId recibido en updateVacation:", vacationId);
 
     if (!startDate || !endDate || !reason) {
-        return response.status(400).json({
-            success: false,
-            message: "Todos los campos son obligatorios.",
-        });
-    }
-    Vacation.updateVacation(vacationId, startDate, endDate, reason)
-    .then(() => {
-            response.status(200).json({
-                success: true,
-                message: "Solicitud de vacaciones actualizada exitosamente.",
+        request.session.info = "Todos los campos son obligatorios.";
+
+        try {
+            const [rows] = await Vacation.fetchOneVacation(vacationId);
+            if (rows.length === 0) {
+                return response.status(404).send("Vacación no encontrada.");
+            }
+
+            return response.render("modifyVacation", {
+                ...sessionVars(request),
+                vacation: rows[0], // Ahora pasamos la vacación correcta
             });
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error(error);
-            response.status(500).json({
-                success: false,
-                message: "Error al actualizar la solicitud.",
-            });
+            return response.status(500).send("Error interno del servidor.");
+        }
+    }
+
+    try {
+        await Vacation.updateVacation(vacationId, startDate, endDate, reason);
+        request.session.info = "Solicitud de vacaciones actualizada exitosamente.";
+
+        const [rows] = await Vacation.fetchOneVacation(vacationId);
+        return response.render("modifyVacation", {
+            ...sessionVars(request),
+            vacation: rows[0], // Pasamos la vacación actualizada
         });
+    } catch (error) {
+        console.error(error);
+        request.session.info = "Error al actualizar la solicitud.";
+
+        try {
+            const [rows] = await Vacation.fetchOneVacation(vacationId);
+            return response.render("modifyVacation", {
+                ...sessionVars(request),
+                vacation: rows[0], // Pasamos la vacación incluso en caso de error
+            });
+        } catch (fetchError) {
+            console.error(fetchError);
+            return response.status(500).send("Error interno del servidor.");
+        }
+    }
 };
+
+
 
 // TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
 
