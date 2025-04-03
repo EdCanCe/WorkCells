@@ -82,11 +82,11 @@ exports.getOneToOneFill = (request, response, next) => {
 };
 
 exports.postOneToOneFill = (request, response, next) => {
-    
+
     OneToOne.countVariables()
         .then(([rows]) => {
-            const questionsNum = rows[0].questionAmount;
-            const measurableAmount = rows[0].measurableAmount;
+            const questionsNum = request.body.numQuestions;
+            const measurableAmount = request.body.numMeasures;
             for (let i = 1; i <= questionsNum; i++) {
                 const answer = new Answer(
                     request.body[`question_${i}`],

@@ -60,7 +60,7 @@
                 <!-- TODO: Modificar el css y js de los botones -->
 
                 <!-- Obtiene la cantidad de preguntas -->
-                <input type="hidden" name="numMeasures" value="<%= questions.length %>" />
+                <input type="hidden" name="numMeasures" value="<%= measurables.length %>" />
 
                 <!-- Ciclo para cada pregunta -->
                 <% measurables.forEach((measurable, qIndex) => { %>
@@ -147,7 +147,7 @@
         if (validAnswer == 0) {
             this.submit();
         } else {
-            // TODO: Implementar mensaje de error
+            showStatus("Alert", "You need to add text to ALL the answer fields.")
         }
     });
 
