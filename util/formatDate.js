@@ -1,5 +1,11 @@
+/**
+ * Obtiene el sufijo de un día en inglés.
+ * 
+ * @param int day   El número del día en el mes 
+ * @returns     El día con su sufijo.
+ */
 function getOrdinalSuffix(day) {
-    if (day > 3 && day < 21) return 'th'; // handles 11th, 12th, 13th, etc.
+    if (day > 3 && day < 21) return 'th';
     switch (day % 10) {
         case 1: return 'st';
         case 2: return 'nd';
@@ -9,8 +15,15 @@ function getOrdinalSuffix(day) {
 }
 
 module.exports = {
+    /**
+     * Convierte una fecha plana a una fecha en texto.
+     * 
+     * @param string dateString     La fecha plana. 
+     * @returns     La fecha en texto.
+     */
     formatDateWithOrdinal: (dateString) => {
         try {
+            // Convierte la fecha plana a variable tipo fecha
             const date = new Date(dateString);
             if (isNaN(date.getTime())) return 'Invalid Date';
 

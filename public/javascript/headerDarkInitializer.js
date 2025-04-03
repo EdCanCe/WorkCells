@@ -5,6 +5,7 @@ document.cookie = `darkMode=${getCookieByName("darkMode") == "1" ? "1" : "0"}; m
     30 * 24 * 60 * 60
 }; path=/`;
 
+// Añade la clase oscura al html para que se carguen los elementos con ese estilo
 if(getCookieByName("darkMode") == "1"){
     htmlInit.classList.add("dark");
 } else{

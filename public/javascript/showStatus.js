@@ -4,8 +4,8 @@
  *  - Advertencia
  *  - Alerta
  * 
- * @param text status: El tipo de estado a mostrar
- * @param text text: Mensaje a mostrar
+ * @param text status   El tipo de estado a mostrar
+ * @param text text     Mensaje a mostrar
  */
 const showStatus = (status, text) => {
     const container = document.querySelector(`.bgStatus${status}`);

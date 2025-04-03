@@ -1,20 +1,20 @@
-const { response } = require("express");
-const OneToOne = require("../models/oneToOne.model");
-const Question = require("../models/question.model");
-const Measurable = require("../models/measurable.model");
-const Answer = require("../models/answer.model");
-const Measure = require("../models/measure.model");
-const { formatDateWithOrdinal } = require("../util/formatDate");
+const { response } = require('express');
+const OneToOne = require('../models/oneToOne.model');
+const Question = require('../models/question.model');
+const Measurable = require('../models/measurable.model');
+const Answer = require('../models/answer.model');
+const Measure = require('../models/measure.model');
+const { formatDateWithOrdinal } = require('../util/formatDate');
 const sessionVars = require('../util/sessionVars');
 
 exports.getOneToOne = (request, response, next) => {
-    response.render("oneToOne", {
+    response.render('oneToOne', {
         ...sessionVars(request),
     });
 };
 
 exports.getOneToOneSchedule = (request, response, next) => {
-    response.render("oneToOneAdd", {
+    response.render('oneToOneAdd', {
         ...sessionVars(request),
     });
 };
@@ -24,12 +24,12 @@ exports.postOneToOneSchedule = (request, response, next) => {
         .then(([rows]) => {
             if (rows.length === 0) {
                 request.session.error =
-                    "El correo ingresado no se encuentra registrado.";
-                return response.redirect("/oneToOne/schedule");
+                    'El correo ingresado no se encuentra registrado.';
+                return response.redirect('/oneToOne/schedule');
             }
             // Si el usuario está registrado, se obtiene su ID
             const oneOnOneUserIDFK = rows[0].userID;
-            const meetingDate = request.body.date + " " + request.body.time + ":00";
+            const meetingDate = request.body.date + ' ' + request.body.time + ':00';
 
             const meeting = new OneToOne(
                 request.body.expectedTime,
@@ -40,12 +40,12 @@ exports.postOneToOneSchedule = (request, response, next) => {
 
             return meeting.save().then(() => {
                 request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
-                response.redirect("/oneToOne/schedule");
+                response.redirect('/oneToOne/schedule');
             });
         })
         .catch((err) => {
             console.error(err);
-            response.status(500).send("Error interno del servidor");
+            response.status(500).send('Error interno del servidor');
         });
 };
 
@@ -55,8 +55,8 @@ exports.getOneToOneFill = (request, response, next) => {
         .then(([rows]) => {
             // En caso de que no exista, redirige a error
             if (rows.length === 0) {
-                request.session.alert = "There is no session with that ID."
-                response.status(404).redirect("/notFound");
+                request.session.alert = 'There is no session with that ID.'
+                response.status(404).redirect('/notFound');
             }
 
             // Consulta las preguntas en la base de datos
@@ -64,13 +64,13 @@ exports.getOneToOneFill = (request, response, next) => {
                 // Consulta las métricas en la base de datos
                 Measurable.fetchAll().then(([measurables]) => {
                     // Renderiza el formulario para llenar los datos
-                    response.render("oneToOneFill", {
+                    response.render('oneToOneFill', {
                         ...sessionVars(request),
-                        name: rows[0].birthName + " " + rows[0].surname,
+                        questions,
+                        measurables,
+                        name: `${rows[0].birthName} ${rows[0].surname}`,
                         meetingDate: formatDateWithOrdinal(rows[0].meetingDate),
                         meetingLink: rows[0].meetingLink,
-                        questions: questions,
-                        measurables: measurables,
                         sessionID: request.params.sessionID,
                     });
                 });
@@ -126,13 +126,13 @@ AND o.oneOnOneID = '0301111b-9bfc-43d0-8d73-098f03b3a583';
  */
 
 exports.getOneToOneGraphs = (request, response, next) => {
-    response.render("oneToOneGraphs", {
+    response.render('oneToOneGraphs', {
         ...sessionVars(request),
     });
 };
 
 exports.getOneToOneCheck = (request, response, next) => {
-    response.render("oneToOneCheck", {
+    response.render('oneToOneCheck', {
         ...sessionVars(request),
     });
 };
@@ -152,6 +152,9 @@ exports.getFullName = (request, response, next) => {
         })
         .catch((err) => {
             console.error(err);
-            response.status(500).json({ success: false, error: err.message });
+            response.status(500).json({ 
+                success: false, 
+                error: err.message
+            });
         });
 };

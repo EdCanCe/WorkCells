@@ -3,7 +3,7 @@
  * Así como su rol, la posición de la nav, datos de información y warning.
  * 
  * @param {*} request 
- * @returns session variables
+ * @returns     Las variables de sesión usadas en los EJS
  */
 module.exports = (request) => {
     // Obtiene un popup de alerta, lo guarda y lo resetea
@@ -19,6 +19,9 @@ module.exports = (request) => {
     if (request.session.info) request.session.info = "";
 
     return {
+        alert,
+        warning,
+        info,
         csrfToken: request.csrfToken(),
         isLoggedIn: request.session.isLoggedIn || false,
         username: request.session.username || "",
@@ -26,8 +29,5 @@ module.exports = (request) => {
         role: request.session.role || "none",
         privilegios: request.session.privilegios || [],
         navIsOpen: (request.cookies.navOpened === '0' ? false : true),
-        alert: alert,
-        warning: warning,
-        info: info,
     };
 }
