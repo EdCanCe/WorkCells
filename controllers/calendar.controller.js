@@ -166,7 +166,12 @@ exports.getFetch = (request, response, next) => {
                     Absence.fetchByDateType(sqlStartDate, sqlEndDate, request.session.userID)
                         .then(([rows, fieldData]) => {
                             const absenceRows = rows;
-                            OneToOne.fetchByDateType(sqlStartDate, sqlEndDate, request.session.userID)
+
+                            const oneToOneFetch = (request.session.role == 'Human Resources') ?
+                            OneToOne.fetchByDateTypeHR(sqlStartDate, sqlEndDate) :
+                            OneToOne.fetchByDateType(sqlStartDate, sqlEndDate, request.session.userID);
+                            
+                            oneToOneFetch
                                 .then(([rows, fieldData]) => {
                                     const oneToOneRows = rows;
 
