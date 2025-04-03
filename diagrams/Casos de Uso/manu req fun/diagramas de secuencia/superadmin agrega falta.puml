@@ -1,5 +1,3 @@
-con alt:
-
 @startuml
 actor navegador
 boundary addfault.ejs
@@ -10,20 +8,30 @@ database mysql
 
 autonumber
 ' Inicio del flujo
+activate navegador
 navegador -> fault.routes : GET /fault/add
+deactivate navegador
+
 activate fault.routes
 
-fault.routes -> addfault.ejs : get_fault(req,res)
+fault.routes -> fault.controller : getAdd(req,res)
+deactivate fault.routes
+activate fault.controller
+fault.controller -> addfault.ejs: render(faultAdd)
+deactivate fault.controller
 activate addfault.ejs
 addfault.ejs -> navegador : Mostrar formulario de falta
 deactivate addfault.ejs
+activate navegador
 deactivate fault.routes
 
 ' Envío de datos de la falta
-navegador -> fault.routes : POST_add_fault (datos de la falta)
+navegador -> fault.routes : POST /fault/add (datos de la falta)
+deactivate navegador
 activate fault.routes
 
-fault.routes -> fault.controller : post_add_fault(req, res)
+fault.routes -> fault.controller : postAdd(req, res)
+deactivate fault.routes
 activate fault.controller
 
 ' Validación de campos
@@ -31,52 +39,55 @@ fault.controller -> fault.controller : Validar campos
 
 alt Campos incompletos
     fault.controller -> addfault.ejs : mensaje de error "Completa todos los campos"
+    deactivate fault.controller    
     activate addfault.ejs
     addfault.ejs -> navegador : HTML
     deactivate addfault.ejs
-    deactivate fault.controller
     deactivate fault.routes
 
 else Campos completos
     ' Crear instancia del modelo
-    fault.controller -> faultModelInstance : new FaultModel()
+    activate fault.controller
+    fault.controller -> faultModelInstance : new FaultModel(param)
 
     ' Verificar si el colaborador existe
-    fault.controller -> faultModelInstance : verificar_colaborador(email)
     activate faultModelInstance
+    fault.controller ->> faultModelInstance : save()
+    deactivate fault.controller
+    
+    
 
-    faultModelInstance -->> mysql : SELECT * FROM user WHERE email = ?
+    faultModelInstance -->> mysql : SELECT userID FROM user WHERE email = ?
     activate mysql
-    mysql -->> faultModelInstance : Resultado (existe / no existe)
+    mysql -->> faultModelInstance : Resultado
+    
     deactivate mysql
 
     alt Colaborador no existe
-        faultModelInstance -> fault.controller : No encontrado
-        fault.controller -> addfault.ejs : Mostrar mensaje de error "Colaborador no encontrado"
+        
+        faultModelInstance -->> fault.controller : Error
+        activate fault.controller
+        fault.controller -> addfault.ejs : Mostrar mensaje de error "Error en los datos"
+        deactivate fault.controller
         activate addfault.ejs
         addfault.ejs -> navegador : HTML
         deactivate addfault.ejs
-        deactivate faultModelInstance
         deactivate fault.controller
         deactivate fault.routes
 
     else Colaborador existe
-        faultModelInstance -> fault.controller : Colaborador válido
-        deactivate faultModelInstance
-
-        ' Insertar la falta usando la instancia
-        fault.controller ->> faultModelInstance : insertar_falta(faultData)
-        activate faultModelInstance
 
         faultModelInstance ->> mysql : INSERT INTO fault (...)
         activate mysql
         mysql -->> faultModelInstance : Insert OK
         deactivate mysql
-        faultModelInstance -> fault.controller : Falta registrada
+        faultModelInstance -->> fault.controller : Falta registrada
+        activate fault.controller
         deactivate faultModelInstance
 
         ' Notificación de éxito
         fault.controller -> addfault.ejs : Mostrar mensaje "Falta creada exitosamente"
+        deactivate fault.controller
         activate addfault.ejs
         addfault.ejs -> navegador : Mostrar notificación
         deactivate addfault.ejs
@@ -84,68 +95,4 @@ else Campos completos
         deactivate fault.routes
     end
 end
-@enduml
-
-
-
-------------------------------------------------------------------------------------------------
-sin alt:
-
-@startuml
-actor navegador
-boundary addfault.ejs
-boundary fault.routes
-control fault.controller
-entity faultModelInstance
-database mysql
-
-autonumber
-' Inicio del flujo
-navegador -> fault.routes : GET /fault/add
-activate fault.routes
-
-fault.routes -> fault.controller: get_fault(req, res)
-activate fault.controller
-deactivate fault.routes
-
-fault.controller -> addfault.ejs: render(addfault)
-deactivate fault.controller
-activate addfault.ejs
-
-addfault.ejs -> navegador : Mostrar formulario de falta
-deactivate addfault.ejs
-activate navegador
-
-' Envío de datos de la falta
-navegador -> fault.routes : POST /fault/add (datos de la falta)
-deactivate navegador
-activate fault.routes
-
-fault.routes -> fault.controller : post_add_fault(req, res)
-deactivate fault.routes
-activate fault.controller
-
-' Se crea la instancia del modelo
-fault.controller -> faultModelInstance : new FaultModel()
-
-' Insertar la falta usando la instancia
-fault.controller ->> faultModelInstance : insertar_falta(faultData)
-activate faultModelInstance
-
-faultModelInstance ->> mysql : INSERT INTO fault (...)
-activate mysql
-mysql -->> faultModelInstance : Insert OK
-deactivate mysql
-faultModelInstance -->> fault.controller : Falta registrada
-deactivate faultModelInstance
-
-' Notificación de éxito
-fault.controller -> addfault.ejs : Mostrar mensaje "Falta creada exitosamente"
-activate addfault.ejs
-activate navegador
-addfault.ejs -> navegador : Mostrar notificación
-deactivate navegador
-deactivate addfault.ejs
-deactivate fault.controller
-deactivate fault.routes
 @enduml

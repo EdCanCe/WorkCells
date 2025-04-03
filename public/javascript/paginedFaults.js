@@ -26,8 +26,8 @@ async function loadFaltas(page) {
           <td class="px-6 py-4">${falta.nombre}</td>
           <td class="px-6 py-4">${falta.correo}</td>
           <td class="px-6 py-4">${new Date(
-            falta.fecha_falta
-          ).toLocaleDateString("es-MX")}</td>
+        falta.fecha_falta
+      ).toLocaleDateString("es-MX")}</td>
           <td class="px-6 py-4 font-semibold">${falta.num_faltas}</td>
         </tr>
       `;

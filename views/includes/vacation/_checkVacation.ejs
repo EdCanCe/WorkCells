@@ -7,17 +7,40 @@
                     Descripción de la Solicitud de Vacaciones
                 </h2>
                 <p class="text-neutral-100">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Voluptate natus quibusdam accusamus aperiam? Quis vitae, quo
-                    asperiores aliquid laborum sequi tenetur ipsa eos sint
-                    officia in exercitationem cumque quos doloribus!
+                    A continuación, se presentan los detalles de la solicitud de vacaciones:
                 </p>
+                <div class="mt-4 space-y-2">
+                    <p><strong class="text-neutral-300">ID Solicitud:</strong> <%= vacation.vacationID %></p>
+                    <p><strong class="text-neutral-300">Motivo:</strong> <%= vacation.reason %></p>
+                    <p><strong class="text-neutral-300">Fecha de Inicio:</strong> <%= vacation.startDate %></p>
+                    <p><strong class="text-neutral-300">Fecha de Fin:</strong> <%= vacation.endDate %></p>
+                    <p><strong class="text-neutral-300">Días Solicitados:</strong> <%= vacation.daysRequested %></p>
+                    <p><strong class="text-neutral-300">Estado RH:</strong> 
+                        <% if (vacation.hrStatus === 1) { %>
+                            <span class="text-green-500">Aprobado</span>
+                        <% } else if (vacation.hrStatus === 0) { %>
+                            <span class="text-red-500">Denegado</span>
+                        <% } else { %>
+                            <span class="text-yellow-500">Pendiente</span>
+                        <% } %>
+                    </p>
+                    <p><strong class="text-neutral-300">Estado Líder:</strong> 
+                        <% if (vacation.leaderStatus === 1) { %>
+                            <span class="text-green-500">Aprobado</span>
+                        <% } else if (vacation.leaderStatus === 0) { %>
+                            <span class="text-red-500">Denegado</span>
+                        <% } else { %>
+                            <span class="text-yellow-500">Pendiente</span>
+                        <% } %>
+                    </p>
+                    <p><strong class="text-neutral-300">Comentarios:</strong> <%= vacation.comments || 'Sin comentarios' %></p>
+                </div>
             </div>
         </div>
-        <a
-            href="/vacation"
-            class="inline-block mt-6 px-6 py-2 bg-[#1B3F43] text-white rounded-md hover:bg-[#1B3F43]"
-            >Regresar</a
-        >
+        <div class="flex space-x-4 justify-center mt-6">
+            <a href="/vacation/check/modify/<%= vacation.vacationID %>" class="btnPrimary">
+                Modificar Solicitud
+            </a>
+        </div>
     </div>
 </div>

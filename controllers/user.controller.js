@@ -1,54 +1,75 @@
 const Usuario = require("../models/user.model");
+const sessionVars = require('../util/sessionVars');
 
 // Renderiza la vista de login
-exports.get_login = (req, res, next) => {
-  const warning = req.session.warning || "";
-  if (req.session.warning) req.session.warning = "";
-
-  res.render("login.ejs", {
-    isLoggedIn: req.session.isLoggedIn || false,
-    warning: warning,
-    csrfToken: req.csrfToken(),
-  });
-};
-
-// Procesa el login y valida usando el modelo
-exports.post_login = (req, res, next) => {
-  const { email, password } = req.body;
-
-  // Buscar usuario en la base de datos
-  Usuario.fetchOne(email)
-    .then(([rows]) => {
-      if (rows.length === 0) {
-        req.session.warning = "Usuario y/o contraseña incorrectos";
-        return res.redirect("/login");
-      }
-
-      const user = rows[0];
-
-      // Comparación de contraseñas sin bcrypt
-      if (password === user.passwd) {
-        req.session.isLoggedIn = true;
-        req.session.mail = email;
-        req.session.userID = user.userID; // Asignar userID a la sesión
-        req.session.role = user.role;
-        console.log("UserID from session:", req.session.userID);
-        return req.session.save(() => res.redirect("/home"));
-      } else {
-        req.session.warning = "Usuario y/o contraseña incorrectos";
-        return res.redirect("/login");
-      }
-    })
-    .catch((error) => {
-      console.error("Error al buscar el usuario:", error);
-      req.session.warning = "Hubo un problema con el servidor";
-      res.redirect("/login");
+exports.get_login = (request, response, next) => {
+    response.render("login.ejs", {
+        ...sessionVars(request),
     });
 };
 
+// Procesa el login y valida usando el modelo
+exports.post_login = (request, response, next) => {
+    const { email, password } = request.body;
+
+    // Buscar usuario en la base de datos
+    Usuario.fetchOne(email)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                request.session.warning = "Usuario y/o contraseña incorrectos";
+                return response.redirect("/login");
+            }
+
+            const user = rows[0];
+
+            // Comparación de contraseñas sin bcrypt (se recomienda usar bcrypt para mayor seguridad)
+            if (password === user.passwd) {
+                request.session.workStatus = user.workStatus; 
+                request.session.isLoggedIn = true;
+                request.session.mail = email;
+                request.session.userID = user.userID;
+                request.session.role = user.role;
+
+                console.log("workStatus: ", request.session.workStatus);
+                console.log("UserID from session:", request.session.userID);
+                console.log("Valor de user.mail:", request.session.mail);
+                console.log("role: ", request.session.role);
+                // Obtener privilegios del usuario
+                return Usuario.getPrivilegios(user.mail)
+                    .then(([privilegios]) => {
+                        console.log("Privilegios obtenidos:", privilegios);
+                        request.session.privilegios = privilegios;
+                        if(request.session.workStatus === 1){
+                            return request.session.save(() =>
+                                response.redirect("/home")
+                            );
+                    }
+                    request.session.warning =
+                            "Tu cuenta esta inactiva";
+                        response.redirect("/login");
+
+                    })
+                    .catch((error) => {
+                        console.error("Error al obtener privilegios:", error);
+                        request.session.warning =
+                            "Hubo un problema con el servidor";
+                        response.redirect("/login");
+                    });
+            } else {
+                request.session.warning = "Usuario y/o contraseña incorrectos";
+                return response.redirect("/login");
+            }
+        })
+        .catch((error) => {
+            console.error("Error al buscar el usuario:", error);
+            request.session.warning = "Hubo un problema con el servidor";
+            response.redirect("/login");
+        });
+};
+
 // Cierra sesión
-exports.get_logout = (req, res, next) => {
-  req.session.destroy(() => {
-    res.redirect("/login");
-  });
+exports.get_logout = (request, response, next) => {
+    request.session.destroy(() => {
+        response.redirect("/login");
+    });
 };

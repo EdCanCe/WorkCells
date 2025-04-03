@@ -1,13 +1,10 @@
-<div
-    id="navBar"
-    class="text-neutral-100 bg-neutral-900 border-neutral-700 relative h-screen w-fit border-r-[1px] relative"
->
+<div id="navBar" class="bgNav h-screen w-fit relative">
     <div
-        class="bg-neutral-800 border-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden border-b-[1px] text-nowrap"
+        class="bgNavTwo border-b-1 h-[60px] w-full navItem"
     >
         <a
             href="/"
-            class="hover:bg-neutral-600 toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-[opacity,width] duration-[1s]"
+            class="bgNavHead flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %> toggleText"
         >
             <span
                 class="text-xl font-semibold inline-block w-full whitespace-nowrap text-center"
@@ -16,23 +13,23 @@
         </a>
         <div
             id="openAndCloseNav"
-            class="hover:bg-neutral-600 navIcon z-10 inline-block aspect-square h-full cursor-pointer p-3"
+            class="bgNavHead z-10 inline-block aspect-square h-full cursor-pointer p-3 <%= navIsOpen == true ? 'rotate-180' : '' %>"
         >
-            <img src="/icons/openArrow.svg" class="size-full" />
+            <img src="/icons/openArrow.svg" class="navIcon size-full" />
         </div>
     </div>
 
     <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
     <a
         href="/calendar"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/calendar.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Calendar</span
@@ -42,14 +39,14 @@
 
     <a
         href="/department"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/department.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Departments</span
@@ -59,14 +56,14 @@
 
     <a
         href="/vacation"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/vacation.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Vacations</span
@@ -76,14 +73,14 @@
 
     <a
         href="/absence"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/absence.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Absences</span
@@ -93,14 +90,14 @@
 
     <a
         href="/holiday"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/holiday.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Holidays</span
@@ -110,14 +107,14 @@
 
     <a
         href="/oneToOne"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/onetoone.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >One To One</span
@@ -127,14 +124,14 @@
 
     <a
         href="/fault"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/faults.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Faults</span
@@ -144,14 +141,14 @@
 
     <a
         href="/employee"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/employee.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Employees</span
@@ -161,14 +158,14 @@
 
     <a
         href="/reports"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
     >
         <img
             src="/icons/report.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Reports</span
@@ -178,14 +175,14 @@
 
     <a
         href="/logout"
-        class="hover:bg-neutral-700 flex h-[60px] w-full flex-row flex justify-center overflow-hidden p-3 text-nowrap absolute bottom-0"
+        class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-0"
     >
         <img
             src="/icons/logout.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
         />
         <div
-            class="toggleText flex h-full w-0 items-center overflow-hidden opacity-0 transition-all duration-[1s]"
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
             <span class="font-medium inline-block ml-2 whitespace-nowrap"
                 >Logout</span

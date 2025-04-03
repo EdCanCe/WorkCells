@@ -1,0 +1,105 @@
+@startuml
+actor Navegador
+boundary faults.ejs
+boundary faults.routes
+control faults.controller
+entity faults.modelInstance
+entity faults.model
+database mysql
+
+autonumber
+' Inicio del flujo
+activate Navegador
+Navegador -> faults.routes : GET /faults/modify/:faultID
+deactivate Navegador
+activate faults.routes
+
+faults.routes -> faults.controller : getModifyFault(req, res)
+deactivate faults.routes
+activate faults.controller
+
+faults.controller -> faults.ejs : Mostrar alerta de confirmación
+deactivate faults.controller
+activate faults.ejs
+faults.ejs -> Navegador : Preguntar si está seguro de modificar
+deactivate faults.ejs
+
+alt Confirmación positiva
+    activate Navegador
+    Navegador->faults.routes: POST fault/yes
+    activate faults.routes 
+    faults.routes->faults.controller: getFaults(req,res)
+    deactivate faults.routes
+    activate faults.controller
+    faults.controller ->> faults.model : fetchFaults(absenceID)
+    deactivate faults.controller
+    activate faults.model
+    faults.model ->> mysql : Consulta sql
+    activate mysql
+    mysql -->> faults.model : Datos de la falta administrativa
+    deactivate mysql
+    faults.model -->> faults.controller : Retorna datos de la falta
+    activate faults.controller
+    deactivate faults.model
+    
+    faults.controller -> faults.ejs : render(modifyAbsence)
+    deactivate faults.controller
+    activate faults.ejs
+    faults.ejs -> Navegador : Mostrar formulario de modificación
+    deactivate faults.ejs
+else Cancelación
+    Navegador->faults.routes: POST fault/no
+    activate faults.routes
+    faults.routes->faults.controller: getFaults(req,res)
+    deactivate faults.routes
+    activate faults.controller
+    faults.controller -> Navegador : Redirigir a vista de faltas
+    deactivate faults.controller
+    
+end
+
+' Super Admin modifica la falta administrativa
+Navegador -> faults.routes : POST /faults/modify/:faultID
+deactivate Navegador
+activate faults.routes
+
+faults.routes -> faults.controller : postModifyAbsence(req, res)
+deactivate faults.routes
+activate faults.controller
+
+faults.controller -> faults.ejs : Verificar si se llenó algún campo
+deactivate faults.controller
+activate faults.ejs
+alt Al menos un campo lleno
+    faults.ejs -> faults.controller : Permitir actualización
+    activate faults.controller
+    deactivate faults.ejs
+    
+    faults.controller ->> faults.modelInstance : New Absence(reason, date, action)
+    activate faults.modelInstance
+    faults.controller ->> faults.modelInstance : updateAbsence()
+    deactivate faults.controller
+
+    faults.modelInstance ->> mysql : UPDATE faults (consulta sql)
+    activate mysql
+    mysql -->> faults.modelInstance : Falta administrativa actualizada
+    deactivate mysql
+
+    faults.modelInstance -->> faults.controller : Retorna éxito
+    activate faults.controller
+    deactivate faults.modelInstance
+    
+    faults.controller -> faults.ejs : Mostrar mensaje de actualización exitosa
+    activate faults.ejs
+    deactivate faults.controller
+else Ningún campo lleno
+    faults.ejs -> Navegador : Mostrar mensaje de error
+end
+
+activate faults.ejs
+faults.ejs -> Navegador : Mostrar mensaje correspondiente
+deactivate faults.ejs
+activate Navegador
+deactivate Navegador
+
+@enduml

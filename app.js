@@ -6,38 +6,55 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const csrfProtection = csrf();
 const multer = require("multer");
+const passport = require("passport");
+require("dotenv").config();
+require("./util/google-auth.js");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 const session = require("express-session");
 
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
+
 app.use(
-  session({
-    secret: crypto.randomUUID(),
-    resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
-    saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
-  })
+    session({
+        secret: crypto.randomUUID(),
+        resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
+        saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+    })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    console.log(`Solicitud recibida: ${req.method} ${req.url}`);
+    next();
+});
+
+
 app.use(cookieParser());
 //fileStorage: Es nuestra constante de configuración para manejar el almacenamiento
 const fileStorage = multer.diskStorage({
-  destination: (request, file, callback) => {
-    //'uploads': Es el directorio del servidor donde se subirán los archivos
-    callback(null, "public/uploads");
-  },
-  filename: (request, file, callback) => {
-    //aquí configuramos el nombre que queremos que tenga el archivo en el servidor,
-    //para que no haya problema si se suben 2 archivos con el mismo nombre concatenamos el timestamp
-    callback(null, new Date().getTime() + file.originalname);
-  },
+    destination: (request, file, callback) => {
+        //'uploads': Es el directorio del servidor donde se subirán los archivos
+        callback(null, "public/uploads");
+    },
+    filename: (request, file, callback) => {
+        //aquí configuramos el nombre que queremos que tenga el archivo en el servidor,
+        //para que no haya problema si se suben 2 archivos con el mismo nombre concatenamos el timestamp
+        callback(null, new Date().getTime() + file.originalname);
+    },
 });
+
 //En el registro, pasamos la constante de configuración y
 //usamos single porque es un sólo archivo el que vamos a subir,
 //pero hay diferentes opciones si se quieren subir varios archivos.
@@ -45,6 +62,10 @@ const fileStorage = multer.diskStorage({
 app.use(multer({ storage: fileStorage }).single("evidence"));
 
 app.use(csrfProtection);
+
+const authRouter = require("./routes/auth.routes");
+app.use("/auth", authRouter);
+app.use("/google", authRouter);
 
 const usersRouter = require("./routes/user.routes");
 app.use("/login", usersRouter);
@@ -80,9 +101,12 @@ const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
 
+const sessionVars = require('./util/sessionVars');
 app.use((request, response, next) => {
-  response.statusCode = 404;
-  response.render("notFound");
+    response.statusCode = 404;
+    response.render("notFound", {
+        ...sessionVars(request),
+    });
 });
 
 app.listen(3000);

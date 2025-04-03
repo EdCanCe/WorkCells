@@ -10,11 +10,11 @@
                 </h2>
             </div>
 
-            <% if (error && error !== '') { %>
+            <% if (warning && warning !== '') { %>
             <div
                 class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 text-center"
             >
-                <%= error %>
+                <%= warning %>
             </div>
             <% } %> <% if (info != '') { %>
             <div class="bg-green-900 text-green-300 p-4 rounded-lg mb-4">
@@ -115,7 +115,6 @@
                                 >Worker's name:</label
                             >
                             <input
-                                disabled
                                 id="workerName"
                                 class="bg-neutral-700 w-full p-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 type="text"
@@ -128,7 +127,6 @@
                                 >Worker's surname:</label
                             >
                             <input
-                                disabled
                                 id="workerSurname"
                                 class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
                                 type="text"
@@ -137,19 +135,6 @@
                             />
                         </div>
                     </div>
-                </div>
-
-                <div class="text-center">
-                    <input
-                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-                        type="submit"
-                        value="Enviar"
-                    />
-                    <a
-                        href="/oneToOne"
-                        class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80 ml-2"
-                        >Cancelar</a
-                    >
                 </div>
             </form>
         </div>
@@ -165,9 +150,7 @@
                         <p class="text-lg mb-4 text-neutral-300">
                             Consultar sesión de One To One
                         </p>
-                        <a
-                            href="/oneToOne/check"
-                            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
+                        <a href="/oneToOne/check" class="btnPrimary"
                             >Consultar</a
                         >
                     </div>

@@ -8,64 +8,64 @@
     >
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-    <div>
-      <label class="block text-neutral-100 font-semibold mb-2"
-        >Fecha de la falta</label
-      >
-      <div class="relative">
-        <input
-          class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
-          type="date"
-          name="doneDate"
-          required
-        />
-        <div
-          class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
-        >
-          <i class="fas fa-calendar-day"></i>
+        <div>
+            <label class="block text-neutral-100 font-semibold mb-2"
+                >Fecha de la falta</label
+            >
+            <div class="relative">
+                <input
+                    class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
+                    type="date"
+                    name="doneDate"
+                    required
+                />
+                <div
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
+                >
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div>
-      <label class="block text-neutral-100 font-semibold mb-2"
-        >Razón de la falta</label
-      >
-      <div class="relative">
-        <input
-          class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
-          type="text"
-          name="reason"
-          placeholder="Razón de la falta"
-          required
-        />
-        <div
-          class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
-        >
-          <i class="fas fa-exclamation-circle"></i>
+        <div>
+            <label class="block text-neutral-100 font-semibold mb-2"
+                >Razón de la falta</label
+            >
+            <div class="relative">
+                <input
+                    class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
+                    type="text"
+                    name="reason"
+                    placeholder="Razón de la falta"
+                    required
+                />
+                <div
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
+                >
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div>
-      <label class="block text-neutral-100 font-semibold mb-2"
-        >Correo del colaborador</label
-      >
-      <div class="relative">
-        <input
-          class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
-          type="email"
-          name="email"
-          placeholder="Correo del colaborador"
-          required
-        />
-        <div
-          class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
-        >
-          <i class="fas fa-envelope"></i>
+        <div>
+            <label class="block text-neutral-100 font-semibold mb-2"
+                >Correo del colaborador</label
+            >
+            <div class="relative">
+                <input
+                    class="w-full bg-neutral-700/50 border border-neutral-600/50 rounded-lg py-2 px-4 pl-10"
+                    type="email"
+                    name="email"
+                    placeholder="Correo del colaborador"
+                    required
+                />
+                <div
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400"
+                >
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
         <!-- Campo para subir archivos -->
         <div class="mb-6">
@@ -73,6 +73,7 @@
                 Evidencia (opcional):
             </label>
             <input
+                id="faultEvidenceInput"
                 class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                 type="file"
                 name="evidence"
@@ -81,20 +82,27 @@
         </div>
 
         <div class="flex items-center justify-between">
-            <button
-                type="submit"
-                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-            >
-                Enviar
-            </button>
-            <a
-                href="/fault"
-                class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-            >
-                Regresar
-            </a>
+            <button type="submit" class="btnPrimary">Enviar</button>
         </div>
     </form>
 
-  <%- include('includes/_footer') %>
+    <script>
+        const evidenceInput = document.getElementById("faultEvidenceInput");
+
+        evidenceInput.addEventListener("change", function () {
+            const file = this.files[0]; // Obtiene el archivo seleccionado
+            const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+
+            if (file) {
+                if (file.size > maxSize) {
+                    alert(
+                        `El archivo es demasiado grande. El tamaño máximo permitido es 10 MB.`
+                    );
+                    this.value = ""; // Borra el archivo seleccionado
+                }
+            }
+        });
+    </script>
+
+    <%- include('includes/_footer') %>
 </div>

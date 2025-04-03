@@ -49,8 +49,8 @@ CREATE TABLE department (
 
 CREATE TABLE user (
     userID VARCHAR(40) NOT NULL PRIMARY KEY,
-    curp CHAR(18) NOT NULL,
-    rfc VARCHAR(13) NOT NULL,
+    curp CHAR(18),
+    rfc VARCHAR(13),
     birthName VARCHAR(50) NOT NULL,
     surname VARCHAR(100) NOT NULL,
     mail VARCHAR(70) NOT NULL,

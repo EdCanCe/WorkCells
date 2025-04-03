@@ -1,90 +1,111 @@
 @startuml
 actor Navegador
-boundary oneToOne.routes
-boundary error.routes
-boundary oneToOneForm.ejs
-control oneToOne.controller
-entity oneToOne.model
-entity user.model
-database mysql
+boundary "oneToOne.routes" as Routes
+boundary "error.routes" as Error
+boundary "oneToOneForm.ejs" as Ejs
+control "oneToOne.controller" as Controller
+entity "answer" as Answer
+entity "measure" as Measure
+entity "oneToOne.model" as Model
+entity "question.model" as Question
+entity "measurable.model" as Measurable
+database "mysql" as MySQL
 
 autonumber
 
 activate Navegador
-Navegador -> oneToOne.routes : GET /oneToOne/:id/fill
+Navegador -> Routes  : GET /oneToOne/:sessionID/fill
 deactivate Navegador
 
-activate oneToOne.routes
-oneToOne.routes -> oneToOne.controller : getFill(req, res)
-deactivate oneToOne.routes
+activate Routes 
+Routes  -> Controller : getFill(request, response)
+deactivate Routes 
 
-activate oneToOne.controller
+activate Controller
 
-oneToOne.controller ->> user.model : fetchUserRole(req.session.userID)
-activate user.model
-    user.model ->> mysql : execute(QUERY)
-    activate mysql
-        mysql -->> user.model : rows
-    deactivate mysql
-    user.model -->> oneToOne.controller : rows
-deactivate user.model
+Controller ->> Model : fetchSessionData(request.params.sessionID)
+activate Model
+Model ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Model : rows
+deactivate MySQL
+Model -->> Controller : rows
+deactivate Model
 
-alt rows.role != "Human Resources"
-    oneToOne.controller -> error.routes : res.redirect('/error/403')
-    activate error.routes
-    deactivate error.routes
-else
+alt rows.length == 0
+    Controller -> Error : response.redirect("/error")
+end
 
-oneToOne.controller ->> oneToOne.model : fetchSessionData(req.params.id)
-activate oneToOne.model
-    oneToOne.model ->> mysql : execute(QUERY)
-    activate mysql
-        mysql -->> oneToOne.model : rows
-    deactivate mysql
-    oneToOne.model -->> oneToOne.controller : rows
-deactivate oneToOne.model
+Controller ->> Question : fetchAll()
+activate Question
+Question ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Question : questions
+deactivate MySQL
+Question -->> Controller : questions
+deactivate Question
 
-oneToOne.controller -> oneToOneForm.ejs : res.render('oneToOneFill.ejs', VARIABLES)
-deactivate oneToOne.controller
+Controller ->> Measurable : fetchAll()
+activate Measurable
+Measurable ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Measurable : measusables
+deactivate MySQL
+Measurable -->> Controller : measusables
+deactivate Measurable
 
-activate oneToOneForm.ejs
-oneToOneForm.ejs -> Navegador : HTML
-deactivate oneToOneForm.ejs
+
+Controller -> Ejs : response.render('oneToOneFill.ejs', {...})
+deactivate Controller
+
+activate Ejs
+Ejs -> Navegador : HTML
+deactivate Ejs
 
 activate Navegador
-Navegador -> oneToOne.routes : POST /oneToOne/:id/fill
+Navegador -> Routes  : POST /oneToOne/:sessionID/fill
 deactivate Navegador
 
-activate oneToOne.routes
-oneToOne.routes -> oneToOne.controller : postFill(req, res)
-deactivate oneToOne.routes
+activate Routes 
+Routes  -> Controller : postFill(request, response)
+deactivate Routes 
 
-activate oneToOne.controller
+activate Controller
 
-    oneToOne.controller ->> oneToOne.model : saveAnswers(answers)
-    activate oneToOne.model
-        oneToOne.model ->> mysql : execute(QUERY)
-        activate mysql
-            mysql -->> oneToOne.model : Query OK
-        deactivate mysql
-        oneToOne.model -->> oneToOne.controller : promise
-    deactivate oneToOne.model
+Controller ->> Model : fetchSessionData(request.params.sessionID)
+activate Model
+Model ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Model : rows
+deactivate MySQL
+Model -->> Controller : rows
+deactivate Model
 
-    oneToOne.controller ->> oneToOne.model : saveMeasures(measures)
-    activate oneToOne.model
-        oneToOne.model ->> mysql : execute(QUERY)
-        activate mysql
-            mysql -->> oneToOne.model : Query OK
-        deactivate mysql
-        oneToOne.model -->> oneToOne.controller : promise
-    deactivate oneToOne.model
-
-oneToOne.controller -> oneToOne.routes : res.redirect('/oneToOne/' + sessionID)
-deactivate oneToOne.controller
-
-activate oneToOne.routes
-deactivate oneToOne.routes
-
+loop Para cada pregunta
+    Controller -> Answer : new Answer(...)
+    activate Answer
+    Controller ->> Answer : save()
+    Answer ->> MySQL : execute(...)
+    activate MySQL
+    MySQL -->> Answer : Query OK
+    deactivate MySQL
+    Answer -->> Controller : promesa
+    deactivate Answer
 end
+
+loop Para cada métrica
+    Controller -> Measure : new Measure(...)
+    activate Measure
+    Controller ->> Measure : save()
+    Measure ->> MySQL : execute(...)
+    activate MySQL
+    MySQL -->> Measure : Query OK
+    deactivate MySQL
+    Measure -->> Controller : promesa
+    deactivate Measure
+end
+
+Controller -> Routes  : response.redirect(`/oneToOne/${request.params.sessionID}`)
+deactivate Controller
 
 @enduml

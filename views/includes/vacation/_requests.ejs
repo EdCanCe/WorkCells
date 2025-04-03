@@ -5,9 +5,12 @@
                 <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
             </div>
             <div class="p-6">
-                <div
-                    class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
-                >
+                <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
+                    <% if (vacations.length === 0) { %>
+                    <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
+                        <p class="text-center text-gray-400 text-xl">No vacation requests available.</p>
+                    </div>
+                    <% } else { %>
                     <table id="vacations-table" class="min-w-full table-auto">
                         <thead class="bg-neutral-800">
                             <tr>
@@ -16,204 +19,263 @@
                                 <th class="px-4 py-2 text-left">Start Date</th>
                                 <th class="px-4 py-2 text-left">End Date</th>
                                 <th class="px-4 py-2 text-left">Duration</th>
-                                <th class="px-4 py-2 text-center">
-                                    Leader Status
-                                </th>
-                                <th class="px-4 py-2 text-center">HR Status</th>
                                 <th class="px-4 py-2 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Iterar sobre las solicitudes de vacaciones -->
                             <% vacations.forEach(vacation => { %>
                             <tr class="border-b hover:bg-neutral-800">
+                                <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
+                                <td class="px-4 py-2"><%= vacation.reason %></td>
+                                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                                <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                                 <td class="px-4 py-2">
-                                    <%= vacation.birthName + " " +
-                                    vacation.surname %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <%= vacation.reason %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <%= new
-                                    Date(vacation.startDate).toLocaleDateString('es-MX')
-                                    %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <%= new
-                                    Date(vacation.endDate).toLocaleDateString('es-MX')
-                                    %>
-                                </td>
-                                <td
-                                    class="px-4 py-2 total-days"
-                                    data-start-date="<%= vacation.startDate %>"
-                                    data-end-date="<%= vacation.endDate %>"
-                                ></td>
-                                <td class="px-4 py-2">
-                                    <% if (vacation.leaderStatus === 1) { %>
-                                    <span
-                                        class="text-green-600 font-semibold text-center"
-                                        >Approved</span
-                                    >
-                                    <% } else if (vacation.leaderStatus === 0) {
-                                    %>
-                                    <span
-                                        class="text-red-600 font-semibold text-center"
-                                        >Denied</span
-                                    >
-                                    <% } else { %>
-                                    <span
-                                        class="text-neutral-500 font-semibold text-center"
-                                        >Pending</span
-                                    >
+                                    <% if (role === "Human Resources") { %>
+                                        <% if (vacation.hrStatus === 1) { %>
+                                            <div class="text-green-500 text-center font-semibold">Approved</div>
+                                        <% } else if (vacation.hrStatus === 0) { %>
+                                            <div class="text-red-500 text-center font-semibold">Denied</div>
+                                        <% } else { %>
+                                            <!-- RRHH: Mostrar botones independientemente del estado del líder -->
+                                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                                <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                                <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
+                                            </div>
+                                            <% if (vacation.leaderStatus === 2) { %>
+                                                <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
+                                            <% } %>
+                                        <% } %>
+                                    <% } else if (role === "Department Leader") { %>
+                                        <% if (vacation.leaderStatus === 1) { %>
+                                            <div class="text-green-500 text-center font-semibold">Approved</div>
+                                        <% } else if (vacation.leaderStatus === 0) { %>
+                                            <div class="text-red-500 text-center font-semibold">Denied</div>
+                                        <% } else if (vacation.leaderStatus === 2) { %>
+                                            <!-- Líder: Solicitud pendiente de aprobación -->
+                                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                                <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                                <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
+                                            </div>
+                                        <% } %>
                                     <% } %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <% if (vacation.hrStatus === 1) { %>
-                                    <span
-                                        class="text-green-600 font-semibold text-center"
-                                        >Approved</span
-                                    >
-                                    <% } else if (vacation.hrStatus === 0) { %>
-                                    <span
-                                        class="text-red-600 font-semibold text-center"
-                                        >Denied</span
-                                    >
-                                    <% } else { %>
-                                    <span
-                                        class="text-neutral-500 font-semibold text-center"
-                                        >Pending</span
-                                    >
-                                    <% } %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
-                                    >
-                                        <button
-                                            href="/vacation/requests/approve/<%= vacation.vacationID %>"
-                                            class="btn bg-[#1B3F43] text-white px-6 py-2 rounded-md hover:bg-[#1B3F43]/80"
-                                            data-url="/vacation/requests/approve/<%= vacation.vacationID %>"
-                                            data-csrf="<%= csrfToken %>"
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            href="/vacation/requests/deny/<%= vacation.vacationID %>"
-                                            class="btn bg-[#830000] text-white px-6 py-2 rounded-md hover:bg-[#470000]/80"
-                                            data-url="/vacation/requests/deny/<%= vacation.vacationID %>"
-                                            data-csrf="<%= csrfToken %>"
-                                        >
-                                            Deny
-                                        </button>
-                                    </div>
                                 </td>
                             </tr>
                             <% }) %>
                         </tbody>
                     </table>
+                    <% } %>
                 </div>
             </div>
         </div>
-        <a
-            href="/vacation"
-            class="inline-block mt-6 px-6 py-2 bg-[#1B3F43] text-white rounded-md hover:bg-[#1B3F43]"
-            >Back</a
-        >
+        <!-- Controles de paginación -->
+        <div class="pagination-controls mt-4 mb-4 flex justify-between">
+            <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
+            <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
+        </div>
+        <a href="/vacation" class="btnPrimary">Back</a>
     </div>
 </div>
 
 <script>
-    // Calcular los días para cada fila una vez que la página se ha cargado
-    document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll("#vacations-table tbody tr");
-        rows.forEach((row) => {
-            const totalDaysCell = row.querySelector(".total-days");
-            if (totalDaysCell) {
-                const startDate = new Date(
-                    totalDaysCell.getAttribute("data-start-date")
-                );
-                const endDate = new Date(
-                    totalDaysCell.getAttribute("data-end-date")
-                );
+    let currentPage = 0;
+    const limit = 10;
+    let isLoading = false;
+    const role = "<%= role %>"; // Asegurarse de que role está disponible
 
-                // Ajustar las fechas para incluir el día inicial y final
-                const timeDifference = endDate - startDate;
-                const totalDays =
-                    Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+    // Calcula el total de días entre dos fechas
+    function calculateTotalDays(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return Math.ceil((end - start) / (1000 * 3600 * 24)) + 1;
+    }
 
-                // Asignar el total de días a la celda correspondiente
-                totalDaysCell.innerText = totalDays;
-            }
-        });
-    });
-
-    // Agregar event listener a todos los botones de "Approve"
-
-    document.querySelectorAll(".approve-btn").forEach((button) => {
-        button.addEventListener("click", async function (event) {
+    function assignActionListeners() {
+    document.querySelectorAll(".approve-btn, .deny-btn").forEach((button) => {
+        button.onclick = async function() {
+            if (this.disabled) return;
+            
             const url = this.dataset.url;
             const csrf = this.dataset.csrf;
-            // Deshabilitar el botón y mostrar estado de carga
+            const isApprove = this.classList.contains("approve-btn");
+            const row = this.closest("tr");
+            
+            // Guardar texto original para restaurarlo en caso de error
+            const originalText = this.textContent;
+            
+            // Mostrar "Procesando..." mientras se ejecuta
+            this.textContent = "Procesando...";
             this.disabled = true;
-            const originalText = this.innerText;
-            this.innerText = "Processing...";
+            const buttons = row.querySelectorAll("button");
+            buttons.forEach(btn => btn.disabled = true);
+            
             try {
-                const response = await fetch(url, {
+                const res = await fetch(url, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "csrf-token": csrf,
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "csrf-token": csrf 
                     },
-                    body: JSON.stringify({}),
+                    body: JSON.stringify({})
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || "Error en la operación");
                 }
-                const data = await response.json();
-                // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest("td");
-                // Reemplazar el contenido con el nuevo estado
-                tableCell.innerHTML =
-                    '<span class="text-green-600 font-semibold text-center">Approved</span>';
+                
+                // Reemplazar los botones con mensaje de Approved/Denied
+                const actionCell = row.querySelector("td:last-child");
+                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
+                
+                // No recargamos la página para mantener la solicitud visible
             } catch (err) {
-                console.error("Error al aprobar:", err);
-                // Restaurar el estado del botón en caso de error
-                this.disabled = false;
-                this.innerText = originalText;
-                alert(
-                    "Hubo un error al procesar la solicitud. Por favor, intente nuevamente."
-                );
+                console.error("Error al procesar la solicitud:", err);
+                alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
+                
+                // Restaurar el texto original y habilitar botones
+                this.textContent = originalText;
+                buttons.forEach(btn => btn.disabled = false);
             }
+        };
+    });
+    }
+
+    // Actualiza la función updateTable para manejar mejor la tabla vacía
+    function updateTable(data) {
+        const table = document.getElementById("vacations-table");
+        const tbody = table.querySelector("tbody");
+        
+        // Limpiar el contenido de la tabla
+        tbody.innerHTML = "";
+        
+        // Si no hay datos
+        if (!data || data.length === 0) {
+            if (currentPage === 0) {
+                // Es la primera página y no hay solicitudes
+                const noRequestsRow = document.createElement("tr");
+                noRequestsRow.innerHTML = `<td colspan="6" class="text-center py-4">No vacation requests available.</td>`;
+                tbody.appendChild(noRequestsRow);
+            } else {
+                // No es la primera página, mostrar alerta y volver a la página Previous
+                alert("No existen más solicitudes.");
+                currentPage--;
+                loadPage(currentPage);
+            }
+            
+            // Actualizar estado de botones
+            document.getElementById("prev-button").disabled = currentPage === 0;
+            document.getElementById("next-button").disabled = true;
+            return;
+        }
+        
+        // Si hay datos, mostrarlos en la tabla
+        data.forEach((vac) => {
+            const totalDays = calculateTotalDays(vac.startDate, vac.endDate);
+            let actionCell = "";
+            
+            // Dentro de la función updateTable, en la parte donde se crea actionCell:
+            if (role === "Human Resources") {
+                // Verificar si la solicitud ya fue procesada por RRHH
+                if (vac.hrStatus === 1) {
+                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                } else if (vac.hrStatus === 0) {
+                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                } else {
+                    // RRHH: Siempre mostrar botones, independientemente del estado del líder
+                    actionCell = `
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                        </div>`;
+                    
+                    if (vac.leaderStatus === 2) {
+                        actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
+                    }
+                }
+            } else if (role === "Department Leader") {
+                // Verificar si la solicitud ya fue procesada por Líder
+                if (vac.leaderStatus === 1) {
+                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                } else if (vac.leaderStatus === 0) {
+                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                } else if (vac.leaderStatus === 2) {
+                    // Líder: Solicitud pendiente de aprobación
+                    actionCell = `
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                        </div>`;
+                }
+            }
+
+            const row = document.createElement("tr");
+            row.className = "border-b hover:bg-neutral-800";
+            
+            row.innerHTML = `
+                <td class="px-4 py-2">${vac.birthName} ${vac.surname}</td>
+                <td class="px-4 py-2">${vac.reason}</td>
+                <td class="px-4 py-2">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${totalDays}</td>
+                <td class="px-4 py-2">${actionCell}</td>
+            `;
+            
+            tbody.appendChild(row);
         });
+        
+        // Actualizar estado de botones de paginación
+        document.getElementById("prev-button").disabled = currentPage === 0;
+        document.getElementById("next-button").disabled = data.length < limit;
+        
+        assignActionListeners(); // Reasigna los listeners
+    }
+
+    // Mejora la función loadPage para garantizar que los botones siempre funcionen
+    async function loadPage(page) {
+        if (isLoading) return;
+        isLoading = true;
+        
+        try {
+            const response = await fetch(`/vacation/requests/paginated?page=${page}`);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error en la respuesta del servidor");
+            }
+            // console.log("response", response);            
+            const data = await response.json();
+            currentPage = page;
+            updateTable(data);
+        } catch (error) {
+            console.error("Error en loadPage:", error);
+            alert("Error al cargar las solicitudes. Por favor, intente nuevamente.");
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    // Manejadores para los botones de paginación
+    document.getElementById("next-button").addEventListener("click", async () => {
+        if (!document.getElementById("next-button").disabled) {
+            await loadPage(currentPage + 1);
+        }
+    });
+    
+    document.getElementById("prev-button").addEventListener("click", async () => {
+        if (currentPage > 0 && !document.getElementById("prev-button").disabled) {
+            await loadPage(currentPage - 1);
+        }
     });
 
-    // Agregar event listener a todos los botones de "Deny"
-    document.querySelectorAll(".deny-btn").forEach((button) => {
-        button.addEventListener("click", async function (event) {
-            const url = this.dataset.url;
-            const csrf = this.dataset.csrf;
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "csrf-token": csrf,
-                    },
-                    body: JSON.stringify({}),
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // Obtener la celda de la tabla que contiene los botones
-                const tableCell = this.closest("td");
-                // Reemplazar el contenido con el nuevo estado
-                tableCell.innerHTML =
-                    '<span class="text-red-600 font-semibold text-center">Denied</span>';
-            } catch (err) {
-                console.error("Error al denegar:", err);
-            }
+    // Inicialización al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+        loadPage(0);
+        
+        // Inicializar los totales de días para los elementos que ya están en el DOM
+        document.querySelectorAll(".total-days").forEach(cell => {
+            const startDate = cell.dataset.startDate;
+            const endDate = cell.dataset.endDate;
+            cell.textContent = calculateTotalDays(startDate, endDate);
         });
     });
 </script>

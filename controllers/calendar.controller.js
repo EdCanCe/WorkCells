@@ -1,27 +1,29 @@
-const Vacation = require("../models/vacation.model");
-const Absence = require("../models/absence.model");
-const OneToOne = require("../models/oneToOne.model");
-const Holiday = require("../models/holiday.model");
-const { end } = require("../util/database");
+const Vacation = require('../models/vacation.model');
+const Absence = require('../models/absence.model');
+const OneToOne = require('../models/oneToOne.model');
+const Holiday = require('../models/holiday.model');
 const { formatDateWithOrdinal } = require('../util/formatDate');
-
+const sessionVars = require('../util/sessionVars');
 
 exports.getRoot = (request, response, next) => {
 
     // Formatea las fechas para ser usadas en SQL
     const formatDateForSQL = (date) => {
-        return date.toISOString().split("T")[0];
+        return date.toISOString().split('T')[0];
     };
 
     // Obtiene los días de inicio y final de la semana
     const getWeekDays = (date) => {
-        const dayOfWeek = date.getDay(); // Obtiene el día de la semana
+        // Obtiene el día de la semana
+        const dayOfWeek = date.getDay(); 
 
+        // Obtiene el primer día de la semana
         let startingDate = new Date(date);
-        startingDate.setDate(date.getDate() - dayOfWeek); // Obtiene el primer día de la semana
+        startingDate.setDate(date.getDate() - dayOfWeek);
 
+        // Obtiene el último día de la semana
         let endingDate = new Date(startingDate);
-        endingDate.setDate(startingDate.getDate() + 6); // Obtiene el último día de la semana
+        endingDate.setDate(startingDate.getDate() + 6);
 
         return {
             startingDate,
@@ -29,15 +31,11 @@ exports.getRoot = (request, response, next) => {
         }
     }
 
-    const mensaje = request.session.info || ""; // Obtén el mensaje de la sesión
-    // Limpiar el mensaje después de usarlo
-    request.session.info = "";
-
     // Lee la cookie y la pone en una variable
     let isMonthView = (request.cookies.isMonthView === '1') ? true : false; // Convertir a booleano con '1' o '0'
 
     // Configura la cookie con valores consistentes
-    response.cookie("isMonthView", isMonthView ? '1' : '0', {
+    response.cookie('isMonthView', isMonthView ? '1' : '0', {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
     });
 
@@ -45,39 +43,44 @@ exports.getRoot = (request, response, next) => {
     const today = new Date();
     let startDate, endDate;
 
-    if (isMonthView) { // Vista mensual
+    // Vista mensual
+    if (isMonthView) { 
         startDate = new Date(today.getFullYear(), today.getMonth(), 1);
         endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    } else { // Vista semanal: lunes a domingo de la semana actual
+
+    // Vista semanal: lunes a domingo de la semana actual
+    } else { 
         const weekDays = getWeekDays(today);
         startDate = weekDays.startingDate;
         endDate = weekDays.endingDate;
     }
 
+    // Obtiene las fechas límite que usará para renderizar el calendario 
     let preSqlStartDate = startDate;
     let preSqlEndDate = endDate
-    if(isMonthView) {
+    if (isMonthView) {
         preSqlStartDate = getWeekDays(startDate).startingDate;
         preSqlEndDate = getWeekDays(endDate).endingDate;
     }
 
     preSqlStartDate = new Date(preSqlStartDate);
     preSqlEndDate = new Date(preSqlEndDate);
-    
+
     // Obtiene las fechas en formato SQL para hacer queries
     const sqlStartDate = formatDateForSQL(preSqlStartDate);
     const sqlEndDate = formatDateForSQL(preSqlEndDate);
 
-    console.log("Start, End, preStart, endStart: ");
+    console.log('Start, End, preStart, endStart: ');
     console.log(startDate, endDate);
+
     //console.log(preSqlStartDate, preSqlEndDate);
     console.log(sqlStartDate, sqlEndDate);
 
-    response.render("calendar", {
-        today: formatDateForSQL(today),
-        info: mensaje,
-        weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    response.render('calendar', {
+        ...sessionVars(request),
         isMonthView,
+        today: formatDateForSQL(today),
+        weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     });
 
 };
@@ -85,18 +88,21 @@ exports.getRoot = (request, response, next) => {
 exports.getFetch = (request, response, next) => {
     // Formatea las fechas para ser usadas en SQL
     const formatDateForSQL = (date) => {
-        return date.toISOString().split("T")[0];
+        return date.toISOString().split('T')[0];
     };
 
     // Obtiene los días de inicio y final de la semana
     const getWeekDays = (date) => {
-        const dayOfWeek = date.getDay(); // Obtiene el día de la semana
+        // Obtiene el día de la semana
+        const dayOfWeek = date.getDay();
 
+        // Obtiene el primer día de la semana
         let startingDate = new Date(date);
-        startingDate.setDate(date.getDate() - dayOfWeek); // Obtiene el primer día de la semana
+        startingDate.setDate(date.getDate() - dayOfWeek);
 
+        // Obtiene el último día de la semana
         let endingDate = new Date(startingDate);
-        endingDate.setDate(startingDate.getDate() + 6); // Obtiene el último día de la semana
+        endingDate.setDate(startingDate.getDate() + 6);
 
         return {
             startingDate,
@@ -108,7 +114,7 @@ exports.getFetch = (request, response, next) => {
     let isMonthView = (request.cookies.isMonthView === '1') ? true : false; // Convertir a booleano con '1' o '0'
 
     // Configura la cookie con valores consistentes
-    response.cookie("isMonthView", isMonthView ? '1' : '0', {
+    response.cookie('isMonthView', isMonthView ? '1' : '0', {
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
     });
 
@@ -117,33 +123,39 @@ exports.getFetch = (request, response, next) => {
     console.log(today);
     let startDate, endDate;
 
-    if (isMonthView) { // Vista mensual
+    // Vista mensual
+    if (isMonthView) { 
         startDate = new Date(today.getFullYear(), today.getMonth(), 1);
         endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    } else { // Vista semanal: lunes a domingo de la semana actual
+
+    // Vista semanal: lunes a domingo de la semana actual
+    } else { 
         const weekDays = getWeekDays(today);
         startDate = weekDays.startingDate;
         endDate = weekDays.endingDate;
     }
 
+    // Obtiene las fechas límite que usará para renderizar el calendario 
     let preSqlStartDate = startDate;
     let preSqlEndDate = endDate
-    if(isMonthView) {
+    if (isMonthView) {
         preSqlStartDate = getWeekDays(startDate).startingDate;
         preSqlEndDate = getWeekDays(endDate).endingDate;
     }
 
     preSqlStartDate = new Date(preSqlStartDate);
     preSqlEndDate = new Date(preSqlEndDate);
-    
+
     // Obtiene las fechas en formato SQL para hacer queries
     const sqlStartDate = formatDateForSQL(preSqlStartDate);
     const sqlEndDate = formatDateForSQL(preSqlEndDate);
 
-    console.log("Start, End, preStart, endStart: ");
+    console.log('Start, End, preStart, endStart: ');
     console.log(startDate, endDate);
+
     //console.log(preSqlStartDate, preSqlEndDate);
     console.log(sqlStartDate, sqlEndDate);
+    console.log('Intento id?', request.session.userID);
 
     Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
         .then(([rows, fieldData]) => {
@@ -160,8 +172,11 @@ exports.getFetch = (request, response, next) => {
 
                                     // Lógica para hacer el arreglo a renderizar
 
-                                    const daysMap = new Map(); // Usamos Map para acceso rápido por fecha
-                                    const currentDate = new Date(preSqlStartDate); // Índice para recorrer cada uno de los días
+                                    // Usamos Map para acceso rápido por fecha
+                                    const daysMap = new Map(); 
+
+                                    // Índice para recorrer cada uno de los días
+                                    const currentDate = new Date(preSqlStartDate);
 
                                     // Genera un arreglo vacío para los eventos de cada día
                                     while (currentDate <= preSqlEndDate) {
@@ -180,7 +195,7 @@ exports.getFetch = (request, response, next) => {
                                     }
 
                                     // Procesar feriados (eventos de un día)
-                                    holidayRows.forEach(holiday => {
+                                    holidayRows.forEach((holiday) => {
                                         const date = new Date(holiday.usedDate);
                                         const day = daysMap.get(formatDateForSQL(date));
                                         if (day) {
@@ -189,7 +204,7 @@ exports.getFetch = (request, response, next) => {
                                     });
 
                                     // Procesar on to ones (eventos de un día)
-                                    oneToOneRows.forEach(oneToOne => {
+                                    oneToOneRows.forEach((oneToOne) => {
                                         const date = new Date(oneToOne.meetingDate);
                                         const day = daysMap.get(formatDateForSQL(date));
                                         if (day) {
@@ -198,7 +213,7 @@ exports.getFetch = (request, response, next) => {
                                     });
 
                                     // Procesar vacaciones (eventos de múltiples días)
-                                    vacationRows.forEach(vacation => {
+                                    vacationRows.forEach((vacation) => {
                                         const start = new Date(vacation.startDate);
                                         const end = new Date(vacation.endDate);
                                         const current = new Date(start);
@@ -209,7 +224,7 @@ exports.getFetch = (request, response, next) => {
                                             const day = daysMap.get(dateStr);
                                             if (day) {
                                                 day.events.vacations.push({
-                                                    ...vacation, // Pasa los datos ya existentes
+                                                    ...vacation,
                                                     isStart: dateStr === formatDateForSQL(vacation.startDate),
                                                     isEnd: dateStr === formatDateForSQL(vacation.endDate)
                                                 });
@@ -219,7 +234,7 @@ exports.getFetch = (request, response, next) => {
                                     });
 
                                     // Procesar ausencias (eventos de múltiples días)
-                                    absenceRows.forEach(absence => {
+                                    absenceRows.forEach((absence) => {
                                         const start = new Date(absence.startDate);
                                         const end = new Date(absence.endDate);
                                         const current = new Date(start);
@@ -230,7 +245,7 @@ exports.getFetch = (request, response, next) => {
                                             const day = daysMap.get(dateStr);
                                             if (day) {
                                                 day.events.absences.push({
-                                                    ...absence, // Pasa los datos ya existentes
+                                                    ...absence,
                                                     isStart: dateStr === formatDateForSQL(absence.startDate),
                                                     isEnd: dateStr === formatDateForSQL(absence.endDate)
                                                 });
@@ -246,7 +261,7 @@ exports.getFetch = (request, response, next) => {
                                     if (isMonthView) {
                                         // Obtener el día de la semana del primer día del mes
                                         const firstDayOfWeek = startDate.getDay();
-                                        
+
                                         // Marcar días anteriores al mes como que están fuera
                                         for (let i = 0; i < firstDayOfWeek; i++) {
                                             daysArray[i] = {
@@ -254,12 +269,12 @@ exports.getFetch = (request, response, next) => {
                                                 isOutside: true,
                                             };
                                         }
-                                        
+
                                         // Obtener el día de la semana del último día del mes
                                         const totalDaysInMonth = endDate.getDate();
                                         const totalCellsNeeded = Math.ceil((totalDaysInMonth + firstDayOfWeek) / 7) * 7;
                                         const daysToAddAtEnd = totalCellsNeeded - (totalDaysInMonth + firstDayOfWeek);
-                                        
+
                                         // Marcar días anteriores al mes como que están fuera
                                         for (let i = daysArray.length - daysToAddAtEnd; i < daysArray.length; i++) {
                                             daysArray[i] = {
@@ -269,34 +284,32 @@ exports.getFetch = (request, response, next) => {
                                         }
                                     }
 
-                                    // console.log(daysArray);
-
                                     response.status(200).json({
-                                        today: formatDateForSQL(today),
                                         isMonthView,
+                                        today: formatDateForSQL(today),
                                         days: daysArray,
                                         formattedStart: formatDateWithOrdinal(startDate),
                                         formattedEnd: formatDateWithOrdinal(endDate),
-                                        formattedMonth: startDate.toLocaleString('default', { month: 'long' }) + ", " + startDate.getFullYear(),
+                                        formattedMonth: `${startDate.toLocaleString('default', { month: 'long' })}, ${startDate.getFullYear()}`,
                                     });
                                 })
                                 .catch((error) => {
-                                    console.error(error); // Mejor manejo de error
-                                    response.status(500).send("Error al obtener los datos. 1");
+                                    console.error(error);
+                                    response.status(500).send('Error al obtener los datos. 1');
                                 });
                         })
                         .catch((error) => {
-                            console.error(error); // Mejor manejo de error
-                            response.status(500).send("Error al obtener los datos. 2");
+                            console.error(error);
+                            response.status(500).send('Error al obtener los datos. 2');
                         });
                 })
                 .catch((error) => {
-                    console.error(error); // Mejor manejo de error
-                    response.status(500).send("Error al obtener los datos. 3");
+                    console.error(error);
+                    response.status(500).send('Error al obtener los datos. 3');
                 });
         })
         .catch((error) => {
-            console.error(error); // Mejor manejo de error
-            response.status(500).send("Error al obtener los datos. 4");
+            console.error(error);
+            response.status(500).send('Error al obtener los datos. 4');
         });
 }
