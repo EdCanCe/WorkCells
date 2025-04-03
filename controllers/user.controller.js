@@ -24,11 +24,13 @@ exports.post_login = (request, response, next) => {
 
             // Comparación de contraseñas sin bcrypt (se recomienda usar bcrypt para mayor seguridad)
             if (password === user.passwd) {
+                request.session.workStatus = user.workStatus; 
                 request.session.isLoggedIn = true;
                 request.session.mail = email;
                 request.session.userID = user.userID;
                 request.session.role = user.role;
 
+                console.log("workStatus: ", request.session.workStatus);
                 console.log("UserID from session:", request.session.userID);
                 console.log("Valor de user.mail:", request.session.mail);
                 console.log("role: ", request.session.role);
@@ -37,9 +39,15 @@ exports.post_login = (request, response, next) => {
                     .then(([privilegios]) => {
                         console.log("Privilegios obtenidos:", privilegios);
                         request.session.privilegios = privilegios;
-                        return request.session.save(() =>
-                            response.redirect("/home")
-                        );
+                        if(request.session.workStatus === 1){
+                            return request.session.save(() =>
+                                response.redirect("/home")
+                            );
+                    }
+                    request.session.warning =
+                            "Tu cuenta esta inactiva";
+                        response.redirect("/login");
+
                     })
                     .catch((error) => {
                         console.error("Error al obtener privilegios:", error);

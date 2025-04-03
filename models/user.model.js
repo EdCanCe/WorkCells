@@ -4,7 +4,7 @@ module.exports = class Usuario {
     // Obtiene un usuario por su email
     static fetchOne(email) {
         return db.execute(
-            "SELECT mail, title as role, passwd, userID FROM user, role WHERE mail = ? AND user.userRoleIDFK = role.roleID",
+            "SELECT mail, title as role, passwd, userID, workStatus FROM user, role WHERE mail = ? AND user.userRoleIDFK = role.roleID",
             [email]
         );
     }
