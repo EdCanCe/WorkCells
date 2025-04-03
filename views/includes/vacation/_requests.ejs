@@ -46,7 +46,7 @@
                                                 <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
                                             <% } %>
                                         <% } %>
-                                    <% } else if (role === "Leader") { %>
+                                    <% } else if (role === "Department Leader") { %>
                                         <% if (vacation.leaderStatus === 1) { %>
                                             <div class="text-green-500 text-center font-semibold">Approved</div>
                                         <% } else if (vacation.leaderStatus === 0) { %>
@@ -193,7 +193,7 @@
                         actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
                     }
                 }
-            } else if (role === "Leader") {
+            } else if (role === "Department Leader") {
                 // Verificar si la solicitud ya fue procesada por Líder
                 if (vac.leaderStatus === 1) {
                     actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
@@ -238,12 +238,11 @@
         
         try {
             const response = await fetch(`/vacation/requests/paginated?page=${page}`);
-            
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Error en la respuesta del servidor");
             }
-            
+            // console.log("response", response);            
             const data = await response.json();
             currentPage = page;
             updateTable(data);
@@ -279,4 +278,4 @@
             cell.textContent = calculateTotalDays(startDate, endDate);
         });
     });
-</script>ript>
+</script>

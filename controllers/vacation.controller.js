@@ -10,7 +10,7 @@ exports.getRequests = (request, response, next) => {
     
     let fetchPromise;
 
-    if (userRole === "Human Resources" || userRole === "Leader") {
+    if (userRole === "Human Resources" || userRole === "Department Leader") {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
         fetchPromise = Vacation.fetchPaginated(limit, offset, userRole, userId);
     } else {
@@ -213,7 +213,6 @@ exports.updateVacation  = (request, response, next) => {
         });
 };
 
-// TODO: Hacer que, dependiendo si es lider o hr, se actualice el status de la solicitud
 
 exports.postRequestApprove = (request, response, next) => {
     const vacationId = request.params.vacationID;
@@ -290,7 +289,7 @@ exports.postRequestDeny = (request, response, next) => {
                 return Vacation.updateStatusHR(vacationId, 0); // 0 = Denegado
             }
             // Si es líder, actualiza el estado del líder
-            else if (userRole === "Leader") {
+            else if (userRole === "Department Leader") {
                 return Vacation.fetchDepartmentPaginated(userId, 1, 0)
                     .then(([departmentVacations]) => {
                         const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
@@ -321,7 +320,8 @@ exports.postRequestDeny = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     const userID = request.session.userID;
-
+    // const userRole = request.session.role;
+    // console.log("userRole", userRole);
     Vacation.fetchAllVacation(userID)
         .then(([rows]) => {
             // Vacaciones aprobadas: ambas aprobadas (valor 1)
