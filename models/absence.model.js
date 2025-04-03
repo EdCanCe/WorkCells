@@ -1,6 +1,6 @@
-const { off } = require("process");
-const db = require("../util/database");
-const { v4: uuidv4 } = require("uuid");
+const { off } = require('process');
+const db = require('../util/database');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Absence {
     constructor(startDate, endDate, reason, absenceUserID) {
@@ -30,7 +30,7 @@ module.exports = class Absence {
     }
 
     static fetchAll() {
-        return db.execute("SELECT * FROM absence ORDER BY startDate DESC");
+        return db.execute('SELECT * FROM absence ORDER BY startDate DESC');
     }
 
     static fetchAllWithName() {
@@ -52,7 +52,7 @@ ORDER BY startDate DESC`);
     }
 
     static fetchOne(id) {
-        return db.execute("SELECT * FROM absence WHERE absenceID = ?", [id]);
+        return db.execute('SELECT * FROM absence WHERE absenceID = ?', [id]);
     }
 
     static fetch(id) {
@@ -67,18 +67,24 @@ ORDER BY startDate DESC`);
         return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email]);
     }
 
+    /**
+     * Regresa las ausencias entre 2 fechas para un usuario.
+     * 
+     * @param string startDate  La fecha inicial
+     * @param string endDate    La fecha final 
+     * @param string userID     El usuario al que le pertenecen las ausencias
+     * @returns Las ausencias en esas fechass
+     */
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(
-            `(SELECT * FROM absence WHERE startDate BETWEEN ? AND ? AND absenceUserIDFK = ?)
-    UNION
-    (SELECT * FROM absence WHERE endDate BETWEEN ? AND ? AND absenceUserIDFK = ?)`,
+            `(SELECT * FROM absence WHERE startDate BETWEEN ? AND ? AND absenceUserIDFK = ?) UNION (SELECT * FROM absence WHERE endDate BETWEEN ? AND ? AND absenceUserIDFK = ?)`,
             [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
 
     static updateStatus(absenceId, status) {
         return db.execute(
-            "UPDATE absence SET justified = ? WHERE absenceID = ?",
+            'UPDATE absence SET justified = ? WHERE absenceID = ?',
             [status, absenceId]
         );
     }
