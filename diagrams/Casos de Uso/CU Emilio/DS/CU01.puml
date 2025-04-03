@@ -2,8 +2,9 @@
 actor navegador
 boundary employee.routes
 boundary employeeAdd.ejs
+boundary employee.ejs
 control employee.controller
-entity employeeModelInstance
+entity employeeModel
 database mysql
 
 autonumber
@@ -30,24 +31,31 @@ employee.routes -> employee.controller : postAdd(request, response)
 deactivate employee.routes
 activate employee.controller
 
-employee.controller -> employeeModelInstance : new EmployeeModel()
+create employeeModel
+employee.controller -> employeeModel : new Employee()
+activate employeeModel
 
-employee.controller ->> employeeModelInstance : addEmployee(employeeData)
-activate employeeModelInstance
+employee.controller ->> employeeModel : save()
 
-employeeModelInstance ->> mysql : INSERT INTO user(userID, curp, rfc, birthName,\nsurname, mail, passwd, passwdFlag, zipCode,\nhouseNumber, streetName,colony, workModality,\nworkStatus, userRoleIDFK, countryUserIDFK)
+employeeModel ->> mysql : INSERT INTO user(userID, curp, rfc, birthName,\nsurname, mail, passwd, passwdFlag, zipCode,\nhouseNumber, streetName,colony, workModality,\nworkStatus, userRoleIDFK, countryUserIDFK)
 activate mysql
-mysql -->> employeeModelInstance : Insert OK
+mysql -->> employeeModel : Insert OK
 deactivate mysql
-employeeModelInstance -->> employee.controller : Empleado registrado
-deactivate employeeModelInstance
+employeeModel -->> employee.controller : Empleado registrado
+deactivate employeeModel
 
-employee.controller -> employeeAdd.ejs : Mostrar mensaje "Empleado registrado exitosamente"
+employee.controller -> employee.routes : response.redirect("/employee")
 deactivate employee.controller
-activate employeeAdd.ejs
-activate navegador
-employeeAdd.ejs -> navegador : Mostrar notificación
-deactivate navegador
-deactivate employeeAdd.ejs
+activate employee.routes
+employee.routes -> employee.controller : getAdd(request, response)
 deactivate employee.routes
+activate employee.controller
+
+employee.controller -> employee.ejs : response.render(employee)
+deactivate employee.controller
+activate employee.ejs
+
+
+employee.ejs -> navegador : Mostrar notificacion "Empleado registrado exitosamente"
+deactivate employee.ejs
 @enduml

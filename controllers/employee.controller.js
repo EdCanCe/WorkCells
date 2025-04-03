@@ -24,7 +24,7 @@ exports.getAdd = (request, response, next) => {
 };
 
 exports.postAdd = (request, response, next) => {
-    console.log("Datos del formulario:", request.body); // 👈 Depuración aquí
+    console.log("Datos del formulario:", request.body); // Depuración aquí
 
     const curp = request.body.curp;
 
@@ -102,4 +102,26 @@ exports.getRoot = (request, response, next) => {
     response.render("employee", {
         ...sessionVars(request),
     });
+};
+
+exports.getSearch = (request, response, next) => {
+    const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
+    const limit = 5;
+    const offset = (page - 1) * limit;
+
+    const searchPromise = query
+        ? Employee.searchByName(query)
+        : Employee.fetchPaginated(limit, offset);
+
+    searchPromise
+        .then(([employees]) => {
+            response.json({ employees, page, query });
+        })
+        .catch((error) => {
+            console.error("Error en la búsqueda/paginación:", error);
+            response
+                .status(500)
+                .json({ error: "Error en la búsqueda/paginación" });
+        });
 };

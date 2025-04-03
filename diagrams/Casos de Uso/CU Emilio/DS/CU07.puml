@@ -2,19 +2,20 @@
 actor navegador
 boundary holiday.routes
 boundary holidayAdd.ejs
+boundary holiday.ejs
 control holiday.controller
-entity holidayModelInstance
+entity holidayModel
 database mysql
 
 autonumber
 navegador -> holiday.routes : GET /holiday/add
 activate holiday.routes
 
-holiday.routes -> holiday.controller: getHolidaysAdd(req, res)
+holiday.routes -> holiday.controller: getHolidaysAdd(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holidayAdd.ejs: render(holidayAdd)
+holiday.controller -> holidayAdd.ejs: response.render(holidayAdd)
 deactivate holiday.controller
 activate holidayAdd.ejs
 
@@ -26,28 +27,34 @@ navegador -> holiday.routes : POST /holiday/add (datos del dia feriado)
 deactivate navegador
 activate holiday.routes
 
-holiday.routes -> holiday.controller : postHolidayAdd(req, res)
+holiday.routes -> holiday.controller : postHolidayAdd(request, response)
+deactivate holiday.routes
+activate holiday.controller
+create holidayModel
+holiday.controller -> holidayModel : new Holiday()
+activate holidayModel
+
+holiday.controller ->> holidayModel : save()
+
+holidayModel ->> mysql : INSERT INTO usedHoliday(usedHolidayID, \nusedDate, usedTemplateHolidayIDFK)
+activate mysql
+mysql -->> holidayModel : Insert OK
+deactivate mysql
+holidayModel -->> holiday.controller : Dia Feriado registrado
+deactivate holidayModel
+
+holiday.controller -> holiday.routes : response.redirect("/holiday")
+deactivate holiday.controller
+activate holiday.routes
+
+holiday.routes -> holiday.controller : getHolidays(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holidayModelInstance : new HolidayModel()
-
-holiday.controller ->> holidayModelInstance : insertar_diaFeriado(holidayData)
-activate holidayModelInstance
-
-holidayModelInstance ->> mysql : INSERT INTO usedHoliday(usedHolidayID, \nusedDate, usedTemplateHolidayIDFK)
-activate mysql
-mysql -->> holidayModelInstance : Insert OK
-deactivate mysql
-holidayModelInstance -->> holiday.controller : Dia Feriado registrado
-deactivate holidayModelInstance
-
-holiday.controller -> holidayAdd.ejs : Mostrar mensaje "Dia Feriado creado exitosamente"
+holiday.controller -> holiday.ejs : response.render(holiday)
 deactivate holiday.controller
-activate holidayAdd.ejs
-holidayAdd.ejs -> navegador : Mostrar notificación
-deactivate holidayAdd.ejs
-activate navegador
-deactivate navegador
-deactivate holiday.routes
+activate holiday.ejs
+
+holiday.ejs ->navegador : Mostrar notificación, Dia Feriado registrado correctamente.
+deactivate holiday.ejs
 @enduml

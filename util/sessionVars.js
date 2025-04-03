@@ -1,8 +1,8 @@
 /**
  * Regresa las variables necesarias de la sesión.
  * Así como su rol, la posición de la nav, datos de información y warning.
- * 
- * @param {*} request 
+ *
+ * @param {*} request
  * @returns session variables
  */
 module.exports = (request) => {
@@ -12,7 +12,7 @@ module.exports = (request) => {
 
     // Obtiene un popup de info, lo guarda y lo resetea
     const info = request.session.info || "";
-    if (request.session.info) request.session.warning = "";
+    if (request.session.info) request.session.info = "";
 
     return {
         csrfToken: request.csrfToken(),
@@ -21,8 +21,8 @@ module.exports = (request) => {
         userID: request.session.userID || 0,
         role: request.session.role || "none",
         privilegios: request.session.privilegios || [],
-        navIsOpen: (request.cookies.navOpened === '0' ? false : true),
+        navIsOpen: request.cookies.navOpened === "0" ? false : true,
         warning: warning,
         info: info,
     };
-}
+};

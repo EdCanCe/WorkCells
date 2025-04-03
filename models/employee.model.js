@@ -121,4 +121,36 @@ module.exports = class Employee {
                         FROM department d, enterprise e 
                         WHERE d.enterpriseIDFK = e.enterpriseID;`);
     }
+
+    static fetchUser() {
+        return db.execute(`SELECT * FROM user;`);
+    }
+
+    static searchByName(query) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title AS departmentName, 
+            e.title AS enterpriseName, r.title AS roleName, u.workStatus 
+            FROM user u, department d, role r, enterprise e 
+            WHERE (u.birthName LIKE ? OR u.surname LIKE ?) 
+            AND u.prioritaryDepartmentIDFK = d.departmentID 
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userRoleIDFK = r.roleID`,
+            [`%${query}%`, `%${query}%`]
+        );
+    }
+
+    // Obtener empleados con paginación
+    static fetchPaginated(limit, offset) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title 
+            AS departmentName, e.title 
+            AS enterpriseName, r.title AS roleName, u.workStatus 
+            FROM user u, department d, role r, enterprise e 
+            WHERE u.userRoleIDFK = r.roleID 
+            AND u.prioritaryDepartmentIDFK = d.departmentID 
+            AND d.enterpriseIDFK = e.enterpriseID
+            LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    }
 };
