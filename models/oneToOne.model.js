@@ -50,13 +50,27 @@ module.exports = class OneToOne {
     }
 
     /**
+     * Regresa las sesiones One On One entre 2 fechas.
+     * 
+     * @param string startDate  La fecha inicial
+     * @param string endDate    La fecha final 
+     * @returns Las sesiones en esas fechass
+     */
+    static fetchByDateTypeHR(startDate, endDate) {
+        return db.execute(
+            'SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ?',
+            [startDate, endDate]
+        );
+    }
+
+    /**
      * Obtiene los datos de una sesión One On One en específico.
      * @param string sessionID  El ID de la sesión One On One
      * @returns Los datos de la sesión One On One
      */
     static fetchBySession(sessionID) {
         return db.execute(
-            `SELECT o.meetingLink, o.meetingDate, u.birthName, u.surname FROM oneOnOne o, user u WHERE o.oneOnOneUserIDFK = u.userID AND o.oneOnOneID = ? `,
+            `SELECT o.oneOnOneUserIDFK, o.meetingLink, o.meetingDate, u.birthName, u.surname FROM oneOnOne o, user u WHERE o.oneOnOneID = ? `,
             [sessionID]
         );
     }

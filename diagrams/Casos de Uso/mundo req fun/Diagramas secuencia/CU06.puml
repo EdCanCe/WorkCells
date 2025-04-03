@@ -33,7 +33,7 @@ alt rows.length == 0
     Controller -> Error : response.redirect("/error")
 end
 
-alt request.session.role != "Human Resources"\n||rows[0].oneOnOneUserIDFK != request.session.userID
+alt request.session.role != "Human Resources"\n&& rows[0].oneOnOneUserIDFK != request.session.userID
     Controller -> Error : response.redirect("/error")
 end
 

@@ -10,14 +10,14 @@ router.get("/", isAuth, oneToOneController.getOneToOne);
 router.get("/schedule", isAuth, OTO, oneToOneController.getOneToOneSchedule);
 router.post("/schedule",isAuth, OTO, oneToOneController.postOneToOneSchedule);
 
+// Muestra los datos de una sesión
+router.get("/:sessionID", isAuth, oneToOneController.getOneToOneCheck);
+
 // Rellena los datos de una sesión previamente agendada
 router.get("/:sessionID/fill", isAuth, OTO, oneToOneController.getOneToOneFill);
 router.post("/:sessionID/fill", isAuth, OTO, oneToOneController.postOneToOneFill);
 
 router.get("/graphs", isAuth, oneToOneController.getOneToOneGraphs);
-
-// Muestra los datos de una sesión
-router.get("/:sessionID", isAuth, oneToOneController.getOneToOneCheck);
 
 router.get("/getFullName/:email", isAuth, oneToOneController.getFullName);
 
