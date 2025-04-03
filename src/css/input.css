@@ -50,6 +50,7 @@
 
 /** Colores */
 
+/* TODO: Cambiar los colores de clases de tailwind a root */
 :root {
     /* Backgrounds & Text */
     --lightColorNavBase: #e5e5e5;
@@ -95,6 +96,22 @@
     @apply flex flex-row justify-center overflow-hidden text-nowrap;
 }
 
+.status {
+    @apply w-[calc(100%-60px)] h-0 m-0 pb-0 rounded-lg overflow-hidden text-nowrap;
+}
+
+.statusText {
+    @apply pl-3 overflow-hidden;
+}
+
+.statusBarContainer {
+    @apply  h-fit pt-3 overflow-hidden;
+}
+
+.statusBar {
+    @apply block h-1 w-full;
+}
+
 /* Backgrounds & Text */
 
 .navIcon {
@@ -119,7 +136,38 @@
 
 .bgNavHead {
     @apply hover:bg-neutral-500
-           dark:hover:bg-neutral-600
+           dark:hover:bg-neutral-600;
+}
+
+.bgStatusInfo {
+    @apply bg-sky-400 text-sky-900
+           dark:bg-sky-900 dark:text-sky-400;
+}
+
+.bgStatusBarInfo {
+    @apply bg-sky-600
+           dark:bg-sky-950;
+}
+
+.bgStatusWarning {
+    @apply bg-amber-400 text-amber-900
+           dark:bg-amber-900 dark:text-amber-400;
+}
+
+.bgStatusBarWarning {
+    @apply bg-amber-600
+           dark:bg-amber-950;
+}
+
+.bgStatusAlert {
+    @apply font-bold
+           bg-rose-400 text-rose-900
+           dark:bg-rose-900 dark:text-rose-400;
+}
+
+.bgStatusBarAlert {
+    @apply bg-rose-500
+           dark:bg-rose-950;
 }
 
 .bgBase {
@@ -169,4 +217,54 @@
 
 ::-webkit-scrollbar-track {
     background: transparent;
+}
+
+/** Animaciones */
+
+@keyframes statusContainer {
+    0% {
+        height: 0px;
+        margin: 0px 30px;
+        padding-top: 0;
+    }
+
+    5% {
+        height: 53px;
+        margin: 30px 30px;
+        padding-top: 13px;
+    }
+
+    95% {
+        height: 53px;
+        margin: 30px 30px;
+        padding-top: 13px;
+    }
+
+    100% {
+        height: 0px;
+        margin: 0px 30px;
+        padding-top: 0;
+    }
+}
+
+.statusContainerAnimate {
+    animation: statusContainer 7s linear forwards;
+}
+
+@keyframes statusBar {
+    0% {
+        width: 100%;
+    }
+
+    5% {
+        width: 100%;
+    }
+
+    95% {
+        width: 0;
+    }
+}
+
+.statusBarAnimate {
+    animation: statusBar 7s linear forwards;
 }
