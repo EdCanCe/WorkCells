@@ -1,6 +1,7 @@
 @startuml
 actor Navegador
 boundary "vacation.routes" as Routes
+boundary "error.routes" as Error
 boundary "addVacation.ejs" as Ejs
 control "vacation.controller" as Controller
 entity "vacation" as Model1

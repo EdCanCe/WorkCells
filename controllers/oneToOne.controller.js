@@ -7,65 +7,71 @@ const Measure = require("../models/measure.model");
 const { formatDateWithOrdinal } = require("../util/formatDate");
 const sessionVars = require('../util/sessionVars');
 
-exports.getOneToOne = (req, res, next) => {
-    res.render("oneToOne", {
-        ...sessionVars(req),
+exports.getOneToOne = (request, response, next) => {
+    response.render("oneToOne", {
+        ...sessionVars(request),
     });
 };
 
-exports.getOneToOneSchedule = (req, res, next) => {
-    res.render("oneToOneAdd", {
-        ...sessionVars(req),
+exports.getOneToOneSchedule = (request, response, next) => {
+    response.render("oneToOneAdd", {
+        ...sessionVars(request),
     });
 };
 
-exports.postOneToOneSchedule = (req, res, next) => {
-    OneToOne.getID(req.body.email)
+exports.postOneToOneSchedule = (request, response, next) => {
+    OneToOne.getID(request.body.email)
         .then(([rows]) => {
             if (rows.length === 0) {
-                req.session.error =
+                request.session.error =
                     "El correo ingresado no se encuentra registrado.";
-                return res.redirect("/oneToOne/schedule");
+                return response.redirect("/oneToOne/schedule");
             }
             // Si el usuario está registrado, se obtiene su ID
             const oneOnOneUserIDFK = rows[0].userID;
-            const meetingDate = req.body.date + " " + req.body.time + ":00";
+            const meetingDate = request.body.date + " " + request.body.time + ":00";
 
             const meeting = new OneToOne(
-                req.body.expectedTime,
+                request.body.expectedTime,
                 meetingDate,
-                req.body.meetingLink,
+                request.body.meetingLink,
                 oneOnOneUserIDFK
             );
 
             return meeting.save().then(() => {
-                req.session.info = `Sesión de one to one para el ${meetingDate} con ${req.body.name} creada`;
-                res.redirect("/oneToOne/schedule");
+                request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
+                response.redirect("/oneToOne/schedule");
             });
         })
         .catch((err) => {
             console.error(err);
-            res.status(500).send("Error interno del servidor");
+            response.status(500).send("Error interno del servidor");
         });
 };
 
-exports.getOneToOneFill = (req, res, next) => {
-    OneToOne.fetchBySession(req.params.sessionID)
+exports.getOneToOneFill = (request, response, next) => {
+    // Obtiene los valores de la sesión
+    OneToOne.fetchBySession(request.params.sessionID)
         .then(([rows]) => {
+            // En caso de que no exista, redirige a error
             if (rows.length === 0) {
-                req.session.info = "There is no session with that ID.";
-                res.status(404).redirect("/notFound");
+                request.session.alert = "There is no session with that ID."
+                response.status(404).redirect("/notFound");
             }
+
+            // Consulta las preguntas en la base de datos
             Question.fetchAll().then(([questions]) => {
+                // Consulta las métricas en la base de datos
                 Measurable.fetchAll().then(([measurables]) => {
-                    res.render("oneToOneFill", {
-                        ...sessionVars(req),
+                    // Renderiza el formulario para llenar los datos
+                    response.render("oneToOneFill", {
+                        ...sessionVars(request),
                         name: rows[0].birthName + " " + rows[0].surname,
                         meetingDate: formatDateWithOrdinal(rows[0].meetingDate),
                         meetingLink: rows[0].meetingLink,
                         questions: questions,
                         measurables: measurables,
-                        sessionID: req.params.sessionID,
+                        sessionID: request.params.sessionID,
                     });
                 });
             });
@@ -75,36 +81,37 @@ exports.getOneToOneFill = (req, res, next) => {
         });
 };
 
-exports.postOneToOneFill = (req, res, next) => {
+exports.postOneToOneFill = (request, response, next) => {
+    
     OneToOne.countVariables()
         .then(([rows]) => {
             const questionsNum = rows[0].questionAmount;
             const measurableAmount = rows[0].measurableAmount;
             for (let i = 1; i <= questionsNum; i++) {
                 const answer = new Answer(
-                    req.body[`question_${i}`],
-                    req.params.sessionID,
-                    req.body[`question_id_${i}`]
+                    request.body[`question_${i}`],
+                    request.params.sessionID,
+                    request.body[`question_id_${i}`]
                 );
                 console.log("RSPUESTA: ");
-                console.log(req.body[`question_${i}`]);
+                console.log(request.body[`question_${i}`]);
                 answer.save();
             }
             for (let i = 1; i <= measurableAmount; i++) {
                 const measure = new Measure(
-                    req.body[`measure_${i}`],
-                    req.params.sessionID,
-                    req.body[`measurable_id_${i}`]
+                    request.body[`measure_${i}`],
+                    request.params.sessionID,
+                    request.body[`measurable_id_${i}`]
                 );
                 measure.save();
             }
-            res.redirect(`/oneToOne/${req.params.sessionID}`);
+            response.redirect(`/oneToOne/${request.params.sessionID}`);
         })
         .catch((err) => {
             console.log(err);
-            req.session.info =
+            request.session.info =
                 err.message || "There was an error trying to sumbit it.";
-            res.redirect(`/oneToOne/${req.params.sessionID}/fill`);
+            response.redirect(`/oneToOne/${request.params.sessionID}/fill`);
         });
 };
 
@@ -123,33 +130,33 @@ AND ml.measurableID = m.measurableIDFK
 AND o.oneOnOneID = '0301111b-9bfc-43d0-8d73-098f03b3a583';
  */
 
-exports.getOneToOneGraphs = (req, res, next) => {
-    res.render("oneToOneGraphs", {
-        ...sessionVars(req),
+exports.getOneToOneGraphs = (request, response, next) => {
+    response.render("oneToOneGraphs", {
+        ...sessionVars(request),
     });
 };
 
-exports.getOneToOneCheck = (req, res, next) => {
-    res.render("oneToOneCheck", {
-        ...sessionVars(req),
+exports.getOneToOneCheck = (request, response, next) => {
+    response.render("oneToOneCheck", {
+        ...sessionVars(request),
     });
 };
 
-exports.getFullName = (req, res, next) => {
-    OneToOne.getFullName(req.params.email)
+exports.getFullName = (request, response, next) => {
+    OneToOne.getFullName(request.params.email)
         .then(([rows]) => {
             if (rows.length > 0) {
-                res.json({
+                response.json({
                     success: true,
                     birthName: rows[0].birthName,
                     surname: rows[0].surname,
                 });
             } else {
-                res.json({ success: false });
+                response.json({ success: false });
             }
         })
         .catch((err) => {
             console.error(err);
-            res.status(500).json({ success: false, error: err.message });
+            response.status(500).json({ success: false, error: err.message });
         });
 };
