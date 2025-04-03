@@ -1,9 +1,9 @@
 /**
  * Regresa las variables necesarias de la sesión.
  * Así como su rol, la posición de la nav, datos de información y warning.
- * 
- * @param {*} request 
- * @returns     Las variables de sesión usadas en los EJS
+ *
+ * @param {*} request
+ * @returns session variables
  */
 module.exports = (request) => {
     // Obtiene un popup de alerta, lo guarda y lo resetea
@@ -28,6 +28,8 @@ module.exports = (request) => {
         userID: request.session.userID || 0,
         role: request.session.role || "none",
         privilegios: request.session.privilegios || [],
-        navIsOpen: (request.cookies.navOpened === '0' ? false : true),
+        navIsOpen: request.cookies.navOpened === "0" ? false : true,
+        warning: warning,
+        info: info,
     };
-}
+};
