@@ -12,3 +12,4 @@ public/css/style.css
 *.x
 *.env
 *.txt
+*.csv
