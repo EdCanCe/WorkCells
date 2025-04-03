@@ -32,20 +32,32 @@
                                 <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                                 <td class="px-4 py-2">
                                     <% if (role === "Human Resources") { %>
-                                        <!-- RRHH: Mostrar botones independientemente del estado del líder -->
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Aprobar</button>
-                                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Denegar</button>
-                                        </div>
-                                        <% if (vacation.leaderStatus === 2) { %>
-                                            <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
+                                        <% if (vacation.hrStatus === 1) { %>
+                                            <div class="text-green-500 font-semibold">Aprobado</div>
+                                        <% } else if (vacation.hrStatus === 0) { %>
+                                            <div class="text-red-500 font-semibold">Negado</div>
+                                        <% } else { %>
+                                            <!-- RRHH: Mostrar botones independientemente del estado del líder -->
+                                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                                <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Aprobar</button>
+                                                <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Denegar</button>
+                                            </div>
+                                            <% if (vacation.leaderStatus === 2) { %>
+                                                <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
+                                            <% } %>
                                         <% } %>
-                                    <% } else if (role === "Leader" && vacation.leaderStatus === 2) { %>
-                                        <!-- Líder: Solicitud pendiente de aprobación -->
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Aprobar</button>
-                                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Denegar</button>
-                                        </div>
+                                    <% } else if (role === "Leader") { %>
+                                        <% if (vacation.leaderStatus === 1) { %>
+                                            <div class="text-green-500 font-semibold">Aprobado</div>
+                                        <% } else if (vacation.leaderStatus === 0) { %>
+                                            <div class="text-red-500 font-semibold">Negado</div>
+                                        <% } else if (vacation.leaderStatus === 2) { %>
+                                            <!-- Líder: Solicitud pendiente de aprobación -->
+                                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                                <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Aprobar</button>
+                                                <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Denegar</button>
+                                            </div>
+                                        <% } %>
                                     <% } %>
                                 </td>
                             </tr>
@@ -78,42 +90,55 @@
         return Math.ceil((end - start) / (1000 * 3600 * 24)) + 1;
     }
 
-    // Actualiza la función assignActionListeners para eliminar la confirmación
     function assignActionListeners() {
-        document.querySelectorAll(".approve-btn, .deny-btn").forEach((button) => {
-            button.onclick = async function() {
-                if (this.disabled) return;
+    document.querySelectorAll(".approve-btn, .deny-btn").forEach((button) => {
+        button.onclick = async function() {
+            if (this.disabled) return;
+            
+            const url = this.dataset.url;
+            const csrf = this.dataset.csrf;
+            const isApprove = this.classList.contains("approve-btn");
+            const row = this.closest("tr");
+            
+            // Guardar texto original para restaurarlo en caso de error
+            const originalText = this.textContent;
+            
+            // Mostrar "Procesando..." mientras se ejecuta
+            this.textContent = "Procesando...";
+            this.disabled = true;
+            const buttons = row.querySelectorAll("button");
+            buttons.forEach(btn => btn.disabled = true);
+            
+            try {
+                const res = await fetch(url, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "csrf-token": csrf 
+                    },
+                    body: JSON.stringify({})
+                });
                 
-                const url = this.dataset.url;
-                const csrf = this.dataset.csrf;
-                
-                this.disabled = true;
-                
-                try {
-                    const res = await fetch(url, {
-                        method: "POST",
-                        headers: { 
-                            "Content-Type": "application/json", 
-                            "csrf-token": csrf 
-                        },
-                        body: JSON.stringify({})
-                    });
-                    
-                    if (!res.ok) {
-                        const err = await res.json();
-                        throw new Error(err.message || "Error en la operación");
-                    }
-                    
-                    // Recargar la página actual después de la acción
-                    await loadPage(currentPage);
-                } catch (err) {
-                    console.error("Error al procesar la solicitud:", err);
-                    alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
-                } finally {
-                    this.disabled = false;
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || "Error en la operación");
                 }
-            };
-        });
+                
+                // Reemplazar los botones con mensaje de aprobado/negado
+                const actionCell = row.querySelector("td:last-child");
+                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 font-semibold">${isApprove ? 'Aprobado' : 'Negado'}</div>`;
+                
+                // No recargamos la página para mantener la solicitud visible
+            } catch (err) {
+                console.error("Error al procesar la solicitud:", err);
+                alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
+                
+                // Restaurar el texto original y habilitar botones
+                this.textContent = originalText;
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        };
+    });
     }
 
     // Actualiza la función updateTable para manejar mejor la tabla vacía
@@ -149,23 +174,39 @@
             const totalDays = calculateTotalDays(vac.startDate, vac.endDate);
             let actionCell = "";
             
+            // Dentro de la función updateTable, en la parte donde se crea actionCell:
             if (role === "Human Resources") {
-                // RRHH: Siempre mostrar botones, independientemente del estado del líder
-                actionCell = `
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Aprobar</button>
-                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Denegar</button>
-                    </div>`;
-                
-                if (vac.leaderStatus === 2) {
-                    actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
+                // Verificar si la solicitud ya fue procesada por RRHH
+                if (vac.hrStatus === 1) {
+                    actionCell = `<div class="text-green-500 font-semibold">Aprobado</div>`;
+                } else if (vac.hrStatus === 0) {
+                    actionCell = `<div class="text-red-500 font-semibold">Negado</div>`;
+                } else {
+                    // RRHH: Siempre mostrar botones, independientemente del estado del líder
+                    actionCell = `
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Aprobar</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Denegar</button>
+                        </div>`;
+                    
+                    if (vac.leaderStatus === 2) {
+                        actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
+                    }
                 }
-            } else if (role === "Leader" && vac.leaderStatus === 2) {
-                actionCell = `
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Aprobar</button>
-                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Denegar</button>
-                    </div>`;
+            } else if (role === "Leader") {
+                // Verificar si la solicitud ya fue procesada por Líder
+                if (vac.leaderStatus === 1) {
+                    actionCell = `<div class="text-green-500 font-semibold">Aprobado</div>`;
+                } else if (vac.leaderStatus === 0) {
+                    actionCell = `<div class="text-red-500 font-semibold">Negado</div>`;
+                } else if (vac.leaderStatus === 2) {
+                    // Líder: Solicitud pendiente de aprobación
+                    actionCell = `
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Aprobar</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Denegar</button>
+                        </div>`;
+                }
             }
 
             const row = document.createElement("tr");
