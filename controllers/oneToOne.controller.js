@@ -82,37 +82,32 @@ exports.getOneToOneFill = (request, response, next) => {
 };
 
 exports.postOneToOneFill = (request, response, next) => {
+    // Obtiene la cantidad de preguntas y métricas
+    const questionsNum = request.body.numQuestions;
+    const measurableAmount = request.body.numMeasures;
 
-    OneToOne.countVariables()
-        .then(([rows]) => {
-            const questionsNum = request.body.numQuestions;
-            const measurableAmount = request.body.numMeasures;
-            for (let i = 1; i <= questionsNum; i++) {
-                const answer = new Answer(
-                    request.body[`question_${i}`],
-                    request.params.sessionID,
-                    request.body[`question_id_${i}`]
-                );
-                console.log("RSPUESTA: ");
-                console.log(request.body[`question_${i}`]);
-                answer.save();
-            }
-            for (let i = 1; i <= measurableAmount; i++) {
-                const measure = new Measure(
-                    request.body[`measure_${i}`],
-                    request.params.sessionID,
-                    request.body[`measurable_id_${i}`]
-                );
-                measure.save();
-            }
-            response.redirect(`/oneToOne/${request.params.sessionID}`);
-        })
-        .catch((err) => {
-            console.log(err);
-            request.session.info =
-                err.message || "There was an error trying to sumbit it.";
-            response.redirect(`/oneToOne/${request.params.sessionID}/fill`);
-        });
+    // Añade cada pregunta a la base de datos
+    for (let i = 1; i <= questionsNum; i++) {
+        const answer = new Answer(
+            request.body[`question${i}`],
+            request.params.sessionID,
+            request.body[`questionID${i}`]
+        );
+        answer.save();
+    }
+
+    // Añade cada métrica a la base de datos
+    for (let i = 1; i <= measurableAmount; i++) {
+        const measure = new Measure(
+            request.body[`measure${i}`],
+            request.params.sessionID,
+            request.body[`measurableID${i}`]
+        );
+        measure.save();
+    }
+
+    // Redirección para ver la sesión
+    response.redirect(`/oneToOne/${request.params.sessionID}`);
 };
 
 /** Probar queries

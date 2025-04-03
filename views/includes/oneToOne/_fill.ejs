@@ -1,18 +1,15 @@
 <div class="container mx-auto p-6 max-w-4xl">
     <div class="bg-neutral-700/25 shadow-lg rounded-lg overflow-hidden">
-        <h2 class="text-2xl font-semibold text-center">One On One</h2>
+        <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
 
+        <!-- Muestra los datos de la sesión One On One -->
         <h3 class="text-2xl font-semibold text-center">
             <%= name %> | <%= meetingDate %>
         </h3>
 
-        <% if (info && info !== '') { %>
-        <div class="bg-green-100 text-green-800 p-4 rounded-lg mx-6 mt-6">
-            <%= info %>
-        </div>
+        <% if (meetingLink) { %>
+            <a target="_blank" href="<%= meetingLink %>" class="btnPrimary !block w-fit m-auto mt-5">Google Meet Link</a>
         <% } %>
-
-        <!-- TODO: Añadir botón para abrir meet en caso de que el dato no sea nulo -->
 
         <!-- Formulario -->
         <form
@@ -39,12 +36,12 @@
                     <!-- Relaciona la respuesta con la pregunta por medio de su ID -->
                     <input
                         type="hidden"
-                        name="question_id_<%= index + 1 %>"
+                        name="questionID<%= index + 1 %>"
                         value="<%= question.questionID %>"
                     />
 
                     <textarea
-                        name="question_<%= index + 1 %>"
+                        name="question<%= index + 1 %>"
                         rows="3"
                         class="questionInput w-full h-40 max-h-40 resize-none p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
                         placeholder="Please provide your answer..."
@@ -56,8 +53,6 @@
 
             <!-- Métricas -->
             <div class="space-y-8">
-
-                <!-- TODO: Modificar el css y js de los botones -->
 
                 <!-- Obtiene la cantidad de preguntas -->
                 <input type="hidden" name="numMeasures" value="<%= measurables.length %>" />
@@ -72,13 +67,14 @@
                      <!-- Relaciona la respuesta con la métrica por medio de su ID -->
                     <input
                         type="hidden"
-                        name="measurable_id_<%= qIndex + 1 %>"
+                        name="measurableID<%= qIndex + 1 %>"
                         value="<%= measurable.measurableID %>"
                     />
 
                     <input
+                        id="measureSlider<%= qIndex + 1 %>"
                         type="range"
-                        name="measure_<%= qIndex + 1 %>"
+                        name="measure<%= qIndex + 1 %>"
                         min="1"
                         max="5"
                         value="3"
@@ -87,22 +83,14 @@
                         data-measurable="<%= qIndex + 1 %>"
                     />
 
-                    <div
-                        class="flex items-center gap-1 rating-buttons"
-                        data-measurable="<%= qIndex + 1 %>"
-                    >
-                        <!-- Genera los 5 botones para la métrica -->
-                        <% for (let i = 1; i <= 5; i++) { %>
-                        <div
-                            class="flex-1 h-10 bg-neutral-700/50 rounded-md cursor-pointer rating-button border border-blue-300 <%= i <= 3 ? 'bg-blue-500 border-blue-600' : '' %>"
-                            data-value="<%= i %>"
-                            onclick="updateRating(this)"
-                            onmouseover="previewRating(this)"
-                            onmouseout="resetPreview(this)"
-                            title="Rating <%= i %>"
-                        ></div>
+                    <!-- Generación de botones -->
+                    <div id="measureContainer<%= qIndex + 1 %>" question="<%= qIndex %>" class="w-[90%] h-7 m-auto flex flex-row gap-5 place-content-between">
+                        <% for(let i=0; i<5; i++) { %>
+                            <!-- La clase value es necesaria para JS, no modificar -->
+                            <p class="value<%= i+1 %> btnMeasure h-full flex-1"></p>
                         <% } %>
                     </div>
+
                 </div>
                 <% }); %>
             </div>
@@ -123,6 +111,7 @@
 <script>
     const form = document.getElementById("fillForm");
     const answers = document.querySelectorAll(".questionInput");
+    const measureButtons = document.querySelectorAll(".btnMeasure");
 
     // Verifica que en los textarea haya algo de texto (letras)
     form.addEventListener("submit", function(event) {
@@ -151,104 +140,76 @@
         }
     });
 
-    // Store original states
-    const originalStates = new Map();
+    // Limpia los botones a su estado base
+    const cleanButtons = (question) => {
+        // Obtiene el valor actual para usar como límite
+        const buttonLimit = document.getElementById(`measureSlider${question}`);
 
-    function previewRating(button) {
-        const container = button.closest(".rating-buttons");
-        const value = parseInt(button.getAttribute("data-value"));
-        const buttons = container.querySelectorAll(".rating-button");
-
-        // Save original states if not already saved
-        if (!originalStates.has(container)) {
-            const states = Array.from(buttons).map((btn) => ({
-                element: btn,
-                classes: [...btn.classList],
-            }));
-            originalStates.set(container, states);
-        }
-
-        // Preview selection
-        buttons.forEach((btn) => {
-            const btnValue = parseInt(btn.getAttribute("data-value"));
-            if (btnValue <= value) {
-                btn.classList.add("bg-blue-400", "border-blue-500");
-                btn.classList.remove("bg-neutral-700/50");
-            }
-        });
-    }
-
-    function resetPreview(button) {
-        const container = button.closest(".rating-buttons");
-        const savedStates = originalStates.get(container);
-
-        if (savedStates) {
-            savedStates.forEach((state) => {
-                state.element.className = ""; // Clear all classes
-                state.classes.forEach((c) => state.element.classList.add(c)); // Restore original
-            });
+        // Resetea todos los botones
+        for (let i=1; i<=5; i++) {
+            let button = document.querySelector(`#measureContainer${question} .value${i}`);
+            button.classList.remove("bgPrimary");
+            button.classList.remove("bgPrimaryLowOpacity");
         }
     }
 
-    function updateRating(button) {
-        const container = button.closest(".rating-buttons");
-        const value = parseInt(button.getAttribute("data-value"));
-        const measurableIndex = container.getAttribute("data-measurable");
-        const rangeInput = document.querySelector(
-            `.range-input[data-measurable="${measurableIndex}"]`
-        );
+    // Pinta los botones seleccionados
+    const clickButtons = (question) => {
+        // Limpia los botones a su estado base
+        cleanButtons(question);
 
-        // Update hidden range input
-        rangeInput.value = value;
+        // Obtiene el valor actual para usar como límite
+        const buttonLimit = document.getElementById(`measureSlider${question}`);
 
-        // Update button styles permanently
-        const buttons = container.querySelectorAll(".rating-button");
-        buttons.forEach((btn) => {
-            const btnValue = parseInt(btn.getAttribute("data-value"));
-            btn.classList.remove(
-                "bg-neutral-700/50",
-                "bg-blue-400",
-                "bg-blue-500"
-            );
-
-            if (btnValue <= value) {
-                btn.classList.add("bg-blue-500", "border-blue-600");
-            } else {
-                btn.classList.add("bg-neutral-700/50");
-            }
-        });
-
-        // Update original states
-        const states = Array.from(buttons).map((btn) => ({
-            element: btn,
-            classes: [...btn.classList],
-        }));
-        originalStates.set(container, states);
+        // Solo pinta los botones hasta el selecionado
+        for (let i=1; i<=buttonLimit.value; i++) {
+            const button = document.querySelector(`#measureContainer${question} .value${i}`);
+            button.classList.add("bgPrimary");
+        }
     }
 
-    // Initialize with default value (3)
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".range-input").forEach((input) => {
-            const measurableIndex = input.getAttribute("data-measurable");
-            const container = document.querySelector(
-                `.rating-buttons[data-measurable="${measurableIndex}"]`
-            );
-            const buttons = container.querySelectorAll(".rating-button");
+    // Pinta los botones seleccionados
+    const hoverButtons = (question, value) => {
+        // Limpia los botones a su estado base
+        cleanButtons(question);
 
-            buttons.forEach((btn) => {
-                const btnValue = parseInt(btn.getAttribute("data-value"));
-                if (btnValue <= 3) {
-                    btn.classList.add("bg-blue-500", "border-blue-600");
-                    btn.classList.remove("bg-neutral-700/50");
-                }
-            });
+        // Solo pinta los botones hasta el selecionado
+        for (let i=1; i<=value; i++) {
+            const button = document.querySelector(`#measureContainer${question} .value${i}`);
+            button.classList.add("bgPrimaryLowOpacity");
+        }
+    }
 
-            // Save initial state
-            const states = Array.from(buttons).map((btn) => ({
-                element: btn,
-                classes: [...btn.classList],
-            }));
-            originalStates.set(container, states);
+    // Funcionalidades en botones de métricas
+    measureButtons.forEach((measureButton) => {
+        const question = measureButton.parentElement.id.split("measureContainer")[1];
+        const measure = document.getElementById(`measureSlider${question}`);
+        const value = measureButton.classList[0].split("value")[1];
+
+        // Al clickear pinta los antecesores del botón
+        measureButton.addEventListener("click", () =>{
+            measure.value = value;
+            console.log(measure, value);
+            clickButtons(question);
         });
+
+        // Al hacer hover pinta los antecesores del botón
+        measureButton.addEventListener("mouseenter", () =>{
+            hoverButtons(question, value);
+        });
+
+        // Al salir del hover limpia los antecesores del botón
+        measureButton.addEventListener("mouseleave", () =>{
+            clickButtons(question);
+        });
+
+
     });
+
+    // Al cargar la página pinta los botones
+    for (let i=1; i<=5; i++){
+        clickButtons(i);
+    }
+
+    
 </script>

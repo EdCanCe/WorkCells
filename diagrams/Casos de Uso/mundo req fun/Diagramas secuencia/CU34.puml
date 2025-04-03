@@ -81,7 +81,7 @@ deactivate MySQL
 Model -->> Controller : rows
 deactivate Model
 
-loop answers.foreach
+loop Para cada pregunta
     Controller -> Answer : new Answer(...)
     activate Answer
     Controller ->> Answer : save()
@@ -93,7 +93,7 @@ loop answers.foreach
     deactivate Answer
 end
 
-loop measures.foreach
+loop Para cada métrica
     Controller -> Measure : new Measure(...)
     activate Measure
     Controller ->> Measure : save()
@@ -105,7 +105,7 @@ loop measures.foreach
     deactivate Measure
 end
 
-Controller -> Routes  : response.redirect(`/oneToOne/${sessionID}`)
+Controller -> Routes  : response.redirect(`/oneToOne/${request.params.sessionID}`)
 deactivate Controller
 
 @enduml

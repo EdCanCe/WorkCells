@@ -69,6 +69,9 @@
     --lightBtnPrimary: #1dd2b4;
     --darkBtnPrimary: #1b3f43;
 
+    --lightBtnPrimaryLowOpacity: #1dd2b466;
+    --darkBtnPrimaryLowOpacity: #1b3f4366;
+
     --lightBtnSuccess: #30e16e;
     --darkBtnSuccess: #029033;
 
@@ -175,6 +178,16 @@
            dark:bg-(--darkColorBase) dark:text-(--lightColorBase);
 }
 
+.bgPrimary {
+    @apply bg-(--lightBtnPrimary)
+           dark:bg-(--darkBtnPrimary);
+}
+
+.bgPrimaryLowOpacity {
+    @apply bg-(--lightBtnPrimaryLowOpacity)
+           dark:bg-(--darkBtnPrimaryLowOpacity);
+}
+
 .invertText {
     @apply text-(--lightColorBase)
            dark:text-(--darkColorBase);
@@ -198,6 +211,12 @@
     @apply px-6 py-2 rounded-md cursor-pointer inline-block
            bg-(--lightBtnDanger) hover:bg-(--lightBtnDanger)/80 text-(--darkColorBase)
            dark:bg-(--darkBtnDanger) dark:hover:bg-(--darkBtnDanger)/50 dark:text-(--lightColorBase);
+}
+
+.btnMeasure {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block border-[1px]
+           border-(--lightBtnPrimary)
+           dark:border-(--darkBtnPrimary);
 }
 
 /* Scrollbar */
