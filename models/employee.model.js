@@ -153,4 +153,65 @@ module.exports = class Employee {
             [limit, offset]
         );
     }
+
+    static searchActiveByName(query) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title AS departmentName, 
+            e.title AS enterpriseName, r.title AS roleName, u.workStatus 
+            FROM user u, department d, role r, enterprise e 
+            WHERE (u.birthName LIKE ? OR u.surname LIKE ?) 
+            AND u.workStatus = 1
+            AND u.prioritaryDepartmentIDFK = d.departmentID 
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userRoleIDFK = r.roleID`,
+            [`%${query}%`, `%${query}%`]
+        );
+    }
+
+    // Modificar fetchPaginated para solo obtener empleados activos
+    static fetchPaginatedActive(limit, offset) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title 
+        AS departmentName, e.title 
+        AS enterpriseName, r.title AS roleName, u.workStatus 
+        FROM user u, department d, role r, enterprise e 
+        WHERE u.workStatus = 1
+        AND u.userRoleIDFK = r.roleID 
+        AND u.prioritaryDepartmentIDFK = d.departmentID 
+        AND d.enterpriseIDFK = e.enterpriseID
+        LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    }
+
+    // Obtener empleados inactivos con paginación
+    static fetchPaginatedInactive = (limit, offset) => {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title 
+        AS departmentName, e.title 
+        AS enterpriseName, r.title AS roleName, u.workStatus 
+        FROM user u, department d, role r, enterprise e 
+        WHERE u.workStatus = 0
+        AND u.userRoleIDFK = r.roleID 
+        AND u.prioritaryDepartmentIDFK = d.departmentID 
+        AND d.enterpriseIDFK = e.enterpriseID
+        LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    };
+
+    // Buscar empleados inactivos por nombre
+    static searchInactiveByName = (query) => {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title AS departmentName, 
+            e.title AS enterpriseName, r.title AS roleName, u.workStatus 
+            FROM user u, department d, role r, enterprise e 
+            WHERE (u.birthName LIKE ? OR u.surname LIKE ?) 
+            AND u.workStatus = 1
+            AND u.prioritaryDepartmentIDFK = d.departmentID 
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userRoleIDFK = r.roleID`,
+            [`%${query}%`, `%${query}%`]
+        );
+    };
 };

@@ -80,18 +80,6 @@ exports.getCheck = (request, response, next) => {
     });
 };
 
-exports.getActive = (request, response, next) => {
-    response.render("employeeCheckActive", {
-        ...sessionVars(request),
-    });
-};
-
-exports.getIdle = (request, response, next) => {
-    response.render("employeeCheckIdle", {
-        ...sessionVars(request),
-    });
-};
-
 exports.getMe = (request, response, next) => {
     response.render("employeeMe", {
         ...sessionVars(request),
@@ -107,16 +95,31 @@ exports.getRoot = (request, response, next) => {
 exports.getSearch = (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
     const query = request.query.query || "";
-    const limit = 5;
+    const filter = request.query.filter || "all";
+    const limit = 6;
     const offset = (page - 1) * limit;
 
-    const searchPromise = query
-        ? Employee.searchByName(query)
-        : Employee.fetchPaginated(limit, offset);
+    let searchPromise;
+
+    if (query) {
+        searchPromise =
+            filter === "active"
+                ? Employee.searchActiveByName(query)
+                : filter === "inactive"
+                ? Employee.searchInactiveByName(query)
+                : Employee.searchByName(query);
+    } else {
+        searchPromise =
+            filter === "active"
+                ? Employee.fetchPaginatedActive(limit, offset)
+                : filter === "inactive"
+                ? Employee.fetchPaginatedInactive(limit, offset)
+                : Employee.fetchPaginated(limit, offset);
+    }
 
     searchPromise
         .then(([employees]) => {
-            response.json({ employees, page, query });
+            response.json({ employees, page, query, filter });
         })
         .catch((error) => {
             console.error("Error en la búsqueda/paginación:", error);

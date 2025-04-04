@@ -14,8 +14,6 @@ router.get(
     employeeContrllers.getModify
 );
 router.get("/check", isAuth, employeePrivilege, employeeContrllers.getCheck);
-router.get("/active", isAuth, employeePrivilege, employeeContrllers.getActive);
-router.get("/idle", isAuth, employeePrivilege, employeeContrllers.getIdle);
 router.get("/search", isAuth, employeePrivilege, employeeContrllers.getSearch);
 router.get("/me", isAuth, employeePrivilege, employeeContrllers.getMe);
 router.get("/", isAuth, employeePrivilege, employeeContrllers.getRoot);

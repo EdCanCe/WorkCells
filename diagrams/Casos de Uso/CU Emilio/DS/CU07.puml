@@ -40,7 +40,7 @@ holidayModel ->> mysql : INSERT INTO usedHoliday(usedHolidayID, \nusedDate, used
 activate mysql
 mysql -->> holidayModel : Insert OK
 deactivate mysql
-holidayModel -->> holiday.controller : Dia Feriado registrado
+holidayModel -->> holiday.controller : Promesa
 deactivate holidayModel
 
 holiday.controller -> holiday.routes : response.redirect("/holiday")
