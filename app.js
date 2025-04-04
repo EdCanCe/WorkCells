@@ -24,6 +24,10 @@ app.use(
         secret: crypto.randomUUID(),
         resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
         saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
+        rolling: true,
+        cookie: {
+            maxAge: 15 * 60 * 1000 // 15 minutos en milisegundos
+        },
     })
 );
 
