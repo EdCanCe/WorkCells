@@ -8,6 +8,8 @@ control controller
 entity oneOnOne as one
 database mysql
 
+autonumber
+
 activate navegador
 navegador -> routes: GET oneToOne/check
 deactivate navegador

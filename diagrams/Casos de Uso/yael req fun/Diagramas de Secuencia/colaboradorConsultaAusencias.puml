@@ -7,6 +7,8 @@ control controller
 entity absence as ab
 database mysql
 
+autonumber
+
 activate nav
 nav -> routes: GET /absence
 deactivate nav
