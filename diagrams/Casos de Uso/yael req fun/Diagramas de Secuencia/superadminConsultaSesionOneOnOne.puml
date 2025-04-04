@@ -1,0 +1,76 @@
+@startuml
+
+actor navegador
+boundary routes
+boundary "Vista list.ejs" as list
+boundary "Vista sesion.ejs" as sesion
+control controller
+entity oneOnOne as one
+database mysql
+
+activate navegador
+navegador -> routes: GET oneToOne/check
+deactivate navegador
+activate routes
+routes -> controller: getSessions(req, res)
+deactivate routes
+
+activate controller
+controller ->> one: getAllSessions()
+activate one
+one ->> mysql: execute(´SELECT u.birthName, u.surname, u.mail, \nr.title, o.meetingDate, o.expectedTime FROM user u \nJOIN role r ON u.userRoleIDFK = r.roleID \nJOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK \nORDER BY o.meetingDate DESC´)
+activate mysql
+mysql -->> one: sessions
+deactivate mysql
+one -->> controller: sessions
+deactivate one
+
+controller -> list: res.render("check.ejs", sessions)
+deactivate controller
+activate list
+list -> navegador: HTML
+deactivate list
+activate navegador
+navegador -> navegador: evento keyUp()
+navegador -> routes: fetch()
+deactivate navegador
+activate routes
+routes -> controller: getOneSession(req, res)
+deactivate routes
+activate controller
+controller ->> one: getOneSession(req.body.mail)
+activate one
+one ->> mysql: execute(´SELECT u.birthName, u.surname, u.mail, \nr.title, o.meetingDate, o.expectedTime FROM user u \nJOIN role r ON u.userRoleIDFK = r.roleID \nJOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK \nWHERE u.mail = ? ORDER BY o.meetingDate DESC´, [mail])
+activate mysql
+mysql -->> one: workerSessions
+deactivate mysql
+one -->> controller: workerSessions
+deactivate one
+
+controller -->> navegador: json
+deactivate controller
+activate navegador
+navegador -> navegador: procesar(json)
+navegador -> routes: GET oneToOne/check/:oneOnOneID
+deactivate navegador
+
+activate routes
+routes -> controller: getSessionInfo(req, res)
+deactivate routes
+activate controller
+controller ->> one: getSessionInfo(req.body.oneOnOneID)
+activate one
+one ->> mysql: execute(´SELECT u.birthname, u.surname, o.meetingDate, oq.question, \noa.answer, om.evaluation, omr.summary FROM user u \nJOIN oneOnONE o ON u.userID = o.oneOnOneUserIDFK \nJOIN oneOnOneAnswer oa ON o.oneOnOneID = oa.answerOneOnOneIDFK \nJOIN oneOnOneQuestion oq ON oq.questionID = oa.questionIDFK \nJOIN oneOnOneMeasure om ON om.measureOneOnOneIDFK = o.oneOnOneID \nJOIN oneOnOneMeasurable omr ON omr.measurableID = om.measurableIDFK \nWHERE oneOnOneID = ?´, [oneOnOneID])
+activate mysql
+mysql -->> one: sessionInfo
+deactivate mysql
+one -->> controller: sessionInfo
+deactivate one
+controller -> sesion: res.render("sesion.ejs", sessionInfo)
+deactivate controller
+
+activate sesion
+sesion -> navegador: HTML
+deactivate sesion 
+activate navegador
+@enduml
