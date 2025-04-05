@@ -221,6 +221,15 @@ AND u.userID IN (
             [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
+
+    static deleteVacation(vacationID) {
+        return db.execute(
+            'DELETE FROM vacation WHERE vacationID = ?',
+            [vacationID]
+        );
+    }
 }
+
+
 
 module.exports = Vacation;
