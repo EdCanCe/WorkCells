@@ -78,9 +78,7 @@ AND u.userID IN (
         );
     }
 
-    static updateVacation(vacationId, startDate, endDate, reason) {
-        console.log('Ejecutando UPDATE con:', vacationId, startDate, endDate, reason); // Agregar log
-    
+    static updateVacation(vacationId, startDate, endDate, reason) {    
         return db.execute(
             `UPDATE vacation
              SET startDate = ?, endDate = ?, reason = ?

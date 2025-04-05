@@ -167,13 +167,9 @@ exports.getModifyVacation = async (request, response, next) => {
 
 
 exports.updateVacation = async (request, response, next) => {
-    console.log('Entrando en updateVacation...');
-    console.log('Datos recibidos:', request.body);
     
     const vacationId = request.params.vacationID;
     const { startDate, endDate, reason } = request.body;
-
-    console.log('vacationId recibido en updateVacation:', vacationId);
 
     if (!startDate || !endDate || !reason) {
         request.session.info = 'Todos los campos son obligatorios.';

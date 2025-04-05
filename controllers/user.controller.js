@@ -30,14 +30,10 @@ exports.post_login = (request, response, next) => {
                 request.session.userID = user.userID;
                 request.session.role = user.role;
 
-                console.log("workStatus: ", request.session.workStatus);
-                console.log("UserID from session:", request.session.userID);
-                console.log("Valor de user.mail:", request.session.mail);
-                console.log("role: ", request.session.role);
+
                 // Obtener privilegios del usuario
                 return Usuario.getPrivilegios(user.mail)
                     .then(([privilegios]) => {
-                        console.log("Privilegios obtenidos:", privilegios);
                         request.session.privilegios = privilegios;
                         if(request.session.workStatus === 1){
                             return request.session.save(() =>
