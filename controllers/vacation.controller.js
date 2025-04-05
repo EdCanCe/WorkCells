@@ -186,7 +186,7 @@ exports.updateVacation = async (request, response, next) => {
 
             return response.render('modifyVacation', {
                 ...sessionVars(request),
-                vacation: rows[0], // Ahora pasamos la vacación correcta
+                vacation: rows[0], 
             });
         } catch (error) {
             console.error(error);
