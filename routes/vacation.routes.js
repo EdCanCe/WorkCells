@@ -15,6 +15,12 @@ router.get(
     vacationController.getModifyVacation
 );
 
+router.get(
+    "/check/delete/:vacationID",
+    isAuth,
+    vacationController.getModifyVacation
+);
+
 // Página para añadir una solicitud de vacaciones
 router.get("/add", isAuth, vacationController.getAddVacation);
 router.post("/add", isAuth, vacationController.postAddVacation);
