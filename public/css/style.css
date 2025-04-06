@@ -267,12 +267,6 @@
   .z-10 {
     z-index: 10;
   }
-  .float-left {
-    float: left;
-  }
-  .float-right {
-    float: right;
-  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
