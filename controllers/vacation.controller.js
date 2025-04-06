@@ -1,6 +1,9 @@
 const Vacation = require('../models/vacation.model');
+const Holiday = require('../models/holiday.model');
 const User = require('../models/user.model');
+const formatDate = require('../util/formatDate');
 const sessionVars = require('../util/sessionVars');
+const { end } = require('../util/database');
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -92,69 +95,203 @@ exports.getRequestsPaginated = (request, response, next) => {
         });
 };
 
-
 exports.getAddVacation = (request, response, next) => {
-    User.fetchStartDate(request.session.userID)
+    // Obtiene las vacaciones del usuario en el periodo actual
+    Vacation.fetchVacationsInPeriod(request.session.userID)
         .then(([rows]) => {
-            // Obtiene una fecha inicial para ver si ya pasó, o aún no.
-            const today = new Date();
-            let givenDate = new Date();
-            givenDate.setFullYear(
-                givenDate.getUTCFullYear(),
-                rows[0].month - 1,
-                rows[0].day,
-            );
+            const vacations = rows;
 
-            let firstYear;
-            let midYear;
-            let lastYear;
+            // Obtiene la fecha de inicio y fin del periodo del usuario
+            const startDate = vacations[0].mapStart;
+            const endDate = vacations[0].mapEnd;
 
-            if (today < givenDate) {
-                // Aún no pasa
-                firstYear = givenDate.getUTCFullYear() - 1;
-                midYear = givenDate.getUTCFullYear();
-                lastYear = givenDate.getUTCFullYear() + 1;
-            } else {
-                firstYear = givenDate.getUTCFullYear();
-                midYear = givenDate.getUTCFullYear() + 1;
-                lastYear = givenDate.getUTCFullYear() + 2;
-            }
+            // Obtiene los días feriados durante el periodo del usuario
+            Holiday.fetchByDateType(startDate, endDate)
+                .then(([rows]) => {
+                    const holidays = rows;
 
-            const firstDate = `${firstYear}/${rows[0].month}/${rows[0].day}`;
-            const midDate = `${midYear}/${rows[0].month}/${rows[0].day}`;
-            const lastDate = `${lastYear}/${rows[0].month}/${rows[0].day}`;
+                    // Obtiene los años que el trabajador lleva trabajando en la compañía
+                    User.fetchWorkingTime(request.session.userID)
+                        .then(([rows]) => {
+                            // Los años que el trabajador lleva trabajando en la compañía
+                            const workingYears = rows[0].time;
 
-            response.render('addVacation', {
-                ...sessionVars(request),
-                firstDate,
-                midDate,
-                lastDate,
-            });
+                            // Mapa para tener control de los días disponibles
+                            const daysMap = new Map(); 
+
+                            // Índice para recorrer cada uno de los días
+                            const currentDate = new Date(startDate);
+
+                            // Genera un arreglo vacío para los eventos de cada día
+                            while (currentDate < endDate) {
+                                const dateStr = formatDate.forSql(currentDate);
+
+                                // La llave para los elementos del mapa es la fecha en string
+                                daysMap.set(dateStr, {
+                                    date: new Date(currentDate),
+                                    dayType: currentDate.getDay(),
+                                    holiday: 0,
+                                });
+                                currentDate.setDate(currentDate.getDate() + 1);
+                            }
+
+                            // Marca en el mapa los días que son días feriados
+                            holidays.forEach((holiday) => {
+                                const date = new Date(holiday.usedDate);
+                                const day = daysMap.get(formatDate.forSql(date));
+                                if (day) {
+                                    day.holiday = 1;
+                                }
+                            });
+
+                            let totalUsedDays = 0;
+
+                            // Procesar vacaciones
+                            vacations.forEach((vacation) => {
+                                const start = new Date(vacation.startDate);
+                                const end = new Date(vacation.endDate);
+                                const current = new Date(start);
+
+                                // Por cada día del que la vacación es parte, verifica si es válido
+                                while (current <= end) {
+                                    const dateStr = formatDate.forSql(current);
+                                    const day = daysMap.get(dateStr);
+
+                                    // Verifica que no sea día festivo o fin de semana
+                                    if (day && day.holiday == 0 && day.dayType != 0 && day.dayType != 6) {
+                                        totalUsedDays += 1;
+                                    }
+                                    current.setDate(current.getDate() + 1);
+                                }
+                            });
+
+                            // Obtiene la cantidad de días de vacaciones que puede tener el trabajador
+                            const totalDays = () => {
+                                let baseDays = 12;
+                                let years = workingYears;
+
+                                // Por cada año trabajando se le aumentan 2 días
+                                while (years > 0) {
+                                    baseDays += 2;
+                                    years -= 1;
+                                }
+                                
+                                return baseDays > 20 ? 20 : baseDays;
+                            }
+
+                            const availableDays = totalDays() - totalUsedDays;
+
+                            request.session.availableDays = availableDays;
+
+                            const startDateTextAux = new Date(startDate);
+                            const endDateTextAux = new Date(endDate);
+                            endDateTextAux.setDate(endDateTextAux.getDate() - 1);
+                            
+                            response.render("addVacation", {
+                                ...sessionVars(request),
+                                availableDays,
+                                startDate: `${startDateTextAux.getFullYear()}-${String(startDateTextAux.getMonth() + 1).padStart(2, '0')}-${String(startDateTextAux.getDate()).padStart(2, '0')}`,
+                                endDate: `${endDateTextAux.getFullYear()}-${String(endDateTextAux.getMonth() + 1).padStart(2, '0')}-${String(endDateTextAux.getDate()).padStart(2, '0')}`,
+
+                            })
+
+
+                        });
+                });
         })
         .catch((error) => {
-            // Mejor manejo de error
             console.error(error);
             response.status(500).send('Error al obtener los datos.');
         });
 };
 
 exports.postAddVacation = (request, response, next) => {
-    const vacation = new Vacation(
-        request.session.userID,
-        request.body.startDate,
-        request.body.endDate,
-        request.body.reason
-    );
-    vacation.save()
-        .then(() => {
-            request.session.info = 'Your request was submitted without any problem.';
-            response.redirect('/calendar');
-        })
-        .catch((error) => {
-            request.session.info =
-                error.message ||
-                'There was an error trying to sumbit your request.';
+    const startDate = request.body.startDate;
+    const endDate = request.body.endDate;
+
+    console.log("Fecha inicio", startDate);
+ 
+    // En caso de que la fecha de inicio sea posterior a la final
+    if ((new Date(startDate)) > (new Date(endDate))) {
+        request.session.alert = "The start date must be before the end date";
+        return response.redirect("/vacation/add");
+    }
+
+    // Obtiene los días feriados durante el periodo que solicitó el usuario
+    Holiday.fetchByDateType(startDate, endDate)
+        .then(([rows]) => {
+            const holidays = rows;
+
+            // Mapa para tener control de los días disponibles
+            const daysMap = new Map(); 
+
+            // Índice para recorrer cada uno de los días
+            const currentDate = new Date(startDate);
+            const endDateLoop = new Date(endDate);
+
+            // Genera un arreglo vacío para los eventos de cada día
+            while (currentDate <= endDateLoop) {
+                const dateStr = formatDate.forSql(currentDate);
+
+                // La llave para los elementos del mapa es la fecha en string
+                daysMap.set(dateStr, {
+                    date: new Date(currentDate),
+                    dayType: currentDate.getDay(),
+                    holiday: 0,
+                });
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Marca en el mapa los días que son días feriados
+            holidays.forEach((holiday) => {
+                const date = new Date(holiday.usedDate);
+                const day = daysMap.get(formatDate.forSql(date));
+                if (day) {
+                    day.holiday = 1;
+                }
+            });
+
+            // Obtiene los días que no cuentan para las vacaciones
+            let nonusableDays = 0;
+            daysMap.forEach((day, key) => {
+                // Verifica si el día es festivo o fin de semana
+                console.log(`${key} => ${['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][day.dayType]} | holiday: ${day.holiday} | dayNumber: ${day.dayType}`);
+                if (day.holiday == 1 || day.dayType == 5 || day.dayType == 6) {
+                    nonusableDays += 1;
+                }
+            });
+
+            // Obtiene los días válidos que solicitó el usuario
+            const dateDiff = Number(new Date(endDate)) - Number(new Date(startDate));
+            const requestDays = Math.ceil(dateDiff / (1000 * 60 * 60 * 24)) + 1 - nonusableDays;
+            console.log("requested: ", requestDays);
+            console.log("nonusable: ", nonusableDays);
+
+            // En caso de que el usuario haya solicitado más días de los que tiene disponibles
+            if(requestDays > request.session.availableDays){
+                request.session.alert = "You cannot request more days than the ones available";
+                return response.redirect("/vacation/add");
+            }
+
+            // Genera la vacación
+            const vacation = new Vacation(
+                request.session.userID,
+                request.body.startDate,
+                request.body.endDate,
+                request.body.reason
+            );
+
+            // Guarda la vacación
+            vacation.save()
+                .then(() => {
+                    request.session.info = 'Your request was submitted without any problem.';
+                    return response.redirect('/calendar');
+                });
+
+        }).catch((error) => {
+            request.session.alert = 'There was an error trying to sumbit your request.';
             response.redirect('/vacation/add');
+            return next();
         });
 };
 

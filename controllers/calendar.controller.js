@@ -2,15 +2,10 @@ const Vacation = require('../models/vacation.model');
 const Absence = require('../models/absence.model');
 const OneToOne = require('../models/oneToOne.model');
 const Holiday = require('../models/holiday.model');
-const { formatDateWithOrdinal } = require('../util/formatDate');
+const formatDate = require('../util/formatDate');
 const sessionVars = require('../util/sessionVars');
 
 exports.getRoot = (request, response, next) => {
-
-    // Formatea las fechas para ser usadas en SQL
-    const formatDateForSQL = (date) => {
-        return date.toISOString().split('T')[0];
-    };
 
     // Obtiene los días de inicio y final de la semana
     const getWeekDays = (date) => {
@@ -67,8 +62,8 @@ exports.getRoot = (request, response, next) => {
     preSqlEndDate = new Date(preSqlEndDate);
 
     // Obtiene las fechas en formato SQL para hacer queries
-    const sqlStartDate = formatDateForSQL(preSqlStartDate);
-    const sqlEndDate = formatDateForSQL(preSqlEndDate);
+    const sqlStartDate = formatDate.forSql(preSqlStartDate);
+    const sqlEndDate = formatDate.forSql(preSqlEndDate);
 
     console.log('Start, End, preStart, endStart: ');
     console.log(startDate, endDate);
@@ -79,17 +74,13 @@ exports.getRoot = (request, response, next) => {
     response.render('calendar', {
         ...sessionVars(request),
         isMonthView,
-        today: formatDateForSQL(today),
+        today: formatDate.forSql(today),
         weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     });
 
 };
 
 exports.getFetch = (request, response, next) => {
-    // Formatea las fechas para ser usadas en SQL
-    const formatDateForSQL = (date) => {
-        return date.toISOString().split('T')[0];
-    };
 
     // Obtiene los días de inicio y final de la semana
     const getWeekDays = (date) => {
@@ -147,8 +138,8 @@ exports.getFetch = (request, response, next) => {
     preSqlEndDate = new Date(preSqlEndDate);
 
     // Obtiene las fechas en formato SQL para hacer queries
-    const sqlStartDate = formatDateForSQL(preSqlStartDate);
-    const sqlEndDate = formatDateForSQL(preSqlEndDate);
+    const sqlStartDate = formatDate.forSql(preSqlStartDate);
+    const sqlEndDate = formatDate.forSql(preSqlEndDate);
 
     console.log('Start, End, preStart, endStart: ');
     console.log(startDate, endDate);
@@ -185,7 +176,7 @@ exports.getFetch = (request, response, next) => {
 
                                     // Genera un arreglo vacío para los eventos de cada día
                                     while (currentDate <= preSqlEndDate) {
-                                        const dateStr = formatDateForSQL(currentDate);
+                                        const dateStr = formatDate.forSql(currentDate);
                                         daysMap.set(dateStr, { // La llave para los elementos del mapa es la fecha en string
                                             date: new Date(currentDate),
                                             dayNumber: currentDate.getDate(),
@@ -202,7 +193,7 @@ exports.getFetch = (request, response, next) => {
                                     // Procesar feriados (eventos de un día)
                                     holidayRows.forEach((holiday) => {
                                         const date = new Date(holiday.usedDate);
-                                        const day = daysMap.get(formatDateForSQL(date));
+                                        const day = daysMap.get(formatDate.forSql(date));
                                         if (day) {
                                             day.events.holidays.push(holiday);
                                         }
@@ -211,7 +202,7 @@ exports.getFetch = (request, response, next) => {
                                     // Procesar on to ones (eventos de un día)
                                     oneToOneRows.forEach((oneToOne) => {
                                         const date = new Date(oneToOne.meetingDate);
-                                        const day = daysMap.get(formatDateForSQL(date));
+                                        const day = daysMap.get(formatDate.forSql(date));
                                         if (day) {
                                             day.events.oneToOnes.push(oneToOne);
                                         }
@@ -225,13 +216,13 @@ exports.getFetch = (request, response, next) => {
 
                                         // Por cada día del que la vacación es parte le añade al mapa
                                         while (current <= end) {
-                                            const dateStr = formatDateForSQL(current);
+                                            const dateStr = formatDate.forSql(current);
                                             const day = daysMap.get(dateStr);
                                             if (day) {
                                                 day.events.vacations.push({
                                                     ...vacation,
-                                                    isStart: dateStr === formatDateForSQL(vacation.startDate),
-                                                    isEnd: dateStr === formatDateForSQL(vacation.endDate)
+                                                    isStart: dateStr === formatDate.forSql(vacation.startDate),
+                                                    isEnd: dateStr === formatDate.forSql(vacation.endDate)
                                                 });
                                             }
                                             current.setDate(current.getDate() + 1);
@@ -246,13 +237,13 @@ exports.getFetch = (request, response, next) => {
 
                                         // Por cada día del que la ausencia es parte le añade al mapa
                                         while (current <= end) {
-                                            const dateStr = formatDateForSQL(current);
+                                            const dateStr = formatDate.forSql(current);
                                             const day = daysMap.get(dateStr);
                                             if (day) {
                                                 day.events.absences.push({
                                                     ...absence,
-                                                    isStart: dateStr === formatDateForSQL(absence.startDate),
-                                                    isEnd: dateStr === formatDateForSQL(absence.endDate)
+                                                    isStart: dateStr === formatDate.forSql(absence.startDate),
+                                                    isEnd: dateStr === formatDate.forSql(absence.endDate)
                                                 });
                                             }
                                             current.setDate(current.getDate() + 1);
@@ -291,10 +282,10 @@ exports.getFetch = (request, response, next) => {
 
                                     response.status(200).json({
                                         isMonthView,
-                                        today: formatDateForSQL(today),
+                                        today: formatDate.forSql(today),
                                         days: daysArray,
-                                        formattedStart: formatDateWithOrdinal(startDate),
-                                        formattedEnd: formatDateWithOrdinal(endDate),
+                                        formattedStart: formatDate.withOrdinal(startDate),
+                                        formattedEnd: formatDate.withOrdinal(endDate),
                                         formattedMonth: `${startDate.toLocaleString('default', { month: 'long' })}, ${startDate.getFullYear()}`,
                                     });
                                 })

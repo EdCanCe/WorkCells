@@ -1,5 +1,7 @@
 const db = require('../util/database');
-class Vacation {
+
+
+module.exports = class Vacation {
     /**
      * Constructor de una solicitud de vacaciones.
      * 
@@ -245,7 +247,7 @@ AND u.userID IN (
      */
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(`
-            (SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ?) UNION (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ?)`,
+            (SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ? AND hrStatus * leaderStatus != 0) UNION (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ? AND hrStatus * leaderStatus != 0)`,
             [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
@@ -256,8 +258,34 @@ AND u.userID IN (
             [vacationID]
         );
     }
+
+    /**
+     * Regresa las vacaciones que el usuario ha tenido en el periodo actual
+     * 
+     * @param string userID El usuario del cuál se verificarán sus vacaciones 
+     * @returns Las vacaciones del usuario en el periodo actual
+     */
+    static fetchVacationsInPeriod(userID) {
+        return db.execute(`
+SELECT v.startDate, v.endDate, v.leaderStatus, d.startDate as mapStart, d.endDate as mapEnd FROM
+vacation v, (SELECT 
+STR_TO_DATE(CONCAT_WS('-', IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) , d.startMonth, d.startDay), '%Y-%m-%d') as startDate,
+STR_TO_DATE(CONCAT_WS('-', IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) , d.startMonth, d.startDay), '%Y-%m-%d') as endDate
+FROM (
+SELECT MONTH(w.startDate) as startMonth, DAY(w.startDate) as startDay, startDate as startingDate,
+STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+FROM user u, workStatus w
+WHERE u.userID = w.userStatusIDFK
+AND u.userID = ?
+GROUP BY u.userID
+ORDER BY endDate DESC
+LIMIT 1
+) as d) as d
+WHERE v.startDate BETWEEN d.startDate AND d.endDate 
+AND vacationUserIDFK = ?
+AND v.hrStatus * v.leaderStatus != 0
+;`,
+        [userID, userID]);
+    }
+
 }
-
-
-
-module.exports = Vacation;
