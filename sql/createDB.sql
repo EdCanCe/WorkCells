@@ -101,7 +101,8 @@ CREATE TABLE absence (
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
     reason VARCHAR(300),
-    justified TINYINT NOT NULL,
+    leaderStatus TINYINT DEFAULT 0,
+    hrStatus TINYINT DEFAULT 0,
     absenceUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT absenceUserIDFK FOREIGN KEY (absenceUserIDFK) REFERENCES user(userID)
 );
