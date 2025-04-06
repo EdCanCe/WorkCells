@@ -15,77 +15,127 @@ exports.getAdd = (request, response, next) => {
 exports.postRequestApprove = (request, response, next) => {
     const absenceId = request.params.absenceID;
     const userRole = request.session.role;
-
-    // Aquí solo verificamos el rol ya que la autorización ya se maneja en el middleware absencePrivilege
-    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
-        Absence.updateStatus(absenceId, 1) // 1 = Aprobado
-            .then(() => {
-                response.status(200).json({
-                    success: true,
-                    message: "Request approved",
-                });
-            })
-            .catch((error) => {
-                console.error("Error approving request:", error);
-                response.status(500).json({
+    const userId = request.session.userID;
+    // Verificar si el usuario tiene permiso para aprobar esta solicitud
+    Absence.fetchOne(absenceId)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).json({
                     success: false,
-                    message: "Error processing request",
+                    message: 'Solicitud no encontrada'
                 });
+            }
+            const vacation = rows[0];
+            
+            // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
+            if (userRole === 'Human Resources') {
+                return Absence.updateStatusHR(absenceId, 1); // 1 = Aprobado
+            }
+            // Si es líder, actualiza el estado del líder
+            else if (userRole === 'Department Leader') { // Cambiado de 'Leader' a 'Department Leader'
+                return Absence.fetchDepartmentPaginated(userId, 1, 0)
+                    .then(([departmentVacations]) => {
+                        const hasPermission = departmentVacations.some(v => v.absenceId === absenceId);
+                        if (!hasPermission) {
+                            throw new Error('No tienes permiso para aprobar esta solicitud');
+                        }
+                        return Absence.updateStatusLeader(absenceId, 1);
+                    });
+            }
+            else {
+                throw new Error('Rol no autorizado');
+            }
+        })
+        .then(() => {
+            response.status(200).json({
+                success: true,
+                message: 'Solicitud aprobada exitosamente'
             });
-    } else {
-        response.status(403).json({
-            success: false,
-            message: "No tienes permisos para realizar esta acción",
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).json({
+                success: false,
+                message: error.message || 'Error al procesar la solicitud'
+            });
         });
-    }
 };
 
 exports.postRequestDeny = (request, response, next) => {
     const absenceId = request.params.absenceID;
     const userRole = request.session.role;
-
-    // Aquí solo verificamos el rol ya que la autorización ya se maneja en el middleware absencePrivilege
-    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
-        Absence.updateStatus(absenceId, 0) // 0 = Denegado
-            .then(() => {
-                response.status(200).json({
-                    success: true,
-                    message: "Request denied",
-                });
-            })
-            .catch((error) => {
-                console.error("Error denying request:", error);
-                response.status(500).json({
+    const userId = request.session.userID;
+    // Verificar si el usuario tiene permiso para denegar esta solicitud
+    Absence.fetchOne(absenceId)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).json({
                     success: false,
-                    message: "Error processing request",
+                    message: 'Solicitud no encontrada'
                 });
+            }
+            const absence = rows[0];
+            // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
+            if (userRole === 'Human Resources') {
+                // Elimina la restricción de verificar el estado del líder
+                return Absence.updateStatusHR(absenceId, 0); // 0 = Denegado
+            }
+            // Si es líder, actualiza el estado del líder
+            else if (userRole === 'Department Leader') {
+                return Absence.fetchDepartmentPaginated(userId, 1, 0)
+                    .then(([departmentVacations]) => {
+                        const hasPermission = departmentVacations.some(v => v.absenceId === absenceId);
+                        if (!hasPermission) {
+                            throw new Error('No tienes permiso para denegar esta solicitud');
+                        }
+                        return Absence.updateStatusLeader(absenceId, 0);
+                    });
+            }
+            else {
+                throw new Error('Rol no autorizado');
+            }
+        })
+        .then(() => {
+            response.status(200).json({
+                success: true,
+                message: 'Solicitud denegada exitosamente'
             });
-    } else {
-        response.status(403).json({
-            success: false,
-            message: "No tienes permisos para realizar esta acción",
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).json({
+                success: false,
+                message: error.message || 'Error al procesar la solicitud'
+            });
         });
-    }
 };
 
-exports.getRequest = (request, response, next) => {
+exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
     const userRole = request.session.role;
     const limit = 10;
     const offset = 0;
-    
-    Absence.fetchPaginated(limit, offset, userRole, userId)
-        .then(([rows, fieldData]) => {
-            response.render("absenceRequests", {
+    const showAll = request.query.all === 'true';
+    let fetchPromise;
+    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
+        // Usar el método fetchPaginated actualizado que maneja ambos roles
+        fetchPromise = Absence.fetchPaginated(limit, offset, userRole, userId);
+    } else {
+        // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
+        fetchPromise = Absence.fetchPaginated(limit, offset, userRole, userId);
+    }
+
+    fetchPromise
+        .then(([rows]) => {
+            response.render('absenceRequests', {
                 ...sessionVars(request),
                 absences: rows,
-                today: new Date(),
                 role: userRole
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send('Error al obtener los datos.');
         });
 };
 
@@ -94,19 +144,25 @@ exports.getAllRequests = (request, response, next) => {
     const userRole = request.session.role;
     const limit = 10;
     const offset = 0;
-    
-    Absence.fetchAllPaginated(limit, offset, userRole, userId)
-        .then(([rows, fieldData]) => {
-            response.render("absenceAllRequests", {
+    let fetchPromise;
+    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
+        // Usar el método fetchPaginated actualizado que maneja ambos roles
+        fetchPromise = Absence.fetchAllPaginated(limit, offset, userRole, userId);
+    } else {
+        // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
+        fetchPromise = Absence.fetchAll(userId);
+    }
+    fetchPromise
+        .then(([rows]) => {
+            response.render('absenceAllRequests', {
                 ...sessionVars(request),
                 absences: rows,
-                today: new Date(),
                 role: userRole
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send('Error al obtener los datos.');
         });
 };
 

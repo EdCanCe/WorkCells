@@ -22,7 +22,7 @@
                                 <th class="px-4 py-2 text-left">Role</th>
                                 <th class="px-4 py-2 text-left">Start date</th>
                                 <th class="px-4 py-2 text-left">End date</th>
-                                <th class="px-4 py-2 text-left">Total days</th>
+                                <th class="px-4 py-2 text-left">Duration</th>
                                 <th class="px-4 py-2 text-left">Reason</th>
                                 <th class="px-4 py-2 text-center">Status</th>
                             </tr>
@@ -105,143 +105,206 @@
 </div>
 
 <script>
-    const csrfToken = '<%= csrfToken %>';
     let currentPage = 0;
     const limit = 10;
-    document.addEventListener("DOMContentLoaded", function () {
-        const table = document.querySelector("#absences-table");
+    let isLoading = false;
+    const role = "<%= role %>";
 
-        table.addEventListener("click", function (event) {
-            if (event.target.classList.contains("approve-btn")) {
-                handleAction(event.target, "Approved", "text-green-600");
-            } else if (event.target.classList.contains("deny-btn")) {
-                handleAction(event.target, "Denied", "text-red-600");
-            }
-        });
-
-        async function handleAction(button, statusText, statusClass) {
-            const url = button.getAttribute("data-url");
-            const csrfToken = button.getAttribute("data-csrf");
-
-            button.disabled = true;
-            const originalText = button.innerText;
-            button.innerText = "Processing...";
-
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "csrf-token": csrfToken,
-                    },
-                });
-
-                if (!response.ok) throw new Error("Error en la respuesta");
-
-                button.closest(
-                    "td"
-                ).innerHTML = `<span class="${statusClass} font-semibold">${statusText}</span>`;
-            } catch (error) {
-                console.error("Error al procesar la solicitud:", error);
-                button.disabled = false;
-                button.innerText = originalText;
-                alert(
-                    "Hubo un error al procesar la solicitud. Intente nuevamente."
-                );
-            }
-        }
-    });
-
-    // Función para calcular los días totales
     function calculateTotalDays(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
-        const timeDifference = end - start;
-        return Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+        return Math.ceil((end - start) / (1000 * 3600 * 24)) + 1;
     }
 
-    // Función para generar la celda del estado
-    function getStatusCell(ab) {
-        if (ab.justified === 0) {
-            return '<span class="text-red-600 font-semibold">Denied</span>';
-        } else if (ab.justified === 1) {
-            return '<span class="text-green-600 font-semibold">Approved</span>';
-        } else if (ab.justified === 2) {
-            return `
-                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4 justify-center">
-                    <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/${ab.absenceID}" data-csrf="${csrfToken}">Approve</button>
-                    <button class="btnDanger deny-btn" data-url="/absence/requests/deny/${ab.absenceID}" data-csrf="${csrfToken}">Deny</button>
-                </div>`;
-        }
-        return "";
+    function assignActionListeners() {
+    document.querySelectorAll(".approve-btn, .deny-btn").forEach((button) => {
+        button.onclick = async function() {
+            if (this.disabled) return;
+            
+            const url = this.dataset.url;
+            const csrf = this.dataset.csrf;
+            const isApprove = this.classList.contains("approve-btn");
+            const row = this.closest("tr");
+            
+            // Guardar texto original para restaurarlo en caso de error
+            const originalText = this.textContent;
+            
+            // Mostrar "Procesando..." mientras se ejecuta
+            this.textContent = "Processing...";
+            this.disabled = true;
+            const buttons = row.querySelectorAll("button");
+            buttons.forEach(btn => btn.disabled = true);
+            
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "csrf-token": csrf 
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.message || "Error en la operación");
+                }
+                
+                // Reemplazar los botones con mensaje de Approved/Denied
+                const actionCell = row.querySelector("td:last-child");
+                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 text-center font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
+                
+                // No recargamos la página para mantener la solicitud visible
+            } catch (err) {
+                console.error("Error al procesar la solicitud:", err);
+                alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
+                
+                // Restaurar el texto original y habilitar botones
+                this.textContent = originalText;
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        };
+    });
     }
 
-
-
-    // Función para actualizar la tabla con nuevos datos
     function updateTable(data) {
-        const tbody = document.querySelector("#absences-table tbody");
+        const tableContainer = document.querySelector(".overflow-x-auto");
+    
+        // Check if data is empty first
+        if (!data || data.length === 0) {
+            // Replace table with "no requests" message
+            tableContainer.innerHTML = `
+                <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
+                    <p class="text-center text-gray-400 text-xl">No absence requests available.</p>
+                </div>`;
+            
+            // Disable pagination buttons
+            document.getElementById("prev-button").disabled = currentPage === 0;
+            document.getElementById("next-button").disabled = true;
+            return;
+        }
+        
+        // If we have data, make sure we have a table
+        if (!document.getElementById("absences-table")) {
+            tableContainer.innerHTML = `
+                <table id="absences-table" class="min-w-full table-auto">
+                    <thead class="bg-neutral-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Full name</th>
+                            <th class="px-4 py-2 text-left">Role</th>
+                            <th class="px-4 py-2 text-left">Start date</th>
+                            <th class="px-4 py-2 text-left">End date</th>
+                            <th class="px-4 py-2 text-left">Duration</th>
+                            <th class="px-4 py-2 text-left">Reason</th>
+                            <th class="px-4 py-2 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>`;
+        }
+        
+        const table = document.getElementById("absences-table");
+        const tbody = table.querySelector("tbody");
         tbody.innerHTML = "";
 
-        data.forEach((ab) => {
-            const tr = document.createElement("tr");
-            tr.classList.add("border-b", "hover:bg-neutral-800");
-            tr.innerHTML = `
-                <td class="px-4 py-2">${ab.birthName} ${ab.surname}</td>
-                <td class="px-4 py-2">${ab.title}</td>
-                <td class="px-4 py-2">${new Date(
-                    ab.startDate
-                ).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(ab.endDate).toLocaleDateString(
-                    "es-MX"
-                )}</td>
-                <td class="px-4 py-2">${calculateTotalDays(
-                    ab.startDate,
-                    ab.endDate
-                )}</td>
-                <td class="px-4 py-2">${ab.reason}</td>
-                <td class="px-4 py-2 text-center">${getStatusCell(ab)}</td>
+        data.forEach((absence) => {
+            const totalDays = calculateTotalDays(absence.startDate, absence.endDate);
+            let actionCell = "";
+            
+            if (role === "Human Resources") {
+                if (absence.hrStatus === 1) {
+                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                } else if (absence.hrStatus === 0) {
+                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                } else {
+                    actionCell = `
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/${absence.absenceID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/absence/requests/deny/${absence.absenceID}" data-csrf="<%= csrfToken %>">Deny</button>
+                        </div>`;
+                }
+            } else if (role === "Department Leader") {
+                if (absence.leaderStatus === 1) {
+                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                } else if (absence.leaderStatus === 0) {
+                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                } else if (absence.leaderStatus === 2) {
+                    actionCell = `
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/${absence.absenceID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/absence/requests/deny/${absence.absenceID}" data-csrf="<%= csrfToken %>">Deny</button>
+                        </div>`;
+                }
+            }
+
+            const row = document.createElement("tr");
+            row.className = "border-b hover:bg-neutral-800";
+            
+            row.innerHTML = `
+                <td class="px-4 py-2">${absence.birthName} ${absence.surname}</td>
+                <td class="px-4 py-2">${absence.title}</td>
+                <td class="px-4 py-2">${new Date(absence.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(absence.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${totalDays}</td>
+                <td class="px-4 py-2">${absence.reason}</td>
+                <td class="px-4 py-2">${actionCell}</td>
             `;
-            tbody.appendChild(tr);
+            
+            tbody.appendChild(row);
         });
+        
+        // Actualizar estado de botones de paginación
+        document.getElementById("prev-button").disabled = currentPage === 0;
+        document.getElementById("next-button").disabled = data.length < limit;
+        
+        assignActionListeners(); // Reasigna los listeners
     }
 
-    // Función para cargar una página de solicitudes mediante AJAX
+    // Mejora la función loadPage para garantizar que los botones siempre funcionen
     async function loadPage(page) {
+        if (isLoading) return;
+        isLoading = true;
+        
         try {
-            const response = await fetch(
-                `/absence/requests/paginated?page=${page}`
-            );
-            if (!response.ok) throw new Error("Error al cargar la página");
-            return await response.json();
+            const response = await fetch(`/absence/requests/paginated?page=${page}`);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error en la respuesta del servidor");
+            }
+            // console.log("response", response);            
+            const data = await response.json();
+            currentPage = page;
+            updateTable(data);
         } catch (error) {
             console.error("Error en loadPage:", error);
-            return [];
+            alert("Error al cargar las solicitudes. Por favor, intente nuevamente.");
+        } finally {
+            isLoading = false;
         }
     }
 
-    // Manejador para botón "Siguiente"
-    document
-        .getElementById("next-button")
-        .addEventListener("click", async () => {
-            const nextPage = currentPage + 1;
-            const data = await loadPage(nextPage);
-            if (data.length > 0) {
-                currentPage = nextPage;
-                updateTable(data);
-            } else {
-                alert("No hay más solicitudes disponibles.");
-            }
-        });
+    // Manejadores para los botones de paginación
+    document.getElementById("next-button").addEventListener("click", async () => {
+        if (!document.getElementById("next-button").disabled) {
+            await loadPage(currentPage + 1);
+        }
+    });
+    
+    document.getElementById("prev-button").addEventListener("click", async () => {
+        if (currentPage > 0 && !document.getElementById("prev-button").disabled) {
+            await loadPage(currentPage - 1);
+        }
+    });
 
-    // Manejador para botón "Anterior"
-    document
-        .getElementById("prev-button")
-        .addEventListener("click", async () => {
-            if (currentPage === 0) return;
-            const prevPage = currentPage - 1;
-            const data = await loadPage(prevPage);
-            currentPage = prevPage;
-            updateTable(data);
+    // Inicialización al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+        loadPage(0);
+        
+        // Inicializar los totales de días para los elementos que ya están en el DOM
+        document.querySelectorAll(".total-days").forEach(cell => {
+            const startDate = cell.dataset.startDate;
+            const endDate = cell.dataset.endDate;
+            cell.textContent = calculateTotalDays(startDate, endDate);
         });
+    });
 </script>

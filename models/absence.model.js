@@ -56,6 +56,15 @@ ORDER BY startDate DESC`);
         return db.execute('SELECT * FROM absence WHERE absenceID = ?', [id]);
     }
 
+    static fetchOne(absenceID) {
+        return db.execute(
+            `SELECT *
+        FROM absence a
+        WHERE a.absenceID = ?`,
+            [absenceID]
+        );
+    }
+
     static fetch(id) {
         if (id) {
             return this.fetchOne(id);
@@ -83,9 +92,16 @@ ORDER BY startDate DESC`);
         );
     }
 
-    static updateStatus(absenceId, status) {
+    static updateStatusLeader(absenceId, status) {
+            return db.execute(
+                "UPDATE absence SET leaderStatus = ? WHERE absenceID = ?",
+                [status, absenceId]
+            );
+        }
+    
+    static updateStatusHR(absenceId, status) {
         return db.execute(
-            'UPDATE absence SET justified = ? WHERE absenceID = ?',
+            'UPDATE absence SET hrStatus = ? WHERE absenceID = ?',
             [status, absenceId]
         );
     }
@@ -98,7 +114,7 @@ ORDER BY startDate DESC`);
                 FROM absence AS a
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
-                WHERE a.justified = 2
+                WHERE a.hrStatus = 2
                 ORDER BY a.startDate DESC
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
@@ -111,7 +127,7 @@ ORDER BY startDate DESC`);
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
                 JOIN user AS leader ON leader.userID = ?
-                WHERE a.justified = 2
+                WHERE a.leaderStatus = 2
                 AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
                 ORDER BY a.startDate DESC
                 LIMIT ? OFFSET ?`,
@@ -131,7 +147,7 @@ ORDER BY startDate DESC`);
                 FROM absence AS a
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
-                WHERE a.justified = 0 OR a.justified = 1
+                WHERE (a.hrStatus = 0 OR a.hrStatus = 1)
                 ORDER BY a.startDate DESC
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
@@ -144,7 +160,7 @@ ORDER BY startDate DESC`);
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
                 JOIN user AS leader ON leader.userID = ?
-                WHERE (a.justified = 0 OR a.justified = 1)
+                WHERE (a.leaderStatus = 0 OR a.leaderStatus = 1)
                 AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
                 ORDER BY a.startDate DESC
                 LIMIT ? OFFSET ?`,

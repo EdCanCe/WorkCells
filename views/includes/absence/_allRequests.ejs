@@ -120,22 +120,22 @@
         tbody.innerHTML = "";
         
         // Si hay datos, mostrarlos en la tabla
-        data.forEach((vac) => {
-            const totalDays = calculateTotalDays(vac.startDate, vac.endDate);
+        data.forEach((absence) => {
+            const totalDays = calculateTotalDays(absence.startDate, absence.endDate);
             
             let statusCell = "";
             if (role === "Department Leader") {
-                if (vac.leaderStatus === 1) {
+                if (absence.leaderStatus === 1) {
                     statusCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
-                } else if (vac.leaderStatus === 0) {
+                } else if (absence.leaderStatus === 0) {
                     statusCell = `<div class="text-red-500 text-center font-semibold">Deneid</div>`;
                 } else {
                     statusCell = `<div class="text-yellow-500 text-center font-semibold">Pendiente</div>`;
                 }
             } else if (role === "Human Resources") {
-                if (vac.hrStatus === 1) {
+                if (absence.hrStatus === 1) {
                     statusCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
-                } else if (vac.hrStatus === 0) {
+                } else if (absence.hrStatus === 0) {
                     statusCell = `<div class="text-red-500 text-center font-semibold">Deneid</div>`;
                 } else {
                     statusCell = `<div class="text-yellow-500 text-center font-semibold">Pendiente</div>`;
@@ -146,10 +146,10 @@
             row.className = "border-b hover:bg-neutral-800";
             
             let rowHTML = `
-                <td class="px-4 py-2">${vac.birthName} ${vac.surname}</td>
-                <td class="px-4 py-2">${vac.reason}</td>
-                <td class="px-4 py-2">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${absence.birthName} ${absence.surname}</td>
+                <td class="px-4 py-2">${absence.reason}</td>
+                <td class="px-4 py-2">${new Date(absence.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(absence.endDate).toLocaleDateString("es-MX")}</td>
                 <td class="px-4 py-2">${totalDays}</td>`;
                 
             if (role === "Department Leader" || role === "Human Resources") {

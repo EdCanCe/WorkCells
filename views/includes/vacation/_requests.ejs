@@ -108,7 +108,7 @@
             buttons.forEach(btn => btn.disabled = true);
             
             try {
-                const res = await fetch(url, {
+                const response = await fetch(url, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json", 
@@ -117,8 +117,8 @@
                     body: JSON.stringify({})
                 });
                 
-                if (!res.ok) {
-                    const err = await res.json();
+                if (!response.ok) {
+                    const err = await response.json();
                     throw new Error(err.message || "Error en la operación");
                 }
                 
@@ -179,37 +179,37 @@
         tbody.innerHTML = "";
         
         // Si hay datos, mostrarlos en la tabla
-        data.forEach((vac) => {
-            const totalDays = calculateTotalDays(vac.startDate, vac.endDate);
+        data.forEach((vacation) => {
+            const totalDays = calculateTotalDays(vacation.startDate, vacation.endDate);
             let actionCell = "";
             
             // Dentro de la función updateTable, en la parte donde se crea actionCell:
             if (role === "Human Resources") {
                 // Verificar si la solicitud ya fue procesada por RRHH
-                if (vac.hrStatus === 1) {
+                if (vacation.hrStatus === 1) {
                     actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
-                } else if (vac.hrStatus === 0) {
+                } else if (vacation.hrStatus === 0) {
                     actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
                 } else {
                     // RRHH: Siempre mostrar botones, independientemente del estado del líder
                     actionCell = `
                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
-                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
                         </div>`;
                 }
             } else if (role === "Department Leader") {
                 // Verificar si la solicitud ya fue procesada por Líder
-                if (vac.leaderStatus === 1) {
+                if (vacation.leaderStatus === 1) {
                     actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
-                } else if (vac.leaderStatus === 0) {
+                } else if (vacation.leaderStatus === 0) {
                     actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
-                } else if (vac.leaderStatus === 2) {
+                } else if (vacation.leaderStatus === 2) {
                     // Líder: Solicitud pendiente de aprobación
                     actionCell = `
                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
-                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
                         </div>`;
                 }
             }
@@ -218,10 +218,10 @@
             row.className = "border-b hover:bg-neutral-800";
             
             row.innerHTML = `
-                <td class="px-4 py-2">${vac.birthName} ${vac.surname}</td>
-                <td class="px-4 py-2">${vac.reason}</td>
-                <td class="px-4 py-2">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${vacation.birthName} ${vacation.surname}</td>
+                <td class="px-4 py-2">${vacation.reason}</td>
+                <td class="px-4 py-2">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
                 <td class="px-4 py-2">${totalDays}</td>
                 <td class="px-4 py-2">${actionCell}</td>
             `;

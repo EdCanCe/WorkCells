@@ -8,9 +8,7 @@ exports.getRequests = (request, response, next) => {
     const limit = 10;
     const offset = 0;
     const showAll = request.query.all === 'true';
-    
     let fetchPromise;
-
     if (userRole === 'Human Resources' || userRole === 'Department Leader') {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
         fetchPromise = Vacation.fetchPaginated(limit, offset, userRole, userId);
@@ -161,7 +159,7 @@ exports.postAddVacation = (request, response, next) => {
 exports.getCheckVacation = (request, response, next) => {
     const vacationID = request.params.vacationID; // Obtener el ID de la vacación desde la URL
 
-    Vacation.fetchOneVacation(vacationID)
+    Vacation.fetchOne(vacationID)
         .then(([rows]) => {
             if (rows.length === 0) {
                 return response.status(404).send('Solicitud de vacaciones no encontrada.');
@@ -184,7 +182,7 @@ exports.getCheckVacation = (request, response, next) => {
 exports.getModifyVacation = async (request, response, next) => {
     try {
         const vacationID = request.params.vacationID;
-        const [rows] = await Vacation.fetchOneVacation(vacationID);
+        const [rows] = await Vacation.fetchOne(vacationID);
 
         if (rows.length === 0) {
             return response.status(404).send('Vacación no encontrada.');
@@ -213,7 +211,7 @@ exports.updateVacation = async (request, response, next) => {
         request.session.info = 'Todos los campos son obligatorios.';
 
         try {
-            const [rows] = await Vacation.fetchOneVacation(vacationId);
+            const [rows] = await Vacation.fetchOne(vacationId);
             if (rows.length === 0) {
                 return response.status(404).send('Vacación no encontrada.');
             }
@@ -232,7 +230,7 @@ exports.updateVacation = async (request, response, next) => {
         await Vacation.updateVacation(vacationId, startDate, endDate, reason);
         request.session.info = 'Solicitud de vacaciones actualizada exitosamente.';
 
-        const [rows] = await Vacation.fetchOneVacation(vacationId);
+        const [rows] = await Vacation.fetchOne(vacationId);
         return response.render('modifyVacation', {
             ...sessionVars(request),
             vacation: rows[0], // Pasamos la vacación actualizada
@@ -242,7 +240,7 @@ exports.updateVacation = async (request, response, next) => {
         request.session.info = 'Error al actualizar la solicitud.';
 
         try {
-            const [rows] = await Vacation.fetchOneVacation(vacationId);
+            const [rows] = await Vacation.fetchOne(vacationId);
             return response.render('modifyVacation', {
                 ...sessionVars(request),
                 vacation: rows[0], // Pasamos la vacación incluso en caso de error
@@ -261,7 +259,7 @@ exports.postRequestApprove = (request, response, next) => {
     const userId = request.session.userID;
 
     // Verificar si el usuario tiene permiso para aprobar esta solicitud
-    Vacation.fetchOneVacation(vacationId)
+    Vacation.fetchOne(vacationId)
         .then(([rows]) => {
             if (rows.length === 0) {
                 return response.status(404).json({
@@ -312,7 +310,7 @@ exports.postRequestDeny = (request, response, next) => {
     const userId = request.session.userID;
 
     // Verificar si el usuario tiene permiso para denegar esta solicitud
-    Vacation.fetchOneVacation(vacationId)
+    Vacation.fetchOne(vacationId)
         .then(([rows]) => {
             if (rows.length === 0) {
                 return response.status(404).json({
