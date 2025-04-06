@@ -356,6 +356,22 @@ exports.postRequestDeny = (request, response, next) => {
         });
 };
 
+
+exports.PostDeleteVacation = (request, response, next) => {
+    const vacationId = request.params.vacationID;
+
+    Vacation.deleteVacation(vacationId)
+        .then(() => {
+            response.status(200).json({ message: 'Solicitud eliminada correctamente' });
+        })
+        .catch((error) => {
+            console.error('Error al eliminar solicitud:', error);
+            response.status(500).json({ message: 'Error al eliminar la solicitud' });
+        });
+};
+
+
+
 exports.getRoot = (request, response, next) => {
     const userID = request.session.userID;
     // const userRole = request.session.role;

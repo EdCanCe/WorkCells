@@ -1,0 +1,43 @@
+<div class="flex bg-neutral-800/50 min-h-screen">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Faltas Administrativas</h1>
+
+        <% if (info === "Error al ingresar datos.") { %>
+        <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+            <%= info %>
+        </div>
+        <% } else if (info && info !== '') { %>
+        <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+            <%= info %>
+        </div>
+        <% } %>
+        <div id="faltasTable" class="overflow-x-auto rounded-lg shadow"></div>
+
+        <div class="mt-6 flex justify-between">
+            <button
+                id="prevBtn"
+                class="btnPrimary"
+            >
+                Anterior
+            </button>
+            <button
+                id="nextBtn"
+                class="btnPrimary"
+            >
+                Siguiente
+            </button>
+            <% for (let privilegio of privilegios) { %>
+            <% if(privilegio.title == "Superadmin registra falta administrativa") { %>
+            <a
+                href="/fault/add"
+                class="btnPrimary"
+            >
+                Registrar Nueva Falta
+            </a>
+            <% } %>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="/javascript/paginedFaults.js"></script>
+</div>

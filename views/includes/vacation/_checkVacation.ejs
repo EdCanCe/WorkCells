@@ -41,7 +41,65 @@
             <a href="/vacation/check/modify/<%= vacation.vacationID %>" class="btnPrimary">
                 Modificar Solicitud
             </a>
-            <a href="/vacation/check/delete/<%= vacation.vacationID %>" class="btnPrimary">Eliminar</a>
+            <a href="/vacation/check/<%= vacation.vacationID %>" 
+                class="btnPrimary" 
+                id="btnEliminar" 
+                data-id="<%= vacation.vacationID %>">
+                Eliminar
+             </a>
         </div>
     </div>
 </div>
+<meta name="csrf-token" content="<%= csrfToken %>">
+<script src="/javascript/sweetalert2.all.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const btnEliminar = document.getElementById("btnEliminar");
+
+    if (!btnEliminar) return;
+
+    btnEliminar.addEventListener("click", async function (event) {
+      event.preventDefault();
+
+      const vacationID = btnEliminar.getAttribute("data-id");
+
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡Esta acción no se puede deshacer!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (result.isConfirmed) {
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            const response = await fetch(`/vacation/check/delete/${vacationID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken // Header que espera `csurf`
+            },
+            body: JSON.stringify({ id: vacationID })
+            });
+
+          if (response.ok) {
+            Swal.fire('Eliminado', 'La solicitud ha sido eliminada.', 'success')
+              .then(() => {
+                // Redirige a la lista u otra página
+                window.location.href = '/vacation';
+              });
+          } else {
+            throw new Error('Error en la eliminación');
+          }
+        } catch (err) {
+          Swal.fire('Error', 'No se pudo eliminar la solicitud.', 'error');
+        }
+      }
+    });
+  });
+</script>
