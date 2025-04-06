@@ -35,7 +35,7 @@ async function loadEmployees(page, query = "", selectedFilter = filter) {
                 } - ${emp.enterpriseName}</td>
                 <td class="px-6 py-4 text-white">${emp.roleName || "N/A"}</td>
                 <td class="px-6 py-4 text-white">
-                    <a href="/employee/check?id=${
+                    <a href="/employee/${
                         emp.userID
                     }" class="btnPrimary ml-2">Check</a>
                 </td>

@@ -23,7 +23,7 @@ holidayAdd.ejs -> navegador : Mostrar formulario dia feriado
 deactivate holidayAdd.ejs
 activate navegador
 
-navegador -> holiday.routes : POST /holiday/add (datos del dia feriado)
+navegador -> holiday.routes : POST /holiday/add
 deactivate navegador
 activate holiday.routes
 
@@ -31,12 +31,12 @@ holiday.routes -> holiday.controller : postHolidayAdd(request, response)
 deactivate holiday.routes
 activate holiday.controller
 create holidayModel
-holiday.controller -> holidayModel : new Holiday()
+holiday.controller -> holidayModel : new Holiday(request.body.usedHolidayID, \nrequest.body.usedDate, request.body.usedTemplateHolidayIDFK)
 activate holidayModel
 
 holiday.controller ->> holidayModel : save()
 
-holidayModel ->> mysql : INSERT INTO usedHoliday(usedHolidayID, \nusedDate, usedTemplateHolidayIDFK)
+holidayModel ->> mysql : INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK)
 activate mysql
 mysql -->> holidayModel : Insert OK
 deactivate mysql

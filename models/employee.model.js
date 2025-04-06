@@ -122,8 +122,32 @@ module.exports = class Employee {
                         WHERE d.enterpriseIDFK = e.enterpriseID;`);
     }
 
-    static fetchUser() {
-        return db.execute(`SELECT * FROM user;`);
+    // Obtener el país por ID
+    static fetchCountryByID(countryID) {
+        return db.execute("SELECT title FROM country WHERE countryID = ?", [
+            countryID,
+        ]);
+    }
+
+    // Obtener el rol por ID
+    static fetchRoleByID(roleID) {
+        return db.execute("SELECT title FROM role WHERE roleID = ?", [roleID]);
+    }
+
+    // Obtener el departamento por ID
+    static fetchDepartmentByID(departmentID) {
+        return db.execute(
+            `
+        SELECT d.title AS departmentTitle, e.title AS enterpriseTitle
+        FROM department d, enterprise e
+        WHERE d.departmentID = ?
+        AND d.enterpriseIDFK = e.enterpriseID;`,
+            [departmentID]
+        );
+    }
+
+    static fetchUser(userID) {
+        return db.execute("SELECT * FROM user WHERE userID = ?", [userID]);
     }
 
     static searchByName(query) {

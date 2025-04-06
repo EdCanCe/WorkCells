@@ -75,9 +75,56 @@ exports.getModify = (request, response, next) => {
 };
 
 exports.getCheck = (request, response, next) => {
-    response.render("employeeCheck", {
-        ...sessionVars(request),
-    });
+    const userID = request.params.id;
+
+    Employee.fetchUser(userID)
+        .then(([userData]) => {
+            if (!userData || userData.length === 0) {
+                request.session.info = "Empleado no encontrado.";
+                return response.redirect("/employee");
+            }
+
+            const employee = userData[0];
+            console.log("Employee:", employee);
+
+            // Obtener datos adicionales (país, rol y departamento)
+            Promise.all([
+                Employee.fetchCountryByID(employee.countryUserIDFK),
+                Employee.fetchRoleByID(employee.userRoleIDFK),
+                Employee.fetchDepartmentByID(employee.prioritaryDepartmentIDFK),
+            ])
+                .then(([countries, roles, departments]) => {
+                    const country = countries[0] ? countries[0][0] : null; // Accede al primer objeto dentro del primer array
+                    const role = roles[0] ? roles[0][0] : null;
+                    const department = departments[0]
+                        ? departments[0][0]
+                        : null;
+
+                    console.log("Country:", country);
+                    console.log("Role:", role);
+                    console.log("Department:", department);
+
+                    // Renderizar la vista con todos los datos
+                    response.render("employeeCheck", {
+                        ...sessionVars(request),
+                        employee: employee,
+                        country: country,
+                        role: role,
+                        department: department,
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error al obtener catálogos:", error);
+                    request.session.info =
+                        "Error al cargar información del empleado.";
+                    response.redirect("/employee");
+                });
+        })
+        .catch((error) => {
+            console.error("Error al obtener los datos del empleado:", error);
+            request.session.info = "Error al obtener datos del empleado.";
+            response.redirect("/employee");
+        });
 };
 
 exports.getMe = (request, response, next) => {
