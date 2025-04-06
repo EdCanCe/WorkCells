@@ -26,6 +26,13 @@ router.get(
     vacationController.getRequests
 );
 
+router.get(
+    "/requests/all",
+    isAuth,
+    vacationPrivilege,
+    vacationController.getAllRequests
+);
+
 router.post("/update/:vacationID",isAuth, vacationController.updateVacation);
 
 

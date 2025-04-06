@@ -117,7 +117,7 @@ AND u.userID IN (
     
     static fetchPaginated(limit, offset, userRole, userId) {
         if (userRole === 'Human Resources') {
-            // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2), sin importar el estado del líder
+            // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2)
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
                 FROM vacation AS v
@@ -128,23 +128,51 @@ AND u.userID IN (
                 [limit, offset]
             );
         } else if (userRole === 'Department Leader') {
-            // Líder: Ver solo solicitudes pendientes de su departamento
+            // Líder: Ver solo solicitudes pendientes de su departamento donde leaderStatus = 2
+            return db.execute(
+                `SELECT v.*, u.birthName, u.surname 
+                FROM vacation AS v
+                JOIN user AS u 
+                    ON u.userID = v.vacationUserIDFK
+                JOIN user AS leader 
+                    ON leader.userID = ?
+                WHERE v.leaderStatus = 2
+                AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
+                ORDER BY v.startDate DESC
+                LIMIT ? OFFSET ?;`,
+                [userId, limit, offset]
+            );
+        } else {
+            // Para otros roles, retornar un array vacío
+            return Promise.resolve([[]]);
+        }
+    }
+
+    static fetchAllPaginated(limit, offset, userRole, userId) {
+        if (userRole === 'Human Resources') {
+            // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2)
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
                 FROM vacation AS v
                 JOIN user AS u ON u.userID = v.vacationUserIDFK
-                WHERE v.leaderStatus = 2
-                AND u.userID IN (
-                    SELECT ud.userIDFK
-                    FROM userDepartment ud
-                    WHERE ud.departmentIDFK IN (
-                        SELECT departmentIDFK
-                        FROM userDepartment
-                        WHERE userIDFK = ?
-                    )
-                )
+                WHERe v.hrStatus = 0 OR v.hrStatus = 1
                 ORDER BY v.startDate DESC
                 LIMIT ? OFFSET ?`,
+                [limit, offset]
+            );
+        } else if (userRole === 'Department Leader') {
+            // Líder: Ver solo solicitudes pendientes de su departamento donde leaderStatus = 2
+            return db.execute(
+                `SELECT v.*, u.birthName, u.surname 
+                FROM vacation AS v
+                JOIN user AS u 
+                    ON u.userID = v.vacationUserIDFK
+                JOIN user AS leader 
+                    ON leader.userID = ?
+                WHERE v.leaderStatus = 0 OR v.leaderStatus = 1
+                AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
+                ORDER BY v.startDate DESC
+                LIMIT ? OFFSET ?;`,
                 [userId, limit, offset]
             );
         } else {

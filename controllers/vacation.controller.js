@@ -7,6 +7,7 @@ exports.getRequests = (request, response, next) => {
     const userRole = request.session.role;
     const limit = 10;
     const offset = 0;
+    const showAll = request.query.all === 'true';
     
     let fetchPromise;
 
@@ -32,16 +33,53 @@ exports.getRequests = (request, response, next) => {
         });
 };
 
+
+exports.getAllRequests = (request, response, next) => {
+    const userId = request.session.userID;
+    const userRole = request.session.role;
+    const limit = 10;
+    const offset = 0;
+    let fetchPromise;
+    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
+        // Usar el método fetchPaginated actualizado que maneja ambos roles
+        fetchPromise = Vacation.fetchAllPaginated(limit, offset, userRole, userId);
+    } else {
+        // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
+        fetchPromise = Vacation.fetchAllVacation(userId);
+    }
+    fetchPromise
+        .then(([rows]) => {
+            response.render('vacationAllRequests', {
+                ...sessionVars(request),
+                vacations: rows,
+                role: userRole
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send('Error al obtener los datos.');
+        });
+};
+
 exports.getRequestsPaginated = (request, response, next) => {
     const page = parseInt(request.query.page) || 0;
     const limit = 10;
     const offset = page * limit;
     const userId = request.session.userID;
     const userRole = request.session.role;
-
-    Vacation.fetchPaginated(limit, offset, userRole, userId)
+    const showAll = request.query.all === 'true'; // Nuevo parámetro para mostrar todas las solicitudes
+    let fetchPromise;
+    if (userRole === 'Human Resources' && showAll) {
+        fetchPromise = Vacation.fetchAllPaginated(limit, offset, userRole, userId);
+    } 
+    else if (userRole === 'Department Leader' && showAll) {
+        fetchPromise = Vacation.fetchAllPaginated(limit, offset, userRole, userId);
+    }
+    else {
+        fetchPromise = Vacation.fetchPaginated(limit, offset, userRole, userId);
+    }
+    fetchPromise
         .then(([rows]) => {
-            // Asegurarse de que rows es un array antes de enviarlo
             const vacations = Array.isArray(rows) ? rows : [];
             response.status(200).json(vacations);
         })
@@ -49,7 +87,7 @@ exports.getRequestsPaginated = (request, response, next) => {
             console.error('Error fetching paginated requests:', error);
             response.status(500).json({ 
                 success: false, 
-                message: 'Error al cargar las solicitudes.' 
+                message: `Error al cargar las solicitudes: ${error.message}` 
             });
         });
 };
@@ -236,11 +274,10 @@ exports.postRequestApprove = (request, response, next) => {
             
             // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
             if (userRole === 'Human Resources') {
-                // Elimina la restricción de verificar el estado del líder
                 return Vacation.updateStatusHR(vacationId, 1); // 1 = Aprobado
             }
             // Si es líder, actualiza el estado del líder
-            else if (userRole === 'Leader') {
+            else if (userRole === 'Department Leader') { // Cambiado de 'Leader' a 'Department Leader'
                 return Vacation.fetchDepartmentPaginated(userId, 1, 0)
                     .then(([departmentVacations]) => {
                         const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
@@ -283,9 +320,7 @@ exports.postRequestDeny = (request, response, next) => {
                     message: 'Solicitud no encontrada'
                 });
             }
-
             const vacation = rows[0];
-            
             // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
             if (userRole === 'Human Resources') {
                 // Elimina la restricción de verificar el estado del líder
