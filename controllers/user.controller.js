@@ -30,6 +30,7 @@ exports.post_login = (request, response, next) => {
                 request.session.userID = user.userID;
                 request.session.role = user.role;
 
+                console.log("role: ", request.session.role);
 
                 // Obtener privilegios del usuario
                 return Usuario.getPrivilegios(user.mail)
