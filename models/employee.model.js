@@ -238,4 +238,45 @@ module.exports = class Employee {
             [`%${query}%`, `%${query}%`]
         );
     };
+
+    static updateEmployee(
+        userID,
+        curp,
+        rfc,
+        birthName,
+        surname,
+        mail,
+        zipCode,
+        houseNumber,
+        streetName,
+        colony,
+        workModality,
+        userRoleIDFK,
+        countryUserIDFK,
+        prioritaryDepartmentIDFK
+    ) {
+        return db.execute(
+            `UPDATE user
+             SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
+             houseNumber = ?, streetName = ?, colony = ?, workModality = ?, userRoleIDFK = ?, 
+             countryUserIDFK = ?, prioritaryDepartmentIDFK = ?
+             WHERE userID = ?;`,
+            [
+                curp,
+                rfc,
+                birthName,
+                surname,
+                mail,
+                zipCode,
+                houseNumber,
+                streetName,
+                colony,
+                workModality,
+                userRoleIDFK,
+                countryUserIDFK,
+                prioritaryDepartmentIDFK,
+                userID,
+            ]
+        );
+    }
 };

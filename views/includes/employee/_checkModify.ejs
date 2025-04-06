@@ -3,174 +3,189 @@
         <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
             <div class="card-content">
                 <h1 class="text-3xl font-semibold mb-4">Modify Employee</h1>
+                <form
+                    action="/employee/<%= employee.userID %>/update"
+                    method="POST"
+                >
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >CURP</label
+                            >
+                            <input
+                                type="text"
+                                name="curp"
+                                value="<%= employee.curp || 'Not registered'%>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                    <div class="field">
-                        <label class="block text-lg font-medium">CURP</label>
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.curp || 'Not registered'%>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
+                        <div class="field">
+                            <label class="block text-lg font-medium">RFC</label>
+                            <input
+                                type="text"
+                                name="rfc"
+                                value="<%= employee.rfc || 'Not registered' %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Name</label
+                            >
+                            <input
+                                type="text"
+                                name="birthName"
+                                value="<%= employee.birthName %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Surname</label
+                            >
+                            <input
+                                type="text"
+                                name="surname"
+                                value="<%= employee.surname %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Email</label
+                            >
+                            <input
+                                type="email"
+                                name="mail"
+                                value="<%= employee.mail %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
                     </div>
 
-                    <div class="field">
-                        <label class="block text-lg font-medium">RFC</label>
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.rfc || 'Not registered' %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Zip Code</label
+                            >
+                            <input
+                                type="text"
+                                name="zipCode"
+                                value="<%= employee.zipCode %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >House Number</label
+                            >
+                            <input
+                                type="text"
+                                name="houseNumber"
+                                value="<%= employee.houseNumber %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Street Name</label
+                            >
+                            <input
+                                type="text"
+                                name="streetName"
+                                value="<%= employee.streetName %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Colony</label
+                            >
+                            <input
+                                type="text"
+                                name="colony"
+                                value="<%= employee.colony %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Country</label
+                            >
+                            <input
+                                type="text"
+                                name="country"
+                                value="<%= country.title %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
                     </div>
 
-                    <div class="field">
-                        <label class="block text-lg font-medium">Name</label>
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.birthName %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Work Modality</label
+                            >
+                            <input
+                                type="text"
+                                name="workModality"
+                                value="<%= employee.workModality == 0 ? 'Presencial' : employee.workModality == 1 ? 'Remote' : 'Hybrid' %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >User Role</label
+                            >
+                            <input
+                                type="text"
+                                name="userRole"
+                                value="<%= role.title %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Prioritary Department</label
+                            >
+                            <input
+                                type="text"
+                                name="prioritaryDepartment"
+                                value="<%= department.departmentTitle %> - <%= department.enterpriseTitle %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
+
+                        <div class="field">
+                            <label class="block text-lg font-medium"
+                                >Work Status</label
+                            >
+                            <input
+                                type="text"
+                                name="workStatus"
+                                value="<%= employee.workStatus == 1 ? 'Active' : 'Idle' %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            />
+                        </div>
                     </div>
 
-                    <div class="field">
-                        <label class="block text-lg font-medium">Surname</label>
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.surname %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
+                    <div class="flex justify-end">
+                        <a href="/employee" class="btnPrimary mr-6">Return</a>
+                        <button type="submit" class="btnPrimary">
+                            Save Changes
+                        </button>
                     </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium">Email</label>
-                        <input
-                            type="email"
-                            readonly
-                            value="<%= employee.mail %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >Zip Code</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.zipCode %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >House Number</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.houseNumber %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >Street Name</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.streetName %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium">Colony</label>
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.colony %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium">Country</label>
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= country.title %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >Work Modality</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.workModality == 0 ? 'Presencial' : employee.workModality == 1 ? 'Remote' : 'Hybrid' %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >User Role</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= role.title %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >Prioritary Department</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= department.departmentTitle %> - <%= department.enterpriseTitle %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-                    <div class="field">
-                        <label class="block text-lg font-medium"
-                            >Work Status</label
-                        >
-                        <input
-                            type="text"
-                            readonly
-                            value="<%= employee.workStatus == 1 ? 'Active' : 'Idle' %>"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                        />
-                    </div>
-                </div>
-
-                <div class="flex justify-end">
-                    <a href="/employee" class="btnPrimary mr-6">Return</a>
-                    <a
-                        href="/employee/<%= employee.userID %>/modify"
-                        class="btnPrimary"
-                        >Modify</a
-                    >
-                </div>
+                </form>
             </div>
         </div>
     </div>
