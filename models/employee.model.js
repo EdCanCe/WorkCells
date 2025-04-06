@@ -231,7 +231,7 @@ module.exports = class Employee {
             e.title AS enterpriseName, r.title AS roleName, u.workStatus 
             FROM user u, department d, role r, enterprise e 
             WHERE (u.birthName LIKE ? OR u.surname LIKE ?) 
-            AND u.workStatus = 1
+            AND u.workStatus = 0
             AND u.prioritaryDepartmentIDFK = d.departmentID 
             AND d.enterpriseIDFK = e.enterpriseID
             AND u.userRoleIDFK = r.roleID`,
