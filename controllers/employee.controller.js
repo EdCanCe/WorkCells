@@ -81,32 +81,39 @@ exports.getModify = (request, response, next) => {
             const employee = userData[0];
             console.log("Employee:", employee);
 
-            // Obtener datos adicionales (país, rol y departamento)
             Promise.all([
                 Employee.fetchCountryByID(employee.countryUserIDFK),
                 Employee.fetchRoleByID(employee.userRoleIDFK),
                 Employee.fetchDepartmentByID(employee.prioritaryDepartmentIDFK),
+                Employee.fetchCountry(),
+                Employee.fetchRoleID(),
+                Employee.fetchDepartment(),
             ])
-                .then(([countries, roles, departments]) => {
-                    const country = countries[0] ? countries[0][0] : null; // Accede al primer objeto dentro del primer array
-                    const role = roles[0] ? roles[0][0] : null;
-                    const department = departments[0]
-                        ? departments[0][0]
-                        : null;
+                .then(
+                    ([
+                        employeeCountry,
+                        employeeRole,
+                        employeeDepartment,
+                        countries,
+                        roles,
+                        departments,
+                    ]) => {
+                        const country = employeeCountry[0] || null;
+                        const role = employeeRole[0] || null;
+                        const department = employeeDepartment[0] || null;
 
-                    console.log("Country:", country);
-                    console.log("Role:", role);
-                    console.log("Department:", department);
-
-                    // Renderizar la vista con todos los datos
-                    response.render("employeeCheckModify", {
-                        ...sessionVars(request),
-                        employee: employee,
-                        country: country,
-                        role: role,
-                        department: department,
-                    });
-                })
+                        response.render("employeeCheckModify", {
+                            ...sessionVars(request),
+                            employee: employee,
+                            country: country, // País específico del empleado
+                            role: role, // Rol específico del empleado
+                            department: department, // Departamento específico del empleado
+                            countries: countries[0], // Lista completa de países
+                            roles: roles[0], // Lista completa de roles
+                            departments: departments[0], // Lista completa de departamentos
+                        });
+                    }
+                )
                 .catch((error) => {
                     console.error("Error al obtener catálogos:", error);
                     request.session.info =
