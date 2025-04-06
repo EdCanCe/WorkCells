@@ -42,14 +42,10 @@
                                         <% } else if (vacation.hrStatus === 0) { %>
                                             <div class="text-red-500 text-center font-semibold">Denied</div>
                                         <% } else { %>
-                                            <!-- RRHH: Mostrar botones independientemente del estado del líder -->
                                             <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                                                 <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
                                                 <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
                                             </div>
-                                            <% if (vacation.leaderStatus === 2) { %>
-                                                <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
-                                            <% } %>
                                         <% } %>
                                     <% } else if (role === "Department Leader") { %>
                                         <% if (vacation.leaderStatus === 1) { %>
@@ -57,7 +53,6 @@
                                         <% } else if (vacation.leaderStatus === 0) { %>
                                             <div class="text-red-500 text-center font-semibold">Denied</div>
                                         <% } else if (vacation.leaderStatus === 2) { %>
-                                            <!-- Líder: Solicitud pendiente de aprobación -->
                                             <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                                                 <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
                                                 <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
@@ -73,7 +68,6 @@
                 </div>
             </div>
         </div>
-        <!-- Controles de paginación -->
         <div class="pagination-controls mt-4 mb-4 flex justify-between">
             <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
             <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
@@ -86,9 +80,8 @@
     let currentPage = 0;
     const limit = 10;
     let isLoading = false;
-    const role = "<%= role %>"; // Asegurarse de que role está disponible
+    const role = "<%= role %>";
 
-    // Calcula el total de días entre dos fechas
     function calculateTotalDays(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -109,7 +102,7 @@
             const originalText = this.textContent;
             
             // Mostrar "Procesando..." mientras se ejecuta
-            this.textContent = "Procesando...";
+            this.textContent = "Processing...";
             this.disabled = true;
             const buttons = row.querySelectorAll("button");
             buttons.forEach(btn => btn.disabled = true);
@@ -131,7 +124,7 @@
                 
                 // Reemplazar los botones con mensaje de Approved/Denied
                 const actionCell = row.querySelector("td:last-child");
-                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
+                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 text-center font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
                 
                 // No recargamos la página para mantener la solicitud visible
             } catch (err) {
@@ -204,10 +197,6 @@
                             <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
                             <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
                         </div>`;
-                    
-                    if (vac.leaderStatus === 2) {
-                        actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
-                    }
                 }
             } else if (role === "Department Leader") {
                 // Verificar si la solicitud ya fue procesada por Líder
