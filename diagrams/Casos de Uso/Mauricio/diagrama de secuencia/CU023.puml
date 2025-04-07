@@ -1,4 +1,4 @@
-@startuml CU03 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de secuencia
+@startuml CU023 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de secuencia
 actor Navegador
 boundary "vacation.routes" as Routes
 boundary "vacation.view" as View

@@ -1,4 +1,4 @@
-@startuml CU02 - Superadmin registra respuesta hacia solicitud de vacaciones de empleado - Diagrama de secuencia
+@startuml CU041 - Superadmin registra respuesta hacia solicitud de vacaciones de empleado - Diagrama de secuencia
 actor Navegador
 boundary "vacation.routes" as Routes
 boundary "vacation.view" as View
