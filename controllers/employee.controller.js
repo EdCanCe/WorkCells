@@ -198,7 +198,7 @@ exports.postModify = (request, response, next) => {
         .then(() => {
             // Si la actualización fue exitosa, redirigir al usuario
             request.session.info = "Empleado modificado con éxito.";
-            response.redirect("/employee");
+            response.redirect(`/employee/${userID}`);
         })
         .catch((error) => {
             console.error("Error al modificar empleado:", error);

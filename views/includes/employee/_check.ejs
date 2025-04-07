@@ -3,7 +3,11 @@
         <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
             <div class="card-content">
                 <h1 class="text-3xl font-semibold mb-4">Check Employee</h1>
-
+                <% if (info) { %>
+                <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+                    <%= info %>
+                </div>
+                <% } %>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                     <div class="field">
                         <label class="block text-lg font-medium">CURP</label>
