@@ -25,7 +25,7 @@ exports.getEmployeeRotation = (request, response, next) => {
     // fecha inicial del año
     const startYear = new Date(now.getFullYear(), 0, 1)
         .toISOString()
-        .split(T)[0];
+        .split("T")[0];
     // fecha final del año
     const endYear = new Date(now.getFullYear(), 11, 31)
         .toISOString()
@@ -49,6 +49,8 @@ exports.getEmployeeRotation = (request, response, next) => {
                 [activesPerMonth],
                 [inactivesPerMonth],
             ]) => {
+                console.log(activesPerMonth);
+                console.log(inactivesPerMonth);
                 response.render("reportRotation", {
                     ...sessionVars(request),
                     activeUsers: activeUsers,

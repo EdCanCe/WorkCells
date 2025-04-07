@@ -51,7 +51,7 @@ module.exports = class Report {
         return db.execute(
             `SELECT YEAR(w.startDate) AS anio, MONTH(w.startDate) AS mes, 
             COUNT(DISTINCT u.userID) AS totalEmpleados FROM user u 
-            JOIN workStatus w ON u.userID = w.userIDFK JOIN userDepartment 
+            JOIN workStatus w ON u.userID = w.userStatusIDFK JOIN userDepartment ud
             ON ud.userIDFK = u.userID WHERE u.workStatus = 1 
             AND w.startDate BETWEEN ? AND ? GROUP BY anio, mes 
             ORDER BY anio, mes`,
@@ -61,9 +61,9 @@ module.exports = class Report {
 
     static getInactivesPerMonth(start, end) {
         return db.execute(
-            `SELECT YEAR(w.startDate) AS anio, MONTH(w.startDate) AS mes, 
+            `SELECT YEAR(w.endDate) AS anio, MONTH(w.endDate) AS mes, 
             COUNT(DISTINCT u.userID) AS totalEmpleados FROM user u 
-            JOIN workStatus w ON u.userID = w.userIDFK JOIN userDepartment 
+            JOIN workStatus w ON u.userID = w.userStatusIDFK JOIN userDepartment ud
             ON ud.userIDFK = u.userID WHERE u.workStatus = 0
             AND w.endDate BETWEEN ? AND ? GROUP BY anio, mes 
             ORDER BY anio, mes`,
