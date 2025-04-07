@@ -1,5 +1,4 @@
-@startuml CU01 - Super admin registra alta de empleado
-actor navegador
+@startuml CU38 - Superadmin registra evidencia de falta
 boundary fault.routes
 boundary faultAdd.ejs
 control fault.controller
