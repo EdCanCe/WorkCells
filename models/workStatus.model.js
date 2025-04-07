@@ -14,4 +14,11 @@ module.exports = class WorkStatus {
             [workStatusID, this.startDate, this.endDate, this.userStatusIDFK]
         );
     }
+
+    static updateEndDate(userID, endDate) {
+        return db.execute(
+            `UPDATE workStatus SET endDate = ? WHERE userStatusIDFK = ? AND endDate IS NULL`,
+            [endDate, userID]
+        );
+    }
 };
