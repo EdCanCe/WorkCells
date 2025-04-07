@@ -253,30 +253,50 @@ module.exports = class Employee {
         workModality,
         userRoleIDFK,
         countryUserIDFK,
-        prioritaryDepartmentIDFK
+        prioritaryDepartmentIDFK,
+        workStatus
     ) {
-        return db.execute(
-            `UPDATE user
-             SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
-             houseNumber = ?, streetName = ?, colony = ?, workModality = ?, userRoleIDFK = ?, 
-             countryUserIDFK = ?, prioritaryDepartmentIDFK = ?
-             WHERE userID = ?;`,
-            [
-                curp,
-                rfc,
-                birthName,
-                surname,
-                mail,
-                zipCode,
-                houseNumber,
-                streetName,
-                colony,
-                workModality,
-                userRoleIDFK,
-                countryUserIDFK,
-                prioritaryDepartmentIDFK,
-                userID,
-            ]
-        );
+        const checkUserQuery = `SELECT userID 
+                                FROM user 
+                                WHERE userID != ? 
+                                AND (
+                                (curp = ? AND curp IS NOT NULL) OR 
+                                (rfc = ? AND rfc IS NOT NULL) OR 
+                                (mail = ? AND mail IS NOT NULL));`;
+
+        return db
+            .execute(checkUserQuery, [curp, rfc, mail, userID])
+            .then(([rows]) => {
+                if (rows.length > 0) {
+                    throw new Error(
+                        "The user with that CURP, RFC or email is already registered."
+                    );
+                }
+
+                return db.execute(
+                    `UPDATE user
+                    SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
+                    houseNumber = ?, streetName = ?, colony = ?, workModality = ?, userRoleIDFK = ?, 
+                    countryUserIDFK = ?, prioritaryDepartmentIDFK = ?, workStatus = ?
+                    WHERE userID = ?;`,
+                    [
+                        curp,
+                        rfc,
+                        birthName,
+                        surname,
+                        mail,
+                        zipCode,
+                        houseNumber,
+                        streetName,
+                        colony,
+                        workModality,
+                        userRoleIDFK,
+                        countryUserIDFK,
+                        prioritaryDepartmentIDFK,
+                        workStatus,
+                        userID,
+                    ]
+                );
+            });
     }
 };

@@ -79,7 +79,6 @@ exports.getModify = (request, response, next) => {
             }
 
             const employee = userData[0];
-            console.log("Employee:", employee);
 
             Promise.all([
                 Employee.fetchCountryByID(employee.countryUserIDFK),
@@ -128,6 +127,87 @@ exports.getModify = (request, response, next) => {
         });
 };
 
+exports.postModify = (request, response, next) => {
+    const userID = request.params.id;
+
+    const curp = request.body.curp;
+    const rfc = request.body.rfc;
+    const birthName = request.body.birthName;
+    const surname = request.body.surname;
+    const mail = request.body.mail;
+    const zipCode = request.body.zipCode;
+    const houseNumber = request.body.houseNumber;
+    const streetName = request.body.streetName;
+    const colony = request.body.colony;
+    const countryUserIDFK = request.body.countryUserIDFK;
+    const workModality = request.body.workModality;
+    const userRoleIDFK = request.body.userRoleIDFK;
+    const prioritaryDepartmentIDFK = request.body.prioritaryDepartmentIDFK;
+    const workStatus = request.body.workStatus;
+
+    // Validación para asegurarse de que no haya campos undefined o vacíos
+    const updatedEmployee = {
+        userID,
+        curp,
+        rfc,
+        birthName,
+        surname,
+        mail,
+        zipCode,
+        houseNumber,
+        streetName,
+        colony,
+        countryUserIDFK,
+        workModality,
+        userRoleIDFK,
+        prioritaryDepartmentIDFK,
+        workStatus,
+    };
+
+    console.log("Campos antes de llamar a updateEmployee:", updatedEmployee);
+
+    // Llamada a la función de actualización en la base de datos
+    Employee.updateEmployee(
+        userID,
+        curp,
+        rfc,
+        birthName,
+        surname,
+        mail,
+        zipCode,
+        houseNumber,
+        streetName,
+        colony,
+        workModality,
+        userRoleIDFK,
+        countryUserIDFK,
+        prioritaryDepartmentIDFK,
+        workStatus
+    )
+        .then(() => {
+            let dateOfDeactivation = null;
+            if (workStatus === "0") {
+                dateOfDeactivation = new Date();
+            }
+
+            if (dateOfDeactivation) {
+                // Si el estado cambió a "Idle", actualizamos el campo endDate
+                return WorkStatus.updateEndDate(userID, dateOfDeactivation);
+            }
+        })
+        .then(() => {
+            // Si la actualización fue exitosa, redirigir al usuario
+            request.session.info = "Empleado modificado con éxito.";
+            response.redirect("/employee");
+        })
+        .catch((error) => {
+            console.error("Error al modificar empleado:", error);
+            request.session.info =
+                error.message || "Error al modificar el empleado.";
+            response.redirect(`/employee/${userID}/modify`);
+        });
+};
+
 exports.getCheck = (request, response, next) => {
     const userID = request.params.id;
 
@@ -139,8 +219,6 @@ exports.getCheck = (request, response, next) => {
             }
 
             const employee = userData[0];
-            console.log("Employee:", employee);
-
             // Obtener datos adicionales (país, rol y departamento)
             Promise.all([
                 Employee.fetchCountryByID(employee.countryUserIDFK),
@@ -153,10 +231,6 @@ exports.getCheck = (request, response, next) => {
                     const department = departments[0]
                         ? departments[0][0]
                         : null;
-
-                    console.log("Country:", country);
-                    console.log("Role:", role);
-                    console.log("Department:", department);
 
                     // Renderizar la vista con todos los datos
                     response.render("employeeCheck", {

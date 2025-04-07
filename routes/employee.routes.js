@@ -13,6 +13,7 @@ router.get(
     employeePrivilege,
     employeeContrllers.getModify
 );
+router.post("/:id", isAuth, employeePrivilege, employeeContrllers.postModify);
 router.get("/search", isAuth, employeePrivilege, employeeContrllers.getSearch);
 router.get("/me", isAuth, employeePrivilege, employeeContrllers.getMe);
 router.get("/:id", isAuth, employeePrivilege, employeeContrllers.getCheck);

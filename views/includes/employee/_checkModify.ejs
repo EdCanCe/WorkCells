@@ -14,6 +14,11 @@
                     action="/employee/<%= employee.userID %>"
                     method="POST"
                 >
+                <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                    />
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                         <div class="field">
                             <label class="block text-lg font-medium"
@@ -39,6 +44,7 @@
                                 type="text"
                                 id="rfc"
                                 name="rfc"
+                                value="<%= employee.rfc%>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
                                 maxlength="13"
                             />
@@ -58,6 +64,7 @@
                                 name="birthName"
                                 value="<%= employee.birthName %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                         </div>
 
@@ -71,6 +78,7 @@
                                 name="surname"
                                 value="<%= employee.surname %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                         </div>
 
@@ -84,6 +92,7 @@
                                 name="mail"
                                 value="<%= employee.mail %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                             <div
                                 id="mailFormatError"
@@ -103,6 +112,7 @@
                                 name="zipCode"
                                 value="<%= employee.zipCode %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                         </div>
 
@@ -116,6 +126,7 @@
                                 name="houseNumber"
                                 value="<%= employee.houseNumber %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                         </div>
 
@@ -129,6 +140,7 @@
                                 name="streetName"
                                 value="<%= employee.streetName %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                         </div>
 
@@ -142,21 +154,26 @@
                                 name="colony"
                                 value="<%= employee.colony %>"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
                             />
                         </div>
 
                         <div class="field">
                             <label class="block text-lg font-medium">Country</label>
                             <select 
-                            id="countryUserIDFK"
                             name="countryUserIDFK" 
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full">
-                                <% countries.forEach(country => { %>
-                                    <option value="<%= country.countryUserID %>" 
-                                        <%= country.countryUserID == employee.countryUserIDFK ? "selected" : "" %>><%= country.title %>
-                                    </option>
+                            id="countryUserIDFK"
+                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            required
+                            >
+                                <% countries.forEach(c => { %>
+                                  <option 
+                                    value="<%= c.countryID %>" 
+                                    <%= c.countryID == employee.countryUserIDFK ? "selected" : "" %>>
+                                    <%= c.title %>
+                                  </option>
                                 <% }) %>
-                            </select>
+                              </select>
                         </div>
                     </div>
 
@@ -179,30 +196,36 @@
                         <div class="field">
                             <label class="block text-lg font-medium">User Role</label>
                             <select 
-                            id="userRoleIDFK"
                             name="userRoleIDFK" 
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full">
-                                <% roles.forEach(role => { %>
-                                    <option value="<%= role.userRoleID %>" 
-                                        <%= role.userRoleID == employee.userRoleIDFK ? "selected" : "" %>><%= role.title %>
-                                    </option>
+                            id="userRoleIDFK"
+                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            required>
+                                <% roles.forEach(r => { %>
+                                  <option 
+                                    value="<%= r.roleID %>" 
+                                    <%= r.roleID == employee.userRoleIDFK ? "selected" : "" %>>
+                                    <%= r.title %>
+                                  </option>
                                 <% }) %>
-                            </select>
+                              </select>
                         </div>
 
                         <div class="field">
                             <label class="block text-lg font-medium">Prioritary Department</label>
                             <select 
-                            id="prioritaryDepartmentID"
                             name="prioritaryDepartmentIDFK" 
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full">
-                                <% departments.forEach(dept => { %>
-                                    <option value="<%= dept.prioritaryDepartmentID %>" 
-                                        <%= dept.prioritaryDepartmentID == employee.prioritaryDepartmentIDFK ? "selected" : "" %>>
-                                        <%= dept.departmentTitle %> - <%= dept.enterpriseTitle %>
-                                    </option>
+                            id="prioritaryDepartmentIDFK"
+                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            required
+                            >
+                                <% departments.forEach(d => { %>
+                                  <option 
+                                    value="<%= d.departmentID %>" 
+                                    <%= d.departmentID == employee.prioritaryDepartmentIDFK ? "selected" : "" %>>
+                                    <%= d.departmentTitle %> – <%= d.enterpriseTitle %>
+                                  </option>
                                 <% }) %>
-                            </select>
+                              </select>
                         </div>
 
                         <div class="field">
