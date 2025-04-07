@@ -80,3 +80,20 @@ exports.listPaginated = async (request, response) => {
         res.status(500).json({ error: "Error al obtener las faltas" });
     }
 };
+
+exports.postDelete = (request, response, next) => {
+    const fault = new Fault({
+        faultID: request.body.faultID,
+        userID: request.body.userID,
+    });
+
+    fault.delete()
+        .then(() => {
+            request.session.info = 'It was deleted successfully';
+            response.redirect('/fault');
+        })
+        .catch((error) => {
+            request.session.alert = error.message;
+            response.redirect('/fault');
+        })
+};

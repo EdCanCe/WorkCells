@@ -1,10 +1,12 @@
 const db = require("../util/database"); // Asegúrate de importar tu módulo de conexión
 const { v4: uuidv4 } = require("uuid");
 class Fault {
-    constructor(reason, doneDate, email) {
+    constructor({ reason = '', doneDate = '', email = '', faultID = '', userID = '' }) {
         this.reason = reason;
         this.doneDate = doneDate;
         this.email = email;
+        this.faultID = faultID;
+        this.userID = userID;
     }
 
     save() {
@@ -28,6 +30,23 @@ class Fault {
                         rows[0].userID,
                     ])
                     .then(() => faultID);
+            });
+    }
+
+    delete() {
+
+        console.log("User delete: ", this.userID);
+        console.log("Fault delete: ", this.faultID);
+
+        return db.execute(`SELECT faultID FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID])
+            .then(([rows]) => {
+                if (rows.length === 0) {
+                    throw new Error('There are no faults with this ID and user');
+                }
+                return db.execute(`DELETE FROM faultMedia WHERE faultIDFK = ?`, [this.faultID])
+                    .then(() => {
+                        return db.execute(`DELETE FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID]);
+                    });
             });
     }
 

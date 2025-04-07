@@ -10,5 +10,6 @@ router.get("/search", isAuth, faultPrivilege, faultControllers.listPaginated);
 router.get("/add", isAuth, faultPrivilege, faultControllers.getAdd);
 router.post("/", isAuth, faultPrivilege, faultControllers.postAdd);
 router.get("/check", isAuth, faultPrivilege, faultControllers.getCheck);
+router.post("/delete", isAuth,faultPrivilege, faultControllers.postDelete);
 router.get("/", isAuth, faultPrivilege, faultControllers.getRoot);
 module.exports = router;
