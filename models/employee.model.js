@@ -122,8 +122,32 @@ module.exports = class Employee {
                         WHERE d.enterpriseIDFK = e.enterpriseID;`);
     }
 
-    static fetchUser() {
-        return db.execute(`SELECT * FROM user;`);
+    // Obtener el país por ID
+    static fetchCountryByID(countryID) {
+        return db.execute("SELECT title FROM country WHERE countryID = ?", [
+            countryID,
+        ]);
+    }
+
+    // Obtener el rol por ID
+    static fetchRoleByID(roleID) {
+        return db.execute("SELECT title FROM role WHERE roleID = ?", [roleID]);
+    }
+
+    // Obtener el departamento por ID
+    static fetchDepartmentByID(departmentID) {
+        return db.execute(
+            `
+        SELECT d.title AS departmentTitle, e.title AS enterpriseTitle
+        FROM department d, enterprise e
+        WHERE d.departmentID = ?
+        AND d.enterpriseIDFK = e.enterpriseID;`,
+            [departmentID]
+        );
+    }
+
+    static fetchUser(userID) {
+        return db.execute("SELECT * FROM user WHERE userID = ?", [userID]);
     }
 
     static searchByName(query) {
@@ -152,5 +176,127 @@ module.exports = class Employee {
             LIMIT ? OFFSET ?`,
             [limit, offset]
         );
+    }
+
+    static searchActiveByName(query) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title AS departmentName, 
+            e.title AS enterpriseName, r.title AS roleName, u.workStatus 
+            FROM user u, department d, role r, enterprise e 
+            WHERE (u.birthName LIKE ? OR u.surname LIKE ?) 
+            AND u.workStatus = 1
+            AND u.prioritaryDepartmentIDFK = d.departmentID 
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userRoleIDFK = r.roleID`,
+            [`%${query}%`, `%${query}%`]
+        );
+    }
+
+    // Modificar fetchPaginated para solo obtener empleados activos
+    static fetchPaginatedActive(limit, offset) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title 
+        AS departmentName, e.title 
+        AS enterpriseName, r.title AS roleName, u.workStatus 
+        FROM user u, department d, role r, enterprise e 
+        WHERE u.workStatus = 1
+        AND u.userRoleIDFK = r.roleID 
+        AND u.prioritaryDepartmentIDFK = d.departmentID 
+        AND d.enterpriseIDFK = e.enterpriseID
+        LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    }
+
+    // Obtener empleados inactivos con paginación
+    static fetchPaginatedInactive = (limit, offset) => {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title 
+        AS departmentName, e.title 
+        AS enterpriseName, r.title AS roleName, u.workStatus 
+        FROM user u, department d, role r, enterprise e 
+        WHERE u.workStatus = 0
+        AND u.userRoleIDFK = r.roleID 
+        AND u.prioritaryDepartmentIDFK = d.departmentID 
+        AND d.enterpriseIDFK = e.enterpriseID
+        LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
+    };
+
+    // Buscar empleados inactivos por nombre
+    static searchInactiveByName = (query) => {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, d.title AS departmentName, 
+            e.title AS enterpriseName, r.title AS roleName, u.workStatus 
+            FROM user u, department d, role r, enterprise e 
+            WHERE (u.birthName LIKE ? OR u.surname LIKE ?) 
+            AND u.workStatus = 0
+            AND u.prioritaryDepartmentIDFK = d.departmentID 
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userRoleIDFK = r.roleID`,
+            [`%${query}%`, `%${query}%`]
+        );
+    };
+
+    static updateEmployee(
+        userID,
+        curp,
+        rfc,
+        birthName,
+        surname,
+        mail,
+        zipCode,
+        houseNumber,
+        streetName,
+        colony,
+        workModality,
+        userRoleIDFK,
+        countryUserIDFK,
+        prioritaryDepartmentIDFK,
+        workStatus
+    ) {
+        const checkUserQuery = `SELECT userID 
+                                FROM user 
+                                WHERE userID != ? 
+                                AND (
+                                (curp = ? AND curp IS NOT NULL) OR 
+                                (rfc = ? AND rfc IS NOT NULL) OR 
+                                (mail = ? AND mail IS NOT NULL));`;
+
+        return db
+            .execute(checkUserQuery, [curp, rfc, mail, userID])
+            .then(([rows]) => {
+                if (rows.length > 0) {
+                    throw new Error(
+                        "The user with that CURP, RFC or email is already registered."
+                    );
+                }
+
+                return db.execute(
+                    `UPDATE user
+                    SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
+                    houseNumber = ?, streetName = ?, colony = ?, workModality = ?, userRoleIDFK = ?, 
+                    countryUserIDFK = ?, prioritaryDepartmentIDFK = ?, workStatus = ?
+                    WHERE userID = ?;`,
+                    [
+                        curp,
+                        rfc,
+                        birthName,
+                        surname,
+                        mail,
+                        zipCode,
+                        houseNumber,
+                        streetName,
+                        colony,
+                        workModality,
+                        userRoleIDFK,
+                        countryUserIDFK,
+                        prioritaryDepartmentIDFK,
+                        workStatus,
+                        userID,
+                    ]
+                );
+            });
     }
 };

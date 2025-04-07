@@ -5,6 +5,11 @@
                 <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
             </div>
             <div class="p-6">
+                <div class="flex justify-end mb-4">
+                    <a href="/vacation/requests/all" class="btnPrimary">
+                        All requests
+                    </a>
+                </div>
                 <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
                     <% if (vacations.length === 0) { %>
                     <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
@@ -141,33 +146,44 @@
     });
     }
 
-    // Actualiza la función updateTable para manejar mejor la tabla vacía
     function updateTable(data) {
-        const table = document.getElementById("vacations-table");
-        const tbody = table.querySelector("tbody");
-        
-        // Limpiar el contenido de la tabla
-        tbody.innerHTML = "";
-        
-        // Si no hay datos
+        const tableContainer = document.querySelector(".overflow-x-auto");
+    
+        // Check if data is empty first
         if (!data || data.length === 0) {
-            if (currentPage === 0) {
-                // Es la primera página y no hay solicitudes
-                const noRequestsRow = document.createElement("tr");
-                noRequestsRow.innerHTML = `<td colspan="6" class="text-center py-4">No vacation requests available.</td>`;
-                tbody.appendChild(noRequestsRow);
-            } else {
-                // No es la primera página, mostrar alerta y volver a la página Previous
-                alert("No existen más solicitudes.");
-                currentPage--;
-                loadPage(currentPage);
-            }
+            // Replace table with "no requests" message
+            tableContainer.innerHTML = `
+                <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
+                    <p class="text-center text-gray-400 text-xl">No vacation requests available.</p>
+                </div>`;
             
-            // Actualizar estado de botones
+            // Disable pagination buttons
             document.getElementById("prev-button").disabled = currentPage === 0;
             document.getElementById("next-button").disabled = true;
             return;
         }
+        
+        // If we have data, make sure we have a table
+        if (!document.getElementById("vacations-table")) {
+            tableContainer.innerHTML = `
+                <table id="vacations-table" class="min-w-full table-auto">
+                    <thead class="bg-neutral-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Full name</th>
+                            <th class="px-4 py-2 text-left">Reason</th>
+                            <th class="px-4 py-2 text-left">Start Date</th>
+                            <th class="px-4 py-2 text-left">End Date</th>
+                            <th class="px-4 py-2 text-left">Duration</th>
+                            <th class="px-4 py-2 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>`;
+        }
+        
+        const table = document.getElementById("vacations-table");
+        const tbody = table.querySelector("tbody");
+        tbody.innerHTML = "";
         
         // Si hay datos, mostrarlos en la tabla
         data.forEach((vac) => {

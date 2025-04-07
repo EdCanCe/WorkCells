@@ -1,7 +1,7 @@
 <div class="container mx-auto p-4">
     <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
         <div class="card-content">
-            <h1 class="shadow-md rounded-lg p-4 text-3xl font-semibold mb-4">
+            <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
                 List of all Employees
             </h1>
             <% if (info) { %>
@@ -27,10 +27,16 @@
                     />
                 </div>
                 <div class="p-4 rounded-md">
+                    <select id="filterSelect" class="btnPrimary">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="p-4 rounded-md">
                     <a href="/employee/add" class="btnPrimary justeify-right"
                         >Add New Employee</a
                     >
-                    <a href="" class="btnPrimary float-left mr-4">Filter</a>
                 </div>
             </div>
             <div

@@ -29,7 +29,5 @@ module.exports = (request) => {
         role: request.session.role || "none",
         privilegios: request.session.privilegios || [],
         navIsOpen: request.cookies.navOpened === "0" ? false : true,
-        warning: warning,
-        info: info,
     };
 };

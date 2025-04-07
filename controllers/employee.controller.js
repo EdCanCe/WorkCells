@@ -69,27 +69,190 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getModify = (request, response, next) => {
-    response.render("employeeCheckModify", {
-        ...sessionVars(request),
-    });
+    const userID = request.params.id;
+
+    Employee.fetchUser(userID)
+        .then(([userData]) => {
+            if (!userData || userData.length === 0) {
+                request.session.info = "Empleado no encontrado.";
+                return response.redirect("/employee");
+            }
+
+            const employee = userData[0];
+
+            Promise.all([
+                Employee.fetchCountryByID(employee.countryUserIDFK),
+                Employee.fetchRoleByID(employee.userRoleIDFK),
+                Employee.fetchDepartmentByID(employee.prioritaryDepartmentIDFK),
+                Employee.fetchCountry(),
+                Employee.fetchRoleID(),
+                Employee.fetchDepartment(),
+            ])
+                .then(
+                    ([
+                        employeeCountry,
+                        employeeRole,
+                        employeeDepartment,
+                        countries,
+                        roles,
+                        departments,
+                    ]) => {
+                        const country = employeeCountry[0] || null;
+                        const role = employeeRole[0] || null;
+                        const department = employeeDepartment[0] || null;
+
+                        response.render("employeeCheckModify", {
+                            ...sessionVars(request),
+                            employee: employee,
+                            country: country, // País específico del empleado
+                            role: role, // Rol específico del empleado
+                            department: department, // Departamento específico del empleado
+                            countries: countries[0], // Lista completa de países
+                            roles: roles[0], // Lista completa de roles
+                            departments: departments[0], // Lista completa de departamentos
+                        });
+                    }
+                )
+                .catch((error) => {
+                    console.error("Error al obtener catálogos:", error);
+                    request.session.info =
+                        "Error al cargar información del empleado.";
+                    response.redirect("/employee");
+                });
+        })
+        .catch((error) => {
+            console.error("Error al obtener los datos del empleado:", error);
+            request.session.info = "Error al obtener datos del empleado.";
+            response.redirect("/employee");
+        });
+};
+
+exports.postModify = (request, response, next) => {
+    const userID = request.params.id;
+
+    const curp = request.body.curp;
+    const rfc = request.body.rfc;
+    const birthName = request.body.birthName;
+    const surname = request.body.surname;
+    const mail = request.body.mail;
+    const zipCode = request.body.zipCode;
+    const houseNumber = request.body.houseNumber;
+    const streetName = request.body.streetName;
+    const colony = request.body.colony;
+    const countryUserIDFK = request.body.countryUserIDFK;
+    const workModality = request.body.workModality;
+    const userRoleIDFK = request.body.userRoleIDFK;
+    const prioritaryDepartmentIDFK = request.body.prioritaryDepartmentIDFK;
+    const workStatus = request.body.workStatus;
+
+    // Validación para asegurarse de que no haya campos undefined o vacíos
+    const updatedEmployee = {
+        userID,
+        curp,
+        rfc,
+        birthName,
+        surname,
+        mail,
+        zipCode,
+        houseNumber,
+        streetName,
+        colony,
+        countryUserIDFK,
+        workModality,
+        userRoleIDFK,
+        prioritaryDepartmentIDFK,
+        workStatus,
+    };
+
+    console.log("Campos antes de llamar a updateEmployee:", updatedEmployee);
+
+    // Llamada a la función de actualización en la base de datos
+    Employee.updateEmployee(
+        userID,
+        curp,
+        rfc,
+        birthName,
+        surname,
+        mail,
+        zipCode,
+        houseNumber,
+        streetName,
+        colony,
+        workModality,
+        userRoleIDFK,
+        countryUserIDFK,
+        prioritaryDepartmentIDFK,
+        workStatus
+    )
+        .then(() => {
+            let dateOfDeactivation = null;
+            if (workStatus === "0") {
+                dateOfDeactivation = new Date();
+            }
+
+            if (dateOfDeactivation) {
+                // Si el estado cambió a "Idle", actualizamos el campo endDate
+                return WorkStatus.updateEndDate(userID, dateOfDeactivation);
+            }
+        })
+        .then(() => {
+            // Si la actualización fue exitosa, redirigir al usuario
+            request.session.info = "Empleado modificado con éxito.";
+            response.redirect(`/employee/${userID}`);
+        })
+        .catch((error) => {
+            console.error("Error al modificar empleado:", error);
+            request.session.info =
+                error.message || "Error al modificar el empleado.";
+            response.redirect(`/employee/${userID}/modify`);
+        });
 };
 
 exports.getCheck = (request, response, next) => {
-    response.render("employeeCheck", {
-        ...sessionVars(request),
-    });
-};
+    const userID = request.params.id;
 
-exports.getActive = (request, response, next) => {
-    response.render("employeeCheckActive", {
-        ...sessionVars(request),
-    });
-};
+    Employee.fetchUser(userID)
+        .then(([userData]) => {
+            if (!userData || userData.length === 0) {
+                request.session.info = "Empleado no encontrado.";
+                return response.redirect("/employee");
+            }
 
-exports.getIdle = (request, response, next) => {
-    response.render("employeeCheckIdle", {
-        ...sessionVars(request),
-    });
+            const employee = userData[0];
+            // Obtener datos adicionales (país, rol y departamento)
+            Promise.all([
+                Employee.fetchCountryByID(employee.countryUserIDFK),
+                Employee.fetchRoleByID(employee.userRoleIDFK),
+                Employee.fetchDepartmentByID(employee.prioritaryDepartmentIDFK),
+            ])
+                .then(([countries, roles, departments]) => {
+                    const country = countries[0] ? countries[0][0] : null; // Accede al primer objeto dentro del primer array
+                    const role = roles[0] ? roles[0][0] : null;
+                    const department = departments[0]
+                        ? departments[0][0]
+                        : null;
+
+                    // Renderizar la vista con todos los datos
+                    response.render("employeeCheck", {
+                        ...sessionVars(request),
+                        employee: employee,
+                        country: country,
+                        role: role,
+                        department: department,
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error al obtener catálogos:", error);
+                    request.session.info =
+                        "Error al cargar información del empleado.";
+                    response.redirect("/employee");
+                });
+        })
+        .catch((error) => {
+            console.error("Error al obtener los datos del empleado:", error);
+            request.session.info = "Error al obtener datos del empleado.";
+            response.redirect("/employee");
+        });
 };
 
 exports.getMe = (request, response, next) => {
@@ -107,16 +270,31 @@ exports.getRoot = (request, response, next) => {
 exports.getSearch = (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
     const query = request.query.query || "";
-    const limit = 5;
+    const filter = request.query.filter || "all";
+    const limit = 6;
     const offset = (page - 1) * limit;
 
-    const searchPromise = query
-        ? Employee.searchByName(query)
-        : Employee.fetchPaginated(limit, offset);
+    let searchPromise;
+
+    if (query) {
+        searchPromise =
+            filter === "active"
+                ? Employee.searchActiveByName(query)
+                : filter === "inactive"
+                ? Employee.searchInactiveByName(query)
+                : Employee.searchByName(query);
+    } else {
+        searchPromise =
+            filter === "active"
+                ? Employee.fetchPaginatedActive(limit, offset)
+                : filter === "inactive"
+                ? Employee.fetchPaginatedInactive(limit, offset)
+                : Employee.fetchPaginated(limit, offset);
+    }
 
     searchPromise
         .then(([employees]) => {
-            response.json({ employees, page, query });
+            response.json({ employees, page, query, filter });
         })
         .catch((error) => {
             console.error("Error en la búsqueda/paginación:", error);
