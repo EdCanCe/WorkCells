@@ -31,7 +31,7 @@ module.exports = class Absence {
     }
 
     static fetchAll() {
-        return db.execute('SELECT * FROM absence ORDER BY startDate DESC');
+        return db.execute("SELECT * FROM absence ORDER BY startDate DESC");
     }
 
     static fetchAllWithName() {
@@ -52,8 +52,9 @@ ORDER BY startDate DESC`);
         );
     }
 
+    // Función repetida, eliminar esta función y usar la siguiente
     static fetchOne(id) {
-        return db.execute('SELECT * FROM absence WHERE absenceID = ?', [id]);
+        return db.execute("SELECT * FROM absence WHERE absenceID = ?", [id]);
     }
 
     static fetchOne(absenceID) {
@@ -79,9 +80,9 @@ ORDER BY startDate DESC`);
 
     /**
      * Regresa las ausencias entre 2 fechas para un usuario.
-     * 
+     *
      * @param string startDate  La fecha inicial
-     * @param string endDate    La fecha final 
+     * @param string endDate    La fecha final
      * @param string userID     El usuario al que le pertenecen las ausencias
      * @returns Las ausencias en esas fechass
      */
@@ -93,21 +94,21 @@ ORDER BY startDate DESC`);
     }
 
     static updateStatusLeader(absenceId, status) {
-            return db.execute(
-                "UPDATE absence SET leaderStatus = ? WHERE absenceID = ?",
-                [status, absenceId]
-            );
-        }
-    
+        return db.execute(
+            "UPDATE absence SET leaderStatus = ? WHERE absenceID = ?",
+            [status, absenceId]
+        );
+    }
+
     static updateStatusHR(absenceId, status) {
         return db.execute(
-            'UPDATE absence SET hrStatus = ? WHERE absenceID = ?',
+            "UPDATE absence SET hrStatus = ? WHERE absenceID = ?",
             [status, absenceId]
         );
     }
 
     static fetchPaginated(limit, offset, userRole, userId) {
-        if (userRole === 'Human Resources') {
+        if (userRole === "Human Resources") {
             // RRHH: Ver todas las solicitudes pendientes para RRHH (justified = 2)
             return db.execute(
                 `SELECT a.*, u.birthName, u.surname, r.title
@@ -119,7 +120,7 @@ ORDER BY startDate DESC`);
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
             );
-        } else if (userRole === 'Department Leader') {
+        } else if (userRole === "Department Leader") {
             // Líder: Ver solo solicitudes pendientes de su departamento
             return db.execute(
                 `SELECT a.*, u.birthName, u.surname, r.title
@@ -138,9 +139,9 @@ ORDER BY startDate DESC`);
             return Promise.resolve([[]]);
         }
     }
-    
+
     static fetchAllPaginated(limit, offset, userRole, userId) {
-        if (userRole === 'Human Resources') {
+        if (userRole === "Human Resources") {
             // RRHH: Ver todas las solicitudes aprobadas o rechazadas (justified = 0 o 1)
             return db.execute(
                 `SELECT a.*, u.birthName, u.surname, r.title
@@ -152,7 +153,7 @@ ORDER BY startDate DESC`);
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
             );
-        } else if (userRole === 'Department Leader') {
+        } else if (userRole === "Department Leader") {
             // Líder: Ver solicitudes aprobadas o rechazadas de su departamento
             return db.execute(
                 `SELECT a.*, u.birthName, u.surname, r.title

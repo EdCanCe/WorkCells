@@ -1,4 +1,4 @@
-@startuml CU018 - Líder consulta respuesta hacia ausencia de colaborador - Diagrama de secuencia
+@startuml CU017 - Líder consulta respuesta hacia ausencia de colaborador - Diagrama de secuencia
 actor Navegador
 boundary "absence.routes" as Routes
 boundary "absence.view" as View
@@ -10,27 +10,27 @@ autonumber
 
 ' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador -> Routes: POST /absence/registerResponse
+Navegador -> Routes: GET /absence/requests
 
 activate Routes
-Routes -> Controller: registerResponse(request, response)
+Routes -> Controller: getRequests(request, response)
 activate Controller
 
 ' El controlador invoca al modelo para actualizar la respuesta de la ausencia
-Controller ->> Model: updateResponse(responseData, absenceID)
+Controller ->> Model: fetchPaginated(responseData, absenceID)
 activate Model
 
 ' El modelo ejecuta la consulta en la base de datos
-Model ->> DB: db.execute(\n"UPDATE absence \nSET response = ? \nWHERE absenceID = ?", \n[responseData, absenceID])
+Model ->> DB: db.execute(\n"SELECT a.*, u.birthName, u.surname, r.title \nFROM absence AS a \nJOIN user AS u ON u.userID = a.absenceUserIDFK \nJOIN role AS r ON r.roleID = u.userRoleIDFK \nWHERE a.hrStatus = 2 \nORDER BY a.startDate DESC LIMIT ? OFFSET ?", \n[limit, offset, userRole, userId])
 activate DB
 DB -->> Model: confirmación de actualización
 deactivate DB
 
-Model -->> Controller: resultado_update
+Model -->> Controller: resultado
 deactivate Model
 
 ' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
-Controller ->> View: renderResponse(resultado_update)
+Controller ->> View: render(absenceRequests)
 activate View
 View --> Controller: fragmento HTML/JSON
 deactivate View
@@ -39,7 +39,7 @@ deactivate View
 Controller -->> Routes: response.json()
 deactivate Controller
 
-Routes -->> Navegador: respuesta AJAX
+Routes -->> Navegador: respuesta
 deactivate Routes
 
 ' El Navegador procesa la respuesta y actualiza la interfaz

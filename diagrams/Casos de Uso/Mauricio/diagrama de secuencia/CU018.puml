@@ -10,10 +10,10 @@ autonumber
 
 ' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador -> Routes: POST /absence/registerResponse
+Navegador -> Routes: POST /absence/requests
 
 activate Routes
-Routes -> Controller: registerResponse(request, response)
+Routes -> Controller: requests(request, response)
 activate Controller
 
 ' El controlador invoca al modelo para actualizar la respuesta de la ausencia
