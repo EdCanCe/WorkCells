@@ -4,7 +4,7 @@ boundary employee.routes
 boundary employeeCheckModify.ejs
 boundary employee.ejs
 control employee.controller
-entity employeeModel
+entity updatedEmployee
 database mysql
 
 autonumber
@@ -22,3 +22,27 @@ activate employeeCheckModify.ejs
 employeeCheckModify.ejs -> navegador : Mostrar formulario para modificar colaborador
 deactivate employeeCheckModify.ejs
 activate navegador
+
+navegador -> employee.routes : POST /employee/:id/modify
+deactivate navegador
+activate employee.routes
+
+employee.routes -> employee.controller : postModify(request, response)
+deactivate employee.routes
+activate employee.controller
+
+create updatedEmployee
+employee.controller -> updatedEmployee : new updatedEmployee(request.body.userID, request.body.curp, request.body.rfc, \nrequest.body.birthName,request.body.surname, reuquest.body.mail, \nrequest.body.passwd, request.body.passwdFlag, request.body.zipCode,\nrequest.body.houseNumber, request.body.streetName,request.body.colony, \nrequest.body.workModality, request.body.workStatus, request.body.userRoleIDFK, \nrequest.body.countryUserIDFK, request.body.workStatus)
+activate updatedEmployee
+
+employee.controller ->> updatedEmployee : modify()
+
+updatedEmployee ->> mysql : INSERT INTO user(\nuserID, curp, rfc, birthName, surname, mail, passwd, \npasswdFlag, zipCode, houseNumber, streetName, \ncolony, workModality, workStatus, userRoleIDFK, \ncountryUserIDFK, prioritaryDepartmentIDFK) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+activate mysql
+mysql -->> updatedEmployee : Insert OK
+deactivate mysql
+updatedEmployee -->> employee.controller : Promesa
+deactivate updatedEmployee
+
+employee.controller -> employee.routes : response.redirect("/employee")
+deactivate employee.controller
