@@ -1,0 +1,24 @@
+@startuml CU28 - Superadmin modifica datos de empleado.
+actor navegador
+boundary employee.routes
+boundary employeeCheckModify.ejs
+boundary employee.ejs
+control employee.controller
+entity employeeModel
+database mysql
+
+autonumber
+navegador -> employee.routes : GET /employee/:id/modify
+activate employee.routes
+
+employee.routes -> employee.controller: getModify(request, response)
+deactivate employee.routes
+activate employee.controller
+
+employee.controller -> employeeCheckModify.ejs: response.render(employeeCheckModify)
+deactivate employee.controller
+activate employeeCheckModify.ejs
+
+employeeCheckModify.ejs -> navegador : Mostrar formulario para modificar colaborador
+deactivate employeeCheckModify.ejs
+activate navegador

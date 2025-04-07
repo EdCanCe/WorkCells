@@ -1,4 +1,4 @@
-@startuml CU07 - Superadmin Registra dia feriado
+@startuml CU36 - Superadmin Registra dia feriado
 actor navegador
 boundary holiday.routes
 boundary holidayAdd.ejs
@@ -36,7 +36,7 @@ activate holidayModel
 
 holiday.controller ->> holidayModel : save()
 
-holidayModel ->> mysql : INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK)
+holidayModel ->> mysql : INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK) \nVALUES(?, ?, ?)
 activate mysql
 mysql -->> holidayModel : Insert OK
 deactivate mysql
@@ -45,16 +45,5 @@ deactivate holidayModel
 
 holiday.controller -> holiday.routes : response.redirect("/holiday")
 deactivate holiday.controller
-activate holiday.routes
 
-holiday.routes -> holiday.controller : getHolidays(request, response)
-deactivate holiday.routes
-activate holiday.controller
-
-holiday.controller -> holiday.ejs : response.render(holiday)
-deactivate holiday.controller
-activate holiday.ejs
-
-holiday.ejs ->navegador : Mostrar notificación, Dia Feriado registrado correctamente.
-deactivate holiday.ejs
 @enduml
