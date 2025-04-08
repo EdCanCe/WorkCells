@@ -1,0 +1,47 @@
+@startuml CU33 - Superadmin da de baja de empleado.
+actor navegador
+boundary employee.routes
+boundary employeeCheckModify.ejs
+control employee.controller
+entity updatedEmployee
+database mysql
+
+autonumber
+navegador -> employee.routes : GET /employee/:id/modify
+activate employee.routes
+
+employee.routes -> employee.controller: getModify(request, response)
+deactivate employee.routes
+activate employee.controller
+
+employee.controller -> employeeCheckModify.ejs: response.render(employeeCheckModify)
+deactivate employee.controller
+activate employeeCheckModify.ejs
+
+employeeCheckModify.ejs -> navegador : Mostrar formulario para modificar colaborador
+deactivate employeeCheckModify.ejs
+activate navegador
+
+navegador -> employee.routes : POST /employee/:id/modify
+deactivate navegador
+activate employee.routes
+
+employee.routes -> employee.controller : postModify(request, response)
+deactivate employee.routes
+activate employee.controller
+
+create updatedEmployee
+employee.controller -> updatedEmployee : new updatedEmployee(request.body.workStatus)
+activate updatedEmployee
+
+employee.controller ->> updatedEmployee : modify()
+
+updatedEmployee ->> mysql : UPDATE user(workStatus) VALUES (?)
+activate mysql
+mysql -->> updatedEmployee : Insert OK
+deactivate mysql
+updatedEmployee -->> employee.controller : Promesa
+deactivate updatedEmployee
+
+employee.controller -> employee.routes : response.redirect("/employee")
+deactivate employee.controller

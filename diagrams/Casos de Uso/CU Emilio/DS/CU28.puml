@@ -36,7 +36,7 @@ activate updatedEmployee
 
 employee.controller ->> updatedEmployee : modify()
 
-updatedEmployee ->> mysql : INSERT INTO user(\nuserID, curp, rfc, birthName, surname, mail, passwd, \npasswdFlag, zipCode, houseNumber, streetName, \ncolony, workModality, workStatus, userRoleIDFK, \ncountryUserIDFK, prioritaryDepartmentIDFK) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+updatedEmployee ->> mysql : UPDATE user(\nuserID, curp, rfc, birthName, surname, mail, passwd, \npasswdFlag, zipCode, houseNumber, streetName, \ncolony, workModality, workStatus, userRoleIDFK, \ncountryUserIDFK, prioritaryDepartmentIDFK) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 activate mysql
 mysql -->> updatedEmployee : Insert OK
 deactivate mysql
