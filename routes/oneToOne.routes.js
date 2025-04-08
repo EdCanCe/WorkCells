@@ -11,7 +11,7 @@ router.get("/schedule", isAuth, OTO, oneToOneController.getOneToOneSchedule);
 router.post("/schedule", isAuth, OTO, oneToOneController.postOneToOneSchedule);
 
 // Muestra los datos de todas las sesiones
-router.get("/check", isAuth, OTO, oneToOneController);
+router.get("/check", isAuth, OTO, oneToOneController.getSessions);
 
 // Muestra los datos de una sesión
 router.get("/:sessionID", isAuth, oneToOneController.getOneToOneCheck);
