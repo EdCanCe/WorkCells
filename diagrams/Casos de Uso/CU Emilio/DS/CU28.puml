@@ -47,7 +47,7 @@ activate updatedEmployee
 
 updatedEmployee ->> mysql : db.execute("UPDATE user SET , curp = ?, rfc = ?, birthName = ?, \nsurname = ?, mail = ?, passwd = ?, passwdFlag = ?, \nzipCode = ?, houseNumber = ?, streetName = ?, \ncolony = ?, workModality = ?, userRoleIDFK = ?, \ncountryUserIDFK = ?, prioritaryDepartmentIDFK = ?, \nworkStatus = ? WHERE userID = ?;"), \n[curp,rfc,birthName,surname,mail,zipCode, \nhouseNumber,streetName,colony,workModality,\nuserRoleIDFK,countryUserIDFK,\nprioritaryDepartmentIDFK,workStatus,userID,]
 activate mysql
-mysql -->> updatedEmployee : Insert OK
+mysql -->> updatedEmployee : Update OK
 deactivate mysql
 updatedEmployee -->> employee.controller : Promesa
 deactivate updatedEmployee
