@@ -153,6 +153,9 @@ exports.getOneToOneCheck = (request, response, next) => {
                         Measurable.fetchBySessionData(
                             request.params.sessionID
                         ).then(([measures]) => {
+                            console.log(rows[0]);
+                            console.log(answers[0]);
+                            console.log[measures[0]];
                             response.render("oneToOneCheck", {
                                 ...sessionVars(request),
                                 answers,
@@ -201,6 +204,7 @@ exports.getSessions = (request, response, next) => {
     OneToOne.getAllSessions()
         .then(([rows, fieldData]) => {
             console.log(rows);
+
             response.render("oneToOneCheckAll", {
                 sessions: rows,
                 ...sessionVars(request),

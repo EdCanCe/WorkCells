@@ -57,7 +57,7 @@
                 <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Role</th>
                 <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Meeting Date</th>
                 <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Meeting Time</th>
-                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Expected Time</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Check One</th>
             </tr>
         </thead>
         <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
@@ -80,7 +80,11 @@
                 </td>
                 <td class="px-6 py-4 text-white">${date}</td>
                 <td class="px-6 py-4 text-white">${time}</td>
-                <td class="px-6 py-4 text-white">${s.expectedTime}</td>
+                <td class="px-6 py-4 text-white">
+                    <a href="/oneToOne/${
+                        s.oneOnOneID
+                    }" class="btnPrimary ml-2">Check</a>
+                </td>
             </tr>`;
             });
 

@@ -1,51 +1,56 @@
-<div class='primaryContainer bgBase'>
+<div class="primaryContainer bgBase">
     <% if(isFilled == '0') { %>
-        <!-- No hay datos aún -->
-        <h1 class="font-bold text-3xl text-center">This session hasn't been filled</h1>
+    <!-- No hay datos aún -->
+    <h1 class="font-bold text-3xl text-center">
+        This session hasn't been filled
+    </h1>
 
-        <!-- Botón para redirigir al meet -->
-        <% if (sessionData.meetingLink) { %>
-            <a target="_blank" href="<%= sessionData.meetingLink %>" class="btnPrimary !block w-fit m-auto mt-5">Google Meet Link</a>
-        <% } %>
+    <!-- Botón para redirigir al meet -->
+    <% if (sessionData.meetingLink) { %>
+    <a
+        target="_blank"
+        href="<%= sessionData.meetingLink %>"
+        class="btnPrimary !block w-fit m-auto mt-5"
+        >Google Meet Link</a
+    >
+    <% } %>
 
-        <!-- Si es HR muestra botón para llenar datos -->
-        <% if(role == 'Human Resources') { %>
-            <a target="_blank" href="/oneToOne/<%= sessionID %>/fill" class="btnPrimary !block w-fit m-auto mt-5">Fill this session</a>
-        <% } %>
-    
-    <% } else { %>
-        <!-- Ya tiene los datos llenos -->
+    <!-- Si es HR muestra botón para llenar datos -->
+    <% if(role == 'Human Resources') { %>
+    <a
+        href="/oneToOne/<%= sessionID %>/fill"
+        class="btnPrimary !block w-fit m-auto mt-5"
+        >Fill this session</a
+    >
+    <% } %> <% } else { %>
+    <!-- Ya tiene los datos llenos -->
 
-        <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
+    <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
 
-        <!-- Muestra los datos de la sesión One On One -->
-        <h3 class="text-2xl font-semibold text-center">
-            <%= name %> | <%= meetingDate %>
-        </h3>
+    <!-- Muestra los datos de la sesión One On One -->
+    <h3 class="text-2xl font-semibold text-center">
+        <%= name %> | <%= meetingDate %>
+    </h3>
 
-        <!-- Imprime las preguntas y sus respuestas -->
-        <% answers.forEach((answer) => { %>
-            <div class="mt-3">
-                <h3 class="text-lg font-semibold">
-                    <%= answer.question  %>
-                </h3>
-                <p>
-                    <%= answer.answer %>
-                </p>
-            </div>
-        <% }); %>
+    <!-- Imprime las preguntas y sus respuestas -->
+    <% answers.forEach((answer) => { %>
+    <div class="mt-3">
+        <h3 class="text-lg font-semibold"><%= answer.question %></h3>
+        <p><%= answer.answer %></p>
+    </div>
+    <% }); %>
 
-        <canvas id="radarChart" class="max-w-[80%] max-h-[300px]"></canvas>
+    <canvas id="radarChart" class="max-w-[80%] max-h-[300px]"></canvas>
 
-        <!-- Genera la gráfica del usuario -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            
+    <!-- Genera la gráfica del usuario -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
             // Se generan los datos necesarios en la gráfica
             const data = {
                 labels: [
                     <% measures.forEach((measure) => { %>
-                        "<%= measure.summary  %>", 
+                        "<%= measure.summary  %>",
                     <% }); %>
                 ],
                 datasets: [
@@ -53,7 +58,7 @@
                         label: 'Employee Data',
                         data: [
                             <% measures.forEach((measure) => { %>
-                                <%= measure.evaluation %>, 
+                                <%= measure.evaluation %>,
                             <% }); %>
                         ],
                     }
@@ -67,15 +72,15 @@
                 responsive: true,
                 scales: {
                     r: {
-                        beginAtZero: true, 
-                        suggestedMin: 0,  
-                        suggestedMax: 5, 
+                        beginAtZero: true,
+                        suggestedMin: 0,
+                        suggestedMax: 5,
                         pointLabels: {
                             font: {
                                 size: 14
                             }
                         },
-                        grid: { color: 'rgba(125, 125, 125, 0.5)' } 
+                        grid: { color: 'rgba(125, 125, 125, 0.5)' }
                     }
                 },
                 plugins: { legend: { display: false } },
@@ -85,7 +90,7 @@
             // Renderiza la gráfica
             const ctx = document.getElementById('radarChart').getContext('2d');
             new Chart(ctx, config);
-        </script>
+    </script>
 
     <% } %>
 </div>

@@ -92,7 +92,7 @@ module.exports = class OneToOne {
      */
     static fetchBySession(sessionID) {
         return db.execute(
-            `SELECT o.oneOnOneUserIDFK, o.meetingLink, o.meetingDate, u.birthName, u.surname FROM oneOnOne o, user u WHERE o.oneOnOneID = ? `,
+            `SELECT o.oneOnOneUserIDFK, o.meetingLink, o.meetingDate, u.birthName, u.surname FROM oneOnOne o INNER JOIN user u ON u.userID = o.oneOnOneUserIDFK WHERE o.oneOnOneID = ? `,
             [sessionID]
         );
     }
@@ -119,7 +119,7 @@ module.exports = class OneToOne {
      */
     static getAllSessions() {
         return db.execute(
-            `SELECT u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
             o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
             JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
             ORDER BY o.meetingDate DESC`
@@ -128,7 +128,7 @@ module.exports = class OneToOne {
 
     static getAllSessionsPaginated(limit, offset) {
         return db.execute(
-            `SELECT u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
             o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
             JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
             ORDER BY o.meetingDate DESC LIMIT ? OFFSET ?`,
@@ -138,8 +138,8 @@ module.exports = class OneToOne {
 
     static searchByName(query) {
         return db.execute(
-            `SELECT u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
-            o.expectedTime FROM user u 
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
+            o.oneOnOneID, o.expectedTime FROM user u 
             JOIN role r ON u.userRoleIDFK = r.roleID
             JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
             WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
