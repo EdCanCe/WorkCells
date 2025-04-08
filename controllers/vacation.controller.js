@@ -639,14 +639,7 @@ exports.postRequestApprove = (request, response, next) => {
             }
             // Si es líder, actualiza el estado del líder
             else if (userRole === 'Department Leader') { // Cambiado de 'Leader' a 'Department Leader'
-                return Vacation.fetchDepartmentPaginated(userId, 1, 0)
-                    .then(([departmentVacations]) => {
-                        const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
-                        if (!hasPermission) {
-                            throw new Error('No tienes permiso para aprobar esta solicitud');
-                        }
-                        return Vacation.updateStatusLeader(vacationId, 1);
-                    });
+                return Vacation.fetchDepartmentPaginated(vacationId, 1, 0)
             }
             else {
                 throw new Error('Rol no autorizado');
@@ -689,7 +682,7 @@ exports.postRequestDeny = (request, response, next) => {
             }
             // Si es líder, actualiza el estado del líder
             else if (userRole === 'Department Leader') {
-                return Vacation.fetchDepartmentPaginated(userId, 1, 0)
+                return Vacation.fetchDepartmentPaginated(vacationId, 1, 0)
                     .then(([departmentVacations]) => {
                         const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
                         if (!hasPermission) {
