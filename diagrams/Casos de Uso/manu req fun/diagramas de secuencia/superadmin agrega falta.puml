@@ -47,9 +47,9 @@ alt Campos incompletos
 
 else Campos completos
     ' Crear instancia del modelo
-    activate fault.controller
-    fault.controller -> faultModelInstance : new FaultModel(param)
 
+    fault.controller -> faultModelInstance : new FaultModel(param)
+    activate fault.controller
     ' Verificar si el colaborador existe
     activate faultModelInstance
     fault.controller ->> faultModelInstance : save()
@@ -82,14 +82,15 @@ else Campos completos
         mysql -->> faultModelInstance : Insert OK
         deactivate mysql
         faultModelInstance -->> fault.controller : Falta registrada
+         deactivate faultModelInstance
         activate fault.controller
-        deactivate faultModelInstance
+      
 
         ' Notificación de éxito
         fault.controller -> addfault.ejs : Mostrar mensaje "Falta creada exitosamente"
         deactivate fault.controller
         activate addfault.ejs
-        addfault.ejs -> navegador : Mostrar notificación
+        addfault.ejs -> navegador : HTML
         deactivate addfault.ejs
         deactivate fault.controller
         deactivate fault.routes
