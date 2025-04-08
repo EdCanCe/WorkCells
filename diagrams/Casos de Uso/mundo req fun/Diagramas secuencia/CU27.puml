@@ -1,0 +1,42 @@
+@startuml
+actor Navegador
+boundary "faults.routes" as Routes
+boundary "checkFault.ejs" as Ejs
+control "faults.controller" as Controller
+entity "fault" as Model
+database "mysql" as MySQL
+
+autonumber
+
+activate Navegador
+
+Navegador -> Navegador : deleteFault(faultID, userID)
+
+Navegador -> Routes : POST /fault/delete
+deactivate Navegador
+
+activate Routes
+Routes -> Controller : postDelete(request, response)
+deactivate Routes
+
+activate Controller
+create Model
+Controller -> Model : new Fault(faultID: request.body.faultID,\nuserID: request.body.userID)
+
+activate Model
+Controller ->> Model : delete()
+Model ->> MySQL : db.execute(...)
+activate MySQL
+
+alt Error en la eliminación
+    MySQL -->> Model : error
+    Model -->> Controller : promesa
+    Controller -> Routes : response.redirect('/error')
+else Eliminación completada
+    MySQL -->> Model : query OK
+    deactivate MySQL
+    Model -->> Controller : promesa
+    deactivate Model
+    Controller -> Routes : response.redirect('/fault')
+    deactivate Controller
+end

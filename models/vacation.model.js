@@ -204,9 +204,9 @@ AND u.userID IN (
         );
     }
 
-    static fetchOneVacation(vacationID) {
+    static fetchOne(vacationID) {
         return db.execute(
-            `SELECT v.vacationID, v.reason, v.startDate, v.endDate, v.leaderStatus, v.hrStatus
+            `SELECT *
         FROM vacation v
         WHERE v.vacationID = ?`,
             [vacationID]

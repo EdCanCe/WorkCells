@@ -42,14 +42,10 @@
                                         <% } else if (vacation.hrStatus === 0) { %>
                                             <div class="text-red-500 text-center font-semibold">Denied</div>
                                         <% } else { %>
-                                            <!-- RRHH: Mostrar botones independientemente del estado del líder -->
                                             <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                                                 <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
                                                 <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
                                             </div>
-                                            <% if (vacation.leaderStatus === 2) { %>
-                                                <div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>
-                                            <% } %>
                                         <% } %>
                                     <% } else if (role === "Department Leader") { %>
                                         <% if (vacation.leaderStatus === 1) { %>
@@ -57,7 +53,6 @@
                                         <% } else if (vacation.leaderStatus === 0) { %>
                                             <div class="text-red-500 text-center font-semibold">Denied</div>
                                         <% } else if (vacation.leaderStatus === 2) { %>
-                                            <!-- Líder: Solicitud pendiente de aprobación -->
                                             <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                                                 <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
                                                 <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
@@ -73,7 +68,6 @@
                 </div>
             </div>
         </div>
-        <!-- Controles de paginación -->
         <div class="pagination-controls mt-4 mb-4 flex justify-between">
             <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
             <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
@@ -86,9 +80,8 @@
     let currentPage = 0;
     const limit = 10;
     let isLoading = false;
-    const role = "<%= role %>"; // Asegurarse de que role está disponible
+    const role = "<%= role %>";
 
-    // Calcula el total de días entre dos fechas
     function calculateTotalDays(startDate, endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -109,13 +102,13 @@
             const originalText = this.textContent;
             
             // Mostrar "Procesando..." mientras se ejecuta
-            this.textContent = "Procesando...";
+            this.textContent = "Processing...";
             this.disabled = true;
             const buttons = row.querySelectorAll("button");
             buttons.forEach(btn => btn.disabled = true);
             
             try {
-                const res = await fetch(url, {
+                const response = await fetch(url, {
                     method: "POST",
                     headers: { 
                         "Content-Type": "application/json", 
@@ -124,14 +117,14 @@
                     body: JSON.stringify({})
                 });
                 
-                if (!res.ok) {
-                    const err = await res.json();
+                if (!response.ok) {
+                    const err = await response.json();
                     throw new Error(err.message || "Error en la operación");
                 }
                 
                 // Reemplazar los botones con mensaje de Approved/Denied
                 const actionCell = row.querySelector("td:last-child");
-                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
+                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 text-center font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
                 
                 // No recargamos la página para mantener la solicitud visible
             } catch (err) {
@@ -186,41 +179,37 @@
         tbody.innerHTML = "";
         
         // Si hay datos, mostrarlos en la tabla
-        data.forEach((vac) => {
-            const totalDays = calculateTotalDays(vac.startDate, vac.endDate);
+        data.forEach((vacation) => {
+            const totalDays = calculateTotalDays(vacation.startDate, vacation.endDate);
             let actionCell = "";
             
             // Dentro de la función updateTable, en la parte donde se crea actionCell:
             if (role === "Human Resources") {
                 // Verificar si la solicitud ya fue procesada por RRHH
-                if (vac.hrStatus === 1) {
+                if (vacation.hrStatus === 1) {
                     actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
-                } else if (vac.hrStatus === 0) {
+                } else if (vacation.hrStatus === 0) {
                     actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
                 } else {
                     // RRHH: Siempre mostrar botones, independientemente del estado del líder
                     actionCell = `
                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
-                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
                         </div>`;
-                    
-                    if (vac.leaderStatus === 2) {
-                        actionCell += '<div class="text-yellow-500 font-semibold mt-2">Pendiente de aprobación por líder</div>';
-                    }
                 }
             } else if (role === "Department Leader") {
                 // Verificar si la solicitud ya fue procesada por Líder
-                if (vac.leaderStatus === 1) {
+                if (vacation.leaderStatus === 1) {
                     actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
-                } else if (vac.leaderStatus === 0) {
+                } else if (vacation.leaderStatus === 0) {
                     actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
-                } else if (vac.leaderStatus === 2) {
+                } else if (vacation.leaderStatus === 2) {
                     // Líder: Solicitud pendiente de aprobación
                     actionCell = `
                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vac.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
-                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vac.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
+                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Approve</button>
+                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/${vacation.vacationID}" data-csrf="<%= csrfToken %>">Deny</button>
                         </div>`;
                 }
             }
@@ -229,10 +218,10 @@
             row.className = "border-b hover:bg-neutral-800";
             
             row.innerHTML = `
-                <td class="px-4 py-2">${vac.birthName} ${vac.surname}</td>
-                <td class="px-4 py-2">${vac.reason}</td>
-                <td class="px-4 py-2">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${vacation.birthName} ${vacation.surname}</td>
+                <td class="px-4 py-2">${vacation.reason}</td>
+                <td class="px-4 py-2">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="px-4 py-2">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
                 <td class="px-4 py-2">${totalDays}</td>
                 <td class="px-4 py-2">${actionCell}</td>
             `;

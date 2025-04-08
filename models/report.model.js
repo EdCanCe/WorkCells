@@ -46,4 +46,28 @@ module.exports = class Report {
             [start, end]
         );
     }
+
+    static getActivesPerMonth(start, end) {
+        return db.execute(
+            `SELECT YEAR(w.startDate) AS anio, MONTH(w.startDate) AS mes, 
+            COUNT(DISTINCT u.userID) AS totalEmpleados FROM user u 
+            JOIN workStatus w ON u.userID = w.userStatusIDFK JOIN userDepartment ud
+            ON ud.userIDFK = u.userID WHERE u.workStatus = 1 
+            AND w.startDate BETWEEN ? AND ? GROUP BY anio, mes 
+            ORDER BY anio, mes`,
+            [start, end]
+        );
+    }
+
+    static getInactivesPerMonth(start, end) {
+        return db.execute(
+            `SELECT YEAR(w.endDate) AS anio, MONTH(w.endDate) AS mes, 
+            COUNT(DISTINCT u.userID) AS totalEmpleados FROM user u 
+            JOIN workStatus w ON u.userID = w.userStatusIDFK JOIN userDepartment ud
+            ON ud.userIDFK = u.userID WHERE u.workStatus = 0
+            AND w.endDate BETWEEN ? AND ? GROUP BY anio, mes 
+            ORDER BY anio, mes`,
+            [start, end]
+        );
+    }
 };
