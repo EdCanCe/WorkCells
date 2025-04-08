@@ -1,4 +1,4 @@
-@startuml CU28 - Superadmin modifica datos de empleado.
+@startuml CU33 - Superadmin da de baja de empleado.
 actor navegador
 boundary employee.routes
 boundary employeeCheckModify.ejs
@@ -31,12 +31,12 @@ deactivate employee.routes
 activate employee.controller
 
 create updatedEmployee
-employee.controller -> updatedEmployee : new updatedEmployee(request.body.userID, request.body.curp, request.body.rfc, \nrequest.body.birthName,request.body.surname, reuquest.body.mail, \nrequest.body.passwd, request.body.passwdFlag, request.body.zipCode,\nrequest.body.houseNumber, request.body.streetName,request.body.colony, \nrequest.body.workModality, request.body.workStatus, request.body.userRoleIDFK, \nrequest.body.countryUserIDFK, request.body.workStatus)
+employee.controller -> updatedEmployee : new updatedEmployee(request.body.workStatus)
 activate updatedEmployee
 
 employee.controller ->> updatedEmployee : modify()
 
-updatedEmployee ->> mysql : UPDATE user(\nuserID, curp, rfc, birthName, surname, mail, passwd, \npasswdFlag, zipCode, houseNumber, streetName, \ncolony, workModality, workStatus, userRoleIDFK, \ncountryUserIDFK, prioritaryDepartmentIDFK) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+updatedEmployee ->> mysql : UPDATE user(workStatus) VALUES (?)
 activate mysql
 mysql -->> updatedEmployee : Insert OK
 deactivate mysql
