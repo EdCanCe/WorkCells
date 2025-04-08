@@ -4,7 +4,7 @@ boundary holiday.routes
 boundary holidayAdd.ejs
 boundary holiday.ejs
 control holiday.controller
-entity holidayModel
+entity holiday
 database mysql
 
 autonumber
@@ -30,18 +30,18 @@ activate holiday.routes
 holiday.routes -> holiday.controller : postHolidayAdd(request, response)
 deactivate holiday.routes
 activate holiday.controller
-create holidayModel
-holiday.controller -> holidayModel : new Holiday(request.body.usedHolidayID, \nrequest.body.usedDate, request.body.usedTemplateHolidayIDFK)
-activate holidayModel
+create holiday
+holiday.controller -> holiday : new Holiday(request.body.usedHolidayID, \nrequest.body.usedDate, \nrequest.body.usedTemplateHolidayIDFK)
+activate holiday
 
-holiday.controller ->> holidayModel : save()
+holiday.controller ->> holiday : save()
 
-holidayModel ->> mysql : INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK) \nVALUES(?, ?, ?)
+holiday ->> mysql : INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK) \nVALUES(?, ?, ?)
 activate mysql
-mysql -->> holidayModel : Insert OK
+mysql -->> holiday : Insert OK
 deactivate mysql
-holidayModel -->> holiday.controller : Promesa
-deactivate holidayModel
+holiday -->> holiday.controller : Promesa
+deactivate holiday
 
 holiday.controller -> holiday.routes : response.redirect("/holiday")
 deactivate holiday.controller

@@ -1,20 +1,20 @@
-const { response } = require('express');
-const OneToOne = require('../models/oneToOne.model');
-const Question = require('../models/question.model');
-const Measurable = require('../models/measurable.model');
-const Answer = require('../models/answer.model');
-const Measure = require('../models/measure.model');
-const formatDate = require('../util/formatDate');
-const sessionVars = require('../util/sessionVars');
+const { response } = require("express");
+const OneToOne = require("../models/oneToOne.model");
+const Question = require("../models/question.model");
+const Measurable = require("../models/measurable.model");
+const Answer = require("../models/answer.model");
+const Measure = require("../models/measure.model");
+const formatDate = require("../util/formatDate");
+const sessionVars = require("../util/sessionVars");
 
 exports.getOneToOne = (request, response, next) => {
-    response.render('oneToOne', {
+    response.render("oneToOne", {
         ...sessionVars(request),
     });
 };
 
 exports.getOneToOneSchedule = (request, response, next) => {
-    response.render('oneToOneAdd', {
+    response.render("oneToOneAdd", {
         ...sessionVars(request),
     });
 };
@@ -24,8 +24,8 @@ exports.postOneToOneSchedule = (request, response, next) => {
         .then(([rows]) => {
             if (rows.length === 0) {
                 request.session.error =
-                    'El correo ingresado no se encuentra registrado.';
-                return response.redirect('/oneToOne/schedule');
+                    "El correo ingresado no se encuentra registrado.";
+                return response.redirect("/oneToOne/schedule");
             }
             // Si el usuario está registrado, se obtiene su ID
             const oneOnOneUserIDFK = rows[0].userID;
@@ -40,12 +40,12 @@ exports.postOneToOneSchedule = (request, response, next) => {
 
             return meeting.save().then(() => {
                 request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
-                response.redirect('/oneToOne/schedule');
+                response.redirect("/oneToOne/schedule");
             });
         })
         .catch((err) => {
             console.error(err);
-            response.status(500).send('Error interno del servidor');
+            response.status(500).send("Error interno del servidor");
         });
 };
 
@@ -55,8 +55,8 @@ exports.getOneToOneFill = (request, response, next) => {
         .then(([rows]) => {
             // En caso de que no exista, redirige a error
             if (rows.length === 0) {
-                request.session.alert = 'There is no session with that ID.'
-                response.status(404).redirect('/notFound');
+                request.session.alert = "There is no session with that ID.";
+                response.status(404).redirect("/notFound");
             }
 
             // Consulta las preguntas en la base de datos
@@ -64,12 +64,14 @@ exports.getOneToOneFill = (request, response, next) => {
                 // Consulta las métricas en la base de datos
                 Measurable.fetchAll().then(([measurables]) => {
                     // Renderiza el formulario para llenar los datos
-                    response.render('oneToOneFill', {
+                    response.render("oneToOneFill", {
                         ...sessionVars(request),
                         questions,
                         measurables,
                         name: `${rows[0].birthName} ${rows[0].surname}`,
-                        meetingDate: formatDate.withOrdinal(rows[0].meetingDate),
+                        meetingDate: formatDate.withOrdinal(
+                            rows[0].meetingDate
+                        ),
                         meetingLink: rows[0].meetingLink,
                         sessionID: request.params.sessionID,
                     });
@@ -111,7 +113,7 @@ exports.postOneToOneFill = (request, response, next) => {
 };
 
 exports.getOneToOneGraphs = (request, response, next) => {
-    response.render('oneToOneGraphs', {
+    response.render("oneToOneGraphs", {
         ...sessionVars(request),
     });
 };
@@ -122,44 +124,54 @@ exports.getOneToOneCheck = (request, response, next) => {
         .then(([rows]) => {
             // En caso de que no exista, redirige a error
             if (rows.length === 0) {
-                request.session.alert = 'There is no session with that ID.'
-                response.status(404).redirect('/notFound');
+                request.session.alert = "There is no session with that ID.";
+                response.status(404).redirect("/notFound");
             }
 
             // Si no es RH y tampoco es a quien entrevistaron, no lo deja entrar
-            if( request.session.role != "Human Resources" &&
-                rows[0].oneOnOneUserIDFK !=  request.session.userID) {
-                request.session.alert = 'You have no permission to view this session.'
-                response.status(404).redirect('/notFound');
+            if (
+                request.session.role != "Human Resources" &&
+                rows[0].oneOnOneUserIDFK != request.session.userID
+            ) {
+                request.session.alert =
+                    "You have no permission to view this session.";
+                response.status(404).redirect("/notFound");
             }
 
-            Question.fetchBySessionData(request.params.sessionID)
-                .then(([answers]) => {
+            Question.fetchBySessionData(request.params.sessionID).then(
+                ([answers]) => {
                     // En caso de que no haya respuestas, indica que no está llenado
                     if (answers.length === 0) {
-                        response.render('oneToOneCheck', {
+                        response.render("oneToOneCheck", {
                             ...sessionVars(request),
-                            isFilled: '0',
+                            isFilled: "0",
                             sessionData: rows[0],
                             sessionID: request.params.sessionID,
                         });
-                    } else{
+                    } else {
                         // A partir de aquí significa que si se llenó la sesión
-                        Measurable.fetchBySessionData(request.params.sessionID)
-                            .then(([measures]) => {
-                                response.render('oneToOneCheck', {
-                                    ...sessionVars(request),
-                                    answers,
-                                    measures,
-                                    isFilled: '1',
-                                    sessionData: rows[0],
-                                    sessionID: request.params.sessionID,
-                                    name: `${rows[0].birthName} ${rows[0].surname}`,
-                                    meetingDate: formatDate.withOrdinal(rows[0].meetingDate),
-                                });
+                        Measurable.fetchBySessionData(
+                            request.params.sessionID
+                        ).then(([measures]) => {
+                            console.log(rows[0]);
+                            console.log(answers[0]);
+                            console.log[measures[0]];
+                            response.render("oneToOneCheck", {
+                                ...sessionVars(request),
+                                answers,
+                                measures,
+                                isFilled: "1",
+                                sessionData: rows[0],
+                                sessionID: request.params.sessionID,
+                                name: `${rows[0].birthName} ${rows[0].surname}`,
+                                meetingDate: formatDate.withOrdinal(
+                                    rows[0].meetingDate
+                                ),
                             });
+                        });
                     }
-                });
+                }
+            );
         })
         .catch((err) => {
             console.log(err);
@@ -181,9 +193,46 @@ exports.getFullName = (request, response, next) => {
         })
         .catch((err) => {
             console.error(err);
-            response.status(500).json({ 
-                success: false, 
-                error: err.message
+            response.status(500).json({
+                success: false,
+                error: err.message,
             });
+        });
+};
+
+exports.getSessions = (request, response, next) => {
+    OneToOne.getAllSessions()
+        .then(([rows, fieldData]) => {
+            console.log(rows);
+
+            response.render("oneToOneCheckAll", {
+                sessions: rows,
+                ...sessionVars(request),
+            });
+        })
+        .catch((err) => {
+            console.error("Error en la promesa de usuarios y sesiones ", err);
+        });
+};
+
+exports.getSearch = (request, response, next) => {
+    const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    const searchPromise = query
+        ? OneToOne.searchByName(query)
+        : OneToOne.getAllSessionsPaginated(limit, offset);
+
+    searchPromise
+        .then(([rows]) => {
+            response.json({ rows, page, query });
+        })
+        .catch((error) => {
+            console.error("Error en la búsqueda/paginación:", error);
+            response
+                .status(500)
+                .json({ error: "Error en la búsqueda/paginación" });
         });
 };

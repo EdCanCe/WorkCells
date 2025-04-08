@@ -1,0 +1,41 @@
+@startuml CU041 - Superadmin registra respuesta hacia solicitud de vacaciones de empleado - Diagrama de secuencia
+actor Navegador
+boundary "vacation.routes" as Routes
+boundary "vacation.view" as View
+control "vacation.controller" as Controller
+entity "vacation.model" as Model
+database "myPhpAdmin" as DB
+
+autonumber
+
+' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
+activate Navegador
+Navegador ->> Routes: POST /vacation/requests/:id
+
+activate Routes
+Routes -> Controller: getRequests(request, response)
+deactivate Routes
+activate Controller
+
+' El controlador invoca al modelo para actualizar la respuesta de la ausencia
+Controller ->> Model: fetchPaginated(responseData, vacationID)
+activate Model
+
+' El modelo ejecuta la consulta en la base de datos
+Model ->> DB: db.execute(\n"UPDATE vacation SET hrStatus = ?\nWHERE vacationID = ?", \n[userId, limit, offset])
+activate DB
+DB -->> Model: rows
+deactivate DB
+
+Model -->> Controller: rows
+deactivate Model
+
+' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
+Controller -->> Navegador: render(vacationRequests)
+deactivate Controller
+
+
+' El Navegador procesa la respuesta y actualiza la interfaz
+Navegador -> Navegador: loadPage, actualiza UI
+
+@enduml

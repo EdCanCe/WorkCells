@@ -1,0 +1,130 @@
+<div class="container mx-auto p-4">
+    <div class="bg-neutral-700/25 shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-4">One To One</h2>
+
+            <div class="flex justify-center w-full">
+                <div
+                    class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
+                >
+                    <img
+                        src="/icons/search.svg"
+                        alt="search"
+                        class="navIcon absolute w-6 h-6 text-white"
+                    />
+                    <input
+                        id="search"
+                        name="search"
+                        type="text"
+                        placeholder="Buscar empleado..."
+                        class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+                    />
+                </div>
+            </div>
+
+            <div
+                id="table"
+                class="flex content justify-center p-4 rounded-md list space-y-4"
+            ></div>
+            <div class="flex justify-center gap-3 mt-6">
+                <button id="prevPage" class="btnPrimary" disabled>
+                    Anterior
+                </button>
+                <button id="nextPage" class="btnPrimary">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    let currentQuery = "";
+
+    async function loadOneToOne(page, query = "") {
+        const url = `/oneToOne/check/search?page=${page}&query=${encodeURIComponent(
+            query
+        )}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        const sessions = data.rows || [];
+
+        let table = `<table class="w-full divide-y divide-neutral-200 text-center">
+        <thead class="bg-neutral-800/50">
+            <tr>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Full Name</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Role</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Meeting Date</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Meeting Time</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Check One</th>
+            </tr>
+        </thead>
+        <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
+
+        if (sessions.length === 0) {
+            table += `<tr><td colspan="6" class="px-6 py-4 text-white text-center">No sessions found</td></tr>`;
+        } else {
+            sessions.forEach((s) => {
+                const d = new Date(s.meetingDate);
+                const date = d.toISOString().split("T")[0];
+                const [hh, mm] = d.toISOString().split("T")[1].split(":");
+                const time = `${hh}:${mm}`;
+
+                table += `<tr>
+                <td class="px-6 py-4 text-white">${s.birthName} ${s.surname}
+                </td>
+                <td class="px-6 py-4 text-white">${s.mail}
+                </td>
+                <td class="px-6 py-4 text-white">${s.title || "N/A"} 
+                </td>
+                <td class="px-6 py-4 text-white">${date}</td>
+                <td class="px-6 py-4 text-white">${time}</td>
+                <td class="px-6 py-4 text-white">
+                    <a href="/oneToOne/${
+                        s.oneOnOneID
+                    }" class="btnPrimary ml-2">Check</a>
+                </td>
+            </tr>`;
+            });
+
+            document
+                .getElementById("table")
+                .scrollIntoView({ behavior: "smooth" });
+        }
+
+        table += `</tbody></table>`;
+        document.getElementById("table").innerHTML = table;
+
+        document.getElementById("prevPage").disabled = page === 1;
+        document.getElementById("nextPage").disabled = sessions.length < 1;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadOneToOne(currentPage, currentQuery);
+    });
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            loadOneToOne(currentPage, currentQuery);
+        }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        loadOneToOne(currentPage, currentQuery);
+    });
+
+    document
+        .getElementById("search")
+        .addEventListener("input", async (event) => {
+            currentQuery = event.target.value;
+            currentPage = 1;
+            loadOneToOne(currentPage, currentQuery);
+        });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadOneToOne(currentPage);
+    });
+</script>

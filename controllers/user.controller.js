@@ -22,9 +22,10 @@ exports.post_login = (request, response, next) => {
 
             const user = rows[0];
 
-            // Comparación de contraseñas sin bcrypt (se recomienda usar bcrypt para mayor seguridad)
-            if (password === user.passwd) {
-                request.session.workStatus = user.workStatus; 
+            const bycrypt = require('bcryptjs');
+            bycrypt.compare(password, user.passwd).then((doMatch)=>{
+                if(doMatch){
+                    request.session.workStatus = user.workStatus; 
                 request.session.isLoggedIn = true;
                 request.session.mail = email;
                 request.session.userID = user.userID;
@@ -52,10 +53,11 @@ exports.post_login = (request, response, next) => {
                             "Hubo un problema con el servidor";
                         response.redirect("/login");
                     });
-            } else {
-                request.session.warning = "Usuario y/o contraseña incorrectos";
-                return response.redirect("/login");
-            }
+                }else {
+                    request.session.warning = "Usuario y/o contraseña incorrectos";
+                    return response.redirect("/login");
+                }
+            })
         })
         .catch((error) => {
             console.error("Error al buscar el usuario:", error);

@@ -2,7 +2,6 @@
 actor navegador
 boundary employee.routes
 boundary employeeAdd.ejs
-boundary employee.ejs
 control employee.controller
 entity employee
 database mysql
