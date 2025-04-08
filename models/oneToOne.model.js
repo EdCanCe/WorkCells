@@ -109,4 +109,20 @@ module.exports = class OneToOne {
             [email]
         );
     }
+
+    /*
+     * Funcion que obtiene informacion de los usuarios, su rol y tambien la fecha
+     * y hora de sus sesiones one on one
+     *
+     * @returns informacion de los colaboradores y sus sesiones
+     *
+     */
+    static getAllSessions() {
+        return db.execute(
+            `SELECT u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
+            o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            ORDER BY o.meetingDate DESC`
+        );
+    }
 };

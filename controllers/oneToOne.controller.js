@@ -197,4 +197,16 @@ exports.getFullName = (request, response, next) => {
         });
 };
 
-exports.getSessions = (request, response, next) => {};
+exports.getSessions = (request, response, next) => {
+    OneToOne.getAllSessions()
+        .then((sessions) => {
+            console.log(sessions);
+            response.render("oneToOneCheckAll", {
+                sessions: sessions,
+                ...sessionVars(request),
+            });
+        })
+        .catch((err) => {
+            console.error("Error en la promesa de usuarios y sesiones ", err);
+        });
+};
