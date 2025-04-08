@@ -1,4 +1,4 @@
-@startuml CU02 - SuperAdmin consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
+@startuml CU041 - SuperAdmin registra solicitudes de vacaciones de colaborador - Diagrama de actividad
 
 |__SuperAdmin__|
 start
