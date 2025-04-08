@@ -1,6 +1,6 @@
 @startuml
 actor navegador
-boundary addfault.ejs
+boundary faultAdd.ejs
 boundary fault.routes
 control fault.controller
 entity faultModelInstance
@@ -17,11 +17,11 @@ activate fault.routes
 fault.routes -> fault.controller : getAdd(req,res)
 deactivate fault.routes
 activate fault.controller
-fault.controller -> addfault.ejs: render(faultAdd)
+fault.controller -> faultAdd.ejs: render(faultAdd)
 deactivate fault.controller
-activate addfault.ejs
-addfault.ejs -> navegador : Mostrar formulario de falta
-deactivate addfault.ejs
+activate faultAdd.ejs
+faultAdd.ejs -> navegador : Mostrar formulario de falta
+deactivate faultAdd.ejs
 activate navegador
 deactivate fault.routes
 
@@ -38,11 +38,11 @@ activate fault.controller
 fault.controller -> fault.controller : Validar campos
 
 alt Campos incompletos
-    fault.controller -> addfault.ejs : mensaje de error "Completa todos los campos"
+    fault.controller -> faultAdd.ejs : mensaje de error "Completa todos los campos"
     deactivate fault.controller    
-    activate addfault.ejs
-    addfault.ejs -> navegador : HTML
-    deactivate addfault.ejs
+    activate faultAdd.ejs
+    faultAdd.ejs -> navegador : HTML
+    deactivate faultAdd.ejs
     deactivate fault.routes
 
 else Campos completos
@@ -67,11 +67,11 @@ else Campos completos
         
         faultModelInstance -->> fault.controller : Error
         activate fault.controller
-        fault.controller -> addfault.ejs : Mostrar mensaje de error "Error en los datos"
+        fault.controller -> faultAdd.ejs : Mostrar mensaje de error "Error en los datos"
         deactivate fault.controller
-        activate addfault.ejs
-        addfault.ejs -> navegador : HTML
-        deactivate addfault.ejs
+        activate faultAdd.ejs
+        faultAdd.ejs -> navegador : HTML
+        deactivate faultAdd.ejs
         deactivate fault.controller
         deactivate fault.routes
 
@@ -87,11 +87,11 @@ else Campos completos
       
 
         ' Notificación de éxito
-        fault.controller -> addfault.ejs : Mostrar mensaje "Falta creada exitosamente"
+        fault.controller -> faultAdd.ejs : Mostrar mensaje "Falta creada exitosamente"
         deactivate fault.controller
-        activate addfault.ejs
-        addfault.ejs -> navegador : HTML
-        deactivate addfault.ejs
+        activate faultAdd.ejs
+        faultAdd.ejs -> navegador : HTML
+        deactivate faultAdd.ejs
         deactivate fault.controller
         deactivate fault.routes
     end
