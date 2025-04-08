@@ -18,7 +18,7 @@ activate holiday.controller
 holiday.controller -> holiday: fetchHolidayID(request.params.id)
 activate holiday
 
-holiday -> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID")
+holiday -> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID = ?", [usedHolidayID]);
 activate mysql
 mysql -> holiday: rows
 deactivate mysql
