@@ -1,0 +1,24 @@
+@startuml CU09 - Colaborador modifica contraseña temporal - Diagrama de secuencia
+actor Navegador
+boundary "myprofile.routes" as Routes
+boundary "myprofile.view" as View
+control "myprofile.controller" as Controller
+entity "user.model" as Model
+database "myPhpAdmin" as DB
+
+autonumber
+
+activate Navegador
+Navegador -> Routes : GET /myprofile/changePasswd
+
+
+
+activate Routes
+Routes -> View : changePasswd
+deactivate Routes
+
+activate View
+View -> Controller : changePasswd
+
+
+@enduml
