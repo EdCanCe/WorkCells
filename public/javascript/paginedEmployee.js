@@ -1,10 +1,11 @@
 let currentPage = 1;
 let currentQuery = "";
+let filter = "all";
 
-async function loadEmployees(page, query = "") {
-    const url = query
-        ? `/employee/search?page=${page}&query=${encodeURIComponent(query)}`
-        : `/employee/search?page=${page}`;
+async function loadEmployees(page, query = "", selectedFilter = filter) {
+    const url = `/employee/search?page=${page}&query=${encodeURIComponent(
+        query
+    )}&filter=${selectedFilter}`;
 
     const res = await fetch(url);
     const data = await res.json();
@@ -16,7 +17,7 @@ async function loadEmployees(page, query = "") {
                 <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Full Name</th>
                 <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Department</th>
                 <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Role</th>
-                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Action</th>
+                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">View</th>
             </tr>
         </thead>
         <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
@@ -34,14 +35,13 @@ async function loadEmployees(page, query = "") {
                 } - ${emp.enterpriseName}</td>
                 <td class="px-6 py-4 text-white">${emp.roleName || "N/A"}</td>
                 <td class="px-6 py-4 text-white">
-                    <a href="/employee/check?id=${
+                    <a href="/employee/${
                         emp.userID
                     }" class="btnPrimary ml-2">Check</a>
                 </td>
             </tr>`;
         });
 
-        // Solo hace scroll si hay resultados
         document
             .getElementById("employeeTable")
             .scrollIntoView({ behavior: "smooth" });
@@ -50,29 +50,34 @@ async function loadEmployees(page, query = "") {
     table += `</tbody></table>`;
     document.getElementById("employeeTable").innerHTML = table;
 
-    // Control de paginación
     document.getElementById("prevPage").disabled = page === 1;
-    document.getElementById("nextPage").disabled = employees.length < 1;
+    document.getElementById("nextPage").disabled = employees.length < 6;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadEmployees(currentPage, currentQuery, filter);
+});
 
 document.getElementById("prevPage").addEventListener("click", () => {
     if (currentPage > 1) {
         currentPage--;
-        loadEmployees(currentPage, currentQuery);
+        loadEmployees(currentPage, currentQuery, filter);
     }
 });
 
 document.getElementById("nextPage").addEventListener("click", () => {
     currentPage++;
-    loadEmployees(currentPage, currentQuery);
+    loadEmployees(currentPage, currentQuery, filter);
 });
 
 document.getElementById("search").addEventListener("input", async (event) => {
     currentQuery = event.target.value;
     currentPage = 1;
-    loadEmployees(currentPage, currentQuery);
+    loadEmployees(currentPage, currentQuery, filter);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadEmployees(currentPage);
+document.getElementById("filterSelect").addEventListener("change", (event) => {
+    filter = event.target.value;
+    currentPage = 1;
+    loadEmployees(currentPage, currentQuery, filter);
 });

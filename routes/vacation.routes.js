@@ -15,6 +15,12 @@ router.get(
     vacationController.getModifyVacation
 );
 
+router.post(
+    "/check/delete/:vacationID",
+    isAuth,
+    vacationController.PostDeleteVacation
+);
+
 // Página para añadir una solicitud de vacaciones
 router.get("/add", isAuth, vacationController.getAddVacation);
 router.post("/add", isAuth, vacationController.postAddVacation);
@@ -24,6 +30,13 @@ router.get(
     isAuth,
     vacationPrivilege,
     vacationController.getRequests
+);
+
+router.get(
+    "/requests/all",
+    isAuth,
+    vacationPrivilege,
+    vacationController.getAllRequests
 );
 
 router.post("/update/:vacationID",isAuth, vacationController.updateVacation);

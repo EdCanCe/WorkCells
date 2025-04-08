@@ -10,7 +10,8 @@ router.post("/add", isAuth, absencesControllers.postAdd);
 
 router.get("/check", isAuth, absencesControllers.getCheck);
 router.get("/search", isAuth, absencesControllers.getListPaginated);
-router.get("/requests", isAuth,absencePrivilege, absencesControllers.getRequest);
+router.get("/requests/all", isAuth,absencePrivilege, absencesControllers.getAllRequests);
+router.get("/requests", isAuth,absencePrivilege, absencesControllers.getRequests);
 router.get(
     "/requests/paginated",
     isAuth,

@@ -1,4 +1,3 @@
-const { off } = require('process');
 const db = require('../util/database');
 const { v4: uuidv4 } = require('uuid');
 
@@ -16,12 +15,14 @@ module.exports = class Absence {
         return db
             .execute(
                 `INSERT INTO absence(absenceID, startDate, endDate, 
-                reason, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?)`,
+                reason, leaderStatus, hrStatus, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?,?,?)`,
                 [
                     absenceID,
                     this.startDate,
                     this.endDate,
                     this.reason,
+                    this.leaderStatus,
+                    this.hrStatus,
                     this.justified,
                     this.absenceUserID,
                 ]
@@ -55,6 +56,15 @@ ORDER BY startDate DESC`);
         return db.execute('SELECT * FROM absence WHERE absenceID = ?', [id]);
     }
 
+    static fetchOne(absenceID) {
+        return db.execute(
+            `SELECT *
+        FROM absence a
+        WHERE a.absenceID = ?`,
+            [absenceID]
+        );
+    }
+
     static fetch(id) {
         if (id) {
             return this.fetchOne(id);
@@ -82,24 +92,84 @@ ORDER BY startDate DESC`);
         );
     }
 
-    static updateStatus(absenceId, status) {
+    static updateStatusLeader(absenceId, status) {
+            return db.execute(
+                "UPDATE absence SET leaderStatus = ? WHERE absenceID = ?",
+                [status, absenceId]
+            );
+        }
+    
+    static updateStatusHR(absenceId, status) {
         return db.execute(
-            'UPDATE absence SET justified = ? WHERE absenceID = ?',
+            'UPDATE absence SET hrStatus = ? WHERE absenceID = ?',
             [status, absenceId]
         );
     }
 
-    static fetchPaginated(limit, offset) {
-        return db.execute(
-            `SELECT a.*, u.birthName, u.surname, r.title
-        FROM absence AS a
-        JOIN user AS u ON u.userID = a.absenceUserIDFK
-        JOIN role AS r ON r.roleID = u.userRoleIDFK
-        WHERE a.justified = 2
-        ORDER BY a.startDate DESC
-        LIMIT ? OFFSET ?`,
-            [limit, offset]
-        );
+    static fetchPaginated(limit, offset, userRole, userId) {
+        if (userRole === 'Human Resources') {
+            // RRHH: Ver todas las solicitudes pendientes para RRHH (justified = 2)
+            return db.execute(
+                `SELECT a.*, u.birthName, u.surname, r.title
+                FROM absence AS a
+                JOIN user AS u ON u.userID = a.absenceUserIDFK
+                JOIN role AS r ON r.roleID = u.userRoleIDFK
+                WHERE a.hrStatus = 2
+                ORDER BY a.startDate DESC
+                LIMIT ? OFFSET ?`,
+                [limit, offset]
+            );
+        } else if (userRole === 'Department Leader') {
+            // Líder: Ver solo solicitudes pendientes de su departamento
+            return db.execute(
+                `SELECT a.*, u.birthName, u.surname, r.title
+                FROM absence AS a
+                JOIN user AS u ON u.userID = a.absenceUserIDFK
+                JOIN role AS r ON r.roleID = u.userRoleIDFK
+                JOIN user AS leader ON leader.userID = ?
+                WHERE a.leaderStatus = 2
+                AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
+                ORDER BY a.startDate DESC
+                LIMIT ? OFFSET ?`,
+                [userId, limit, offset]
+            );
+        } else {
+            // Para otros roles, retornar un array vacío
+            return Promise.resolve([[]]);
+        }
+    }
+    
+    static fetchAllPaginated(limit, offset, userRole, userId) {
+        if (userRole === 'Human Resources') {
+            // RRHH: Ver todas las solicitudes aprobadas o rechazadas (justified = 0 o 1)
+            return db.execute(
+                `SELECT a.*, u.birthName, u.surname, r.title
+                FROM absence AS a
+                JOIN user AS u ON u.userID = a.absenceUserIDFK
+                JOIN role AS r ON r.roleID = u.userRoleIDFK
+                WHERE (a.hrStatus = 0 OR a.hrStatus = 1)
+                ORDER BY a.startDate DESC
+                LIMIT ? OFFSET ?`,
+                [limit, offset]
+            );
+        } else if (userRole === 'Department Leader') {
+            // Líder: Ver solicitudes aprobadas o rechazadas de su departamento
+            return db.execute(
+                `SELECT a.*, u.birthName, u.surname, r.title
+                FROM absence AS a
+                JOIN user AS u ON u.userID = a.absenceUserIDFK
+                JOIN role AS r ON r.roleID = u.userRoleIDFK
+                JOIN user AS leader ON leader.userID = ?
+                WHERE (a.leaderStatus = 0 OR a.leaderStatus = 1)
+                AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
+                ORDER BY a.startDate DESC
+                LIMIT ? OFFSET ?`,
+                [userId, limit, offset]
+            );
+        } else {
+            // Para otros roles, retornar un array vacío
+            return Promise.resolve([[]]);
+        }
     }
 
     static getPagination(limit, offset, id) {

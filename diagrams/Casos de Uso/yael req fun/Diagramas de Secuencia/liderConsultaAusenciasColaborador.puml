@@ -1,0 +1,44 @@
+@startuml
+
+actor navegador as nav
+boundary routes
+boundary "Vista list.ejs" as list
+control controller
+entity absence as ab
+database mysql
+
+autonumber
+
+activate nav
+nav -> routes: GET absence/check
+deactivate nav
+activate routes
+routes -> controller: getCheck(req, res)
+deactivate routes
+activate controller
+controller ->> ab: getLeaderDepartment(req.session.userID)
+
+activate ab
+ab ->> mysql: execute(´SELECT u.priorityDepartmentIDFK, \nud.departmentIDFK, d.title FROM user u \nJOIN userDepartment ud ON u.userID = ud.userIDFK \nJOIN department d ON ud.departmentIDFK = d.departmentID \nWHERE u.userID = ?´, [userID])
+activate mysql
+mysql -->> ab: infoDepartment
+deactivate mysql
+ab -->> controller: infoDepartment
+deactivate ab
+
+controller ->> ab: getColabsAbsences(infoDepartment.departmentIDFK)
+activate ab
+ab ->> mysql: execute(´SELECT a.*, u.birthName, u.surname, u.mail \nFROM user u JOIN absence a ON u.userID = a.absenceUserIDFK \nWHERE u.userID IN (\n    SELECT u.userID FROM user u \n    JOIN userDepartment ud ON u.userID = ud.userIDFK \n    WHERE ud.departmentIDFK = ?\n)´, [infoDepartment.departmentIDFK])
+activate mysql
+mysql -->> ab: rows
+deactivate mysql
+ab -->> controller: rows
+deactivate ab
+
+controller -> list: res.render('list.ejs', rows)
+deactivate controller
+activate list
+list -> nav
+deactivate list
+activate nav
+@enduml

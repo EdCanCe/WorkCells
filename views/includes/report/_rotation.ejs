@@ -153,4 +153,67 @@
             </tbody>
         </table>
     </div>
+
+    <div class="p-6">
+        <h2 class="text-2xl font-bold mb-4">Rotación Mensual</h2>
+        <canvas id="rotationChart" width="800" height="400"></canvas>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    (function() {
+        const activesData   = <%- JSON.stringify(activesPerMonth   || []) %>;
+        const inactivesData = <%- JSON.stringify(inactivesPerMonth || []) %>;
+
+        if (!activesData.length && !inactivesData.length) return;
+
+        const monthSet = new Set();
+        activesData.forEach(d => monthSet.add(d.mes));
+        inactivesData.forEach(d => monthSet.add(d.mes));
+        const months = Array.from(monthSet).sort((a, b) => a - b);
+
+        const monthNames = [
+            'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+            'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+        ];
+        const labels = months.map(m => monthNames[m - 1]);
+
+        const activeTotals = months.map(m => {
+            const f = activesData.find(d => d.mes === m);
+            return f ? f.totalEmpleados : 0;
+        });
+        const inactiveTotals = months.map(m => {
+            const f = inactivesData.find(d => d.mes === m);
+            return f ? f.totalEmpleados : 0;
+        });
+
+        const ctx = document.getElementById('rotationChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels,
+            datasets: [
+                {
+                label: 'Nuevos',
+                data: activeTotals,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                },
+                {
+                label: 'Bajas',
+                data: inactiveTotals,
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                }
+            ]
+            },
+            options: {
+            responsive: true,
+            scales: {
+                x: { title: { display: true, text: 'Mes' } },
+                y: { title: { display: true, text: 'Empleados' }, beginAtZero: true }
+            }
+            }
+        });
+    })();
+</script>

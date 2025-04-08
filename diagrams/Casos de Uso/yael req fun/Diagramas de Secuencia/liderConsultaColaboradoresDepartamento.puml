@@ -1,0 +1,45 @@
+@startuml
+
+actor navegador as nav
+boundary routes
+boundary "Vista list.ejs" as list
+control controller
+entity Employee as emp
+database mysql
+
+autonumber
+
+activate nav
+nav -> routes: GET employee/department
+deactivate nav
+activate routes
+routes -> controller: getEmployeesInDepartment(req, res)
+deactivate routes
+
+activate controller  
+controller ->> emp: getLeaderDepartment(req.session.userID)
+activate emp
+emp ->> mysql: execute(´SELECT ud.departmentIDFK \nFROM user u JOIN userDepartment ud \nON u.userID = ud.userIDFK \nWHERE u.userID = ?´, [userID])
+activate mysql
+mysql -->> emp: leaderDepartmentID
+deactivate mysql
+emp -->> controller: leaderDepartmentID
+deactivate emp
+
+controller ->> emp: getEmployeesInDepartment(leaderDepartmentID)
+activate emp
+emp ->> mysql: execute(´SELECT u.birthName, u.surname, u.mail \nFROM user u JOIN userDepartment ud \nON u.userID = ud.userIDFK \nWHERE ud.departmentIDFK = ?´, \n[leaderDepartmentID])
+activate mysql
+mysql -->> emp: rows
+deactivate mysql
+emp -->> controller: rows
+deactivate emp
+controller -> list: res.render("check.ejs", rows)
+deactivate controller
+
+activate list
+list -> nav: HTML
+deactivate list
+activate nav
+
+@enduml

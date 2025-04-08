@@ -4,6 +4,7 @@ boundary "vacation.routes" as Routes
 boundary "error.routes" as Error
 boundary "addVacation.ejs" as Ejs
 control "vacation.controller" as Controller
+entity "holiday.model" as Holiday
 entity "vacation" as Model1
 entity "vacation.model" as Model
 database "mysql" as MySQL
@@ -20,14 +21,23 @@ deactivate Routes
 
 activate Controller
 
-Controller ->> Model : fetchAvailableDays(request.session.userID)
+Controller ->> Model : fetchVacationsInPeriod(request.session.userID)
 activate Model
-    Model ->> MySQL : execute(...);
+    Model ->> MySQL : execute(...)
     activate MySQL
         MySQL -->> Model : rows
     deactivate MySQL
     Model -->> Controller : rows
 deactivate Model
+
+Controller ->> Holiday: fetchByDateType(startDate, endDate)
+activate Holiday
+Holiday ->> MySQL: execute(...)
+activate MySQL
+MySQL -->> Holiday: rows
+deactivate MySQL
+Holiday -->> Controller: rows
+deactivate Holiday
 
 Controller -> Ejs : response.render("addVacation.ejs", {...})
 deactivate Controller
@@ -46,7 +56,20 @@ deactivate Routes
 
 activate Controller
 
-alt (requestDays > availableDays) || (startDate > endDate)
+alt (request.body.startDate > request.body.endDate)
+    Controller -> Routes : response.redirect("vacation/add")
+end
+
+Controller ->> Holiday: fetchByDateType(startDate, endDate)
+activate Holiday
+Holiday ->> MySQL: execute(...)
+activate MySQL
+MySQL -->> Holiday: rows
+deactivate MySQL
+Holiday -->> Controller: rows
+deactivate Holiday
+
+alt (requestDays > availableDays)
     Controller -> Routes : response.redirect("vacation/add")
 end
 

@@ -67,16 +67,48 @@ exports.getRoot = (request, response, next) => {
         });
 };
 
-exports.listPaginated = async (request, response) => {
+exports.getSearch = async (request, response) => {
     const page = parseInt(request.query.page) || 1;
-    const limit = 10;
+    const query = request.query.query || "";
+    const limit = 6;
     const offset = (page - 1) * limit;
+  
+    let searchPromise;
+  
+    if (query) {
+      // Si se proporciona una consulta, se usa el método de búsqueda
+      searchPromise = Fault.searchByQuery(query, limit, offset);
+    } else {
+      // Si no hay búsqueda, se usa la paginación estándar
+      searchPromise = Fault.getFaltasPaginated(limit, offset);
+    }
 
     try {
-        const [rows] = await Fault.getFaltasPaginated(limit, offset); // <== AQUÍ EL CAMBIO
-        response.json(rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error al obtener las faltas" });
-    }
+        const [rows] = await searchPromise;
+        response.json({ faults: rows, page, query });
+      } catch (error) {
+        console.error("Error al obtener las faltas:", error);
+        response.status(500).json({ error: "Error al obtener las faltas" });
+      }
 };
+
+
+exports.postDelete = (request, response, next) => {
+    const fault = new Fault({
+        faultID: request.body.faultID,
+        userID: request.body.userID,
+    });
+
+    fault.delete()
+        .then(() => {
+            request.session.info = 'It was deleted successfully';
+            response.redirect('/fault');
+        })
+        .catch((error) => {
+            request.session.alert = error.message;
+            response.redirect('/fault');
+        })
+};
+  
+
+  

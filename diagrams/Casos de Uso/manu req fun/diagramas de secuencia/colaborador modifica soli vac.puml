@@ -9,7 +9,7 @@ database mysql
 autonumber
 ' Inicio del flujo
 activate Navegador
-Navegador -> vacation.routes : GET /vacation/modify:vacationID
+Navegador -> vacation.routes : GET /vacation/check/modify:vacationID
 deactivate Navegador
 activate vacation.routes
 

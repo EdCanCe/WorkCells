@@ -4,7 +4,7 @@ const Question = require('../models/question.model');
 const Measurable = require('../models/measurable.model');
 const Answer = require('../models/answer.model');
 const Measure = require('../models/measure.model');
-const { formatDateWithOrdinal } = require('../util/formatDate');
+const formatDate = require('../util/formatDate');
 const sessionVars = require('../util/sessionVars');
 
 exports.getOneToOne = (request, response, next) => {
@@ -69,7 +69,7 @@ exports.getOneToOneFill = (request, response, next) => {
                         questions,
                         measurables,
                         name: `${rows[0].birthName} ${rows[0].surname}`,
-                        meetingDate: formatDateWithOrdinal(rows[0].meetingDate),
+                        meetingDate: formatDate.withOrdinal(rows[0].meetingDate),
                         meetingLink: rows[0].meetingLink,
                         sessionID: request.params.sessionID,
                     });
@@ -155,7 +155,7 @@ exports.getOneToOneCheck = (request, response, next) => {
                                     sessionData: rows[0],
                                     sessionID: request.params.sessionID,
                                     name: `${rows[0].birthName} ${rows[0].surname}`,
-                                    meetingDate: formatDateWithOrdinal(rows[0].meetingDate),
+                                    meetingDate: formatDate.withOrdinal(rows[0].meetingDate),
                                 });
                             });
                     }

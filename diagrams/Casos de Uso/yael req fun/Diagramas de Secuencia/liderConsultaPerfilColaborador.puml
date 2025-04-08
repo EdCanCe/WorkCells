@@ -1,0 +1,36 @@
+@startuml
+
+actor navegador as nav
+boundary routes
+boundary "Vista profile.ejs" as profile
+control controller
+entity Employee as emp
+database mysql
+
+autonumber
+
+activate nav
+nav -> routes: GET /employee/:userID/profile
+deactivate nav
+activate routes
+routes -> controller: getOneEmployeeProfile(req, res)
+deactivate routes
+activate controller
+controller ->> emp: getOneProfile(req.params.userID)
+activate emp
+emp ->> mysql: execute(´SELECT u.* FROM user AS u \nWHERE u.userID = ?´, [userID])
+activate mysql
+mysql -->> emp: perfil
+deactivate mysql
+emp -->> controller: perfil
+deactivate emp
+
+controller -> profile: res.render("profile.ejs", perfil)
+deactivate controller
+activate profile
+profile -> nav: HTML
+deactivate profile
+activate nav
+
+
+@enduml
