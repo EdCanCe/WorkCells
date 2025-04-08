@@ -199,10 +199,10 @@ exports.getFullName = (request, response, next) => {
 
 exports.getSessions = (request, response, next) => {
     OneToOne.getAllSessions()
-        .then((sessions) => {
-            console.log(sessions);
+        .then(([rows, fieldData]) => {
+            console.log(rows);
             response.render("oneToOneCheckAll", {
-                sessions: sessions,
+                sessions: rows,
                 ...sessionVars(request),
             });
         })

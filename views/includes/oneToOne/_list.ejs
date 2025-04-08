@@ -47,9 +47,34 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody
-                        class="bg-neutral-800 divide-y divide-neutral-200"
-                    ></tbody>
+                    <tbody class="bg-neutral-800 divide-y divide-neutral-200">
+                        <% for(const s of sessions) { const d = new
+                        Date(s.meetingDate); const date =
+                        d.toISOString().split("T")[0]; const [hh, mm] =
+                        d.toISOString().split("T")[1].split(":"); const time =
+                        `${hh}:${mm}`; %>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <%= s.birthName + " " + s.surname %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <%= s.mail %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <%= s.title %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <%= date %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <%= time %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                <%= s.expectedTime %>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
                 </table>
             </div>
         </div>
