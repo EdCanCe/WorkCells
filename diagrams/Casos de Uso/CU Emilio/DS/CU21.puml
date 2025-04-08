@@ -14,19 +14,19 @@ employee.routes -> employee.controller: getCheck(request, response)
 deactivate employee.routes
 activate employee.controller
 
-employee.controller ->> employee: fetchUser(userID) \n(request.params.id)
+employee.controller ->> employee: fetchUser(request.params.id)
 activate employee
 
 employee ->> mysql: db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
 activate mysql
 
-mysql -->> employee: Query OK
+mysql -->> employee: rows
 deactivate mysql
 
 employee -->> employee.controller: rows
 deactivate employee
 
-employee.controller -> employeeCheck.ejs: response.render(employeeCheck)
+employee.controller -> employeeCheck.ejs: response.render("employeeCheck", rows)
 deactivate employee.controller
 activate employeeCheck.ejs
 
