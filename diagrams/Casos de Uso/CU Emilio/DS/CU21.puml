@@ -17,7 +17,7 @@ activate employee.controller
 employee.controller ->> employee.model: fetchUser(userID)
 activate employee.model
 
-employee.model ->> mysql: SELECT * FROM user WHERE userID = ?
+employee.model ->> mysql: db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
 activate mysql
 
 mysql -->> employee.model: Datos del empleado
@@ -32,6 +32,8 @@ activate employeeCheck.ejs
 
 employeeCheck.ejs -> navegador: Muestra datos de empleado
 deactivate employeeCheck.ejs
+activate navegador
+deactivate navegador
 
 
 

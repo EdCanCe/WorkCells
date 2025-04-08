@@ -14,7 +14,7 @@ employee.routes -> employee.controller: getModify(request, response)
 deactivate employee.routes
 activate employee.controller
 
-employee.controller -> employeeCheckModify.ejs: response.render(employeeCheckModify)
+employee.controller -> employeeCheckModify.ejs: response.render("employeeCheckModify")
 deactivate employee.controller
 activate employeeCheckModify.ejs
 
@@ -45,3 +45,5 @@ deactivate updatedEmployee
 
 employee.controller -> employee.routes : response.redirect("/employee")
 deactivate employee.controller
+activate employee.routes
+deactivate employee.routes
