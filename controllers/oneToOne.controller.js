@@ -211,4 +211,24 @@ exports.getSessions = (request, response, next) => {
         });
 };
 
-exports.getSearch = (request, response, next) => {};
+exports.getSearch = (request, response, next) => {
+    const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    const searchPromise = query
+        ? OneToOne.searchByName(query)
+        : OneToOne.getAllSessionsPaginated(limit, offset);
+
+    searchPromise
+        .then(([rows]) => {
+            response.json({ rows, page, query });
+        })
+        .catch((error) => {
+            console.error("Error en la búsqueda/paginación:", error);
+            response
+                .status(500)
+                .json({ error: "Error en la búsqueda/paginación" });
+        });
+};

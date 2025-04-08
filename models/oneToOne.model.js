@@ -139,10 +139,11 @@ module.exports = class OneToOne {
     static searchByName(query) {
         return db.execute(
             `SELECT u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
-            o.expectedTime FROM user u WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
+            o.expectedTime FROM user u 
             JOIN role r ON u.userRoleIDFK = r.roleID
             JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
-            ORDER BY o.meetingDate DESC LIMIT ? OFFSET ?`,
+            WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
+            ORDER BY o.meetingDate DESC`,
             [`%${query}%`, `%${query}%`]
         );
     }
