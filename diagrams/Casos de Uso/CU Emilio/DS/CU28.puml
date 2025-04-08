@@ -14,19 +14,19 @@ employee.routes -> employee.controller: getModify(request, response)
 deactivate employee.routes
 activate employee.controller
 
-employee.controller ->> updatedEmployee: fetchUser(userID) \n(request.params.id)
+employee.controller ->> updatedEmployee: fetchUser(request.param.id)
 activate updatedEmployee
 
-updatedEmployee ->> mysql: return db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
+updatedEmployee ->> mysql: db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
 activate mysql
 
-mysql -->> updatedEmployee: Query OK
+mysql -->> updatedEmployee: rows
 deactivate mysql
 
 updatedEmployee -->> employee.controller: rows
 deactivate updatedEmployee
 
-employee.controller -> employeeCheckModify.ejs: response.render("employeeCheckModify")
+employee.controller -> employeeCheckModify.ejs: response.render("employeeCheckModify", rows)
 deactivate employee.controller
 activate employeeCheckModify.ejs
 
@@ -42,10 +42,8 @@ employee.routes -> employee.controller : postModify(request, response)
 deactivate employee.routes
 activate employee.controller
 
-employee.controller -> updatedEmployee : updatedEmployee(request.params.id, request.body.curp, request.body.rfc, \nrequest.body.birthName,request.body.surname, reuquest.body.mail, \nrequest.body.passwd, request.body.passwdFlag, request.body.zipCode,\nrequest.body.houseNumber, request.body.streetName,request.body.colony, \nrequest.body.workModality, request.body.workStatus, request.body.userRoleIDFK, \nrequest.body.countryUserIDFK, request.body.workStatus)
+employee.controller ->> updatedEmployee : updatedEmployee(request.params.id, request.body.curp, request.body.rfc, \nrequest.body.birthName,request.body.surname, reuquest.body.mail, \nrequest.body.passwd, request.body.passwdFlag, request.body.zipCode,\nrequest.body.houseNumber, request.body.streetName,request.body.colony, \nrequest.body.workModality, request.body.workStatus, request.body.userRoleIDFK, \nrequest.body.countryUserIDFK, request.body.workStatus)
 activate updatedEmployee
-
-employee.controller ->> updatedEmployee : modify()
 
 updatedEmployee ->> mysql : db.execute("UPDATE user SET , curp = ?, rfc = ?, birthName = ?, \nsurname = ?, mail = ?, passwd = ?, passwdFlag = ?, \nzipCode = ?, houseNumber = ?, streetName = ?, \ncolony = ?, workModality = ?, userRoleIDFK = ?, \ncountryUserIDFK = ?, prioritaryDepartmentIDFK = ?, \nworkStatus = ? WHERE userID = ?;"), \n[curp,rfc,birthName,surname,mail,zipCode, \nhouseNumber,streetName,colony,workModality,\nuserRoleIDFK,countryUserIDFK,\nprioritaryDepartmentIDFK,workStatus,userID,]
 activate mysql

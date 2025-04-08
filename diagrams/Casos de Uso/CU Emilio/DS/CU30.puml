@@ -15,18 +15,18 @@ holiday.routes -> holiday.controller: getHolidaysModify(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holiday: fetchHolidayID \n(request.params.id)
+holiday.controller -> holiday: fetchHolidayID(request.params.id)
 activate holiday
 
-holiday -> mysql: return db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID")
+holiday -> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID")
 activate mysql
-mysql -> holiday: Query OK
+mysql -> holiday: rows
 deactivate mysql
 
 holiday -> holiday.controller: rows
 deactivate holiday
 
-holiday.controller -> holidayModify.ejs: response.render("holidayModify")
+holiday.controller -> holidayModify.ejs: response.render("holidayModify", rows)
 deactivate holiday.controller
 activate holidayModify.ejs
 
@@ -42,10 +42,8 @@ holiday.routes -> holiday.controller : postHolidayModify(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holiday : updateHoliday(request.body.usedHolidayID, \nrequest.body.usedDate, request.body.usedTemplateHolidayIDFK)
+holiday.controller ->> holiday : updateHoliday(request.body.usedHolidayID, \nrequest.body.usedDate, \nrequest.body.usedTemplateHolidayIDFK)
 activate holiday
-
-holiday.controller ->> holiday : save()
 
 holiday ->> mysql : db.execute ("UPDATE usedHoliday set \nusedDate = ?, usedTemplateHolidayIDFK = ? \nWHERE usedHolidayID = ? ), [usedDate, \nusedTemplateHolidayIDFK, usedHolidayID]);
 activate mysql
@@ -56,5 +54,7 @@ deactivate holiday
 
 holiday.controller -> holiday.routes : response.redirect("/holiday")
 deactivate holiday.controller
+activate holiday.routes
+deactivate holiday.routes
 
 @enduml
