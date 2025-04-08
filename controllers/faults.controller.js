@@ -24,11 +24,10 @@ exports.postAdd = (request, response, next) => {
     }
     );
 
-    console.log("email: ", request.body.email);
     faults
         .save()
         .then((faultID) => {
-            request.session.info = `Fault of ${faults.email} created`;
+            request.session.info = `Fault of ${faults.email} in the date ${faults.doneDate} created`;
 
             if (request.file) {
                 const media = new FaultMedia(request.file.filename, faultID);
@@ -41,7 +40,7 @@ exports.postAdd = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            request.session.info = `Error al ingresar datos.`;
+            request.session.warning = `Error al ingresar datos.`;
             response.redirect("/fault");
             response.status(500);
         });
