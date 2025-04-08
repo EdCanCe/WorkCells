@@ -15,15 +15,15 @@ holiday.routes -> holiday.controller: getHolidaysModify(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holiday: fetchHolidayID(request.params.id)
+holiday.controller ->> holiday: fetchHolidayID(request.params.id)
 activate holiday
 
-holiday -> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID = ?", [usedHolidayID]);
+holiday ->> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID = ?", [usedHolidayID]);
 activate mysql
-mysql -> holiday: rows
+mysql -->> holiday: rows
 deactivate mysql
 
-holiday -> holiday.controller: rows
+holiday -->> holiday.controller: rows
 deactivate holiday
 
 holiday.controller -> holidayModify.ejs: response.render("holidayModify", rows)
@@ -47,7 +47,7 @@ activate holiday
 
 holiday ->> mysql : db.execute ("UPDATE usedHoliday set \nusedDate = ?, usedTemplateHolidayIDFK = ? \nWHERE usedHolidayID = ? ), [usedDate, \nusedTemplateHolidayIDFK, usedHolidayID]);
 activate mysql
-mysql -->> holiday : Insert OK
+mysql -->> holiday : Update OK
 deactivate mysql
 holiday -->> holiday.controller : Promesa
 deactivate holiday
