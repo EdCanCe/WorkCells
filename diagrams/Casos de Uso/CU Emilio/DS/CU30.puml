@@ -47,7 +47,7 @@ activate holiday
 
 holiday.controller ->> holiday : save()
 
-holiday ->> mysql : db.execute ("UPDATE usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK), \n[this.usedHolidayID, this.usedDate, \nthis.usedTemplateHolidayIDFK]
+holiday ->> mysql : db.execute ("UPDATE usedHoliday set \nusedDate = ?, usedTemplateHolidayIDFK = ? \nWHERE usedHolidayID = ? ), [usedDate, \nusedTemplateHolidayIDFK, usedHolidayID]);
 activate mysql
 mysql -->> holiday : Insert OK
 deactivate mysql
