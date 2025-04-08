@@ -10,11 +10,10 @@
                     A continuación, se presentan los detalles de la solicitud de vacaciones:
                 </p>
                 <div class="mt-4 space-y-2">
-                    <p><strong class="text-neutral-300">ID Solicitud:</strong> <%= vacation.vacationID %></p>
                     <p><strong class="text-neutral-300">Motivo:</strong> <%= vacation.reason %></p>
-                    <p><strong class="text-neutral-300">Fecha de Inicio:</strong> <%= vacation.startDate %></p>
-                    <p><strong class="text-neutral-300">Fecha de Fin:</strong> <%= vacation.endDate %></p>
-                    <p><strong class="text-neutral-300">Días Solicitados:</strong> <%= vacation.daysRequested %></p>
+                    <p><strong class="text-neutral-300">Fecha de Inicio:</strong> <%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></p>
+                    <p><strong class="text-neutral-300">Fecha de Fin:</strong> <%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></p>
+                    <p><strong class="text-neutral-300">Días Solicitados:</strong> <%= requestedDays %> días</p>
                     <p><strong class="text-neutral-300">Estado RH:</strong> 
                         <% if (vacation.hrStatus === 1) { %>
                             <span class="text-green-500">Aprobado</span>
@@ -33,7 +32,6 @@
                             <span class="text-yellow-500">Pendiente</span>
                         <% } %>
                     </p>
-                    <p><strong class="text-neutral-300">Comentarios:</strong> <%= vacation.comments || 'Sin comentarios' %></p>
                 </div>
             </div>
         </div>
