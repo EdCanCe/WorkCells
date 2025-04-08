@@ -7,11 +7,11 @@
         </h1>
   
         <!-- Mensaje de info/errores -->
-        <% if (info === "Error al ingresar datos.") { %>
+        <% if (warning) { %>
           <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-            <%= info %>
+            <%= warning %>
           </div>
-        <% } else if (info && info !== '') { %>
+        <% } else if (info) { %>
           <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
             <%= info %>
           </div>

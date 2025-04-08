@@ -51,7 +51,7 @@ async function loadEmployees(page, query = "", selectedFilter = filter) {
     document.getElementById("employeeTable").innerHTML = table;
 
     document.getElementById("prevPage").disabled = page === 1;
-    document.getElementById("nextPage").disabled = employees.length < 6;
+    document.getElementById("nextPage").disabled = employees.length < 1;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

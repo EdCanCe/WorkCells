@@ -7,8 +7,6 @@ entity holiday
 database mysql
 
 autonumber
-' Inicio del flujo
-
 activate Navegador
 
 Navegador -> holiday.routes : POST /holiday/:id/modify

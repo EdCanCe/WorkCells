@@ -15,7 +15,18 @@ holiday.routes -> holiday.controller: getHolidaysModify(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holidayModify.ejs: response.render(holidayModify)
+holiday.controller ->> holiday: fetchHolidayID(request.params.id)
+activate holiday
+
+holiday ->> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID = ?", [usedHolidayID]);
+activate mysql
+mysql -->> holiday: rows
+deactivate mysql
+
+holiday -->> holiday.controller: rows
+deactivate holiday
+
+holiday.controller -> holidayModify.ejs: response.render("holidayModify", rows)
 deactivate holiday.controller
 activate holidayModify.ejs
 
@@ -23,27 +34,27 @@ holidayModify.ejs -> navegador : Mostrar formulario para modificar dia feriado
 deactivate holidayModify.ejs
 activate navegador
 
-navegador -> holiday.routes : POST /holiday/add
+navegador -> holiday.routes : POST /holiday/:id/modify
 deactivate navegador
 activate holiday.routes
 
 holiday.routes -> holiday.controller : postHolidayModify(request, response)
 deactivate holiday.routes
 activate holiday.controller
-create holiday
-holiday.controller -> holiday : new Holiday(request.body.usedHolidayID, \nrequest.body.usedDate, request.body.usedTemplateHolidayIDFK)
+
+holiday.controller ->> holiday : updateHoliday(request.body.usedHolidayID, \nrequest.body.usedDate, \nrequest.body.usedTemplateHolidayIDFK)
 activate holiday
 
-holiday.controller ->> holiday : save()
-
-holiday ->> mysql : UPDATE usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK) \nVALUES(?, ?, ?)
+holiday ->> mysql : db.execute ("UPDATE usedHoliday set \nusedDate = ?, usedTemplateHolidayIDFK = ? \nWHERE usedHolidayID = ? ), [usedDate, \nusedTemplateHolidayIDFK, usedHolidayID]);
 activate mysql
-mysql -->> holiday : Insert OK
+mysql -->> holiday : Update OK
 deactivate mysql
 holiday -->> holiday.controller : Promesa
 deactivate holiday
 
 holiday.controller -> holiday.routes : response.redirect("/holiday")
 deactivate holiday.controller
+activate holiday.routes
+deactivate holiday.routes
 
 @enduml

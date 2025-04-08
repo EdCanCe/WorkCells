@@ -13,6 +13,7 @@ routes -> controller: get_add(req, res)
 deactivate routes
 activate controller
 controller -> add: res.render('add.ejs', sessionVars)
+note right: sessionVars es obtenido a través de un util, \ncontiene las variables de sesion y mensajes 
 deactivate controller
 activate add
 add -> navegador: HTML
@@ -32,11 +33,11 @@ create entity absence
 controller -> absence: new Absence(req.body.startDate, req.body.endDate, \nreq.body.reason, req.session.userID)
 activate absence
 controller ->> absence: save()
-
-entity AbsencesMedia
 database mysql
 
 absence ->> mysql: execute("INSERT INTO absence(?,?,?,?,?,?)",\nabsenceID, this.startDate, this.endDate, \nthis.reason, this.justified, this.absenceUserID )
+note left: absenceID es obtenido usando uuid 
+
 activate mysql
 mysql -->> absence: Query OK
 deactivate mysql
@@ -47,7 +48,9 @@ create entity absenceMedia
 controller -> absenceMedia: new AbsenceMedia(req.file.filename, absenceID)
 activate absenceMedia
 controller ->> absenceMedia : save()
+
 absenceMedia ->> mysql: execute("INSERT INTO absenceMedia(?,?,?)", \nabsenceMediaID, this.mediaLink, this.absenceIDFK)
+note left: absenceMediaID es obtenido usando uuid 
 activate mysql
 mysql -->> absenceMedia: Query OK
 deactivate mysql
@@ -63,7 +66,7 @@ deactivate routes
 activate controller
 controller ->> Absences: fetchAllByID(req.session.userID)
 activate Absences
-Absences ->> mysql: execute("SELECT a.*, am.mediaLink \nFROM absence AS a LEFT JOIN absenceMedia AS am \nON a.absenceID = am.absenceIDFK \nWHERE a.absenceUserIDFK = ? \nORDER BY a.startDate DESC", [id])
+Absences ->> mysql: execute("SELECT a.*, am.mediaLink \nFROM absence AS a LEFT JOIN absenceMedia AS am \nON a.absenceID = am.absenceIDFK \nWHERE a.absenceUserIDFK = ? \nORDER BY a.startDate DESC", [req.session.userID])
 activate mysql
 mysql -->> Absences: rows
 deactivate mysql
@@ -76,4 +79,5 @@ activate list
 list -> navegador: HTML
 deactivate list
 activate navegador
+
 @enduml

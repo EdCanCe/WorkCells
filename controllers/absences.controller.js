@@ -25,7 +25,6 @@ exports.postRequestApprove = (request, response, next) => {
                     message: 'Solicitud no encontrada'
                 });
             }
-            const vacation = rows[0];
             
             // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
             if (userRole === 'Human Resources') {
@@ -33,14 +32,8 @@ exports.postRequestApprove = (request, response, next) => {
             }
             // Si es líder, actualiza el estado del líder
             else if (userRole === 'Department Leader') { // Cambiado de 'Leader' a 'Department Leader'
-                return Absence.fetchDepartmentPaginated(userId, 1, 0)
-                    .then(([departmentVacations]) => {
-                        const hasPermission = departmentVacations.some(v => v.absenceId === absenceId);
-                        if (!hasPermission) {
-                            throw new Error('No tienes permiso para aprobar esta solicitud');
-                        }
-                        return Absence.updateStatusLeader(absenceId, 1);
-                    });
+                console.log('Hola')
+                return Absence.updateStatusLeader(absenceId, 1);
             }
             else {
                 throw new Error('Rol no autorizado');
@@ -74,7 +67,6 @@ exports.postRequestDeny = (request, response, next) => {
                     message: 'Solicitud no encontrada'
                 });
             }
-            const absence = rows[0];
             // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
             if (userRole === 'Human Resources') {
                 // Elimina la restricción de verificar el estado del líder
@@ -82,14 +74,7 @@ exports.postRequestDeny = (request, response, next) => {
             }
             // Si es líder, actualiza el estado del líder
             else if (userRole === 'Department Leader') {
-                return Absence.fetchDepartmentPaginated(userId, 1, 0)
-                    .then(([departmentVacations]) => {
-                        const hasPermission = departmentVacations.some(v => v.absenceId === absenceId);
-                        if (!hasPermission) {
-                            throw new Error('No tienes permiso para denegar esta solicitud');
-                        }
-                        return Absence.updateStatusLeader(absenceId, 0);
-                    });
+                return Absence.updateStatusLeader(absenceId, 0); // 0 = Denegado
             }
             else {
                 throw new Error('Rol no autorizado');

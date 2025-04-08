@@ -15,7 +15,7 @@ holiday.routes -> holiday.controller: getHolidaysAdd(request, response)
 deactivate holiday.routes
 activate holiday.controller
 
-holiday.controller -> holidayAdd.ejs: response.render(holidayAdd)
+holiday.controller -> holidayAdd.ejs: response.render("holidayAdd")
 deactivate holiday.controller
 activate holidayAdd.ejs
 
@@ -36,7 +36,7 @@ activate holiday
 
 holiday.controller ->> holiday : save()
 
-holiday ->> mysql : INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK) \nVALUES(?, ?, ?)
+holiday ->> mysql : const query = 'INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK)' \ndb.execute(query, [usedHolidayID, this.usedDate, \nthis.usedTemplateHolidayIDFK,]);
 activate mysql
 mysql -->> holiday : Insert OK
 deactivate mysql
@@ -45,5 +45,7 @@ deactivate holiday
 
 holiday.controller -> holiday.routes : response.redirect("/holiday")
 deactivate holiday.controller
+activate holiday.routes
+deactivate holiday.routes
 
 @enduml

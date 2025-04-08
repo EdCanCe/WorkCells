@@ -3,7 +3,7 @@ actor navegador
 boundary employee.routes
 boundary employeeCheck.ejs
 control employee.controller
-entity employee.model
+entity employee
 database mysql
 
 autonumber
@@ -14,24 +14,26 @@ employee.routes -> employee.controller: getCheck(request, response)
 deactivate employee.routes
 activate employee.controller
 
-employee.controller ->> employee.model: fetchUser(userID)
-activate employee.model
+employee.controller ->> employee: fetchUser(request.params.id)
+activate employee
 
-employee.model ->> mysql: SELECT * FROM user WHERE userID = ?
+employee ->> mysql: db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
 activate mysql
 
-mysql -->> employee.model: Datos del empleado
+mysql -->> employee: rows
 deactivate mysql
 
-employee.model ->> employee.controller: Promesa
-deactivate employee.model
+employee -->> employee.controller: rows
+deactivate employee
 
-employee.controller -> employeeCheck.ejs: response.render(employeeCheck)
+employee.controller -> employeeCheck.ejs: response.render("employeeCheck", rows)
 deactivate employee.controller
 activate employeeCheck.ejs
 
 employeeCheck.ejs -> navegador: Muestra datos de empleado
 deactivate employeeCheck.ejs
+activate navegador
+deactivate navegador
 
 
 
