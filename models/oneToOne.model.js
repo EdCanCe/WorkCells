@@ -1,14 +1,25 @@
-const db = require('../util/database');
-const { v4: uuidv4 } = require('uuid');
+const db = require("../util/database");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = class OneToOne {
+    /*
+     * funcion utilizada para instanciar un objeto de la clase OneToOne
+     * @param int expectedTime          duración estimada de la reunion
+     * @param string meetingDate        fecha y hora de la reunion
+     * @param string meetingLink        link de una reunion
+     * @param string oneOnOneUserIDFK   id del usuario
+     *
+     */
     constructor(expectedTime, meetingDate, meetingLink, oneOnOneUserIDFK) {
         this.expectedTime = expectedTime;
         this.meetingDate = meetingDate;
         this.meetingLink = meetingLink;
         this.oneOnOneUserIDFK = oneOnOneUserIDFK;
     }
-
+    /*
+     * Funcion que guarda un registro del one to one, con sus datos como id,
+     * generado con uuid, expectedTime, meetingDate, meetingLink, oneOnOneUserIDFK
+     */
     save() {
         const oneToOneID = uuidv4();
         return db.execute(
@@ -24,41 +35,52 @@ module.exports = class OneToOne {
         );
     }
 
+    /*
+     * Recolecta toda la informacion de una sesion one to one, con limite de 10
+     *
+     * @returns todos los registros de sesiones
+     */
     static fetchAll() {
         return db.execute(
             `SELECT * FROM oneOnONE ORDER BY meetingDate DESC LIMIT 10`
         );
     }
 
+    /*
+     * Funcion que retorna el id del usuario a partir de su correo electronico
+     *
+     * @param string email   correo del colaborador
+     * @returns id del colaborador
+     */
     static getID(email) {
         return db.execute(`SELECT userID FROM user WHERE mail = ?`, [email]);
     }
 
     /**
      * Regresa las sesiones One On One entre 2 fechas para un usuario.
-     * 
+     *
      * @param string startDate  La fecha inicial
-     * @param string endDate    La fecha final 
+     * @param string endDate    La fecha final
      * @param string userID     El usuario al que le pertenece la sesión
      * @returns Las sesiones en esas fechass
      */
     static fetchByDateType(startDate, endDate, userID) {
         return db.execute(
-            'SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ? AND oneOnOneUserIDFK = ?',
+            "SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ? AND oneOnOneUserIDFK = ?",
             [startDate, endDate, userID]
         );
     }
 
     /**
      * Regresa las sesiones One On One entre 2 fechas.
-     * 
+     *
      * @param string startDate  La fecha inicial
-     * @param string endDate    La fecha final 
+     * @param string endDate    La fecha final
      * @returns Las sesiones en esas fechass
      */
     static fetchByDateTypeHR(startDate, endDate) {
         return db.execute(
-            'SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ?',
+            "SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ?",
             [startDate, endDate]
         );
     }
@@ -75,6 +97,12 @@ module.exports = class OneToOne {
         );
     }
 
+    /*
+     * Funcion que obtiene el nombre y apellidos de un colaborador mediante su
+     * correo
+     * @param string email      correo del colaborador
+     * @returns nombre y apellidos del colaborador
+     */
     static getFullName(email) {
         return db.execute(
             `SELECT birthName, surname FROM user WHERE mail = ?`,
