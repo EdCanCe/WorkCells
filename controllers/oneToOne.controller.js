@@ -210,3 +210,5 @@ exports.getSessions = (request, response, next) => {
             console.error("Error en la promesa de usuarios y sesiones ", err);
         });
 };
+
+exports.getSearch = (request, response, next) => {};
