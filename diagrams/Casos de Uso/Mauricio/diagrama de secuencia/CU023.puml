@@ -8,37 +8,34 @@ database "myPhpAdmin" as DB
 
 autonumber
 
-' El SuperAdmin (HR) inicia la consulta de solicitudes de vacaciones
+' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador -> Routes: GET /vacation/requests
+Navegador ->> Routes: GET /vacation/requests
 
 activate Routes
-Routes -> Controller: getVacationRequests(request, response)
+Routes -> Controller: getRequests(request, response)
+deactivate Routes
 activate Controller
 
-' El controlador consulta el modelo para obtener las solicitudes de vacaciones
-Controller ->> Model: fetchRequests(collaboratorID)
+' El controlador invoca al modelo para actualizar la respuesta de la ausencia
+Controller ->> Model: fetchPaginated(responseData, vacationID)
 activate Model
-Model ->> DB: db.execute("\nSELECT * \nFROM vacation_requests \nWHERE collaboratorID = ?", \n[collaboratorID])
+
+' El modelo ejecuta la consulta en la base de datos
+Model ->> DB: db.execute(\n"SELECT v.*, u.birthName, u.surname\nFROM vacation AS v\nJOIN user AS u ON u.userID = v.vacationUserIDFK\nWHERE v.hrStatus = 2\nORDER BY v.startDate DESC LIMIT ? OFFSET ?",\n[limit, offset, userRole, userId])
 activate DB
-DB -->> Model: vacationRequests data
+DB -->> Model: rows
 deactivate DB
-Model -->> Controller: data
+
+Model -->> Controller: rows
 deactivate Model
 
-' El controlador procesa la respuesta y delega la renderización a la vista
-Controller ->> View: renderVacationRequests(data)
-activate View
-View --> Controller: HTML/JSON result
-deactivate View
-
-Controller -->> Routes: response.render()
+' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
+Controller -->> Navegador: render(vacationRequests)
 deactivate Controller
 
-Routes -->> Navegador: HTML/JSON response
-deactivate Routes
 
-Navegador -> Navegador: Actualiza interfaz con solicitudes
-deactivate Navegador
+' El Navegador procesa la respuesta y actualiza la interfaz
+Navegador -> Navegador: loadPage, actualiza UI
 
 @enduml

@@ -8,37 +8,34 @@ database "myPhpAdmin" as DB
 
 autonumber
 
-' El SuperAdmin (HR) envía la respuesta a través de AJAX
+' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador -> Routes: POST /vacation/registerResponse (AJAX)
+Navegador ->> Routes: POST /vacation/requests/:id
 
 activate Routes
-Routes -> Controller: registerResponse(request, response)
+Routes -> Controller: getRequests(request, response)
+deactivate Routes
 activate Controller
 
-' El controlador actualiza la respuesta de la solicitud en el modelo
-Controller ->> Model: updateVacationResponse(responseData, vacationID)
+' El controlador invoca al modelo para actualizar la respuesta de la ausencia
+Controller ->> Model: fetchPaginated(responseData, vacationID)
 activate Model
-Model ->> DB: db.execute("\nUPDATE vacation_requests \nSET response = ? \nWHERE vacationID = ?", \n[responseData, vacationID])
+
+' El modelo ejecuta la consulta en la base de datos
+Model ->> DB: db.execute(\n"UPDATE vacation SET hrStatus = ?\nWHERE vacationID = ?", \n[userId, limit, offset])
 activate DB
-DB -->> Model: confirmación de actualización
+DB -->> Model: rows
 deactivate DB
-Model -->> Controller: updateResult
+
+Model -->> Controller: rows
 deactivate Model
 
-' Se prepara la respuesta para el cliente a través de la vista
-Controller ->> View: renderResponse(updateResult)
-activate View
-View --> Controller: fragmento HTML/JSON
-deactivate View
-
-Controller -->> Routes: response.json()
+' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
+Controller -->> Navegador: render(vacationRequests)
 deactivate Controller
 
-Routes -->> Navegador: respuesta AJAX
-deactivate Routes
 
-Navegador -> Navegador: Callback actualiza la interfaz
-deactivate Navegador
+' El Navegador procesa la respuesta y actualiza la interfaz
+Navegador -> Navegador: loadPage, actualiza UI
 
 @enduml

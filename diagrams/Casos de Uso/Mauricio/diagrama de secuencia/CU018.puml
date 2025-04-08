@@ -10,40 +10,32 @@ autonumber
 
 ' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador -> Routes: POST /absence/requests
+Navegador ->> Routes: POST /absence/requests/:id
 
 activate Routes
-Routes -> Controller: requests(request, response)
+Routes -> Controller: getRequests(request, response)
+deactivate Routes
 activate Controller
 
 ' El controlador invoca al modelo para actualizar la respuesta de la ausencia
-Controller ->> Model: updateResponse(responseData, absenceID)
+Controller ->> Model: fetchPaginated(responseData, absenceID)
 activate Model
 
 ' El modelo ejecuta la consulta en la base de datos
-Model ->> DB: db.execute(\n"UPDATE absence \nSET response = ? \nWHERE absenceID = ?", \n[responseData, absenceID])
+Model ->> DB: db.execute(\n"UPDATE absence SET leaderStatus = ? WHERE absenceID = ?", \n[userId, limit, offset])
 activate DB
-DB -->> Model: confirmación de actualización
+DB -->> Model: rows
 deactivate DB
 
-Model -->> Controller: resultado_update
+Model -->> Controller: rows
 deactivate Model
 
 ' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
-Controller ->> View: renderResponse(resultado_update)
-activate View
-View --> Controller: fragmento HTML/JSON
-deactivate View
-
-' El controlador envía la respuesta al router
-Controller -->> Routes: response.json()
+Controller -->> Navegador: render(absenceRequests)
 deactivate Controller
 
-Routes -->> Navegador: respuesta AJAX
-deactivate Routes
 
 ' El Navegador procesa la respuesta y actualiza la interfaz
-Navegador -> Navegador: callback, actualiza UI
-deactivate Navegador
+Navegador -> Navegador: loadPage, actualiza UI
 
 @enduml
