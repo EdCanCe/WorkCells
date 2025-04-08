@@ -304,9 +304,16 @@ exports.getCheckVacation = (request, response, next) => {
             
             const selectedVacation = rows[0];
 
+            // Por ejemplo, calcular la diferencia en días sin descontar feriados ni fines de semana
+            const start = new Date(selectedVacation.startDate);
+            const end = new Date(selectedVacation.endDate);
+            const diffTime = Math.abs(end - start);
+            const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos extremos
+
             response.render('checkVacation', {
                 ...sessionVars(request),
                 vacation: selectedVacation,
+                requestedDays: totalDays
             });
         })
         .catch((error) => {
@@ -326,10 +333,100 @@ exports.getModifyVacation = async (request, response, next) => {
         }
 
         const selectedVacation = rows[0];
+        const userID = request.session.userID;
+
+        // 1. Obtener el período vigente de vacaciones (se asume que fetchVacationsInPeriod retorna mapStart y mapEnd)
+        const [periodRows] = await Vacation.fetchVacationsInPeriod(userID);
+        if (!periodRows || periodRows.length === 0) {
+            throw new Error("No se pudo determinar el período de vacaciones.");
+        }
+        const periodStart = periodRows[0].mapStart;
+        const periodEnd = periodRows[0].mapEnd;
+
+        // 2. Obtener los feriados dentro del período vigente
+        const [holidayRows] = await Holiday.fetchByDateType(periodStart, periodEnd);
+        const holidays = holidayRows;
+
+        // 3. Función auxiliar: construir un mapa de días para un rango dado
+        const buildDayMap = (start, end, holidays) => {
+            const map = new Map();
+            let current = new Date(start);
+            const endDateLoop = new Date(end);
+
+            while (current <= endDateLoop) {
+                const dateStr = formatDate.forSql(current);
+                map.set(dateStr, {
+                    date: new Date(current),
+                    dayType: current.getDay(), // 0: domingo, 6: sábado
+                    holiday: 0,
+                });
+                current.setDate(current.getDate() + 1);
+            }
+
+            holidays.forEach((holiday) => {
+                const date = new Date(holiday.usedDate);
+                const key = formatDate.forSql(date);
+                if (map.has(key)) {
+                    map.get(key).holiday = 1;
+                }
+            });
+            return map;
+        };
+
+        // 4. Función auxiliar: contar los días útiles (días que cuentan para vacaciones) del mapa
+        // Se excluyen días feriados y fines de semana (domingo = 0 y sábado = 6)
+        const countUsableDays = (map) => {
+            let nonusable = 0;
+            map.forEach((day) => {
+                if (day.holiday === 1 || day.dayType === 0 || day.dayType === 6) {
+                    nonusable++;
+                }
+            });
+            return map.size - nonusable;
+        };
+
+        // 5. Construir el mapa de días para el período vigente y contar los días usados en vacaciones aprobadas.
+        // Se asume que en periodRows están incluidas las vacaciones aprobadas o, en caso contrario, se debería obtener ese listado.
+        const periodDayMap = buildDayMap(periodStart, periodEnd, holidays);
+        let totalUsedDays = 0;
+        periodRows.forEach(vac => {
+            // Se asume que para contar los días usados se consideran solo las vacaciones aprobadas.
+            // Si la lógica de aprobación es distinta, ajústala según tu aplicación.
+            if (vac.leaderStatus * vac.hrStatus !== 0) {
+                const start = new Date(vac.startDate);
+                const end = new Date(vac.endDate);
+                let current = new Date(start);
+                while (current <= end) {
+                    const key = formatDate.forSql(current);
+                    const day = periodDayMap.get(key);
+                    if (day && day.holiday === 0 && day.dayType !== 0 && day.dayType !== 6) {
+                        totalUsedDays++;
+                    }
+                    current.setDate(current.getDate() + 1);
+                }
+            }
+        });
+
+        // 6. Obtener el tiempo de servicio del usuario para calcular días asignados
+        const [timeRows] = await User.fetchWorkingTime(userID);
+        const workingYears = timeRows[0].time;
+
+        // 7. Calcular los días totales asignados: 12 días base + 2 por cada año, hasta máximo 20
+        let baseDays = 12;
+        let years = workingYears;
+        while (years > 0) {
+            baseDays += 2;
+            years -= 1;
+        }
+        baseDays = baseDays > 20 ? 20 : baseDays;
+
+        // 8. Días disponibles = días asignados - días usados
+        const availableDays = baseDays - totalUsedDays;
 
         response.render('modifyVacation', {
             ...sessionVars(request),
             vacation: selectedVacation,
+            availableDays
         });
     } catch (error) {
         console.error('Error al obtener la vacación:', error);
@@ -340,22 +437,22 @@ exports.getModifyVacation = async (request, response, next) => {
 
 
 exports.updateVacation = async (request, response, next) => {
-    
     const vacationId = request.params.vacationID;
     const { startDate, endDate, reason } = request.body;
 
+    console.log("Días disponibles asignados a la sesión:", request.session.availableDays);
+
     if (!startDate || !endDate || !reason) {
         request.session.info = 'Todos los campos son obligatorios.';
-
         try {
             const [rows] = await Vacation.fetchOne(vacationId);
             if (rows.length === 0) {
                 return response.status(404).send('Vacación no encontrada.');
             }
-
             return response.render('modifyVacation', {
                 ...sessionVars(request),
-                vacation: rows[0], 
+                vacation: rows[0],
+                availableDays: request.session.availableDays || 0
             });
         } catch (error) {
             console.error(error);
@@ -363,24 +460,152 @@ exports.updateVacation = async (request, response, next) => {
         }
     }
 
+    if (new Date(startDate) > new Date(endDate)) {
+        request.session.alert = "La fecha de inicio debe ser anterior a la fecha final.";
+        return response.redirect(`/vacation/check/modify/${vacationId}`);
+    }
+
     try {
+        const [holidayRows] = await Holiday.fetchByDateType(startDate, endDate);
+        const holidays = holidayRows;
+
+        const buildDayMap = (start, end, holidays) => {
+            const map = new Map();
+            let current = new Date(start);
+            const endDateLoop = new Date(end);
+
+            while (current <= endDateLoop) {
+                const dateStr = formatDate.forSql(current);
+                map.set(dateStr, {
+                    date: new Date(current),
+                    dayType: current.getDay(),
+                    holiday: 0,
+                });
+                current.setDate(current.getDate() + 1);
+            }
+
+            holidays.forEach((holiday) => {
+                const date = new Date(holiday.usedDate);
+                const key = formatDate.forSql(date);
+                if (map.has(key)) {
+                    map.get(key).holiday = 1;
+                }
+            });
+
+            return map;
+        };
+
+        const countUsableDays = (map) => {
+            let nonusable = 0;
+            map.forEach((day) => {
+                if (day.holiday === 1 || day.dayType === 0 || day.dayType === 6) {
+                    nonusable++;
+                }
+            });
+            return map.size - nonusable;
+        };
+
+        const calculateAvailableDays = async (userID, holidays) => {
+            const [periodRows] = await Vacation.fetchVacationsInPeriod(userID);
+            if (!periodRows || periodRows.length === 0) {
+                throw new Error("No se pudo determinar el período de vacaciones.");
+            }
+            const periodStart = periodRows[0].mapStart;
+            const periodEnd = periodRows[0].mapEnd;
+
+            const vacations = periodRows;
+
+            const dayMap = new Map();
+            let current = new Date(periodStart);
+            const endDateLoop = new Date(periodEnd);
+            while (current <= endDateLoop) {
+                const dateStr = formatDate.forSql(current);
+                dayMap.set(dateStr, {
+                    date: new Date(current),
+                    dayType: current.getDay(),
+                    holiday: 0,
+                });
+                current.setDate(current.getDate() + 1);
+            }
+
+            holidays.forEach(holiday => {
+                const date = new Date(holiday.usedDate);
+                const key = formatDate.forSql(date);
+                if (dayMap.has(key)) {
+                    dayMap.get(key).holiday = 1;
+                }
+            });
+
+            let totalUsedDays = 0;
+            vacations.forEach(vac => {
+                const start = new Date(vac.startDate);
+                const end = new Date(vac.endDate);
+                let cur = new Date(start);
+                while (cur <= end) {
+                    const key = formatDate.forSql(cur);
+                    const day = dayMap.get(key);
+                    if (day && day.holiday === 0 && day.dayType !== 0 && day.dayType !== 6) {
+                        totalUsedDays++;
+                    }
+                    cur.setDate(cur.getDate() + 1);
+                }
+            });
+
+            const [timeRows] = await User.fetchWorkingTime(userID);
+            const workingYears = timeRows[0].time;
+
+            let baseDays = 12;
+            let years = workingYears;
+            while (years > 0) {
+                baseDays += 2;
+                years -= 1;
+            }
+            baseDays = baseDays > 20 ? 20 : baseDays;
+            return baseDays - totalUsedDays;
+        };
+
+        const newDaysMap = buildDayMap(startDate, endDate, holidays);
+        const totalDaysRequested = countUsableDays(newDaysMap);
+
+        const [originalVacationRows] = await Vacation.fetchOne(vacationId);
+        if (!originalVacationRows || originalVacationRows.length === 0) {
+            request.session.alert = "Vacación no encontrada.";
+            return response.redirect('/vacation/history');
+        }
+        const originalVacation = originalVacationRows[0];
+        const originalDaysMap = buildDayMap(originalVacation.startDate, originalVacation.endDate, holidays);
+        const originalTotalDays = countUsableDays(originalDaysMap);
+
+        const recalculatedAvailableDays = await calculateAvailableDays(request.session.userID, holidays);
+        const availableIncludingOriginal = recalculatedAvailableDays + originalTotalDays;
+
+        console.log("Días solicitados (válidos):", totalDaysRequested);
+        console.log("Días disponibles (ajustados):", availableIncludingOriginal);
+
+        if (totalDaysRequested > availableIncludingOriginal) {
+            request.session.alert = `No puede actualizar la solicitud con más días de los disponibles. (Disponibles: ${availableIncludingOriginal}, Solicitados: ${totalDaysRequested})`;
+            return response.redirect(`/vacation/check/modify/${vacationId}`);
+        }
+
         await Vacation.updateVacation(vacationId, startDate, endDate, reason);
         request.session.info = 'Solicitud de vacaciones actualizada exitosamente.';
 
         const [rows] = await Vacation.fetchOne(vacationId);
         return response.render('modifyVacation', {
             ...sessionVars(request),
-            vacation: rows[0], // Pasamos la vacación actualizada
+            vacation: rows[0],
+            availableDays: availableIncludingOriginal
         });
-    } catch (error) {
-        console.error(error);
-        request.session.info = 'Error al actualizar la solicitud.';
 
+    } catch (error) {
+        console.error('Error al actualizar la vacación:', error);
+        request.session.info = 'Error al actualizar la solicitud.';
         try {
             const [rows] = await Vacation.fetchOne(vacationId);
             return response.render('modifyVacation', {
                 ...sessionVars(request),
-                vacation: rows[0], // Pasamos la vacación incluso en caso de error
+                vacation: rows[0],
+                availableDays: 0
             });
         } catch (fetchError) {
             console.error(fetchError);
@@ -388,6 +613,7 @@ exports.updateVacation = async (request, response, next) => {
         }
     }
 };
+
 
 
 exports.postRequestApprove = (request, response, next) => {
