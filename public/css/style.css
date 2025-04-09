@@ -317,6 +317,9 @@
   .mr-6 {
     margin-right: calc(var(--spacing) * 6);
   }
+  .mr-10 {
+    margin-right: calc(var(--spacing) * 10);
+  }
   .mb-0 {
     margin-bottom: calc(var(--spacing) * 0);
   }
@@ -422,6 +425,9 @@
   }
   .w-3\/4 {
     width: calc(3/4 * 100%);
+  }
+  .w-4\/5 {
+    width: calc(4/5 * 100%);
   }
   .w-5 {
     width: calc(var(--spacing) * 5);
