@@ -1,0 +1,59 @@
+@startuml CU33 - Superadmin da de baja de empleado.
+actor navegador
+boundary employee.routes
+boundary employeeCheckModify.ejs
+control employee.controller
+entity updatedEmployee
+database mysql
+
+autonumber
+navegador -> employee.routes : GET /employee/:id/modify
+activate employee.routes
+
+employee.routes -> employee.controller: getModify(request, response)
+deactivate employee.routes
+activate employee.controller
+
+employee.controller ->> updatedEmployee: fetchUser(request.param.id)
+activate updatedEmployee
+
+updatedEmployee ->> mysql: db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
+activate mysql
+
+mysql -->> updatedEmployee: rows
+deactivate mysql
+
+updatedEmployee -->> employee.controller: rows
+deactivate updatedEmployee
+
+employee.controller -> employeeCheckModify.ejs: response.render("employeeCheckModify", rows)
+deactivate employee.controller
+activate employeeCheckModify.ejs
+
+employeeCheckModify.ejs -> navegador : Mostrar formulario para modificar \ndar de baja alcolaborador
+deactivate employeeCheckModify.ejs
+activate navegador
+
+navegador -> employee.routes : POST /employee/:id/modify
+deactivate navegador
+activate employee.routes
+
+employee.routes -> employee.controller : postModify(request, response)
+deactivate employee.routes
+activate employee.controller
+
+
+employee.controller -> updatedEmployee : updatedEmployee(request.body.workStatus, \nrequest.params.id)
+activate updatedEmployee
+
+updatedEmployee ->> mysql : db.execute("UPDATE user SET workStatus = ? \nWHERE = userID = ?", [workStatus, userID]);
+activate mysql
+mysql -->> updatedEmployee : Insert OK
+deactivate mysql
+updatedEmployee -->> employee.controller : Promesa
+deactivate updatedEmployee
+
+employee.controller -> employee.routes : response.redirect("/employee")
+deactivate employee.controller
+activate employee.routes
+deactivate employee.routes

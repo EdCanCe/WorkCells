@@ -9,7 +9,7 @@ database mysql
 autonumber
 ' Inicio del flujo
 activate Navegador
-Navegador -> vacation.routes : GET /vacation/modify:vacationID
+Navegador -> vacation.routes : GET /vacation/check/modify:vacationID
 deactivate Navegador
 activate vacation.routes
 
@@ -17,7 +17,7 @@ vacation.routes -> vacation.controller : getModifyVacation(req, res)
 deactivate vacation.routes
 activate vacation.controller
 
-vacation.controller ->> vacation.model : fetchVacation(vacation_id)
+vacation.controller ->> vacation.model : fetchOneVacation(vacation_id)
 activate vacation.model
 
 vacation.model ->> mysql : SELECT * FROM vacation WHERE vacation_id = ?
@@ -38,18 +38,17 @@ activate Navegador
 
 
 ' Navegador modifica la solicitud de vacaciones
-Navegador -> vacation.routes : POST /vacation/modify/:vacationID
+Navegador -> vacation.routes : POST /update/:vacationID
 deactivate Navegador
 activate vacation.routes
 
-vacation.routes -> vacation.controller : postModifyVacation(req, res)
+vacation.routes -> vacation.controller : updateVacation(req, res)
 deactivate vacation.routes
 activate vacation.controller
 
 
-vacation.controller ->> vacation.model : New Vacation(reason, startDate,endDate)
-activate vacation.model
 vacation.controller ->> vacation.model : updateVacation()
+activate vacation.model
 deactivate vacation.controller
 
 vacation.model ->> mysql : UPDATE vacation SET ... WHERE vacation_id = ?

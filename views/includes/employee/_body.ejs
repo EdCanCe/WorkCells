@@ -1,13 +1,12 @@
-<div class="content p-4">
+<div class="container mx-auto p-4">
     <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
         <div class="card-content">
-            <h1 class="shadow-md rounded-lg p-4 text-3xl font-semibold mb-4">
-                List of all Employee
+            <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
+                List of all Employees
             </h1>
             <% if (info) { %>
             <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
                 <%= info %>
-                <!-- Aquí se muestra el mensaje de éxito -->
             </div>
             <% } %>
             <div class="flex justify-center w-full">
@@ -24,103 +23,35 @@
                         name="search"
                         type="text"
                         placeholder="Buscar empleado..."
-                        class="w-full pl-10 p-3 bg-neutral-700/50 text-white rounded-md outline-none"
+                        class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
                     />
                 </div>
+                <div class="p-4 rounded-md">
+                    <select id="filterSelect" class="btnPrimary">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <span id="employeeCount" class="btnPrimary" disabled>
+                    </span>
+                </div>
+                <div class="p-4 rounded-md">
+                    <a href="/employee/add" class="btnPrimary justeify-right"
+                        >Add New Employee</a
+                    >
+                </div>
             </div>
-            <div class="p-4 rounded-md">
-                <a href="/employee/active" class="btnPrimary float-left"
-                    >Show Active Employee</a
-                >
-                <a href="/employee/idle" class="btnPrimary"
-                    >Show Idle Employee</a
-                >
-                <a href="/employee/add" class="btnPrimary float-right"
-                    >Add New Employee</a
-                >
-            </div>
-
             <div
+                id="employeeTable"
                 class="flex content justify-center p-4 rounded-md list space-y-4"
-            >
-                <table
-                    class="w-full max-w-3xl divide-y divide-neutral-200 text-center"
-                    id="employee-table"
-                >
-                    <thead class="bg-neutral-800/50">
-                        <tr>
-                            <th
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
-                            >
-                                Full Name
-                            </th>
-                            <th
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
-                            >
-                                Role
-                            </th>
-                            <th
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
-                            >
-                                Department
-                            </th>
-                            <th
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider"
-                            >
-                                Check
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-neutral-800 divide-y divide-neutral-200">
-                        <tr>
-                            <td class="px-6 py-4 text-white">John Doe</td>
-                            <td class="px-6 py-4 text-white">
-                                Software Engineer
-                            </td>
-                            <td class="px-6 py-4 text-white">IT</td>
-                            <td class="px-6 py-4 text-white">
-                                <a
-                                    href="/employee/check"
-                                    class="btnPrimary ml-2 float-center"
-                                    >Check</a
-                                >
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 text-white">Jane Smith</td>
-                            <td class="px-6 py-4 text-white">
-                                Product Manager
-                            </td>
-                            <td class="px-6 py-4 text-white">Marketing</td>
-                            <td class="px-6 py-4 text-white">
-                                <a
-                                    href="/employee/check"
-                                    class="btnPrimary ml-2 float-center"
-                                    >Check</a
-                                >
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 text-white">Carlos López</td>
-                            <td class="px-6 py-4 text-white">UX Designer</td>
-                            <td class="px-6 py-4 text-white">Design</td>
-                            <td class="px-6 py-4 text-white">
-                                <a
-                                    href="/employee/check"
-                                    class="btnPrimary ml-2 float-center"
-                                    >Check</a
-                                >
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+            ></div>
             <div class="flex justify-center gap-3 mt-6">
-                <button id="prevPage" class="btnPrimary">Anterior</button>
+                <button id="prevPage" class="btnPrimary" disabled>
+                    Anterior
+                </button>
                 <button id="nextPage" class="btnPrimary">Siguiente</button>
             </div>
         </div>
-      </div>
     </div>
 </div>
+<script src="/javascript/paginedEmployee.js"></script>

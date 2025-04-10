@@ -1,0 +1,41 @@
+@startuml CU21 - Superadmin consulta empleado.
+actor navegador
+boundary employee.routes
+boundary employeeCheck.ejs
+control employee.controller
+entity employee
+database mysql
+
+autonumber
+navegador -> employee.routes : GET /employee/:id
+activate employee.routes
+
+employee.routes -> employee.controller: getCheck(request, response)
+deactivate employee.routes
+activate employee.controller
+
+employee.controller ->> employee: fetchUser(request.params.id)
+activate employee
+
+employee ->> mysql: db.execute("SELECT * FROM user \nWHERE userID = ?", [userID]);
+activate mysql
+
+mysql -->> employee: rows
+deactivate mysql
+
+employee -->> employee.controller: rows
+deactivate employee
+
+employee.controller -> employeeCheck.ejs: response.render("employeeCheck", rows)
+deactivate employee.controller
+activate employeeCheck.ejs
+
+employeeCheck.ejs -> navegador: Muestra datos de empleado
+deactivate employeeCheck.ejs
+activate navegador
+deactivate navegador
+
+
+
+
+

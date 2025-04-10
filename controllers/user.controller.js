@@ -22,24 +22,30 @@ exports.post_login = (request, response, next) => {
 
             const user = rows[0];
 
-            // Comparación de contraseñas sin bcrypt (se recomienda usar bcrypt para mayor seguridad)
-            if (password === user.passwd) {
+            const bycrypt = require('bcryptjs');
+            bycrypt.compare(password, user.passwd).then((doMatch)=>{
+                if(doMatch){
+                    request.session.workStatus = user.workStatus; 
                 request.session.isLoggedIn = true;
                 request.session.mail = email;
                 request.session.userID = user.userID;
                 request.session.role = user.role;
 
-                console.log("UserID from session:", request.session.userID);
-                console.log("Valor de user.mail:", request.session.mail);
                 console.log("role: ", request.session.role);
+
                 // Obtener privilegios del usuario
                 return Usuario.getPrivilegios(user.mail)
                     .then(([privilegios]) => {
-                        console.log("Privilegios obtenidos:", privilegios);
                         request.session.privilegios = privilegios;
-                        return request.session.save(() =>
-                            response.redirect("/home")
-                        );
+                        if(request.session.workStatus === 1){
+                            return request.session.save(() =>
+                                response.redirect("/home")
+                            );
+                    }
+                    request.session.warning =
+                            "Tu cuenta esta inactiva";
+                        response.redirect("/login");
+
                     })
                     .catch((error) => {
                         console.error("Error al obtener privilegios:", error);
@@ -47,10 +53,11 @@ exports.post_login = (request, response, next) => {
                             "Hubo un problema con el servidor";
                         response.redirect("/login");
                     });
-            } else {
-                request.session.warning = "Usuario y/o contraseña incorrectos";
-                return response.redirect("/login");
-            }
+                }else {
+                    request.session.warning = "Usuario y/o contraseña incorrectos";
+                    return response.redirect("/login");
+                }
+            })
         })
         .catch((error) => {
             console.error("Error al buscar el usuario:", error);

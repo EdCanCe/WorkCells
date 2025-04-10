@@ -1,0 +1,64 @@
+<div class="container mx-auto p-4">
+    <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
+      <div class="card-content">
+        <!-- Título -->
+        <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
+          Faltas Administrativas
+        </h1>
+  
+        <!-- Mensaje de info/errores -->
+        <% if (warning) { %>
+          <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+            <%= warning %>
+          </div>
+        <% } else if (info) { %>
+          <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+            <%= info %>
+          </div>
+        <% } %>
+  
+        <!-- Barra de búsqueda, filtro y botón de registrar -->
+        <div class="flex justify-center w-full mb-4">
+          <div class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl">
+            <img 
+              src="/icons/search.svg" 
+              alt="search" 
+              class="navIcon absolute w-6 h-6 text-white"
+            />
+            <input
+              id="search"
+              name="search"
+              type="text"
+              placeholder="Buscar falta..."
+              class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+            />
+          </div>
+          <div class="p-4 rounded-md">
+            <select id="filterSelect" class="btnPrimary">
+              <option value="all">Todos</option>
+              <option value="active">Activas</option>
+              <option value="inactive">Inactivas</option>
+            </select>
+          </div>
+          <div class="p-4 rounded-md">
+            <a href="/fault/add" class="btnPrimary">Registrar Nueva Falta</a>
+          </div>
+        </div>
+  
+        <!-- Tabla -->
+        <div 
+          id="faltasTable" 
+          class="flex content justify-center p-4 rounded-md list space-y-4 overflow-x-auto"
+        ></div>
+  
+        <!-- Paginación -->
+        <div class="flex justify-center gap-3 mt-6">
+          <button id="prevBtn" class="btnPrimary">Anterior</button>
+          <button id="nextBtn" class="btnPrimary">Siguiente</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="/javascript/paginedFaults.js"></script>
+  

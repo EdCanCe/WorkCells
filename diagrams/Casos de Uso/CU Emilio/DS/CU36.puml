@@ -1,0 +1,51 @@
+@startuml CU36 - Superadmin Registra dia feriado
+actor navegador
+boundary holiday.routes
+boundary holidayAdd.ejs
+boundary holiday.ejs
+control holiday.controller
+entity holiday
+database mysql
+
+autonumber
+navegador -> holiday.routes : GET /holiday/add
+activate holiday.routes
+
+holiday.routes -> holiday.controller: getHolidaysAdd(request, response)
+deactivate holiday.routes
+activate holiday.controller
+
+holiday.controller -> holidayAdd.ejs: response.render("holidayAdd")
+deactivate holiday.controller
+activate holidayAdd.ejs
+
+holidayAdd.ejs -> navegador : Mostrar formulario dia feriado
+deactivate holidayAdd.ejs
+activate navegador
+
+navegador -> holiday.routes : POST /holiday/add
+deactivate navegador
+activate holiday.routes
+
+holiday.routes -> holiday.controller : postHolidayAdd(request, response)
+deactivate holiday.routes
+activate holiday.controller
+create holiday
+holiday.controller -> holiday : new Holiday(request.body.usedHolidayID, \nrequest.body.usedDate, \nrequest.body.usedTemplateHolidayIDFK)
+activate holiday
+
+holiday.controller ->> holiday : save()
+
+holiday ->> mysql : db.execute("INSERT INTO usedHoliday \n(this.usedHolidayID, this.usedDate, \nthis.usedTemplateHolidayIDFK) \nVALUES( ?, ?, ?) ", [usedHolidayID, \nthis.usedDate, \nthis.usedTemplateHolidayIDFK,]);
+activate mysql
+mysql -->> holiday : Insert OK
+deactivate mysql
+holiday -->> holiday.controller : Promesa
+deactivate holiday
+
+holiday.controller -> holiday.routes : response.redirect("/holiday")
+deactivate holiday.controller
+activate holiday.routes
+deactivate holiday.routes
+
+@enduml

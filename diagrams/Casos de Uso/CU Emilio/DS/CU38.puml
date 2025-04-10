@@ -1,0 +1,65 @@
+@startuml CU38 - Superadmin registra evidencia de falta
+actor navegador
+boundary fault.routes
+boundary faultModify.ejs
+control fault.controller
+entity updateFaultMedia
+database mysql
+
+autonumber
+navegador -> fault.routes : GET /fault/:id/modify
+activate fault.routes
+
+fault.routes -> fault.controller : getModifyFault(request, response)
+deactivate fault.routes
+activate fault.controller
+
+
+fault.controller ->> updateFaultMedia : fecthFaultID(request.params.id)
+deactivate fault.controller
+activate updateFaultMedia
+
+updateFaultMedia ->> mysql : db.execute("SELECT mediaLink \nFROM faultMedia WHERE faultIDFK = ?", \n[faultIDFK])
+activate mysql
+
+mysql -->> updateFaultMedia : rows
+deactivate mysql
+
+updateFaultMedia -->> fault.controller : rows
+deactivate updateFaultMedia
+activate fault.controller
+
+fault.controller -> faultModify.ejs : response.render("faultModify", rows)
+deactivate fault.controller
+activate faultModify.ejs
+
+faultModify.ejs -> navegador : Mostrar Formulario de modificar \nfalta administrativa
+deactivate faultModify.ejs
+activate navegador
+
+navegador -> fault.routes : POST /fault/:id/modify
+deactivate navegador
+activate fault.routes
+
+fault.routes -> fault.controller : postModifyFault(request, response)
+deactivate fault.routes
+activate fault.controller
+
+fault.controller ->> updateFaultMedia : updateFaultMedia(request.params.faultIDFK, \nrequest.body.mediaLink)
+activate updateFaultMedia
+
+updateFaultMedia ->> mysql : db.execute("UPDATE faultMedia SET \nfaultMediaID = ?, mediaLink = ?, \nWHERE faultIDFK = ?")
+activate mysql
+
+mysql -->> updateFaultMedia : Insert OK
+deactivate mysql
+
+updateFaultMedia -->> fault.controller : Promesa
+deactivate updateFaultMedia
+
+fault.controller -> fault.routes : response.redirect("/faults")
+deactivate fault.controller
+activate fault.routes
+deactivate fault.routes
+
+@enduml
