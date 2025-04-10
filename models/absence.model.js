@@ -1,12 +1,13 @@
-const db = require('../util/database');
-const { v4: uuidv4 } = require('uuid');
+const db = require("../util/database");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = class Absence {
     constructor(startDate, endDate, reason, absenceUserID) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reason = reason;
-        this.justified = 2; // 0 -> no justificada | 1 -> justificada | 2 -> pendiente
+        this.leaderStatus = 2; // 0 -> no justificada | 1 -> justificada | 2 -> pendiente
+        this.hrStatus = 2; // 0 -> no justificada | 1 -> justificada | 2 -> pendiente
         this.absenceUserID = absenceUserID;
     }
 
@@ -15,7 +16,7 @@ module.exports = class Absence {
         return db
             .execute(
                 `INSERT INTO absence(absenceID, startDate, endDate, 
-                reason, leaderStatus, hrStatus, justified, absenceUserIDFK) VALUES(?,?,?,?,?,?,?,?)`,
+                reason, leaderStatus, hrStatus, absenceUserIDFK) VALUES(?,?,?,?,?,?,?)`,
                 [
                     absenceID,
                     this.startDate,
@@ -23,7 +24,6 @@ module.exports = class Absence {
                     this.reason,
                     this.leaderStatus,
                     this.hrStatus,
-                    this.justified,
                     this.absenceUserID,
                 ]
             )
