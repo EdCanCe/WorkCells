@@ -10,7 +10,7 @@ database mysql
 autonumber
 
 activate nav
-nav -> routes: GET employee/department
+nav -> routes: GET /department
 deactivate nav
 activate routes
 routes -> controller: getEmployeesInDepartment(req, res)
