@@ -1,4 +1,4 @@
-const { session } = require("passport");
+const Department = require("../models/department.model");
 const sessionVars = require("../util/sessionVars");
 
 exports.getDepartments = (request, response, next) => {
@@ -6,7 +6,20 @@ exports.getDepartments = (request, response, next) => {
 
     // vista del lider para ver su departamento
     if (role === "Department Leader") {
-        response.send("Vista del lider");
+        Department.getLeaderDepartment(request.session.userID)
+            .then(([department, fieldData]) => {
+                const leaderDepartmentID =
+                    department[0].prioritaryDepartmentIDFK;
+                console.log(leaderDepartmentID);
+                return Department.getEmployeesInDepartment(leaderDepartmentID);
+            })
+            .then(([rows, fieldData]) => {
+                console.log(rows);
+            })
+            .catch((err) => {
+                console.log(err);
+                response.status(500).send("Error del servidor");
+            });
     }
     // vista del superadmin, modificar en un futuro
     else {
