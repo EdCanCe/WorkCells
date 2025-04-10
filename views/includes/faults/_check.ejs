@@ -1,0 +1,27 @@
+<button id="deleteIt" class="bgPrimary">Delete</button>
+<form id="form" class="hidden" id="form" action="/fault/delete" method="POST">
+    <input
+        type="hidden"
+        name="_csrf"
+        value="<%= csrfToken %>"
+    />
+
+    <input
+        type="hidden"
+        name="faultID"
+        value="<%= fault.faultID %>"
+    />
+
+    <input
+        type="hidden"
+        name="userID"
+        value="<%= fault.faultUserIDFK %>"
+    />
+
+</form>
+
+<script>
+    document.getElementById("deleteIt").addEventListener("click", () => {
+        document.getElementById("form").submit();
+    })
+</script>
