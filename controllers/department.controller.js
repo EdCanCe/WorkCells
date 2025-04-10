@@ -11,7 +11,10 @@ exports.getDepartments = (request, response, next) => {
                 const leaderDepartmentID =
                     department[0].prioritaryDepartmentIDFK;
                 console.log(leaderDepartmentID);
-                return Department.getEmployeesInDepartment(leaderDepartmentID);
+                return Department.getEmployeesInDepartment(
+                    leaderDepartmentID,
+                    request.session.userID
+                );
             })
             .then(([rows, fieldData]) => {
                 console.log(rows);

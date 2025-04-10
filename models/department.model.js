@@ -26,13 +26,14 @@ module.exports = class Department {
         );
     }
 
-    static getEmployeesInDepartment(leaderDepartmentID) {
+    static getEmployeesInDepartment(leaderDepartmentID, userID) {
         return db.execute(
             `SELECT u.* 
             FROM user u 
-            WHERE u.prioritaryDepartmentIDFK = ? 
+            WHERE u.prioritaryDepartmentIDFK = ?
+            AND u.userID NOT IN (?) 
             ORDER BY u.birthName ASC`,
-            [leaderDepartmentID]
+            [leaderDepartmentID, userID]
         );
     }
 };
