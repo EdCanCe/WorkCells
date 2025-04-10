@@ -239,6 +239,31 @@ module.exports = class Employee {
         );
     };
 
+    static countFilteredEmployees(query = "", filter = "all") {
+        let sql = `
+            SELECT COUNT(*) AS total
+            FROM user u
+            INNER JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
+            INNER JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID
+            INNER JOIN role r ON u.userRoleIDFK = r.roleID
+            WHERE 1=1
+        `;
+        const params = [];
+
+        if (query) {
+            sql += ` AND (u.birthName LIKE ? OR u.surname LIKE ?)`;
+            params.push(`%${query}%`, `%${query}%`);
+        }
+
+        if (filter === "active") {
+            sql += ` AND u.workStatus = 1`;
+        } else if (filter === "inactive") {
+            sql += ` AND u.workStatus = 0`;
+        }
+
+        return db.execute(sql, params);
+    }
+
     static updateEmployee(
         userID,
         curp,

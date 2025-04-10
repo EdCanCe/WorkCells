@@ -292,9 +292,10 @@ exports.getSearch = (request, response, next) => {
                 : Employee.fetchPaginated(limit, offset);
     }
 
-    searchPromise
-        .then(([employees]) => {
-            response.json({ employees, page, query, filter });
+    Promise.all([searchPromise, Employee.countFilteredEmployees(query, filter)])
+        .then(([[employees], [countRow]]) => {
+            const totalCount = countRow[0]?.total || 0;
+            response.json({ employees, page, query, filter, totalCount });
         })
         .catch((error) => {
             console.error("Error en la búsqueda/paginación:", error);
