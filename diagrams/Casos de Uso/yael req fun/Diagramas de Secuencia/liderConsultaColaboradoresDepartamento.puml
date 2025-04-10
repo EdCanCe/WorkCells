@@ -26,9 +26,9 @@ deactivate mysql
 emp -->> controller: leaderDepartmentID
 deactivate emp
 
-controller ->> emp: getEmployeesInDepartment(leaderDepartmentID)
+controller ->> emp: getEmployeesInDepartment(leaderDepartmentID, req.session.userID)
 activate emp
-emp ->> mysql: execute(`SELECT u.* FROM user u \nWHERE u.prioritaryDepartmentIDFK = ? \nORDER BY u.birthName ASC`, \n[leaderDepartmentID])
+emp ->> mysql: execute(`SELECT u.* FROM user u \nWHERE u.prioritaryDepartmentIDFK = ? \nAND u.userID NOT IN (?) \nORDER BY u.birthName ASC`, \n[leaderDepartmentID, req.session.userID])
 activate mysql
 mysql -->> emp: rows
 deactivate mysql
