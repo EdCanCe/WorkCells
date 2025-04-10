@@ -21,6 +21,7 @@ let currentPage = 1;
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Gmail</th>
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Date of the Fault</th>
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Numbers of Faults</th>
+              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Access the fault</th>
             </tr>
           </thead>
           <tbody class="bg-neutral-800 divide-y divide-neutral-200">
@@ -42,6 +43,7 @@ let currentPage = 1;
                 ${new Date(falta.fecha_falta).toLocaleDateString("es-MX")}
               </td>
               <td class="px-6 py-4 text-white font-semibold">${falta.num_faltas}</td>
+              <td class="px-6 py-4 text-white"><a href="/fault/${falta.id_falta}" class="btnPrimary">Check</a></td>
             </tr>
           `;
         });

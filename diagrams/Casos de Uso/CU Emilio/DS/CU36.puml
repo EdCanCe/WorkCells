@@ -36,7 +36,7 @@ activate holiday
 
 holiday.controller ->> holiday : save()
 
-holiday ->> mysql : const query = 'INSERT INTO usedHoliday (this.usedHolidayID, \nthis.usedDate, this.usedTemplateHolidayIDFK)' \ndb.execute(query, [usedHolidayID, this.usedDate, \nthis.usedTemplateHolidayIDFK,]);
+holiday ->> mysql : db.execute("INSERT INTO usedHoliday \n(this.usedHolidayID, this.usedDate, \nthis.usedTemplateHolidayIDFK) \nVALUES( ?, ?, ?) ", [usedHolidayID, \nthis.usedDate, \nthis.usedTemplateHolidayIDFK,]);
 activate mysql
 mysql -->> holiday : Insert OK
 deactivate mysql

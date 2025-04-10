@@ -47,9 +47,17 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getCheck = (request, response, next) => {
-    response.render("check_fault", {
-        ...sessionVars(request),
-    });
+
+    // TODO: Checar que si pueda acceder a verlo
+    console.log(request.params);
+
+    Fault.fetchByID(request.params.faultID)
+        .then(([rows]) => {
+            response.render("checkFault", {
+                ...sessionVars(request),
+                fault: rows[0],
+            });
+        })
 };
 
 exports.getRoot = (request, response, next) => {
@@ -91,7 +99,6 @@ exports.getSearch = async (request, response) => {
       }
 };
 
-
 exports.postDelete = (request, response, next) => {
     const fault = new Fault({
         faultID: request.body.faultID,
@@ -108,6 +115,3 @@ exports.postDelete = (request, response, next) => {
             response.redirect('/fault');
         })
 };
-  
-
-  

@@ -49,8 +49,6 @@ exports.getEmployeeRotation = (request, response, next) => {
                 [activesPerMonth],
                 [inactivesPerMonth],
             ]) => {
-                console.log(activesPerMonth);
-                console.log(inactivesPerMonth);
                 response.render("reportRotation", {
                     ...sessionVars(request),
                     activeUsers: activeUsers,
@@ -60,6 +58,8 @@ exports.getEmployeeRotation = (request, response, next) => {
                     inactivesPerMonth: inactivesPerMonth,
                     activeSize: activeUsers.length,
                     inactiveSize: inactiveUsers.length,
+                    currentMonthStart: start,
+                    currentMonthEnd: end,
                 });
             }
         )
