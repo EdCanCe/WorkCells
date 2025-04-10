@@ -19,7 +19,7 @@ deactivate routes
 activate controller  
 controller ->> emp: getLeaderDepartment(req.session.userID)
 activate emp
-emp ->> mysql: execute(´SELECT ud.departmentIDFK \nFROM user u JOIN userDepartment ud \nON u.userID = ud.userIDFK \nWHERE u.userID = ?´, [userID])
+emp ->> mysql: execute(`SELECT u.prioritaryDepartmentIDFK, d.title \nFROM user u JOIN department d \nON u.prioritaryDepartmentIDFK = d.departmentID \nWHERE u.userID= ?`, [req.session.userID])
 activate mysql
 mysql -->> emp: leaderDepartmentID
 deactivate mysql
@@ -28,7 +28,7 @@ deactivate emp
 
 controller ->> emp: getEmployeesInDepartment(leaderDepartmentID)
 activate emp
-emp ->> mysql: execute(´SELECT u.birthName, u.surname, u.mail \nFROM user u JOIN userDepartment ud \nON u.userID = ud.userIDFK \nWHERE ud.departmentIDFK = ?´, \n[leaderDepartmentID])
+emp ->> mysql: execute(`SELECT u.* FROM user u \nWHERE u.prioritaryDepartmentIDFK = ? \nORDER BY u.birthName ASC`, \n[leaderDepartmentID])
 activate mysql
 mysql -->> emp: rows
 deactivate mysql
