@@ -4,7 +4,7 @@ boundary "absence.routes" as Routes
 boundary "absence.view" as View
 control "absence.controller" as Controller
 entity "absence.model" as Model
-database "myPhpAdmin" as DB
+database "MySQL" as DB
 
 autonumber
 
@@ -13,16 +13,16 @@ activate Navegador
 Navegador ->> Routes: POST /absence/requests/:id
 
 activate Routes
-Routes -> Controller: getRequests(request, response)
+Routes -> Controller: postRequests(request, response)
 deactivate Routes
 activate Controller
 
 ' El controlador invoca al modelo para actualizar la respuesta de la ausencia
-Controller ->> Model: fetchPaginated(responseData, absenceID)
+Controller ->> Model: fetchPaginated(limit, offset, userRole, userId)
 activate Model
 
 ' El modelo ejecuta la consulta en la base de datos
-Model ->> DB: db.execute(\n"UPDATE absence SET leaderStatus = ? WHERE absenceID = ?", \n[userId, limit, offset])
+Model ->> DB: db.execute(\n`SELECT a.*, u.birthName, u.surname, r.title\nFROM absence AS a\nJOIN user AS u ON u.userID = a.absenceUserIDFK\nJOIN role AS r ON r.roleID = u.userRoleIDFK\nJOIN user AS leader ON leader.userID = ?\nWHERE a.leaderStatus = 2\nAND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK\nORDER BY a.startDate DESC LIMIT ? OFFSET ?`, [limit, offset, userRole, userId]);
 activate DB
 DB -->> Model: rows
 deactivate DB
@@ -31,11 +31,11 @@ Model -->> Controller: rows
 deactivate Model
 
 ' El controlador procesa el resultado y prepara la respuesta para la vista (AJAX JSON o fragmento HTML)
-Controller -->> Navegador: render(absenceRequests)
+Controller -->> Navegador: rows
 deactivate Controller
 
 
 ' El Navegador procesa la respuesta y actualiza la interfaz
-Navegador -> Navegador: loadPage, actualiza UI
+Navegador -> Navegador: loadPage()
 
 @enduml

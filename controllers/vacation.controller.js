@@ -728,8 +728,6 @@ exports.PostDeleteVacation = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     const userID = request.session.userID;
-    // const userRole = request.session.role;
-    // console.log('userRole', userRole);
     Vacation.fetchAllVacation(userID)
         .then(([rows]) => {
             // Vacaciones aprobadas: ambas aprobadas (valor 1)
@@ -737,13 +735,11 @@ exports.getRoot = (request, response, next) => {
                 (vacation) =>
                     vacation.leaderStatus === 1 && vacation.hrStatus === 1
             );
-
             // Vacaciones pendientes: si alguno está pendiente (valor 2)
             const pendingVacations = rows.filter(
                 (vacation) =>
                     vacation.leaderStatus === 2 || vacation.hrStatus === 2
             );
-
             response.render('ownVacation', {
                 ...sessionVars(request),
                 approvedVacations,

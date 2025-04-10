@@ -8,16 +8,14 @@
                     Historial de Vacaciones
                 </h2>
                 <div class="flex space-x-4">
-                    <% privilegios.forEach(privilegio => { %>
-                        <% if (privilegio.title === "Líder registra respuesta hacia solicitud de vacaciones de colaborador") { %>
-                            <a href="/vacation/requests" class="btnPrimary">
-                                Revisar Solicitudes de Vacaciones
-                            </a>
-                        <% } %>
-                    <% }) %>
                     <a href="/vacation/add" class="btnPrimary">
-                        Nueva Solicitud
+                        New requests
                     </a>
+                    <% if (role === 'Department Leader' || role === 'Human Resources') { %>
+                        <a href="/vacation/requests" class="btnPrimary">
+                            Prevoius employees requests
+                        </a>
+                    <% } %>
                 </div>
             </div>
             <div class="p-6">

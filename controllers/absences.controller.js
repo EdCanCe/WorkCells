@@ -15,7 +15,6 @@ exports.getAdd = (request, response, next) => {
 exports.postRequestApprove = (request, response, next) => {
     const absenceId = request.params.absenceID;
     const userRole = request.session.role;
-    const userId = request.session.userID;
     // Verificar si el usuario tiene permiso para aprobar esta solicitud
     Absence.fetchOne(absenceId)
         .then(([rows]) => {
@@ -100,7 +99,6 @@ exports.getRequests = (request, response, next) => {
     const userRole = request.session.role;
     const limit = 10;
     const offset = 0;
-    const showAll = request.query.all === 'true';
     let fetchPromise;
     if (userRole === 'Human Resources' || userRole === 'Department Leader') {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
@@ -215,10 +213,11 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getRoot = (request, response, next) => {
+    // console.log(request.session);
     Absence.fetchAllByID(request.session.userID)
         .then(([rows, fieldData]) => {
-            console.log(fieldData);
-            console.log(rows);
+            // console.log(fieldData);
+            // console.log(rows);
             response.render("absencesList", {
                 ...sessionVars(request),
                 absences: rows,
