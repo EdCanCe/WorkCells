@@ -40,32 +40,55 @@
     </div>
     <% }); %>
 
-    <canvas id="radarChart" class="max-w-[80%] max-h-[300px]"></canvas>
+    <div class="flex w-full h-fit justify-center items-center">
+        <canvas id="radarChart" class="max-w-[80%] max-h-[300px]"></canvas>
+    </div>
+
+    <p id="colorTemplate" class="!hidden btnPrimary">helpButtonColor</p>
 
     <!-- Genera la gráfica del usuario -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
 
-            // Se generan los datos necesarios en la gráfica
-            const data = {
-                labels: [
-                    <% measures.forEach((measure) => { %>
-                        "<%= measure.summary  %>",
-                    <% }); %>
-                ],
-                datasets: [
-                    {
-                        label: 'Employee Data',
-                        data: [
-                            <% measures.forEach((measure) => { %>
-                                <%= measure.evaluation %>,
-                            <% }); %>
-                        ],
-                    }
-                ]
+        function rgbToHex(rgb) {
+            const result = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+            if (!result) {
+                return rgb;
             }
+            const r = ("0" + parseInt(result[1], 10).toString(16)).slice(-2);
+            const g = ("0" + parseInt(result[2], 10).toString(16)).slice(-2);
+            const b = ("0" + parseInt(result[3], 10).toString(16)).slice(-2);
+            return `#${r}${g}${b}`.toUpperCase();
+        }
 
-            const config = {
+        const colorTemplate = window.getComputedStyle(document.getElementById('colorTemplate'));
+        const baseTextColor = rgbToHex(colorTemplate.color);
+        const baseBackgroundColor = rgbToHex(colorTemplate.backgroundColor);
+
+        console.log(baseTextColor, baseBackgroundColor);
+
+        // Se generan los datos necesarios en la gráfica
+        const data = {
+            labels: [
+                <% measures.forEach((measure) => { %>
+                    "<%= measure.summary.split(':')[0]  %>",
+                <% }); %>
+            ],
+            datasets: [
+                {
+                    label: 'Employee Data',
+                    data: [
+                        <% measures.forEach((measure) => { %>
+                            <%= measure.evaluation %>,
+                        <% }); %>
+                    ],
+                    backgroundColor: `${baseBackgroundColor}90`, // Fondo datos
+                    borderColor: `${baseBackgroundColor}c0`, // Borde datos
+                }
+            ]
+        };
+
+        const config = {
             type: 'radar',
             data: data,
             options: {
@@ -73,23 +96,40 @@
                 scales: {
                     r: {
                         beginAtZero: true,
-                        suggestedMin: 0,
-                        suggestedMax: 5,
-                        pointLabels: {
-                            font: {
-                                size: 14
-                            }
+                        max: 5,
+                        min: 0,
+                        grid: { 
+                            color: `${baseTextColor}40`, // borde 1
+
                         },
-                        grid: { color: 'rgba(125, 125, 125, 0.5)' }
-                    }
+                        ticks: {
+                            z: 10,
+                            showLabelBackdrop: false,
+                            color: baseTextColor, // número 1 2 3 4 5
+                            font: {
+                                weight: 'bold',
+                            },
+                        },
+                        pointLabels: {
+                            color: baseTextColor, // Titulos labels
+                            font: {
+                                size: 14,
+                                weight: 'semibold',
+                                family: 'Gotham',
+                            },
+                        },
+                        angleLines: {
+                            color: `${baseTextColor}40`, // borde 2
+                        },
+                    },
                 },
                 plugins: { legend: { display: false } },
             }
         };
 
-            // Renderiza la gráfica
-            const ctx = document.getElementById('radarChart').getContext('2d');
-            new Chart(ctx, config);
+        // Renderiza la gráfica
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctx, config);
     </script>
 
     <% } %>
