@@ -1,0 +1,60 @@
+@startuml CU30 - Superadmin modifica dia feriado
+actor navegador
+boundary holiday.routes
+boundary holidayModify.ejs
+boundary holiday.ejs
+control holiday.controller
+entity holiday
+database mysql
+
+autonumber
+navegador -> holiday.routes : GET /holiday/:id/modify
+activate holiday.routes
+
+holiday.routes -> holiday.controller: getHolidaysModify(request, response)
+deactivate holiday.routes
+activate holiday.controller
+
+holiday.controller ->> holiday: fetchHolidayID(request.params.id)
+activate holiday
+
+holiday ->> mysql: db.execute("SELECT * FROM usedHoliday \nWHERE usedHolidayID = ?", [usedHolidayID]);
+activate mysql
+mysql -->> holiday: rows
+deactivate mysql
+
+holiday -->> holiday.controller: rows
+deactivate holiday
+
+holiday.controller -> holidayModify.ejs: response.render("holidayModify", rows)
+deactivate holiday.controller
+activate holidayModify.ejs
+
+holidayModify.ejs -> navegador : Mostrar formulario para modificar dia feriado
+deactivate holidayModify.ejs
+activate navegador
+
+navegador -> holiday.routes : POST /holiday/:id/modify
+deactivate navegador
+activate holiday.routes
+
+holiday.routes -> holiday.controller : postHolidayModify(request, response)
+deactivate holiday.routes
+activate holiday.controller
+
+holiday.controller ->> holiday : updateHoliday(request.body.usedHolidayID, \nrequest.body.usedDate, \nrequest.body.usedTemplateHolidayIDFK)
+activate holiday
+
+holiday ->> mysql : db.execute ("UPDATE usedHoliday set \nusedDate = ?, usedTemplateHolidayIDFK = ? \nWHERE usedHolidayID = ? ), [usedDate, \nusedTemplateHolidayIDFK, usedHolidayID]);
+activate mysql
+mysql -->> holiday : Update OK
+deactivate mysql
+holiday -->> holiday.controller : Promesa
+deactivate holiday
+
+holiday.controller -> holiday.routes : response.redirect("/holiday")
+deactivate holiday.controller
+activate holiday.routes
+deactivate holiday.routes
+
+@enduml

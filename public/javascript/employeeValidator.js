@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("registerForm");
+    const form = document.getElementById("form");
     const curpInput = document.getElementById("curp");
     const curpFormatError = document.getElementById("curpFormatError");
 
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
             isValid = false;
         } else {
             mailFormatError.textContent = "";
-            mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
+            mailInput.setCustomValidity("");
         }
 
         nameFields.forEach((field) => {

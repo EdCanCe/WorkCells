@@ -19,7 +19,7 @@ deactivate routes
 activate controller
 controller ->> Report: getInfoActivos(start, end)
 activate Report
-Report ->> mysql: SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol,\n d.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r ON u.userRoleIDFK = r.roleID \nJOIN country c ON u.countryUserIDFK = c.countryID\n WHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK WHERE u2.workStatus = 1 \nAND w.startDate BETWEEN '2025-03-01' AND '2025-03-31') GROUP BY u.curp ORDER BY d.title;
+Report ->> mysql: 'SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol,\n d.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r \nON u.userRoleIDFK = r.roleID \nJOIN country c ON u.countryUserIDFK = c.countryID\n WHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK \nWHERE u2.workStatus = 1 \nAND w.startDate BETWEEN ? AND ?) \nGROUP BY u.curp ORDER BY d.title', [start, end];
 mysql -->> Report: activeUsers
 deactivate mysql
 Report -->> controller: Promesa
@@ -27,15 +27,31 @@ deactivate Report
 
 controller ->> Report: getInfoInactivos(start, end)
 activate Report
-Report ->> mysql: SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol, \nd.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r ON u.userRoleIDFK = r.roleID JOIN \ncountry c ON u.countryUserIDFK = c.countryID \nWHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK WHERE u2.workStatus = 0 \nAND w.endDate BETWEEN '2025-03-01' AND '2025-03-31') GROUP BY u.curp ORDER BY d.title;
+Report ->> mysql: 'SELECT u.curp AS curp, u.birthName AS nombre, \nu.surname AS apellido, c.title AS pais, r.title AS rol, \nd.title AS departamento FROM user u JOIN userDepartment \nud ON u.userID = ud.userIDFK JOIN department d ON \nud.departmentIDFK = d.departmentID JOIN role r \nON u.userRoleIDFK = r.roleID JOIN \ncountry c ON u.countryUserIDFK = c.countryID \nWHERE u.userID IN ( SELECT u2.userID FROM user u2 \nJOIN workStatus w ON u2.userID = w.userStatusIDFK \nWHERE u2.workStatus = 0 \nAND w.endDate BETWEEN ? AND ?) \nGROUP BY u.curp ORDER BY d.title', [start, end];
 activate mysql
 mysql -->> Report: inactiveUsers
 deactivate mysql
 Report -->> controller: Promesa
 deactivate Report
 
+controller ->> Report: getActivesPerMonth(start, end)
+activate Report
+Report ->> mysql: 'SELECT YEAR(w.startDate) AS anio, \nMONTH(w.startDate) AS mes, COUNT(DISTINCT u.userID) \nAS total_empleados FROM user u \nJOIN workStatus w ON u.userID = w.userStatusIDFK \nJOIN userDepartment ud ON ud.userIDFK = u.userID \nWHERE u.workStatus = 1 AND w.startDate BETWEEN ? AND ? \nGROUP BY anio, mes ORDER BY anio, mes', [start, end];
+activate mysql
+mysql -->> Report: activesPerMonth
+deactivate mysql
+Report -->> controller: Promesa
+deactivate Report
 
-controller -> list: res.render('rotacion.ejs', data)
+controller ->> Report: getInactivesPerMonth(start, end)
+activate Report
+Report ->> mysql: 'SELECT YEAR(w.endDate) AS anio, \nMONTH(w.endDate) AS mes, COUNT(DISTINCT u.userID) \nAS total_empleados FROM user u \nJOIN workStatus w ON u.userID = w.userStatusIDFK \nJOIN userDepartment ud ON ud.userIDFK = u.userID \nWHERE u.workStatus = 0 AND w.endDate BETWEEN ? AND ? \nGROUP BY anio, mesORDER BY anio, mes', [start, end];
+activate mysql
+mysql -->> Report: inactivesPerMonth
+Report -->> controller: Promesa
+deactivate Report
+
+controller -> list: res.render('rotacion.ejs', \nactiveUsers \ninactiveUsers \nacvtivesPerMonth \ninactivesPerMonth)
 deactivate controller
 activate list
 list --> navegador: HTML

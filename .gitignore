@@ -6,7 +6,6 @@
 *.exe
 .vscode/*
 node_modules/
-util/database.js
 uploads/
 public/css/style.css
 *.x

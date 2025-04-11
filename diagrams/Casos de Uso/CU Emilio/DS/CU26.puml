@@ -1,0 +1,65 @@
+@startuml CU26 - Elimina dia feriado
+actor Navegador
+boundary holidayModify.ejs
+boundary holiday.routes
+control holiday.controller
+entity holiday
+database mysql
+
+autonumber
+activate Navegador
+
+Navegador -> holiday.routes : POST /holiday/:id/modify
+deactivate Navegador
+activate holiday.routes
+holiday.routes -> holiday.controller : postDeleteholiday(req, res)
+deactivate holiday.routes
+activate holiday.controller
+
+
+
+holiday.controller -> holidayModify.ejs : Mostrar alerta de confirmación
+deactivate holiday.controller
+activate holidayModify.ejs
+holidayModify.ejs -> Navegador : Alerta si está seguro de eliminar
+deactivate holidayModify.ejs
+activate Navegador
+
+deactivate holidayModify.ejs
+alt Confirmación positiva
+    Navegador->holiday.routes:POST /holiday/yes
+    activate holiday.routes
+    holiday.routes->holiday.controller: postYes(req,res)
+    deactivate holiday.routes
+    activate holiday.controller
+    holiday.controller ->> holiday : deleteholiday(holidayID)
+    deactivate holiday.controller
+    activate holiday
+    holiday ->> mysql : DELETE FROM holiday WHERE holiday_id=?
+    activate mysql
+    mysql -->> holiday : Solicitud eliminada
+deactivate mysql
+    holiday -->> holiday.controller : Éxito
+    deactivate holiday
+    activate holiday.controller
+    holiday.controller -> holidayModify.ejs : Mostrar mensaje de eliminación exitosa
+    deactivate holiday.controller
+    activate holidayModify.ejs
+else Cancelación
+    Navegador->holiday.routes:POST /holiday/no
+    deactivate Navegador
+    activate holiday.routes
+    holiday.routes->holiday.controller : postNo(req,res)
+    deactivate holiday.routes
+    activate holiday.controller
+    holiday.controller -> holidayModify.ejs : Regresar a vista de solicitudes
+    deactivate holiday.controller
+end
+
+activate holidayModify.ejs
+holidayModify.ejs -> Navegador : Mostrar mensaje correspondiente
+deactivate holidayModify.ejs
+
+
+@enduml
+

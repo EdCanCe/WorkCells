@@ -1,16 +1,136 @@
-<div class="flex">
-    <aside class="w-64"></aside>
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-md rounded-lg">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    Datos de sesión One to One
-                </h2>
-                <p class="text-lg">
-                    En esta ruta, el usuario podrá consultar los datos de una
-                    sesión One to One.
-                </p>
-            </div>
-        </div>
+<div class="primaryContainer bgBase">
+    <% if(isFilled == '0') { %>
+    <!-- No hay datos aún -->
+    <h1 class="font-bold text-3xl text-center">
+        This session hasn't been filled
+    </h1>
+
+    <!-- Botón para redirigir al meet -->
+    <% if (sessionData.meetingLink) { %>
+    <a
+        target="_blank"
+        href="<%= sessionData.meetingLink %>"
+        class="btnPrimary !block w-fit m-auto mt-5"
+        >Google Meet Link</a
+    >
+    <% } %>
+
+    <!-- Si es HR muestra botón para llenar datos -->
+    <% if(role == 'Human Resources') { %>
+    <a
+        href="/oneToOne/<%= sessionID %>/fill"
+        class="btnPrimary !block w-fit m-auto mt-5"
+        >Fill this session</a
+    >
+    <% } %> <% } else { %>
+    <!-- Ya tiene los datos llenos -->
+
+    <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
+
+    <!-- Muestra los datos de la sesión One On One -->
+    <h3 class="text-2xl font-semibold text-center">
+        <%= name %> | <%= meetingDate %>
+    </h3>
+
+    <!-- Imprime las preguntas y sus respuestas -->
+    <% answers.forEach((answer) => { %>
+    <div class="mt-3">
+        <h3 class="text-lg font-semibold"><%= answer.question %></h3>
+        <p><%= answer.answer %></p>
     </div>
+    <% }); %>
+
+    <div class="flex w-full h-fit justify-center items-center">
+        <canvas id="radarChart" class="max-w-[80%] max-h-[300px]"></canvas>
+    </div>
+
+    <p id="colorTemplate" class="!hidden btnPrimary">helpButtonColor</p>
+
+    <!-- Genera la gráfica del usuario -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        function rgbToHex(rgb) {
+            const result = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+            if (!result) {
+                return rgb;
+            }
+            const r = ("0" + parseInt(result[1], 10).toString(16)).slice(-2);
+            const g = ("0" + parseInt(result[2], 10).toString(16)).slice(-2);
+            const b = ("0" + parseInt(result[3], 10).toString(16)).slice(-2);
+            return `#${r}${g}${b}`.toUpperCase();
+        }
+
+        const colorTemplate = window.getComputedStyle(document.getElementById('colorTemplate'));
+        const baseTextColor = rgbToHex(colorTemplate.color);
+        const baseBackgroundColor = rgbToHex(colorTemplate.backgroundColor);
+
+        console.log(baseTextColor, baseBackgroundColor);
+
+        // Se generan los datos necesarios en la gráfica
+        const data = {
+            labels: [
+                <% measures.forEach((measure) => { %>
+                    "<%= measure.summary.split(':')[0]  %>",
+                <% }); %>
+            ],
+            datasets: [
+                {
+                    label: 'Employee Data',
+                    data: [
+                        <% measures.forEach((measure) => { %>
+                            <%= measure.evaluation %>,
+                        <% }); %>
+                    ],
+                    backgroundColor: `${baseBackgroundColor}90`, // Fondo datos
+                    borderColor: `${baseBackgroundColor}c0`, // Borde datos
+                }
+            ]
+        };
+
+        const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 5,
+                        min: 0,
+                        grid: { 
+                            color: `${baseTextColor}40`, // borde 1
+
+                        },
+                        ticks: {
+                            z: 10,
+                            showLabelBackdrop: false,
+                            color: baseTextColor, // número 1 2 3 4 5
+                            font: {
+                                weight: 'bold',
+                            },
+                        },
+                        pointLabels: {
+                            color: baseTextColor, // Titulos labels
+                            font: {
+                                size: 14,
+                                weight: 'semibold',
+                                family: 'Gotham',
+                            },
+                        },
+                        angleLines: {
+                            color: `${baseTextColor}40`, // borde 2
+                        },
+                    },
+                },
+                plugins: { legend: { display: false } },
+            }
+        };
+
+        // Renderiza la gráfica
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctx, config);
+    </script>
+
+    <% } %>
 </div>

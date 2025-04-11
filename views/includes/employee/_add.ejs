@@ -4,12 +4,8 @@
         <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
             <div class="card-content">
                 <h1 class="text-3xl font-semibold mb-4">Create New Employee</h1>
-                <% if (info) { %>
-                <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-                    <%= info %>
-                </div>
-                <% } %>
-                <form id="registerForm" action="/employee" method="POST">
+
+                <form id="form" action="/employee" method="POST">
                     <input
                         type="hidden"
                         name="_csrf"
@@ -94,7 +90,7 @@
                                 id="mail"
                                 name="mail"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="eiujmidiam@nuclea.solution"
+                                placeholder="eiujmidiam@nuclea.solutions"
                                 required
                             />
                             <div
@@ -264,7 +260,7 @@
                     </div>
 
                     <div class="flex justify-end mt-4">
-                        <button type="submit" class="btnPrimary">Add</button>
+                        <button type="submit" class="btnPrimary">Submit</button>
                     </div>
                 </form>
             </div>
