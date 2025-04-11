@@ -100,8 +100,10 @@ exports.getRequests = (request, response, next) => {
     const limit = 10;
     const offset = 0;
     let fetchPromise;
+    console.log(request.session);
     if (userRole === 'Human Resources' || userRole === 'Department Leader') {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
+        // SELECT * FROM user WHERE user.prioritaryDepartmentIDFK = 'cbf52319-0026-40ff-bf1e-2e48f1dc8b94';
         fetchPromise = Absence.fetchPaginated(limit, offset, userRole, userId);
     } else {
         // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica

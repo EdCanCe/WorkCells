@@ -10,7 +10,7 @@ autonumber
 
 ' El Navegador envía la petición AJAX para registrar la respuesta a la ausencia
 activate Navegador
-Navegador ->> Routes: POST /absence/requests/:id
+Navegador ->> Routes: POST /absence/approve/:id
 
 activate Routes
 Routes -> Controller: postRequests(request, response)
@@ -18,11 +18,11 @@ deactivate Routes
 activate Controller
 
 ' El controlador invoca al modelo para actualizar la respuesta de la ausencia
-Controller ->> Model: fetchPaginated(limit, offset, userRole, userId)
+Controller ->> Model: updateStatusLeader(absenceId, status)
 activate Model
 
 ' El modelo ejecuta la consulta en la base de datos
-Model ->> DB: db.execute(\n`SELECT a.*, u.birthName, u.surname, r.title\nFROM absence AS a\nJOIN user AS u ON u.userID = a.absenceUserIDFK\nJOIN role AS r ON r.roleID = u.userRoleIDFK\nJOIN user AS leader ON leader.userID = ?\nWHERE a.leaderStatus = 2\nAND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK\nORDER BY a.startDate DESC LIMIT ? OFFSET ?`, [limit, offset, userRole, userId]);
+Model ->> DB: db.execute(\"UPDATE absence \nSET leaderStatus = ? \nWHERE absenceID = ?", \n[status, absenceId]);
 activate DB
 DB -->> Model: rows
 deactivate DB
