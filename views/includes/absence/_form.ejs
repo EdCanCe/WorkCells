@@ -1,6 +1,6 @@
 <div class="container mx-auto p-4">
     <h2 class="text-2xl font-bold mb-6 text-center">
-        Escribe los datos sobre tu Ausencia
+        Fill the data in order to create a new absence
     </h2>
 
     <div class="flex justify-center">
@@ -13,7 +13,7 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <div class="mb-6">
                 <label class="block text-neutral-100 font-semibold mb-2">
-                    Fecha de inicio de la ausencia:
+                    Start Date of the absence:
                 </label>
                 <input
                     id="startInput"
@@ -26,7 +26,7 @@
 
             <div class="mb-6">
                 <label class="block text-neutral-100 font-semibold mb-2">
-                    Fecha de finalización de la ausencia:
+                    End Date of the absence:
                 </label>
                 <input
                     id="endInput"
@@ -39,20 +39,20 @@
 
             <div class="mb-6">
                 <label class="block text-neutral-100 font-semibold mb-2">
-                    Motivo de la ausencia:
+                    Reason of the absence:
                 </label>
                 <textarea
                     id="reason"
                     class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg resize-none overflow-hidden"
                     name="reason"
-                    placeholder="Me enfermé y tuve que acudir al médico"
+                    placeholder="I got ill and had to go to see the doctor"
                     oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';"
                 ></textarea>
             </div>
 
             <div class="mb-6">
                 <label class="block text-neutral-100 font-semibold mb-2">
-                    Evidencia (opcional):
+                    Evidence (optional):
                 </label>
                 <input
                     id="evidenceInput"
@@ -64,7 +64,7 @@
             </div>
 
             <div class="mb-0 flex justify-evenly">
-                <input class="btnPrimary" type="submit" value="Enviar" />
+                <input class="btnPrimary" type="submit" value="Submit" />
             </div>
         </form>
     </div>
@@ -126,7 +126,7 @@
             if (file) {
                 if (file.size > maxSize) {
                     alert(
-                        `El archivo es demasiado grande. El tamaño máximo permitido es 10 MB.`
+                        `The file is too heavy, the maximum allowed is 10mb.`
                     );
                     this.value = ""; // Borra el archivo seleccionado
                 }
