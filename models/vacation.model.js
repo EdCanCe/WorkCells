@@ -309,4 +309,8 @@ LEFT JOIN vacation v
         [userID, userID]);
     }
 
+    static getUserID(vacationID){
+        return db.execute(`SELECT vacationUserIDFK FROM vacation WHERE vacationID = ?;`, [vacationID]);
+    }
+    
 }
