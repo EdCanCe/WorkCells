@@ -82,6 +82,7 @@ Model -->> Controller : rows
 deactivate Model
 
 loop Para cada pregunta
+    create Answer
     Controller -> Answer : new Answer(...)
     activate Answer
     Controller ->> Answer : save()
@@ -94,6 +95,7 @@ loop Para cada pregunta
 end
 
 loop Para cada métrica
+    create Measure
     Controller -> Measure : new Measure(...)
     activate Measure
     Controller ->> Measure : save()

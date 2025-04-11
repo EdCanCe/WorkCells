@@ -8,15 +8,15 @@ async function loadHolidays(page) {
     <table class="min-w-full divide-y divide-emerald-200">
       <thead class="bg-neutral-800 text-white text-left text-lg">
         <tr>
-          <th class="px-6 py-4">Día Feriado</th>
-          <th class="px-6 py-4">Fecha</th>
+          <th class="px-6 py-4">Holidays</th>
+          <th class="px-6 py-4">Date</th>
         </tr>
       </thead>
       <tbody class="text-gray-200 bg-neutral-800">
   `;
 
   if (data.length === 0) {
-    table += `<tr><td colspan="2" class="text-center py-6">No hay más registros.</td></tr>`;
+    table += `<tr><td colspan="2" class="text-center py-6">There´s no more holidays</td></tr>`;
   } else {
     data.forEach((holiday) => {
       table += `

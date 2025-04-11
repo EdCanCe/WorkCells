@@ -5,7 +5,7 @@
         <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
             <div class="p-6 flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">
-                    Historial de Vacaciones
+                    History of vacations
                 </h2>
                 <div class="flex space-x-4">
                     <% privilegios.forEach(privilegio => { %>
@@ -16,7 +16,7 @@
                         <% } %>
                     <% }) %>
                     <a href="/vacation/add" class="btnPrimary">
-                        Nueva Solicitud
+                        New request
                     </a>
                 </div>
             </div>
@@ -25,11 +25,11 @@
                     <table class="table w-full text-sm text-left">
                         <thead class="bg-neutral-700/50">
                             <tr>
-                                <th class="px-4 py-2">Motivo</th>
-                                <th class="px-4 py-2">Fecha Inicio</th>
-                                <th class="px-4 py-2">Fecha Fin</th>
-                                <th class="px-4 py-2">Estatus RH</th>
-                                <th class="px-4 py-2">Estatus Líder</th>
+                                <th class="px-4 py-2">REASON</th>
+                                <th class="px-4 py-2">START DATE</th>
+                                <th class="px-4 py-2">END DATE</th>
+                                <th class="px-4 py-2">HR STATUS</th>
+                                <th class="px-4 py-2">LEADER STATUS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,7 +74,7 @@
         <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
             <div class="p-6">
                 <h2 class="text-2xl font-semibold mb-4">
-                    Vacaciones Pendientes por Aprobar
+                    Vacation awaiting approval...
                 </h2>
             </div>
             <div class="p-6">
@@ -82,12 +82,12 @@
                     <table class="table w-full text-sm text-left">
                         <thead class="bg-neutral-700/50">
                             <tr>
-                                <th class="px-4 py-2">Motivo</th>
-                                <th class="px-4 py-2">Fecha Inicio</th>
-                                <th class="px-4 py-2">Fecha Fin</th>
-                                <th class="px-4 py-2">Estatus RH</th>
-                                <th class="px-4 py-2">Estatus Líder</th>
-                                <th class="px-4 py-2">Acciones</th>
+                                <th class="px-4 py-2">REASON</th>
+                                <th class="px-4 py-2">START DATE</th>
+                                <th class="px-4 py-2">END DATE</th>
+                                <th class="px-4 py-2">HR STATUS</th>
+                                <th class="px-4 py-2">LEADER STATUS</th>
+                                <th class="px-4 py-2">CHECK ONE</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,7 +124,7 @@
                                 <!-- Botón para ver detalles de la vacación -->
                                 <td class="px-4 py-2">
                                     <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">
-                                        Ver Detalle
+                                        Check
                                     </a>
                                 </td>
                             </tr>

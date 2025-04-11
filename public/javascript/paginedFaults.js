@@ -18,7 +18,7 @@ let currentPage = 1;
           <thead class="bg-neutral-800/50">
             <tr>
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Name</th>
-              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Gmail</th>
+              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">E-mail</th>
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Date of the Fault</th>
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Numbers of Faults</th>
               <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Access the fault</th>
@@ -30,7 +30,7 @@ let currentPage = 1;
       if (!data || data.faults.length === 0) {
         table += `
           <tr>
-            <td colspan="4" class="px-6 py-4 text-white text-center">No hay más registros.</td>
+            <td colspan="4" class="px-6 py-4 text-white text-center">There´s no more faults.</td>
           </tr>
         `;
       } else {
