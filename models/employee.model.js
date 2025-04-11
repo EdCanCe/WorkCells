@@ -122,6 +122,13 @@ module.exports = class Employee {
                         WHERE d.enterpriseIDFK = e.enterpriseID;`);
     }
 
+    static fetchAllDataUser(userID) {
+        return db.execute(`SELECT *
+        FROM user u, country c
+        WHERE u.userID = ?
+        AND u.countryUserIDFK = c.countryID`, [userID]);
+    }
+
     // Obtener el país por ID
     static fetchCountryByID(countryID) {
         return db.execute("SELECT title FROM country WHERE countryID = ?", [

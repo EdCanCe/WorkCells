@@ -256,9 +256,25 @@ exports.getCheck = (request, response, next) => {
 };
 
 exports.getMe = (request, response, next) => {
-    response.render("employeeMe", {
-        ...sessionVars(request),
+    // TODO: hacer verificaciones de superAdmin, lider y colaborador
+    const userid = request.session.userID;
+    console.log("ID =", userid);
+    
+    Employee.fetchAllDataUser(userid)
+    .then(([rows])=>{
+        response.render("employeeMe", {
+            ...sessionVars(request),
+            userData: rows[0],
+            API: process.env.GEOLOCATION_API_KEY,
+        });
+    })
+    .catch((error)=>{
+        console.error("this is your error: ",error);
+        request.session.alert = "can not find user";
+        response.redirect("/error");
     });
+
+
 };
 
 exports.getRoot = (request, response, next) => {
@@ -304,3 +320,8 @@ exports.getSearch = (request, response, next) => {
                 .json({ error: "Error en la búsqueda/paginación" });
         });
 };
+
+exports.getMyProfile =(request, response, next) => {
+    const userID = request.session.userID;
+    response.send("entraste");
+}
