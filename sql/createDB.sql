@@ -70,6 +70,13 @@ CREATE TABLE user (
     CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID)
 );
 
+ALTER TABLE department 
+ADD departmentLeaderIDFK VARCHAR(40);
+
+ALTER TABLE department 
+ADD CONSTRAINT departmentLeaderIDFK 
+FOREIGN KEY (departmentLeaderIDFK) REFERENCES user(userID);
+
 CREATE TABLE workStatus (
     workStatusID VARCHAR(40) NOT NULL PRIMARY KEY,
     startDate DATE NOT NULL,
@@ -78,12 +85,13 @@ CREATE TABLE workStatus (
     CONSTRAINT userStatusIDFK FOREIGN KEY (userStatusIDFK) REFERENCES user(userID)
 );
 
+/**
 CREATE TABLE userDepartment (
     departmentIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
     userIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID)
-);
+);*/
 
 CREATE TABLE vacation (
     vacationID VARCHAR(40) NOT NULL PRIMARY KEY,
@@ -142,7 +150,7 @@ CREATE TABLE oneOnOneMeasurable (
 );
 
 CREATE TABLE oneOnOneMeasure (
-    evaluation VARCHAR(40) NOT NULL,
+    evaluation int NOT NULL,
     measureOneOnOneIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT measureOneOnOneIDFK FOREIGN KEY (measureOneOnOneIDFK) REFERENCES oneOnOne(oneOnOneID),
     measurableIDFK VARCHAR(40) NOT NULL,
