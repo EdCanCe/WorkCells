@@ -59,6 +59,7 @@ CREATE TABLE user (
     zipCode MEDIUMINT NOT NULL,
     houseNumber VARCHAR(13) NOT NULL,
     streetName VARCHAR(100),
+    phoneNumber VARCHAR(15),
     colony VARCHAR(100),
     workModality TINYINT NOT NULL,
     workStatus BOOLEAN NOT NULL,
