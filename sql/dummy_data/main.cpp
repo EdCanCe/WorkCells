@@ -59,8 +59,7 @@ int main() {
     createUsers(100);
     users.print();
 
-    createUserDepartment(160);
-    userDepartment.print();
+    createUserDepartment();
     selectUserPriorityDepartment();
 
     createUsedWorkStatus(60);

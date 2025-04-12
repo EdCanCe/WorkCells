@@ -45,18 +45,10 @@ module.exports = class Vacation {
   v.startDate, 
   v.endDate, 
   v.leaderStatus
-FROM vacation v, user u
+FROM vacation v, user u, department d
 WHERE v.vacationUserIDFK = u.userID
-AND u.userID IN (
-  -- Subconsulta: Usuarios del mismo departamento del líder
-  SELECT ud.userIDFK
-  FROM userDepartment ud
-  WHERE ud.departmentIDFK IN (
-    -- Subconsulta: Departamento del líder
-    SELECT departmentIDFK
-    FROM userDepartment, user
-    WHERE userIDFK = ?
-    
+AND u.prioritaryDepartmentIDFK = d.departmentID
+AND d.departmentLeaderIDFK = ?
   )
 );`,
             [userID]
@@ -102,16 +94,10 @@ AND u.userID IN (
                 v.leaderStatus,
                 v.hrStatus,
                 v.vacationID
-            FROM vacation v, user u
+            FROM vacation v, user u, department d
             WHERE v.vacationUserIDFK = u.userID 
-            AND u.userID IN (
-                SELECT ud.userIDFK
-                FROM userDepartment ud
-                WHERE ud.departmentIDFK IN (
-                    SELECT departmentIDFK
-                    FROM userDepartment, user
-                    WHERE userIDFK = ?
-                )
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.departmentLeaderIDFK = ?
             );`,
             [userID]
         );
@@ -186,19 +172,13 @@ AND u.userID IN (
     static fetchDepartmentPaginated(leaderID, limit, offset) {
         return db.execute(
             `SELECT v.*, u.birthName, u.surname 
-            FROM vacation AS v
-            JOIN user AS u ON u.userID = v.vacationUserIDFK
-            WHERE v.leaderStatus = 2 AND v.hrStatus = 2
-            AND u.userID IN (
-                SELECT ud.userIDFK
-                FROM userDepartment ud
-                WHERE ud.departmentIDFK IN (
-                    SELECT departmentIDFK
-                    FROM userDepartment
-                    WHERE userIDFK = ?
-                )
-            )
-            ORDER BY v.startDate DESC
+            FROM vacation v, user u, department d
+            WHERE u.userID = v.vacationUserIDFK 
+            AND v.leaderStatus = 2 
+            AND v.hrStatus = 2
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.departmentLeaderIDFK = ?
+            ORDER BY v.startDate DESC;
             LIMIT ? OFFSET ?`,
             [leaderID, limit, offset]
         );

@@ -12,6 +12,7 @@ class Role {
     public:
         Role(string);
         string getId();
+        string getTitle();
         void print();
 };
 
@@ -24,6 +25,10 @@ Role::Role(string Title) {
 
 string Role::getId(){
     return id;
+}
+
+string Role::getTitle() {
+    return title;
 }
 
 void Role::print() {

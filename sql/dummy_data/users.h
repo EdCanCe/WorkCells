@@ -150,6 +150,7 @@ class User {
     public:
         User(string, string, string, string, string, string, string, bool, int, string, string, string, int, bool, string, string);
         string getId();
+        string getRole();
         void print();
 };
 
@@ -183,9 +184,18 @@ string User::getId(){
     return id;
 }
 
+string User::getRole(){
+    for(auto i:roles){
+        if(i.getId() == "userRoleIDFK") {
+            return i.getTitle();
+        }
+    }
+    return "";
+}
+
 // Impresión / Código en SQL
 void User::print() {
-    cout << "INSERT INTO user(userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES('" << id << "', '" << curp << "', '" << rfc << "', '" << birthName << "', '" << surname << "', '" << mail << "', '" << passwd << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", '" << userRoleIDFK << "', '" << countryUserIDFK << "');\n";
+    cout << "INSERT INTO user(userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES('" << id << "', '" << curp << "', '" << rfc << "', '" << birthName << "', '" << surname << "', '" << mail << "', '" << "$2b$12$c.Zj5/1PciYqJbFcH3VxKOLhAbozT4Zcvb6zq4ofNo5h9KBk1fO.y" << "', " << (passwdFlag ? "TRUE" : "FALSE") << ", " << zipCode << ", '" << houseNumber << "', '" << streetName << "', '" << colony << "', " << workModality << ", " << (workStatus ? "TRUE" : "FALSE") << ", '" << userRoleIDFK << "', '" << countryUserIDFK << "');\n";
 }
 
 string createUserID(){

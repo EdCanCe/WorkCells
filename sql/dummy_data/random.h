@@ -45,6 +45,8 @@ class Randomizer {
         void add(T);
         T random();
         int size();
+        T get(int);
+        T getWithID(string);
         void print();
 };
 
@@ -70,6 +72,19 @@ T Randomizer<T>::random() {
 template <class T>
 int Randomizer<T>::size() {
     return v.size();
+}
+
+template <class T>
+T Randomizer<T>::get(int x) {
+    return v[x];
+}
+
+template <class T>
+T Randomizer<T>::getWithID(string x) {
+    for (auto i:v) {
+        if(i.getId() == x) return i;
+    }
+    return 0;
 }
 
 template <class T>
