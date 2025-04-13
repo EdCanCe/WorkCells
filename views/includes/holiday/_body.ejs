@@ -5,18 +5,14 @@
         <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
             <!-- Nuevo contenido movido dentro -->
             <div class="bg-neutral-800/50 p-6 rounded-lg mb-4">
-                <% if (info) { %>
-                <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-                    <%= info %>
-                </div>
-                <% } %>
-                <h3 class="text-xl font-semibold mb-4">Añadir</h3>
-                <p class="text-lg mb-4">Añadir día feriado</p>
+
+                <h3 class="text-xl font-semibold mb-4">Holidays</h3>
+                <p class="text-lg mb-4">Add Holiday</p>
                 <a
                     href="/holiday/add"
                     class="btnPrimary"
                 >
-                    Agregar
+                    Add
                 </a>
             </div>
 
@@ -24,34 +20,34 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Día específico -->
                 <div class="bg-neutral-800/50 p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold mb-4">Día específico</h3>
-                    <p class="text-lg mb-4">Entrar a un día en específico</p>
+                    <h3 class="text-xl font-semibold mb-4">Add an specific holiday</h3>
+                    <p class="text-lg mb-4">Check an specific holiday</p>
                     <a
                         href="/holiday/check"
                         class="btnPrimary m-2"
                     >
-                        Consultar
+                        Check
                     </a>
                     <a
                         href="/holiday/check/modify"
                         class="btnPrimary"
                     >
-                        Modificar
+                        Modify
                     </a>
                 </div>
 
                 <div class="bg-neutral-800/50 p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-semibold mb-4">
-                        Checar días feriados
+                        Check all holidays
                     </h3>
                     <p class="text-lg mb-4">
-                        Mostrar una lista de días feriados
+                        Shows a list of the holidays
                     </p>
                     <a
                         href="/holiday/used"
                         class="btnPrimary"
                     >
-                        Ver
+                        Check
                     </a>
                 </div>
             </div>

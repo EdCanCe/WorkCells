@@ -1,8 +1,18 @@
 <div class="content p-4">
     <div class="card bg-neutral-700/25 shadow-md rounded-lg p-6">
-        <h1 class="text-3xl font-semibold mb-4">Mi perfil</h1>
+        <h1 class="text-3xl font-semibold mb-4">My Profile</h1>
         <p class="text-lg mb-6">
-            En esta vista se podrá ver el propio perfil del administrador.
+            <%= userData.birthName %>
         </p>
     </div>
+
 </div>
+
+<p id="adress"></p>
+    
+<div id="map"></div>
+
+<script src="/javascript/geolocationApi.js"></script>
+<script>
+    adressLoader("<%= API %>", document.getElementById("adress"),document.getElementById("map"), "<%= userData.streetName %>","<%= userData.houseNumber %>", "<%= userData.colony %>", "<%= userData.zipCode %>", "<%= userData.title %>");
+</script>

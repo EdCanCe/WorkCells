@@ -440,7 +440,8 @@ exports.updateVacation = async (request, response, next) => {
     const vacationId = request.params.vacationID;
     const { startDate, endDate, reason } = request.body;
 
-    console.log("Días disponibles asignados a la sesión:", request.session.availableDays);
+    // Log para identificar si availableDays está definido en la sesión
+    console.log("Días disponibles asignados a la sesión:", request.session.availableDays || "No definido");
 
     if (!startDate || !endDate || !reason) {
         request.session.info = 'Todos los campos son obligatorios.';
@@ -473,7 +474,6 @@ exports.updateVacation = async (request, response, next) => {
             const map = new Map();
             let current = new Date(start);
             const endDateLoop = new Date(end);
-
             while (current <= endDateLoop) {
                 const dateStr = formatDate.forSql(current);
                 map.set(dateStr, {
@@ -514,7 +514,6 @@ exports.updateVacation = async (request, response, next) => {
             const periodEnd = periodRows[0].mapEnd;
 
             const vacations = periodRows;
-
             const dayMap = new Map();
             let current = new Date(periodStart);
             const endDateLoop = new Date(periodEnd);
@@ -553,13 +552,7 @@ exports.updateVacation = async (request, response, next) => {
 
             const [timeRows] = await User.fetchWorkingTime(userID);
             const workingYears = timeRows[0].time;
-
-            let baseDays = 12;
-            let years = workingYears;
-            while (years > 0) {
-                baseDays += 2;
-                years -= 1;
-            }
+            let baseDays = 12 + Math.min(workingYears, 4) * 2;
             baseDays = baseDays > 20 ? 20 : baseDays;
             return baseDays - totalUsedDays;
         };
@@ -572,6 +565,7 @@ exports.updateVacation = async (request, response, next) => {
             request.session.alert = "Vacación no encontrada.";
             return response.redirect('/vacation/history');
         }
+
         const originalVacation = originalVacationRows[0];
         const originalDaysMap = buildDayMap(originalVacation.startDate, originalVacation.endDate, holidays);
         const originalTotalDays = countUsableDays(originalDaysMap);
@@ -587,33 +581,50 @@ exports.updateVacation = async (request, response, next) => {
             return response.redirect(`/vacation/check/modify/${vacationId}`);
         }
 
+        // Obtener el ID del usuario asociado a la vacación
+        const getUserResult = await Vacation.getUserID(vacationId);
+        console.log("Resultado de getUserID:", getUserResult);
+
+        // Verificar el formato del resultado
+        let userRows;
+        if (Array.isArray(getUserResult)) {
+            userRows = getUserResult[0];
+        } else if (getUserResult && getUserResult.rows) {
+            userRows = getUserResult.rows;
+        } else {
+            console.error("Vacation.getUserID retornó un valor inesperado:", getUserResult);
+            throw new Error("Error al obtener la identificación de usuario para la vacación.");
+        }
+
+        if (!userRows || userRows.length === 0) {
+            request.session.alert = "Vacación no encontrada.";
+            return response.redirect("/vacation");
+        }
+        if (userRows[0].vacationUserIDFK != request.session.userID) {
+            request.session.alert = "No puedes modificar una solicitud que no es tuya.";
+            return response.redirect("/vacation");
+        }
+
+        // Actualizar la vacación
         await Vacation.updateVacation(vacationId, startDate, endDate, reason);
         request.session.info = 'Solicitud de vacaciones actualizada exitosamente.';
 
-        const [rows] = await Vacation.fetchOne(vacationId);
-        return response.render('modifyVacation', {
-            ...sessionVars(request),
-            vacation: rows[0],
-            availableDays: availableIncludingOriginal
-        });
+        // Luego de actualizar, redirigimos a la ruta de listado o historial de vacaciones.
+        return response.redirect('/vacation');
 
     } catch (error) {
         console.error('Error al actualizar la vacación:', error);
         request.session.info = 'Error al actualizar la solicitud.';
         try {
             const [rows] = await Vacation.fetchOne(vacationId);
-            return response.render('modifyVacation', {
-                ...sessionVars(request),
-                vacation: rows[0],
-                availableDays: 0
-            });
+            // Se decide redirigir en lugar de renderizar para mantener consistencia
+            return response.redirect('/vacation');
         } catch (fetchError) {
             console.error(fetchError);
             return response.status(500).send('Error interno del servidor.');
         }
     }
 };
-
 
 
 exports.postRequestApprove = (request, response, next) => {
@@ -639,7 +650,7 @@ exports.postRequestApprove = (request, response, next) => {
             }
             // Si es líder, actualiza el estado del líder
             else if (userRole === 'Department Leader') { // Cambiado de 'Leader' a 'Department Leader'
-                return Vacation.fetchDepartmentPaginated(vacationId, 1, 0)
+                return Vacation.fetchDepartmentPaginated(userId, 1, 0);
             }
             else {
                 throw new Error('Rol no autorizado');
@@ -682,7 +693,7 @@ exports.postRequestDeny = (request, response, next) => {
             }
             // Si es líder, actualiza el estado del líder
             else if (userRole === 'Department Leader') {
-                return Vacation.fetchDepartmentPaginated(vacationId, 1, 0)
+                return Vacation.fetchDepartmentPaginated(userId, 1, 0)
                     .then(([departmentVacations]) => {
                         const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
                         if (!hasPermission) {
@@ -714,14 +725,25 @@ exports.postRequestDeny = (request, response, next) => {
 exports.PostDeleteVacation = (request, response, next) => {
     const vacationId = request.params.vacationID;
 
-    Vacation.deleteVacation(vacationId)
-        .then(() => {
-            response.status(200).json({ message: 'Solicitud eliminada correctamente' });
+    Vacation.getUserID(vacationId)
+        .then(([rows]) => {
+            const vacationUserID = rows[0].vacationUserIDFK;
+            if (vacationUserID == request.session.userID) {
+                Vacation.deleteVacation(vacationId)
+                    .then(() => {
+                        response.status(200).json({ message: 'Solicitud eliminada correctamente' });
+                    })
+            } else {
+                console.error('Error al eliminar solicitud, no eres el dueño:', error);
+                response.status(500).json({ message: 'Error al eliminar la solicitud, no eres el dueño' });
+            }
         })
         .catch((error) => {
             console.error('Error al eliminar solicitud:', error);
             response.status(500).json({ message: 'Error al eliminar la solicitud' });
         });
+
+    
 };
 
 

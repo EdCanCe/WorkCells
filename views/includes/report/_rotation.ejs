@@ -193,8 +193,8 @@
             const months = Array.from(monthSet).sort((a, b) => a - b);
 
             const monthNames = [
-                'Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+                'January','February','March','April','May','June',
+                'July','August','September','October','November','December'
             ];
             const labels = months.map(m => monthNames[m - 1]);
 
@@ -214,12 +214,12 @@
                 labels,
                 datasets: [
                     {
-                    label: 'Nuevos',
+                    label: 'New employees',
                     data: activeTotals,
                     backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     },
                     {
-                    label: 'Bajas',
+                    label: 'Idle employees',
                     data: inactiveTotals,
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                     }
@@ -228,8 +228,8 @@
                 options: {
                 responsive: true,
                 scales: {
-                    x: { title: { display: true, text: 'Mes' } },
-                    y: { title: { display: true, text: 'Empleados' }, beginAtZero: true }
+                    x: { title: { display: true, text: 'Month' } },
+                    y: { title: { display: true, text: 'Number of employees' }, beginAtZero: true }
                 }
                 }
             });
