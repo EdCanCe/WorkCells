@@ -36,7 +36,6 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
 1. [Uso de etiquetas](#uso-de-etiquetas)
 
-
 ## Objetos:
  - Al añadir funciones dentro de un objeto, no definir que es una función.
  
