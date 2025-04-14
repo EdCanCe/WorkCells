@@ -193,6 +193,15 @@ AND d.departmentLeaderIDFK = ?
         );
     }
 
+    static fetchOneEmployee(vacationUserID) {
+        return db.execute(
+            `SELECT *
+            FROM user
+            WHERE userID = ?`,
+            [vacationUserID]
+        );
+    }
+
     static fetchAllVacation(userID) {
         return db.execute(
             `SELECT v.vacationID,v.reason,v.startDate, v.endDate,

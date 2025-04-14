@@ -1,36 +1,75 @@
 const axios = require('axios');
 
-const WHATSAPP_API_URL = 'https://graph.facebook.com/v13.0/YOUR_PHONE_NUMBER_ID/messages';
-const ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN';
-
-app.post('/send-message', async (req, res) => {
-  const { number, templateName, languageCode, components } = req.body;
-
-  try {
-    const response = await axios.post(WHATSAPP_API_URL, {
-      messaging_product: 'whatsapp',
-      to: number,
-      type: 'template',
-      template: {
-        name: templateName,
-        language: {
-          code: languageCode
-        },
-        components: components
-      }
-    }, {
-      headers: {
-        'Authorization': `Bearer ${ACCESS_TOKEN}`,
+/**
+ * Función genérica que envía una solicitud POST a la API de WhatsApp .
+ * Usa las variables de entorno para configurar la versión, el phone number id y el token.
+ */
+function sendMessage(data) {
+    const config = {
+        method: 'post',
+        url: `https://graph.facebook.com/${process.env.WHATSAPP_VERSION}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+        headers: {
+        'Authorization': `Bearer ${process.env.WHATSAPP_TOKEN}`,
         'Content-Type': 'application/json'
-      }
-    });
+        },
+        data: data
+    };
 
-    res.status(200).json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: error.response.data });
-  }
-});
+    return axios(config);
+}
 
-app.listen(3000, () => {
-  console.log('Servidor escuchando en el puerto 3000');
-});
+/**
+ * Función para enviar un mensaje de plantilla por WhatsApp usando la plantilla "prueba_wc".
+ * 
+ * @param {string} phoneNumber - El número de destino, obtenido de tu base de datos.
+ * @param {string} headerRequest - Valor para la variable "request" que se usa en la cabecera del mensaje.
+ * @param {string} employeeName - Nombre del empleado (primer parámetro del cuerpo).
+ * @param {string} requestName - Nombre de la solicitud hecha (segundo parámetro del cuerpo).
+ * @param {string} status - Estatus de la solicitud (tercer parámetro del cuerpo).
+ * @param {string} role - Role que ha aceptado o denegado la solicitud (cuarto parámetro del cuerpo).
+ *
+ * La estructura del payload queda de la siguiente manera:
+ * - messaging_product: 'whatsapp'
+ * - to: número de teléfono destino
+ * - type: 'template'
+ * - template:
+ *     - name: 'prueba_wc'
+ *     - language: { code: 'en' }
+ *     - components:
+ *         - Cabecera: se configura con el parámetro "headerRequest"
+ *         - Cuerpo: se configuran 4 variables: employeeName, requestName, status y role
+ */
+function sendTemplateMessage(phoneNumber, headerRequest, employeeName, requestName, status, role) {
+    const data = {
+        "messaging_product": "whatsapp",
+        "to": phoneNumber,
+        "type": "template",
+        "template": {
+            "name": "prueba_wc",
+            "language": { "code": 'en' },
+            "components": [
+            // {
+            // type: 'header',
+            // parameters: [
+            //     { type: 'text', text: headerRequest }
+            // ]
+            // },
+                {
+                "type": "body",
+                "parameters": [
+                    { "type": 'text', "parameter_name": "employee_name", "text": employeeName },
+                    { "type": 'text', "parameter_name": "request", "text": requestName },
+                    { "type": 'text', "parameter_name": "status", "text": status },
+                    { "type": 'text', "parameter_name": "role", "text": role }
+                ]
+                }
+        ]
+        }
+    };
+
+    return sendMessage(data);
+}
+
+module.exports = {
+    sendTemplateMessage
+};
