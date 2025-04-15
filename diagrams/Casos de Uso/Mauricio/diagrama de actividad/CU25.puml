@@ -1,0 +1,25 @@
+@startuml CU25 - Superadmin modifica departamento - Diagrama de actividad
+
+|__Superadmin__|
+start
+
+:Da click en eliminar departamento;
+
+|__Sistema__|
+
+:Se muestra un mensaje para verificación del departamento;
+
+|__Superadmin__|
+
+if (¿Realmente se quiere eliminar el departamento?) then (Si)
+    |__Sistema__|
+    :Se elimina el departamento;
+    else (No)
+    |__Superadmin__|
+    :Se regresa la vista a modificar departamento;
+endif
+
+:El caso de uso finaliza;
+stop
+
+@enduml
