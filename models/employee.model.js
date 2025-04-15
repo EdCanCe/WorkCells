@@ -246,6 +246,28 @@ module.exports = class Employee {
         );
     };
 
+    // Actualizar contraseña para usuarios existentes
+    static updatePassword(userID, newPassword) {
+        return bcrypt.hash(newPassword, 12)
+            .then(hashedPassword => {
+                return db.execute(
+                    "UPDATE user SET passwd = ? WHERE userID = ?",
+                    [hashedPassword, userID]
+                );
+            });
+    }
+
+    // Actualizar contraseña para usuarios que entran por primera vez
+    static updatePasswordFirstTime(userID, newPassword) {
+        return bcrypt.hash(newPassword, 12)
+            .then(hashedPassword => {
+                return db.execute(
+                    "UPDATE user SET passwd = ?, passwdFlag = 1 WHERE userID = ?",
+                    [hashedPassword, userID]
+                );
+            });
+    }
+
     static countFilteredEmployees(query = "", filter = "all") {
         let sql = `
             SELECT COUNT(*) AS total

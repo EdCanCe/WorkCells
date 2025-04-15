@@ -21,7 +21,6 @@ exports.post_login = (request, response, next) => {
             }
 
             const user = rows[0];
-            console.log(rows[0]);
 
             const bycrypt = require('bcryptjs');
             bycrypt.compare(password, user.passwd).then((doMatch)=>{
@@ -32,8 +31,6 @@ exports.post_login = (request, response, next) => {
                     request.session.userID = user.userID;
                     request.session.role = user.role;
                     request.session.passwdFlag = user.passwdFlag;
-
-                    // console.log("role: ", request.session.role);
 
                     // Obtener privilegios del usuario
                     return Usuario.getPrivilegios(user.mail)
