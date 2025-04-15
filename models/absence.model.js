@@ -66,6 +66,15 @@ ORDER BY startDate DESC`);
         );
     }
 
+    static fetchOneEmployee(absenceUserID) {
+        return db.execute(
+            `SELECT *
+            FROM user
+            WHERE userID = ?`,
+            [absenceUserID]
+        );
+    }
+
     static fetch(id) {
         if (id) {
             return this.fetchOne(id);

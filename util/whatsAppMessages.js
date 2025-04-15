@@ -3,6 +3,7 @@ const axios = require('axios');
 /**
  * Función genérica que envía una solicitud POST a la API de WhatsApp .
  * Usa las variables de entorno para configurar la versión, el phone number id y el token.
+ * @param {*} data - Datos JSON que se enviarán en la solicitud POST.
  */
 function sendMessage(data) {
     const config = {
@@ -27,19 +28,9 @@ function sendMessage(data) {
  * @param {string} requestName - Nombre de la solicitud hecha (segundo parámetro del cuerpo).
  * @param {string} status - Estatus de la solicitud (tercer parámetro del cuerpo).
  * @param {string} role - Role que ha aceptado o denegado la solicitud (cuarto parámetro del cuerpo).
- *
- * La estructura del payload queda de la siguiente manera:
- * - messaging_product: 'whatsapp'
- * - to: número de teléfono destino
- * - type: 'template'
- * - template:
- *     - name: 'prueba_wc'
- *     - language: { code: 'en' }
- *     - components:
- *         - Cabecera: se configura con el parámetro "headerRequest"
- *         - Cuerpo: se configuran 4 variables: employeeName, requestName, status y role
- */
-function sendTemplateMessage(phoneNumber, headerRequest, employeeName, requestName, status, role) {
+ * @return {Promise} - La promesa que se resuelve con el resultado de la solicitud.
+**/
+function sendTemplateMessage(phoneNumber, employeeName, requestName, status, role) {
     const data = {
         "messaging_product": "whatsapp",
         "to": phoneNumber,
@@ -48,12 +39,6 @@ function sendTemplateMessage(phoneNumber, headerRequest, employeeName, requestNa
             "name": "prueba_wc",
             "language": { "code": 'en' },
             "components": [
-            // {
-            // type: 'header',
-            // parameters: [
-            //     { type: 'text', text: headerRequest }
-            // ]
-            // },
                 {
                 "type": "body",
                 "parameters": [
