@@ -21,39 +21,47 @@ exports.post_login = (request, response, next) => {
             }
 
             const user = rows[0];
+            console.log(rows[0]);
 
             const bycrypt = require('bcryptjs');
             bycrypt.compare(password, user.passwd).then((doMatch)=>{
                 if(doMatch){
                     request.session.workStatus = user.workStatus; 
-                request.session.isLoggedIn = true;
-                request.session.mail = email;
-                request.session.userID = user.userID;
-                request.session.role = user.role;
+                    request.session.isLoggedIn = true;
+                    request.session.mail = email;
+                    request.session.userID = user.userID;
+                    request.session.role = user.role;
+                    request.session.passwdFlag = user.passwdFlag;
 
-                console.log("role: ", request.session.role);
+                    // console.log("role: ", request.session.role);
 
-                // Obtener privilegios del usuario
-                return Usuario.getPrivilegios(user.mail)
-                    .then(([privilegios]) => {
-                        request.session.privilegios = privilegios;
-                        if(request.session.workStatus === 1){
-                            return request.session.save(() =>
-                                response.redirect("/home")
-                            );
-                    }
-                    request.session.warning =
-                            "Tu cuenta esta inactiva";
-                        response.redirect("/login");
-
-                    })
-                    .catch((error) => {
-                        console.error("Error al obtener privilegios:", error);
+                    // Obtener privilegios del usuario
+                    return Usuario.getPrivilegios(user.mail)
+                        .then(([privilegios]) => {
+                            request.session.privilegios = privilegios;
+                            if(request.session.workStatus === 1){
+                                if (request.session.passwdFlag === 1) {
+                                    return request.session.save(() =>
+                                        response.redirect("/home")
+                                    );
+                                } else {
+                                    return request.session.save(() =>
+                                        response.redirect("/employee/me/changePassword")
+                                    );
+                                }
+                        }
                         request.session.warning =
-                            "Hubo un problema con el servidor";
-                        response.redirect("/login");
-                    });
-                }else {
+                                "Tu cuenta esta inactiva";
+                            response.redirect("/login");
+
+                        })
+                        .catch((error) => {
+                            console.error("Error al obtener privilegios:", error);
+                            request.session.warning =
+                                "Hubo un problema con el servidor";
+                            response.redirect("/login");
+                        });
+                } else {
                     request.session.warning = "Usuario y/o contraseña incorrectos";
                     return response.redirect("/login");
                 }

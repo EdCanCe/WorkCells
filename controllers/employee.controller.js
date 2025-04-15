@@ -321,6 +321,14 @@ exports.getSearch = (request, response, next) => {
         });
 };
 
+exports.getChangePassword = (request, response, next) => {
+    console.log(request.session.passwdFlag);
+    response.render("employeeChangePassword", {
+        ...sessionVars(request),
+    });
+}
+
+
 exports.getMyProfile =(request, response, next) => {
     const userID = request.session.userID;
     response.send("entraste");
