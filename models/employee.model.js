@@ -9,6 +9,7 @@ module.exports = class Employee {
         birthName,
         surname,
         mail,
+        phoneNumber,
         zipCode,
         houseNumber,
         streetName,
@@ -23,6 +24,7 @@ module.exports = class Employee {
         this.birthName = birthName;
         this.surname = surname;
         this.mail = mail;
+        this.phoneNumber = phoneNumber;
         this.zipCode = zipCode;
         this.houseNumber = houseNumber;
         this.streetName = streetName;
@@ -73,9 +75,9 @@ module.exports = class Employee {
                 const query = `
                 INSERT INTO user(
                     userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, 
-                    streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
+                    streetName, colony, phoneNumber workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
                 ) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
                 return bcrypt
                     .hash(passwd, 12)
@@ -93,6 +95,7 @@ module.exports = class Employee {
                             this.houseNumber,
                             this.streetName,
                             this.colony,
+                            this.phoneNumber,
                             this.workModality,
                             workStatus,
                             this.userRoleIDFK,
@@ -123,10 +126,13 @@ module.exports = class Employee {
     }
 
     static fetchAllDataUser(userID) {
-        return db.execute(`SELECT *
+        return db.execute(
+            `SELECT *
         FROM user u, country c
         WHERE u.userID = ?
-        AND u.countryUserIDFK = c.countryID`, [userID]);
+        AND u.countryUserIDFK = c.countryID`,
+            [userID]
+        );
     }
 
     // Obtener el país por ID
@@ -248,24 +254,22 @@ module.exports = class Employee {
 
     // Actualizar contraseña para usuarios existentes
     static updatePassword(userID, newPassword) {
-        return bcrypt.hash(newPassword, 12)
-            .then(hashedPassword => {
-                return db.execute(
-                    "UPDATE user SET passwd = ? WHERE userID = ?",
-                    [hashedPassword, userID]
-                );
-            });
+        return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
+            return db.execute("UPDATE user SET passwd = ? WHERE userID = ?", [
+                hashedPassword,
+                userID,
+            ]);
+        });
     }
 
     // Actualizar contraseña para usuarios que entran por primera vez
     static updatePasswordFirstTime(userID, newPassword) {
-        return bcrypt.hash(newPassword, 12)
-            .then(hashedPassword => {
-                return db.execute(
-                    "UPDATE user SET passwd = ?, passwdFlag = 1 WHERE userID = ?",
-                    [hashedPassword, userID]
-                );
-            });
+        return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
+            return db.execute(
+                "UPDATE user SET passwd = ?, passwdFlag = 1 WHERE userID = ?",
+                [hashedPassword, userID]
+            );
+        });
     }
 
     static countFilteredEmployees(query = "", filter = "all") {
@@ -304,6 +308,7 @@ module.exports = class Employee {
         houseNumber,
         streetName,
         colony,
+        phoneNumber,
         workModality,
         userRoleIDFK,
         countryUserIDFK,
@@ -330,7 +335,7 @@ module.exports = class Employee {
                 return db.execute(
                     `UPDATE user
                     SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
-                    houseNumber = ?, streetName = ?, colony = ?, workModality = ?, userRoleIDFK = ?, 
+                    houseNumber = ?, streetName = ?, colony = ?, phoneNumber, workModality = ?, userRoleIDFK = ?, 
                     countryUserIDFK = ?, prioritaryDepartmentIDFK = ?, workStatus = ?
                     WHERE userID = ?;`,
                     [
@@ -343,6 +348,7 @@ module.exports = class Employee {
                         houseNumber,
                         streetName,
                         colony,
+                        phoneNumber,
                         workModality,
                         userRoleIDFK,
                         countryUserIDFK,
