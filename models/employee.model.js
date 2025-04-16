@@ -75,7 +75,7 @@ module.exports = class Employee {
                 const query = `
                 INSERT INTO user(
                     userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, 
-                    streetName, colony, phoneNumber workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
+                    streetName, colony, phoneNumber, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
                 ) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
