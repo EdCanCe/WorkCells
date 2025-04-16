@@ -1,4 +1,4 @@
-@startuml CU25 - Superadmin modifica departamento - Diagrama de actividad
+@startuml CU25 - Superadmin elimina departamento - Diagrama de actividad
 
 |__Superadmin__|
 start
