@@ -335,7 +335,7 @@ module.exports = class Employee {
                 return db.execute(
                     `UPDATE user
                     SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
-                    houseNumber = ?, streetName = ?, colony = ?, phoneNumber, workModality = ?, userRoleIDFK = ?, 
+                    houseNumber = ?, streetName = ?, colony = ?, phoneNumber = ?, workModality = ?, userRoleIDFK = ?, 
                     countryUserIDFK = ?, prioritaryDepartmentIDFK = ?, workStatus = ?
                     WHERE userID = ?;`,
                     [
