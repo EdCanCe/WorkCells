@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const mailInput = document.getElementById("mail");
     const mailFormatError = document.getElementById("mailFormatError");
 
+    const phoneNumberInput = document.getElementById("phoneNumber");
+    const phoneNumberError = document.getElementById("phoneNumberError");
+
     // Campos adicionales del formulario
     /*const additionalFields = document.querySelectorAll(
         "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #phoneNumber, #countryUserIDFK, #workModality, #userRoleIDFK, #prioritaryDepartmentIDFK"
@@ -20,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
     const rfcRegex = /^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/;
     const lettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Solo letras y espacios
+    const phoneNumberRegex = /^[0-9 ]+$/;
     const mailRegex =
         /^[a-zA-Z0-9._%+-]+@(nuclea\.solutions|zogzag\.house|we\.page|moca\.app|maya\.protocol)$/;
 
@@ -39,6 +43,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 mailFormatError.textContent = "";
                 mailInput.setCustomValidity(""); // Restablecer el mensaje si es válido
             }
+        }
+    });
+
+    phoneNumberInput.addEventListener("input", function () {
+        const value = phoneNumberInput.value;
+        if (!phoneNumberRegex.test(value)) {
+            phoneNumberError.textContent =
+                "The phone number should be numbers only.";
+            phoneNumberInput.setCustomValidity(
+                "The phone number should be numbers only."
+            );
+        } else {
+            phoneNumberError.textContent = "";
+            phoneNumberInput.setCustomValidity("");
         }
     });
 
@@ -154,6 +172,17 @@ document.addEventListener("DOMContentLoaded", function () {
             rfcFormatError.textContent = "";
             rfcInput.setCustomValidity("");
         }*/
+
+        if (!phoneNumberRegex.test(phoneNumberInput.value)) {
+            phoneNumberError.textContent =
+                "The phone number should be numbers only.";
+            phoneNumberInput.setCustomValidity(
+                "The phone number should be numbers only."
+            );
+        } else {
+            phoneNumberError.textContent = "";
+            phoneNumberInput.setCustomValidity("");
+        }
 
         if (!mailRegex.test(mailInput.value)) {
             mailFormatError.textContent =
