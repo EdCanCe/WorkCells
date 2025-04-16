@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const mailFormatError = document.getElementById("mailFormatError");
 
     // Campos adicionales del formulario
-    const additionalFields = document.querySelectorAll(
-        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #countryUserIDFK, #workModality, #userRoleIDFK, #prioritaryDepartmentIDFK"
-    );
+    /*const additionalFields = document.querySelectorAll(
+        "#birthName, #surname, #mail, #zipCode, #houseNumber, #streetName, #colony, #phoneNumber, #countryUserIDFK, #workModality, #userRoleIDFK, #prioritaryDepartmentIDFK"
+    );*/
 
     // Expresiones regulares para validaciones
     const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
