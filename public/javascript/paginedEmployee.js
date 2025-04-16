@@ -2,6 +2,11 @@ let currentPage = 1;
 let currentQuery = "";
 let filter = "all";
 
+function updateEmployeeCount(visibleCount, totalCount) {
+    const countSpan = document.getElementById("employeeCount");
+    countSpan.textContent = `${totalCount}`;
+}
+
 async function loadEmployees(page, query = "", selectedFilter = filter) {
     const url = `/employee/search?page=${page}&query=${encodeURIComponent(
         query
@@ -10,6 +15,9 @@ async function loadEmployees(page, query = "", selectedFilter = filter) {
     const res = await fetch(url);
     const data = await res.json();
     const employees = data.employees || [];
+    const totalCount = data.totalCount || employees.length;
+
+    updateEmployeeCount(employees.length, totalCount);
 
     let table = `<table class="w-full divide-y divide-neutral-200 text-center">
         <thead class="bg-neutral-800/50">
@@ -51,7 +59,7 @@ async function loadEmployees(page, query = "", selectedFilter = filter) {
     document.getElementById("employeeTable").innerHTML = table;
 
     document.getElementById("prevPage").disabled = page === 1;
-    document.getElementById("nextPage").disabled = employees.length < 6;
+    document.getElementById("nextPage").disabled = employees.length < 1;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

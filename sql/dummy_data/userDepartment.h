@@ -15,6 +15,8 @@ class UserDepartment {
     public:
         UserDepartment(string, string);
         string getId();
+        string getDepartmentID();
+        string getUserID();
         void print();
         
 };
@@ -34,16 +36,28 @@ void UserDepartment::print() {
     cout << "INSERT INTO userDepartment(departmentIDFK, userIDFK) values ('" << idDepartment << "', '" << idUser << "'); \n";
 }
 
-void createUserDepartment(int x) {
-    for (int i = 0; i < x; i++) {
-        userDepartment.add(UserDepartment(department.random().getId(), users.random().getId()));
+string UserDepartment::getDepartmentID() {
+    return this->idDepartment;
+}
+
+string UserDepartment::getUserID() {
+    return this->idUser;
+}
+
+void createUserDepartment() {
+    for (int i = 0; i < users.size(); i++) {
+        UserDepartment aux = UserDepartment(department.random().getId(), users.get(i).getId());
+        userDepartment.add(aux);
+        if(users.get(i).getRole() == "Department Leader") {
+            cout << "UPDATE department SET departmentLeaderIDFK = '" << aux.getUserID() << "' WHERE departmentID = '" << aux.getDepartmentID() << "'; \n";
+        }
     }
 }
 
 void selectUserPriorityDepartment(){
     for(int i = 0; i < users.size(); i++){
         if(!auxLink[userIds[i]].size() == 0){
-            cout << "UPDATE user SET prioritaryDepartmentFK = '" << auxLink[userIds[i]].random() << "' WHERE userID = '" << userIds[i] << "'; \n";
+            cout << "UPDATE user SET prioritaryDepartmentIDFK = '" << auxLink[userIds[i]].random() << "' WHERE userID = '" << userIds[i] << "'; \n";
         }
     }
 }

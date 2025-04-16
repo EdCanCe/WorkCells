@@ -9,26 +9,25 @@ exports.getAdd = (request, response, next) => {
 };
 
 exports.postAdd = (request, response, next) => {
-    console.log(request.file);
     console.log(request.body); // Verifica que los datos lleguen correctamente
 
-    if (request.file != ".pdf" || request.file != "jpng" || request.file != "")
         if (!request.body.reason || !request.body.doneDate || !request.body.email) {
             // Validación de valores en el cuerpo de la solicitud
             return response.redirect("/error"); // Redirigir a una página de error si faltan datos
         }
 
     // Crear un nuevo objeto Fault
-    const faults = new Fault(
-        request.body.reason,
-        request.body.doneDate,
-        request.body.email
+    const faults = new Fault({
+        reason: request.body.reason,
+        doneDate: request.body.doneDate,
+        email: request.body.email
+    }
     );
 
     faults
         .save()
         .then((faultID) => {
-            request.session.info = `Fault of ${faults.email} created`;
+            request.session.info = `Fault of ${faults.email} in the date ${faults.doneDate} created`;
 
             if (request.file) {
                 const media = new FaultMedia(request.file.filename, faultID);
@@ -41,16 +40,24 @@ exports.postAdd = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            request.session.info = `Error al ingresar datos.`;
+            request.session.warning = `Error al ingresar datos.`;
             response.redirect("/fault");
             response.status(500);
         });
 };
 
 exports.getCheck = (request, response, next) => {
-    response.render("check_fault", {
-        ...sessionVars(request),
-    });
+
+    // TODO: Checar que si pueda acceder a verlo
+    console.log(request.params);
+
+    Fault.fetchByID(request.params.faultID)
+        .then(([rows]) => {
+            response.render("checkFault", {
+                ...sessionVars(request),
+                fault: rows[0],
+            });
+        })
 };
 
 exports.getRoot = (request, response, next) => {
@@ -92,7 +99,6 @@ exports.getSearch = async (request, response) => {
       }
 };
 
-
 exports.postDelete = (request, response, next) => {
     const fault = new Fault({
         faultID: request.body.faultID,
@@ -109,6 +115,3 @@ exports.postDelete = (request, response, next) => {
             response.redirect('/fault');
         })
 };
-  
-
-  

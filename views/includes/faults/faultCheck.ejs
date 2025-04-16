@@ -3,19 +3,8 @@
       <div class="card-content">
         <!-- Título -->
         <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
-          Faltas Administrativas
+          Administrative Faults
         </h1>
-  
-        <!-- Mensaje de info/errores -->
-        <% if (info === "Error al ingresar datos.") { %>
-          <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-            <%= info %>
-          </div>
-        <% } else if (info && info !== '') { %>
-          <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-            <%= info %>
-          </div>
-        <% } %>
   
         <!-- Barra de búsqueda, filtro y botón de registrar -->
         <div class="flex justify-center w-full mb-4">
@@ -29,19 +18,19 @@
               id="search"
               name="search"
               type="text"
-              placeholder="Buscar falta..."
+              placeholder="Search by name..."
               class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
             />
           </div>
           <div class="p-4 rounded-md">
             <select id="filterSelect" class="btnPrimary">
-              <option value="all">Todos</option>
-              <option value="active">Activas</option>
-              <option value="inactive">Inactivas</option>
+              <option value="all">All</option>
+              <option value="active">Actives</option>
+              <option value="inactive">Inactives</option>
             </select>
           </div>
           <div class="p-4 rounded-md">
-            <a href="/fault/add" class="btnPrimary">Registrar Nueva Falta</a>
+            <a href="/fault/add" class="btnPrimary">Add new fault</a>
           </div>
         </div>
   
@@ -53,8 +42,8 @@
   
         <!-- Paginación -->
         <div class="flex justify-center gap-3 mt-6">
-          <button id="prevBtn" class="btnPrimary">Anterior</button>
-          <button id="nextBtn" class="btnPrimary">Siguiente</button>
+          <button id="prevBtn" class="btnPrimary">Previous</button>
+          <button id="nextBtn" class="btnPrimary">Next</button>
         </div>
       </div>
     </div>

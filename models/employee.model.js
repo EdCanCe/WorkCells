@@ -122,6 +122,13 @@ module.exports = class Employee {
                         WHERE d.enterpriseIDFK = e.enterpriseID;`);
     }
 
+    static fetchAllDataUser(userID) {
+        return db.execute(`SELECT *
+        FROM user u, country c
+        WHERE u.userID = ?
+        AND u.countryUserIDFK = c.countryID`, [userID]);
+    }
+
     // Obtener el país por ID
     static fetchCountryByID(countryID) {
         return db.execute("SELECT title FROM country WHERE countryID = ?", [
@@ -238,6 +245,53 @@ module.exports = class Employee {
             [`%${query}%`, `%${query}%`]
         );
     };
+
+    // Actualizar contraseña para usuarios existentes
+    static updatePassword(userID, newPassword) {
+        return bcrypt.hash(newPassword, 12)
+            .then(hashedPassword => {
+                return db.execute(
+                    "UPDATE user SET passwd = ? WHERE userID = ?",
+                    [hashedPassword, userID]
+                );
+            });
+    }
+
+    // Actualizar contraseña para usuarios que entran por primera vez
+    static updatePasswordFirstTime(userID, newPassword) {
+        return bcrypt.hash(newPassword, 12)
+            .then(hashedPassword => {
+                return db.execute(
+                    "UPDATE user SET passwd = ?, passwdFlag = 1 WHERE userID = ?",
+                    [hashedPassword, userID]
+                );
+            });
+    }
+
+    static countFilteredEmployees(query = "", filter = "all") {
+        let sql = `
+            SELECT COUNT(*) AS total
+            FROM user u
+            INNER JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
+            INNER JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID
+            INNER JOIN role r ON u.userRoleIDFK = r.roleID
+            WHERE 1=1
+        `;
+        const params = [];
+
+        if (query) {
+            sql += ` AND (u.birthName LIKE ? OR u.surname LIKE ?)`;
+            params.push(`%${query}%`, `%${query}%`);
+        }
+
+        if (filter === "active") {
+            sql += ` AND u.workStatus = 1`;
+        } else if (filter === "inactive") {
+            sql += ` AND u.workStatus = 0`;
+        }
+
+        return db.execute(sql, params);
+    }
 
     static updateEmployee(
         userID,

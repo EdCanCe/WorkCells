@@ -2,51 +2,53 @@
 
 actor Navegador
 boundary "myprofile.routes" as Routes
-boundary "myprofile.view" as View
+boundary "myprofile.ejs" as View
 control "myprofile.controller" as Controller
 entity "user.model" as Model
-database "myPhpAdmin" as DB
+database "mySQL" as DB
 
 autonumber
 
 ' El navegador envía una solicitud POST para cambiar la contraseña
 activate Navegador
-Navegador -> Routes : POST /change-password
+Navegador -> Routes : GET /changePassword
 deactivate Navegador
 
 ' La ruta redirige a la vista del formulario
 activate Routes
-Routes -> View : renderChangePasswordForm()
+Routes -> Controller : changePassword
 deactivate Routes
+activate Controller
 
-' El usuario interactúa con la vista: ingresa la nueva contraseña
-activate View
-View -> Controller : submitNewPassword(newPassword, userID)
+Controller -> Navegador : HTML
+deactivate Controller
 deactivate View
+activate Navegador
+Navegador -> Controller : POST /changePassword
+deactivate Navegador
+
 
 ' El controlador valida la contraseña en el servidor
 activate Controller
 Controller -> Controller : validatePassword(newPassword)
 alt La contraseña no es segura
-    Controller -> View : renderChangePasswordForm(error="Contraseña no segura")
-else La contraseña es segura
-    ' Se aplica el hash internamente antes de actualizar la contraseña en la base de datos.
-    Controller -> Model : updatePassword(newPassword, userID)
-    activate Model
-    Model -> DB : db.execute("UPDATE user\nSET passwd = ? ,\npasswdFlag = false\nWHERE userID = ?",\n[newPassword, userID])
-    deactivate Model
-    activate DB
-    DB -> Controller : renderSuccess(\nmessage="Contraseña actualizada\n")
-    deactivate DB
-    deactivate Model
-    Controller -> View : renderSuccess(\nmessage="Contraseña actualizada")
-    deactivate Controller
+    Controller -> View : renderChangePassword(error="Contraseña no segura")
     activate View
+    View -> Navegador : HTML
+    deactivate View
 end
-
-' La vista renderiza el resultado y lo devuelve al navegador
-View -> Navegador : redirect(home)
+' La contraseña es segura
+' Se aplica el hash internamente antes de actualizar la contraseña en la base de datos.
+Controller -> Model : updatePassword(newPassword, userID)
+activate Model
+Model -> DB : db.execute("UPDATE user\nSET passwd = ? ,\npasswdFlag = ture\nWHERE userID = ?",\n[newPassword, userID])
+deactivate Model
+activate DB
+DB -> Controller : success(status=True)
+deactivate DB
 deactivate View
+Controller -> Navegador : redirect(home)
+deactivate Controller
 activate Navegador
 
 @enduml

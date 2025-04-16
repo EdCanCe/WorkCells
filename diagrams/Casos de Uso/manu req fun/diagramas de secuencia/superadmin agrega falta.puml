@@ -1,6 +1,6 @@
 @startuml
 actor navegador
-boundary addfault.ejs
+boundary faultAdd.ejs
 boundary fault.routes
 control fault.controller
 entity faultModelInstance
@@ -17,16 +17,18 @@ activate fault.routes
 fault.routes -> fault.controller : getAdd(req,res)
 deactivate fault.routes
 activate fault.controller
-fault.controller -> addfault.ejs: render(faultAdd)
+fault.controller -> faultAdd.ejs: render(faultAdd)
 deactivate fault.controller
-activate addfault.ejs
-addfault.ejs -> navegador : Mostrar formulario de falta
-deactivate addfault.ejs
+activate faultAdd.ejs
+faultAdd.ejs -> navegador : Mostrar formulario de falta
+deactivate faultAdd.ejs
 activate navegador
 deactivate fault.routes
 
+navegador -> navegador: validar campos
+
 ' Envío de datos de la falta
-navegador -> fault.routes : POST /fault/add (datos de la falta)
+navegador -> fault.routes : POST /fault/add
 deactivate navegador
 activate fault.routes
 
@@ -38,17 +40,16 @@ activate fault.controller
 fault.controller -> fault.controller : Validar campos
 
 alt Campos incompletos
-    fault.controller -> addfault.ejs : mensaje de error "Completa todos los campos"
-    deactivate fault.controller    
-    activate addfault.ejs
-    addfault.ejs -> navegador : HTML
-    deactivate addfault.ejs
-    deactivate fault.routes
+    fault.controller -> fault.routes : redirect(/error)
+     deactivate fault.controller
+
+    
+
 
 else Campos completos
     ' Crear instancia del modelo
 
-    fault.controller -> faultModelInstance : new FaultModel(param)
+    fault.controller -> faultModelInstance : new FaultModel(req.body.email, req.body.reason, req.body.doneDate)
     activate fault.controller
     ' Verificar si el colaborador existe
     activate faultModelInstance
@@ -57,7 +58,7 @@ else Campos completos
     
     
 
-    faultModelInstance -->> mysql : SELECT userID FROM user WHERE email = ?
+    faultModelInstance -->> mysql : db.execute(SELECT userID FROM user WHERE mail = ? [this.email]);
     activate mysql
     mysql -->> faultModelInstance : Resultado
     
@@ -67,17 +68,14 @@ else Campos completos
         
         faultModelInstance -->> fault.controller : Error
         activate fault.controller
-        fault.controller -> addfault.ejs : Mostrar mensaje de error "Error en los datos"
+        fault.controller -> fault.routes : redirect(/faults, warning)
         deactivate fault.controller
-        activate addfault.ejs
-        addfault.ejs -> navegador : HTML
-        deactivate addfault.ejs
         deactivate fault.controller
         deactivate fault.routes
 
     else Colaborador existe
 
-        faultModelInstance ->> mysql : INSERT INTO fault (...)
+        faultModelInstance ->> mysql : db.execute(INSERT INTO fault (faultID, summary, doneDate, faultUserIDFK)  VALUES (?, ?, ?, ?),[faultID, this.reason, this.doneDate, rows[0].userID]);
         activate mysql
         mysql -->> faultModelInstance : Insert OK
         deactivate mysql
@@ -87,11 +85,8 @@ else Campos completos
       
 
         ' Notificación de éxito
-        fault.controller -> addfault.ejs : Mostrar mensaje "Falta creada exitosamente"
+        fault.controller -> fault.routes : redirect(/fault, info)
         deactivate fault.controller
-        activate addfault.ejs
-        addfault.ejs -> navegador : HTML
-        deactivate addfault.ejs
         deactivate fault.controller
         deactivate fault.routes
     end

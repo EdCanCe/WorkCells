@@ -1,52 +1,65 @@
 @startuml CU38 - Superadmin registra evidencia de falta
+actor navegador
 boundary fault.routes
-boundary faultAdd.ejs
+boundary faultModify.ejs
 control fault.controller
-entity faultModelInstance
+entity updateFaultMedia
 database mysql
 
 autonumber
-navegador -> employee.routes : GET /employee/add
-activate employee.routes
+navegador -> fault.routes : GET /fault/:id/modify
+activate fault.routes
 
-employee.routes -> employee.controller: getAdd(request, response)
-deactivate employee.routes
-activate employee.controller
+fault.routes -> fault.controller : getModifyFault(request, response)
+deactivate fault.routes
+activate fault.controller
 
-employee.controller -> employeeAdd.ejs: render(employeeAdd)
-deactivate employee.controller
-activate employeeAdd.ejs
 
-employeeAdd.ejs -> navegador : Mostrar formulario para agregar colaborador
-deactivate employeeAdd.ejs
-activate navegador
+fault.controller ->> updateFaultMedia : fecthFaultID(request.params.id)
+deactivate fault.controller
+activate updateFaultMedia
 
-navegador -> employee.routes : POST /employee/add (datos del colaborador)
-deactivate navegador
-activate employee.routes
-
-employee.routes -> employee.controller : postAdd(request, response)
-deactivate employee.routes
-activate employee.controller
-
-employee.controller -> employeeModelInstance : new EmployeeModel()
-
-employee.controller ->> employeeModelInstance : addEmployee(employeeData)
-activate employeeModelInstance
-
-employeeModelInstance ->> mysql : INSERT INTO user(userID, curp, rfc, birthName,\nsurname, mail, passwd, passwdFlag, zipCode,\nhouseNumber, streetName,colony, workModality,\nworkStatus, userRoleIDFK, countryUserIDFK)
+updateFaultMedia ->> mysql : db.execute("SELECT mediaLink \nFROM faultMedia WHERE faultIDFK = ?", \n[faultIDFK])
 activate mysql
-mysql -->> employeeModelInstance : Insert OK
-deactivate mysql
-employeeModelInstance -->> employee.controller : Empleado registrado
-deactivate employeeModelInstance
 
-employee.controller -> employeeAdd.ejs : Mostrar mensaje "Empleado registrado exitosamente"
-deactivate employee.controller
-activate employeeAdd.ejs
+mysql -->> updateFaultMedia : rows
+deactivate mysql
+
+updateFaultMedia -->> fault.controller : rows
+deactivate updateFaultMedia
+activate fault.controller
+
+fault.controller -> faultModify.ejs : response.render("faultModify", rows)
+deactivate fault.controller
+activate faultModify.ejs
+
+faultModify.ejs -> navegador : Mostrar Formulario de modificar \nfalta administrativa
+deactivate faultModify.ejs
 activate navegador
-employeeAdd.ejs -> navegador : Mostrar notificación
+
+navegador -> fault.routes : POST /fault/:id/modify
 deactivate navegador
-deactivate employeeAdd.ejs
-deactivate employee.routes
+activate fault.routes
+
+fault.routes -> fault.controller : postModifyFault(request, response)
+deactivate fault.routes
+activate fault.controller
+
+fault.controller ->> updateFaultMedia : updateFaultMedia(request.params.faultIDFK, \nrequest.body.mediaLink)
+activate updateFaultMedia
+
+updateFaultMedia ->> mysql : db.execute("UPDATE faultMedia SET \nfaultMediaID = ?, mediaLink = ?, \nWHERE faultIDFK = ?")
+activate mysql
+
+mysql -->> updateFaultMedia : Insert OK
+deactivate mysql
+
+updateFaultMedia -->> fault.controller : Promesa
+deactivate updateFaultMedia
+
+fault.controller -> fault.routes : response.redirect("/faults")
+deactivate fault.controller
+activate fault.routes
+deactivate fault.routes
+
 @enduml

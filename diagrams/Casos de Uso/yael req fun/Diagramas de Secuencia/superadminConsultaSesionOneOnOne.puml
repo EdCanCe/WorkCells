@@ -42,7 +42,7 @@ deactivate routes
 activate controller
 controller ->> one: getOneSession(req.body.mail)
 activate one
-one ->> mysql: execute(´SELECT u.birthName, u.surname, u.mail, \nr.title, o.meetingDate, o.expectedTime FROM user u \nJOIN role r ON u.userRoleIDFK = r.roleID \nJOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK \nWHERE u.mail = ? ORDER BY o.meetingDate DESC´, [mail])
+one ->> mysql: execute(´SELECT u.birthName, u.surname, u.mail, \nr.title, o.meetingDate, o.expectedTime FROM user u \nJOIN role r ON u.userRoleIDFK = r.roleID \nJOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK \nWHERE u.mail = ? ORDER BY o.meetingDate DESC´, [req.body.mail])
 activate mysql
 mysql -->> one: workerSessions
 deactivate mysql
@@ -53,7 +53,7 @@ controller -->> navegador: json
 deactivate controller
 activate navegador
 navegador -> navegador: procesar(json)
-navegador -> routes: GET oneToOne/check/:oneOnOneID
+navegador -> routes: GET oneToOne/:oneOnOneID
 deactivate navegador
 
 activate routes
@@ -62,7 +62,7 @@ deactivate routes
 activate controller
 controller ->> one: getSessionInfo(req.body.oneOnOneID)
 activate one
-one ->> mysql: execute(´SELECT u.birthname, u.surname, o.meetingDate, oq.question, \noa.answer, om.evaluation, omr.summary FROM user u \nJOIN oneOnONE o ON u.userID = o.oneOnOneUserIDFK \nJOIN oneOnOneAnswer oa ON o.oneOnOneID = oa.answerOneOnOneIDFK \nJOIN oneOnOneQuestion oq ON oq.questionID = oa.questionIDFK \nJOIN oneOnOneMeasure om ON om.measureOneOnOneIDFK = o.oneOnOneID \nJOIN oneOnOneMeasurable omr ON omr.measurableID = om.measurableIDFK \nWHERE oneOnOneID = ?´, [oneOnOneID])
+one ->> mysql: execute(´SELECT u.birthname, u.surname, o.meetingDate, oq.question, \noa.answer, om.evaluation, omr.summary FROM user u \nJOIN oneOnONE o ON u.userID = o.oneOnOneUserIDFK \nJOIN oneOnOneAnswer oa ON o.oneOnOneID = oa.answerOneOnOneIDFK \nJOIN oneOnOneQuestion oq ON oq.questionID = oa.questionIDFK \nJOIN oneOnOneMeasure om ON om.measureOneOnOneIDFK = o.oneOnOneID \nJOIN oneOnOneMeasurable omr ON omr.measurableID = om.measurableIDFK \nWHERE oneOnOneID = ?´, [req.body.oneOnOneID])
 activate mysql
 mysql -->> one: sessionInfo
 deactivate mysql

@@ -75,9 +75,9 @@
                         id="measureSlider<%= qIndex + 1 %>"
                         type="range"
                         name="measure<%= qIndex + 1 %>"
-                        min="1"
+                        min="0"
                         max="5"
-                        value="3"
+                        value="0"
                         step="1"
                         class="hidden range-input"
                         data-measurable="<%= qIndex + 1 %>"
@@ -101,7 +101,7 @@
                     type="submit"
                     class="btnPrimary"
                 >
-                    Submit One To One
+                    Submit
                 </button>
             </div>
         </form>
@@ -184,10 +184,15 @@
     measureButtons.forEach((measureButton) => {
         const question = measureButton.parentElement.id.split("measureContainer")[1];
         const measure = document.getElementById(`measureSlider${question}`);
-        const value = measureButton.classList[0].split("value")[1];
+        let value = measureButton.classList[0].split("value")[1];
 
         // Al clickear pinta los antecesores del botón
         measureButton.addEventListener("click", () =>{
+            // En caso de presionar el botón con el valor actual, lo resetea a 0
+            if(measure.value == value) {
+                value = 0;
+            }
+
             measure.value = value;
             console.log(measure, value);
             clickButtons(question);

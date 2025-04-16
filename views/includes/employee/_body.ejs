@@ -4,11 +4,7 @@
             <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
                 List of all Employees
             </h1>
-            <% if (info) { %>
-            <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-                <%= info %>
-            </div>
-            <% } %>
+
             <div class="flex justify-center w-full">
                 <div
                     class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
@@ -22,7 +18,7 @@
                         id="search"
                         name="search"
                         type="text"
-                        placeholder="Buscar empleado..."
+                        placeholder="Search by name..."
                         class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
                     />
                 </div>
@@ -30,8 +26,10 @@
                     <select id="filterSelect" class="btnPrimary">
                         <option value="all">All</option>
                         <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="inactive">Idle</option>
                     </select>
+                    <span id="employeeCount" class="btnPrimary" disabled>
+                    </span>
                 </div>
                 <div class="p-4 rounded-md">
                     <a href="/employee/add" class="btnPrimary justeify-right"
@@ -45,9 +43,9 @@
             ></div>
             <div class="flex justify-center gap-3 mt-6">
                 <button id="prevPage" class="btnPrimary" disabled>
-                    Anterior
+                    Previous
                 </button>
-                <button id="nextPage" class="btnPrimary">Siguiente</button>
+                <button id="nextPage" class="btnPrimary">Next</button>
             </div>
         </div>
     </div>

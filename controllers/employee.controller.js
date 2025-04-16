@@ -1,6 +1,7 @@
 const Employee = require("../models/employee.model");
 const sessionVars = require("../util/sessionVars");
 const WorkStatus = require("../models/workStatus.model");
+const bcrypt = require("bcryptjs");
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -256,9 +257,25 @@ exports.getCheck = (request, response, next) => {
 };
 
 exports.getMe = (request, response, next) => {
-    response.render("employeeMe", {
-        ...sessionVars(request),
+    // TODO: hacer verificaciones de superAdmin, lider y colaborador
+    const userid = request.session.userID;
+    console.log("ID =", userid);
+    
+    Employee.fetchAllDataUser(userid)
+    .then(([rows])=>{
+        response.render("employeeMe", {
+            ...sessionVars(request),
+            userData: rows[0],
+            API: process.env.GEOLOCATION_API_KEY,
+        });
+    })
+    .catch((error)=>{
+        console.error("this is your error: ",error);
+        request.session.alert = "can not find user";
+        response.redirect("/error");
     });
+
+
 };
 
 exports.getRoot = (request, response, next) => {
@@ -292,9 +309,10 @@ exports.getSearch = (request, response, next) => {
                 : Employee.fetchPaginated(limit, offset);
     }
 
-    searchPromise
-        .then(([employees]) => {
-            response.json({ employees, page, query, filter });
+    Promise.all([searchPromise, Employee.countFilteredEmployees(query, filter)])
+        .then(([[employees], [countRow]]) => {
+            const totalCount = countRow[0]?.total || 0;
+            response.json({ employees, page, query, filter, totalCount });
         })
         .catch((error) => {
             console.error("Error en la búsqueda/paginación:", error);
@@ -303,3 +321,120 @@ exports.getSearch = (request, response, next) => {
                 .json({ error: "Error en la búsqueda/paginación" });
         });
 };
+
+exports.getChangePassword = (request, response, next) => {
+    response.render("employeeChangePassword", {
+        ...sessionVars(request),
+    });
+}
+
+exports.postChangePassword = (request, response, next) => {
+    const userID = request.session.userID;
+    const newPassword = request.body.newPassword;
+    const confirmNewPassword = request.body.confirmNewPassword;
+    
+    // console.log("Procesando cambio de contraseña para ID:", userID);
+    
+    // Verificar que las contraseñas coinciden
+    if (newPassword !== confirmNewPassword) {
+        request.session.warning = "Las contraseñas no coinciden.";
+        return response.redirect("/employee/me/changePassword");
+    }
+    
+    // Validar la fortaleza de la contraseña en el servidor
+    const specialCharacters = /[!"#$%&/()\=?¡+*{}\[\];:,.|°]/;
+    const upperCharacters = /[A-Z]/;
+    const numericCharacters = /\d/;
+    
+    if (!upperCharacters.test(newPassword)) {
+        request.session.warning = "La contraseña debe contener al menos una letra mayúscula.";
+        return response.redirect("/employee/me/changePassword");
+    }
+    
+    if (!specialCharacters.test(newPassword)) {
+        request.session.warning = "La contraseña debe contener al menos un carácter especial.";
+        return response.redirect("/employee/me/changePassword");
+    }
+    
+    if (!numericCharacters.test(newPassword)) {
+        request.session.warning = "La contraseña debe contener al menos un número.";
+        return response.redirect("/employee/me/changePassword");
+    }
+    
+    if (newPassword.length <= 8) {
+        request.session.warning = "La contraseña debe tener más de 8 caracteres.";
+        return response.redirect("/employee/me/changePassword");
+    }
+    
+    // Crear una función async para manejar el flujo de promesas de manera más clara
+    const processPasswordChange = async () => {
+        try {
+            // Obtener los datos del usuario
+            const [userData] = await Employee.fetchUser(userID);
+            
+            if (!userData || userData.length === 0) {
+                console.error("Usuario no encontrado:", userID);
+                request.session.warning = "Usuario no encontrado.";
+                return response.redirect("/employee/me/changePassword");
+            }
+            
+            const user = userData[0];
+            console.log("Usuario encontrado, passwdFlag:", user.passwdFlag);
+            
+            // Si es usuario con contraseña ya cambiada previamente
+            if (user.passwdFlag == 1) {
+                const currentPassword = request.body.currentPassword;
+                
+                if (!currentPassword) {
+                    request.session.warning = "Se requiere la contraseña actual.";
+                    return response.redirect("/employee/me/changePassword");
+                }
+                
+                // Verificar la contraseña actual
+                const isMatch = await bcrypt.compare(currentPassword, user.passwd);
+                if (!isMatch) {
+                    request.session.warning = "La contraseña actual es incorrecta.";
+                    return response.redirect("/employee/me/changePassword");
+                }
+                
+                // Verificar que la nueva contraseña sea diferente
+                const isSamePassword = await bcrypt.compare(newPassword, user.passwd);
+                if (isSamePassword) {
+                    request.session.warning = "La nueva contraseña debe ser diferente a la actual.";
+                    return response.redirect("/employee/me/changePassword");
+                }
+                
+                // Actualizar la contraseña
+                await Employee.updatePassword(userID, newPassword);
+            } else {
+                // Para usuarios que hacen su primer cambio de contraseña
+                console.log("Actualizando contraseña por primera vez...");
+                await Employee.updatePasswordFirstTime(userID, newPassword);
+            }
+            
+            console.log("Contraseña actualizada con éxito para ID:", userID);
+            request.session.info = "Contraseña actualizada correctamente.";
+            return response.redirect("/employee/me");
+            
+        } catch (error) {
+            console.error("Error al cambiar la contraseña:", error);
+            request.session.warning = "Error al cambiar la contraseña: " + error.message;
+            return response.redirect("/employee/me/changePassword");
+        }
+    };
+    
+    // Ejecutar la función async
+    processPasswordChange().catch((error) => {
+        console.error("Error en processPasswordChange:", error);
+        // En caso de que haya un error no manejado y no se haya enviado respuesta aún
+        if (!response.headersSent) {
+            request.session.warning = "Error inesperado al cambiar la contraseña.";
+            return response.redirect("/employee/me/changePassword");
+        }
+    });
+};
+
+exports.getMyProfile =(request, response, next) => {
+    const userID = request.session.userID;
+    response.send("entraste");
+}
