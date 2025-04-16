@@ -9,11 +9,11 @@ module.exports = class Employee {
         birthName,
         surname,
         mail,
-        phoneNumber,
         zipCode,
         houseNumber,
         streetName,
         colony,
+        phoneNumber,
         workModality,
         userRoleIDFK,
         countryUserIDFK,
@@ -24,11 +24,11 @@ module.exports = class Employee {
         this.birthName = birthName;
         this.surname = surname;
         this.mail = mail;
-        this.phoneNumber = phoneNumber;
         this.zipCode = zipCode;
         this.houseNumber = houseNumber;
         this.streetName = streetName;
         this.colony = colony;
+        this.phoneNumber = phoneNumber;
         this.workModality = workModality;
         this.userRoleIDFK = userRoleIDFK;
         this.countryUserIDFK = countryUserIDFK;
