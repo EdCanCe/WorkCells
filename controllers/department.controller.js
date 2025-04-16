@@ -18,8 +18,13 @@ exports.getCheckDepartment = (request, response, next) => {
     })
 };
 
+exports.postDeleteDeparment = (request, response, next) => {
+    console.log(request.session);
+}
+
 exports.getModifyDepartment = (request, response, next) => {
     response.render('modifyDepartment', {
         ...sessionVars(request),
+        // TODO: Hacer la fokin conexión con la base de datos para obtener el fokin id del departamento
     })
 };
