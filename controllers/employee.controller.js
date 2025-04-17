@@ -429,6 +429,7 @@ exports.postChangePassword = (request, response, next) => {
 
             console.log("Contraseña actualizada con éxito para ID:", userID);
             request.session.info = "Contraseña actualizada correctamente.";
+            request.session.passwdFlag = 1;
             return response.redirect("/employee/me");
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
