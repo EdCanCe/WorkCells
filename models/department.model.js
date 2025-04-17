@@ -30,8 +30,10 @@ module.exports = class Department {
 
     static getEmployeesInDepartment(leaderDepartmentID, userID) {
         return db.execute(
-            `SELECT u.* 
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, u.phoneNumber, d.title AS 'department'
             FROM user u 
+            JOIN department d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
             WHERE u.prioritaryDepartmentIDFK = ?
             AND u.userID NOT IN (?) 
             ORDER BY u.birthName ASC`,
