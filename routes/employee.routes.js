@@ -9,8 +9,8 @@ const employeePrivilege = require("../util/employeePrivilege/employeePrivilege")
 router.get("/me", isAuth, employeeControllers.getMe);
 router.get("/add", isAuth, employeePrivilege, employeeControllers.getAdd);
 router.post("/", isAuth, employeePrivilege, employeeControllers.postAdd);
-router.get("/me/changePassword", isAuth, employeePrivilege, employeeControllers.getChangePassword);
-router.post("/me/changePassword", isAuth, employeePrivilege, employeeControllers.postChangePassword);
+router.get("/me/changePassword", isAuth,  employeeControllers.getChangePassword);
+router.post("/me/changePassword", isAuth, employeeControllers.postChangePassword);
 router.get(
     "/:id/modify",
     isAuth,
