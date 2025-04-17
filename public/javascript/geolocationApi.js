@@ -140,7 +140,7 @@ const showMap = (mapContainer, lat, lon, fullAdress) => {
  * @param string zipCode    El código postal del usuario
  * @param string country    El país del usuario
 */
-const adressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, colony, zipCode, country) => {
+const addressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, colony, zipCode, country) => {
     // Muestra mensaje para que el usuario sepa que se está realizando la petición
     adressHtml.innerHTML = "Waiting for result...";
     getAdress(apiKey, street, houseNum, colony, zipCode, country)
@@ -152,7 +152,7 @@ const adressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, co
             mapContainerHtml.innerHTML = 'Waiting for results..';
 
             // Obtiene el mapa de la dirección
-            getCoords(street.value, houseNum.value, colony.value, zipCode.value, fullAdress.city, fullAdress.state, country.value)
+            getCoords(street,houseNum,colony,zipCode,fullAdress.city,fullAdress.state,country)
                 .then((coords) => {
                     showMap(mapContainerHtml, coords.lat, coords.lon, fullAdress.display);
                 }).catch((error) => {
