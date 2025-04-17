@@ -387,6 +387,9 @@
   .h-40 {
     height: calc(var(--spacing) * 40);
   }
+  .h-64 {
+    height: calc(var(--spacing) * 64);
+  }
   .h-\[60px\] {
     height: 60px;
   }
@@ -911,6 +914,9 @@
   }
   .text-neutral-100 {
     color: var(--color-neutral-100);
+  }
+  .text-neutral-200 {
+    color: var(--color-neutral-200);
   }
   .text-neutral-300 {
     color: var(--color-neutral-300);

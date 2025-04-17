@@ -1,22 +1,43 @@
 <div class="content p-4">
     <div class="card bg-neutral-700/25 shadow-md rounded-lg p-6">
-        <h1 class="text-3xl font-semibold mb-4">My Profile</h1>
-        <p class="text-lg mb-6">
-            <%= userData.birthName %>
-        </p>
-        <div class="flex justify-end">
-            <a href="/employee/me/changePassword" class="btnPrimary">
-                Change Password
-            </a>
-        </div>
+      <h1 class="text-3xl font-semibold mb-4">My Profile</h1>
+      
+      <!-- Datos básicos -->
+      <div class="space-y-2 mb-6">
+        <p class="text-lg"><strong>Nombre de nacimiento:</strong> <%= userData.birthName %></p>
+        <p class="text-lg"><strong>País:</strong> <%= userData.title %></p>
+        <p class="text-lg"><strong>Código postal:</strong> <%= userData.zipCode %></p>
+        <p class="text-lg"><strong>Colonia:</strong> <%= userData.colony %></p>
+        <p class="text-lg"><strong>Calle:</strong> <%= userData.streetName %> #<%= userData.houseNumber %></p>
+        <!-- Si tienes más campos, añádelos aquí -->
+      </div>
+  
+      <div class="flex justify-end">
+        <a href="/employee/me/changePassword" class="btnPrimary">
+          Change Password
+        </a>
+      </div>
     </div>
-</div>
-
-<p id="adress"></p>
-    
-<div id="map"></div>
-
-<script src="/javascript/geolocationApi.js"></script>
-<script>
-    adressLoader("<%= API %>", document.getElementById("adress"),document.getElementById("map"), "<%= userData.streetName %>","<%= userData.houseNumber %>", "<%= userData.colony %>", "<%= userData.zipCode %>", "<%= userData.title %>");
-</script>
+  </div>
+  
+  <!-- Contenedor para mostrar la dirección formateada -->
+  <p id="address" class="mt-4 text-lg font-medium text-neutral-200"></p>
+  
+  <!-- Contenedor para el mapa -->
+  <div id="map" class="mt-2 h-64 rounded-lg overflow-hidden"></div>
+  
+  <script src="/javascript/geolocationApi.js"></script>
+  <script>
+    // Llama a tu función que consulta la API y dibuja el mapa
+    addressLoader(
+      "<%= API %>",
+      document.getElementById("address"),
+      document.getElementById("map"),
+      "<%= userData.streetName %>",
+      "<%= userData.houseNumber %>",
+      "<%= userData.colony %>",
+      "<%= userData.zipCode %>",
+      "<%= userData.title %>"
+    );
+  </script>
+  
