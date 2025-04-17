@@ -1,0 +1,45 @@
+<div class="container mx-auto mt-6 pt-10 px-4 bg-neutral-700/25 shadow rounded-lg overflow-hidden mb-6">
+    <!-- Título del departamento -->
+    <h2 class="text-4xl font-bold mb-8 text-center">
+        Department: <%= department[0].title %>
+    </h2>
+
+    <!-- Grid centrado de 3 tarjetas por fila -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center mb-8">
+        <% if(rows.length === 0) { %>
+            <div class="w-full bg-neutral-800/50 rounded-2xl shadow-lg p-6 flex flex-col">
+                No Colabs in this department
+            </div>
+        <% } %>
+        
+        <% rows.forEach(user => { %>
+            <div class="w-full bg-neutral-800/50 rounded-2xl shadow-lg p-6 flex flex-col">
+                <!-- Nombre completo -->
+                <h2 class="text-2xl font-semibold mb-4">
+                    <%= user.birthName %> <%= user.surname %>
+                </h2>
+                <!-- Detalles -->
+                <p class="mb-2">
+                    <span class="font-medium">WorkModality:</span>
+                    <% if (user.workModality === 0) { %>
+                    Presencial
+                    <% } else if (user.workModality === 1) { %>
+                    Remote
+                    <% } else if (user.workModality === 2){ %>
+                    Hybrid
+                    <% } else { %>
+                    ---
+                    <% } %>
+                </p>
+                <p class="mb-2">
+                    <span class="font-medium">E-mail:</span>
+                    <%= user.mail %>
+                </p>
+                <p class="mb-0">
+                    <span class="font-medium">Phone Number:</span>
+                    <%= user.phoneNumber || 'N/A' %>
+                </p>
+            </div>
+        <% }) %>
+    </div>
+</div>
