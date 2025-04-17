@@ -2,18 +2,19 @@
     <div class="card bg-neutral-700/25 shadow-md rounded-lg p-6">
       <h1 class="text-3xl font-semibold mb-4">My Profile</h1>
       
-      <!-- Datos básicos -->
       <div class="space-y-2 mb-6">
-        <p class="text-lg"><strong>Nombre de nacimiento:</strong> <%= userData.birthName %></p>
-        <p class="text-lg"><strong>País:</strong> <%= userData.title %></p>
-        <p class="text-lg"><strong>Código postal:</strong> <%= userData.zipCode %></p>
-        <p class="text-lg"><strong>Colonia:</strong> <%= userData.colony %></p>
-        <p class="text-lg"><strong>Calle:</strong> <%= userData.streetName %> #<%= userData.houseNumber %></p>
-        <!-- Si tienes más campos, añádelos aquí -->
+        <p class="text-lg"><strong>Name:</strong> <%= userData.birthName %> <%= userData.surname %></p>
+        <p class="text-lg"><strong>Country:</strong> <%= userData.title %></p>
+        <p class="text-lg"><strong>Zip Code:</strong> <%= userData.zipCode %></p>
+        <p class="text-lg"><strong>Adress line 1:</strong> <%= userData.colony %></p>
+        <p class="text-lg"><strong>Adress line 2:</strong> <%= userData.streetName %> #<%= userData.houseNumber %></p>
+        
       </div>
+      
   
       <div class="flex justify-end">
-        <a href="/employee/me/changePassword" class="btnPrimary">
+        <a href="/faults" class="btnPrimary m-2">check my Faults</a>
+        <a href="/employee/me/changePassword" class="btnPrimary m-2">
           Change Password
         </a>
       </div>
