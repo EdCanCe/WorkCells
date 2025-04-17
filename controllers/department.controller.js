@@ -6,10 +6,13 @@ exports.getDepartments = (request, response, next) => {
 
     // vista del lider para ver su departamento
     if (role === "Department Leader") {
+        let departmentData;
+        
         Department.getLeaderDepartment(request.session.userID)
             .then(([department, fieldData]) => {
-                const leaderDepartmentID =
-                    department[0].prioritaryDepartmentIDFK;
+                departmentData = department;
+                const leaderDepartmentID = department[0].prioritaryDepartmentIDFK;
+
                 return Department.getEmployeesInDepartment(
                     leaderDepartmentID,
                     request.session.userID
@@ -17,6 +20,11 @@ exports.getDepartments = (request, response, next) => {
             })
             .then(([rows, fieldData]) => {
                 console.log(rows);
+                response.render("leaderDepartmentList", {
+                    ...sessionVars(request),
+                    department: departmentData,
+                    rows: rows,
+                });
             })
             .catch((err) => {
                 console.log(err);
