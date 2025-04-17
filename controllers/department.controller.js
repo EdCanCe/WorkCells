@@ -1,10 +1,35 @@
 const sessionVars = require('../util/sessionVars');
+const Department = require('../models/department.model')
 
 exports.getDepartments = (request, response, next) => {
-    response.render('checkDepartment', {
-        ...sessionVars(request),
-    });
-}
+    const role = sessionVars(request).role;
+
+    // vista del lider para ver su departamento
+    if (role === "Department Leader") {
+        Department.getLeaderDepartment(request.session.userID)
+            .then(([department, fieldData]) => {
+                const leaderDepartmentID =
+                    department[0].prioritaryDepartmentIDFK;
+                return Department.getEmployeesInDepartment(
+                    leaderDepartmentID,
+                    request.session.userID
+                );
+            })
+            .then(([rows, fieldData]) => {
+                console.log(rows);
+            })
+            .catch((err) => {
+                console.log(err);
+                response.status(500).send("Error del servidor");
+            });
+    }
+    // vista del superadmin, modificar en un futuro
+    else {
+        response.render("checkDepartment", {
+            ...sessionVars(request),
+        });
+    }
+};
 
 exports.getAddDepartment = (request, response, next) => {
     response.render('addDepartment', {
