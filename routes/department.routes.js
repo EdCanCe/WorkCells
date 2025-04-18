@@ -13,6 +13,7 @@ router.post(
 );
 router.get("/add", isAuth, departmentController.getAddDepartment);
 router.get("/search", isAuth, departmentController.getDepartmentsPaginated);
+router.get("/employee/:userID", isAuth);
 router.get("/", isAuth, departmentController.getDepartments);
 
 module.exports = router;
