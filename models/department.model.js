@@ -38,4 +38,14 @@ module.exports = class Department {
             [leaderDepartmentID, userID]
         );
     }
+
+    static getAllDepartments(){
+        return db.execute(
+            `SELECT d.title, d.flag AS 'status', e.title AS 'enterprise'
+            FROM department d 
+            JOIN enterprise e 
+                ON e.enterpriseID = d.enterpriseIDFK
+            ORDER BY d.title ASC`
+        )
+    }
 };
