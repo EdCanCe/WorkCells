@@ -52,6 +52,26 @@ exports.getEmployeesPaginated = async (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
     const limit = 6;
     const offset = (page - 1) * limit;
+
+    try {
+        const [[department]] = await Department.getLeaderDepartment(
+            request.session.userID
+        );
+        const leaderDepartmentID = department.prioritaryDepartmentIDFK;
+
+        const [rows] = await Department.getEmployeesInDepartmentPaginated(
+            leaderDepartmentID,
+            request.session.userID,
+            limit,
+            offset
+        );
+        response.json(rows);
+    } catch {
+        console.log(error);
+        response
+            .status(500)
+            .json({ error: "Error al obtener los colaboradores" });
+    }
 };
 
 exports.getDepartmentsPaginated = async (request, response, next) => {

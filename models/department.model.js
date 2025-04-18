@@ -45,7 +45,7 @@ module.exports = class Department {
         );
     }
 
-    static getEmployeesInDepartmentPaginated(
+    static async getEmployeesInDepartmentPaginated(
         leaderDepartmentID,
         userID,
         limit,
