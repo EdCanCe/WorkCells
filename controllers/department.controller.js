@@ -33,9 +33,16 @@ exports.getDepartments = (request, response, next) => {
     }
     // vista del superadmin, modificar en un futuro
     else {
-        response.render("checkDepartment", {
-            ...sessionVars(request),
-        });
+        Department.getAllDepartments()
+        .then(([rows, fieldData]) => {
+            console.log(rows)
+            response.render("checkDepartment", {
+                ...sessionVars(request),
+            });
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
 };
 
