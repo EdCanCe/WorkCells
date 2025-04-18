@@ -20,7 +20,7 @@ exports.getDepartments = (request, response, next) => {
                 );
             })
             .then(([rows, fieldData]) => {
-                console.log(rows);
+                //console.log(rows);
                 response.render("leaderDepartmentList", {
                     ...sessionVars(request),
                     department: departmentData,
