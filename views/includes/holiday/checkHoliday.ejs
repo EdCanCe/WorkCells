@@ -1,0 +1,99 @@
+<div class="flex">
+  <div class="p-6">
+    <div class="bg-neutral-700/25 shadow-lg rounded-lg">
+      <div class="p-6">
+        <h2 class="text-2xl font-semibold mb-4">Holiday Details</h2>
+        <div class="mt-4 space-y-2 text-gray-200">
+          <p>
+            <strong class="text-neutral-300">Title:</strong>
+            <%= holiday.title %>
+          </p>
+          <p>
+            <strong class="text-neutral-300">Date:</strong>
+            <%= new Date(holiday.usedDate)
+                  .toLocaleDateString('es-MX', {
+                    weekday: 'long',
+                    year:    'numeric',
+                    month:   'long',
+                    day:     'numeric'
+                  }) %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex space-x-4 justify-center mt-6">
+      <!-- Modificar feriado -->
+      <a
+        href="/holiday/check/modify/<%= holiday.usedHolidayID %>"
+        class="btnPrimary"
+      >
+        Modify Holiday
+      </a>
+
+      <!-- Eliminar feriado -->
+      <a
+        href="/holiday/check/<%= holiday.usedHolidayID %>"
+        class="btnPrimary"
+        id="btnEliminar"
+        data-id="<%= holiday.usedHolidayID %>"
+      >
+        Delete Holiday
+      </a>
+    </div>
+  </div>
+</div>
+
+<meta name="csrf-token" content="<%= csrfToken %>">
+<script src="/javascript/sweetalert2.all.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btnEliminar = document.getElementById("btnEliminar");
+    if (!btnEliminar) return;
+
+    btnEliminar.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const usedHolidayID = btnEliminar.dataset.id;
+
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡Esta acción no se puede deshacer!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute('content');
+
+          const res = await fetch(`/holiday/check/delete/${usedHolidayID}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'CSRF-Token': csrfToken
+            },
+            body: JSON.stringify({ id: usedHolidayID })
+          });
+
+          if (!res.ok) throw new Error('Error al eliminar');
+
+          await Swal.fire(
+            'Eliminado',
+            'El día feriado ha sido eliminado.',
+            'success'
+          );
+          // Puedes redirigir de vuelta al listado:
+          window.location.href = '/holiday/used';
+        } catch (err) {
+          Swal.fire('Error', 'No se pudo eliminar el día feriado', 'error');
+        }
+      }
+    });
+  });
+</script>

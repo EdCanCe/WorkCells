@@ -10,6 +10,7 @@ async function loadHolidays(page) {
         <tr>
           <th class="px-6 py-4">Holidays</th>
           <th class="px-6 py-4">Date</th>
+          <th class = "px-6 py-4"> Check One </th>
         </tr>
       </thead>
       <tbody class="text-gray-200 bg-neutral-800">
@@ -23,12 +24,15 @@ async function loadHolidays(page) {
         <tr class="hover:bg-neutral-700 border-b border-gray-600">
           <td class="px-6 py-4">${holiday.nombre}</td>
           <td class="px-6 py-4">${new Date(holiday.fecha).toLocaleDateString(
-        "es-MX",
-        { weekday: "long", year: "numeric", month: "long", day: "numeric" }
-      )}</td>
+            "es-MX",
+            { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+          )}</td>
+          <td class="px-4 py-2">
+            <a href="/holiday/check/${holiday.usedHolidayID}" class="btnPrimary">Check</a>
+          </td>
         </tr>
       `;
-    });
+    });    
   }
 
   table += `</tbody></table>`;

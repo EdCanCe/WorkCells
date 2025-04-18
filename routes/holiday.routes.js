@@ -5,6 +5,8 @@ const holidayController = require("../controllers/holiday.controller");
 const isAuth = require("../util/is-auth");
 const holidayPrivilege = require("../util/holidayPrivilege/holidayPrivilege");
 
+router.get("/check/:usedHolidayID", isAuth, holidayController.getCheckHoliday);
+
 router.get("/", isAuth, holidayController.getHolidays);
 
 router.get("/search", isAuth, holidayController.listPaginated);
