@@ -48,6 +48,12 @@ exports.getDepartments = (request, response, next) => {
     }
 };
 
+exports.getEmployeesPaginated = async (request, response, next) => {
+    const page = parseInt(request.query.page) || 1;
+    const limit = 6;
+    const offset = (page - 1) * limit;
+};
+
 exports.getDepartmentsPaginated = async (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
     const limit = 4;
