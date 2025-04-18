@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const departmentController = require("../controllers/department.controller");
+const employeeControllers = require("../controllers/employee.controller");
 const isAuth = require("../util/is-auth");
 
 router.get("/check", isAuth, departmentController.getCheckDepartment);
@@ -13,7 +14,7 @@ router.post(
 );
 router.get("/add", isAuth, departmentController.getAddDepartment);
 router.get("/search", isAuth, departmentController.getDepartmentsPaginated);
-router.get("/employee/:userID", isAuth);
+router.get("/employee/:userID", isAuth, employeeControllers.getEmployee);
 router.get("/", isAuth, departmentController.getDepartments);
 
 module.exports = router;

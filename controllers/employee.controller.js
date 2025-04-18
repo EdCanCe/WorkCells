@@ -280,6 +280,8 @@ exports.getMe = (request, response, next) => {
         });
 };
 
+exports.getEmployee = (request, response, next) => {};
+
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
         ...sessionVars(request),
