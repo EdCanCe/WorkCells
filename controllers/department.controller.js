@@ -38,6 +38,7 @@ exports.getDepartments = (request, response, next) => {
             console.log(rows)
             response.render("checkDepartment", {
                 ...sessionVars(request),
+                rows: rows,
             });
         })
         .catch((err) => {

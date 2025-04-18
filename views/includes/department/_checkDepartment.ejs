@@ -1,78 +1,52 @@
-<div class="flex-1 p-6">
-    <!-- Contenido principal -->
-    <div class="max-w-7xl mx-auto">
-        <!-- Descripción y botón -->
-        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    All Departments
+<div class="container mx-auto p-4">
+    <h2 class="text-3xl font-semibold mb-2">All Departments</h2>
+    <div
+        class="bg-neutral-700/25 flex flex-col items-center justify-start py-10"
+    >
+        <% rows.forEach(dept => { %>
+        <div
+            class="w-[70%] bg-neutral-700/25 shadow-md rounded-2xl p-6 mb-6 flex"
+        >
+            <div class="w-4/5 pr-6 flex flex-col justify-center">
+                <h2 class="text-2xl font-semibold mb-2">
+                    Name: <%= dept.title %>
                 </h2>
+                <p class="mb-1">
+                    <span class="font-medium">Status:</span>
+                    <span
+                        class="<%= dept.status === 1 ? 'text-green-600' : 'text-yellow-500' %>"
+                    >
+                        <%= dept.status === 1 ? 'Active' : 'Idle' %>
+                    </span>
+                </p>
+                <p>
+                    <span class="font-medium">Enterprise:</span> <%=
+                    dept.enterprise %>
+                </p>
+                <div class="mt-2 w-1/5 text-center">
+                    <a
+                        href=""
+                        class="block bg-blue-500 px-4 py-2 rounded-xl w-full hover:bg-blue-600 transition"
+                        >Check</a
+                    >
+                </div>
+            </div>
+
+            <div
+                class="w-1/5 flex flex-col items-end justify-center gap-2 text-center"
+            >
                 <a
-                    href="/department/add"
-                    class="btnPrimary"
+                    href=""
+                    class="bg-yellow-500 px-4 py-2 rounded-xl w-full hover:bg-yellow-600 transition"
+                    >Modify</a
                 >
-                    Add Department
-                </a>
+                <a
+                    href=""
+                    class="bg-red-500 px-4 py-2 rounded-xl w-full hover:bg-red-600 transition"
+                    >Delete</a
+                >
             </div>
         </div>
-
-        <!-- Recuadros de departamentos -->
-        <div class="space-y-6">
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">Human Resources</h3>
-                    <p class="text-lg">Department of HR</p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
-
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">IT</h3>
-                    <p class="text-lg">
-                        Department of IT and Software Development
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
-
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">Marketing</h3>
-                    <p class="text-lg">
-                        Department of marketing and PR
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                </div>
-            </div>
-        </div>
+        <% }) %>
     </div>
 </div>
