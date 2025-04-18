@@ -48,10 +48,23 @@ exports.getDepartments = (request, response, next) => {
     }
 };
 
-exports.getDepartmentsPaginated = (request, response, next) => {
+exports.getDepartmentsPaginated = async (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
-    const limit = 5;
+    const limit = 4;
     const offset = (page - 1) * limit;
+
+    try {
+        const [rows] = await Department.getAllDepartmentsPaginated(
+            limit,
+            offset
+        );
+        response.json(rows);
+    } catch (error) {
+        console.log(error);
+        response
+            .status(500)
+            .json({ error: "Error al obtener los departamentos" });
+    }
 };
 
 exports.getAddDepartment = (request, response, next) => {
