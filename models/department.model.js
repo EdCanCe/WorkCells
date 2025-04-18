@@ -13,7 +13,13 @@ module.exports = class Department {
         const departmentID = uuidv4();
         return db.execute(
             `INSERT INTO department(departmentID, title, flag, enterpriseIDFK, departmentLeaderIDFK) VALUES (?,?,?,?,?)`,
-            [departmentID, this.title, this.flag, this.enterpriseIDFK, this.departmentLeaderIDFK]
+            [
+                departmentID,
+                this.title,
+                this.flag,
+                this.enterpriseIDFK,
+                this.departmentLeaderIDFK,
+            ]
         );
     }
 
@@ -39,13 +45,25 @@ module.exports = class Department {
         );
     }
 
-    static getAllDepartments(){
+    static getAllDepartments() {
         return db.execute(
             `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
             FROM department d 
             JOIN enterprise e 
                 ON e.enterpriseID = d.enterpriseIDFK
             ORDER BY d.title ASC`
-        )
+        );
+    }
+
+    static getAllDepartmentsPaginated(limit, offset) {
+        return db.execute(
+            `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
+            FROM department d 
+            JOIN enterprise e 
+                ON e.enterpriseID = d.enterpriseIDFK
+            ORDER BY d.title ASC
+            LIMIT ? OFFSET ?`,
+            [limit, offset]
+        );
     }
 };
