@@ -45,6 +45,23 @@ module.exports = class Department {
         );
     }
 
+    static getEmployeesInDepartmentPaginated(
+        leaderDepartmentID,
+        userID,
+        limit,
+        offset
+    ) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, u.phoneNumber
+            FROM user u 
+            WHERE u.prioritaryDepartmentIDFK = ?
+            AND u.userID NOT IN (?) 
+            ORDER BY u.birthName ASC
+            LIMIT ? OFFSET ?`,
+            [leaderDepartmentID, userID, limit, offset]
+        );
+    }
+
     static getAllDepartments() {
         return db.execute(
             `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
