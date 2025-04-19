@@ -54,7 +54,7 @@ exports.getEmployees = (request, response, next) => {
     Department.getEmployeesInDepartmentInfo(departmentID)
         .then(([rows, fieldData]) => {
             console.log(rows);
-            response.render("leaderDepartmentList", {
+            response.render("RHDepartmentList", {
                 ...sessionVars(request),
                 department: rows,
                 rows: rows,
