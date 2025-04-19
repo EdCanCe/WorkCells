@@ -47,7 +47,8 @@
                                 name="usedDate"
                                 class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
                                 required
-                                min="<%= new Date().toISOString().split('T')[0] %>"
+                                min="<%= new Date().getFullYear() %>-01-01"
+                                max="<%= new Date().getFullYear() %>-12-31"
                                 value="<%= holiday.usedDate.toISOString().split('T')[0] %>"
                             />
                         </div>

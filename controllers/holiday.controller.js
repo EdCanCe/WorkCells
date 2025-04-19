@@ -99,6 +99,28 @@ exports.getHolidayModify = (request, response, next) => {
         });
 };
 
+exports.postHolidayModify = (request, response, next) => {
+    const usedHolidayID = request.params.usedHolidayID;
+    const usedDate = request.body.usedDate;
+
+    console.log("Datos recibidos en POST:", {
+        usedHolidayID,
+        usedDate,
+    });
+
+    Holiday.updateDate(usedHolidayID, usedDate)
+        .then(() => {
+            request.session.info =
+                "Fecha del feriado actualizada correctamente.";
+            response.redirect(`/holiday/check/${usedHolidayID}`);
+        })
+        .catch((error) => {
+            console.error(error);
+            request.session.info = "Error al modificar el feriado.";
+            response.redirect(`/holiday/check/modify/${usedHolidayID}`);
+        });
+};
+
 exports.getCheckHoliday = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
 
