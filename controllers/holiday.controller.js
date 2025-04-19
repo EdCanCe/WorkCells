@@ -1,6 +1,6 @@
 const { error } = require("console");
 const Holiday = require("../models/holiday.model");
-const sessionVars = require('../util/sessionVars');
+const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
 
 exports.getHolidays = (request, response, next) => {
@@ -32,7 +32,8 @@ exports.postHolidaysAdd = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            request.session.info = error.message || "Error al registrar dia feriado.";
+            request.session.info =
+                error.message || "Error al registrar dia feriado.";
             response.redirect("/holiday/add");
         });
 };
@@ -67,34 +68,57 @@ exports.listPaginated = async (request, response) => {
         response.json(rows);
     } catch (err) {
         console.error(err);
-        response.status(500).json({ error: "Error al obtener los días registrados." });
+        response
+            .status(500)
+            .json({ error: "Error al obtener los días registrados." });
     }
 };
 
 exports.getHolidayModify = (request, response, next) => {
-    response.render("holidayModify", {
-        ...sessionVars(request),
-    });
+    const usedHolidayID = request.params.usedHolidayID;
+
+    Holiday.fetchOneUsedHoliday(usedHolidayID)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                request.session.info = "Holiday not found";
+                return response.redirect("/holiday");
+            }
+
+            const holiday = rows[0];
+            console.log(rows);
+            response.render("holidayModify", {
+                ...sessionVars(request),
+                holiday,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response
+                .status(500)
+                .send("Error al cargar el formulario de modificación.");
+        });
 };
 
 exports.getCheckHoliday = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
-  
+
     Holiday.fetchOneUsedHoliday(usedHolidayID)
-      .then(([rows]) => {
-        if (rows.length === 0) {
-          return response.status(404).send("Feriado no encontrado.");
-        }
-  
-        const holiday = rows[0];
-        response.render("checkUsedHoliday", {
-          ...sessionVars(request),
-          holiday,
-          csrfToken: request.csrfToken()
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).send("Feriado no encontrado.");
+            }
+
+            const holiday = rows[0];
+            response.render("checkUsedHoliday", {
+                ...sessionVars(request),
+                holiday,
+                csrfToken: request.csrfToken(),
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response
+                .status(500)
+                .send("Error al obtener los datos del feriado.");
         });
-      })
-      .catch((error) => {
-        console.error(error);
-        response.status(500).send("Error al obtener los datos del feriado.");
-      });
-  };
+};
