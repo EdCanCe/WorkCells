@@ -75,6 +75,20 @@ module.exports = class Department {
         );
     }
 
+    static getEmployeesInDepartmentInfoPaginated(departmentID, limit, offset) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
+                u.phoneNumber, d.title
+            FROM user u 
+            JOIN department d 
+                ON d.departmentID = u.prioritaryDepartmentIDFK
+            WHERE u.prioritaryDepartmentIDFK = ?
+            ORDER BY u.birthName ASC
+            LIMIT ? OFFSET ?`,
+            [departmentID, limit, offset]
+        );
+    }
+
     static getAllDepartments() {
         return db.execute(
             `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
@@ -94,6 +108,15 @@ module.exports = class Department {
             ORDER BY d.title ASC
             LIMIT ? OFFSET ?`,
             [limit, offset]
+        );
+    }
+
+    static getDepartmentById(departmentID) {
+        return db.execute(
+            `SELECT departmentID, title
+           FROM department
+           WHERE departmentID = ?`,
+            [departmentID]
         );
     }
 };
