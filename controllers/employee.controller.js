@@ -470,6 +470,8 @@ exports.postChangePassword = (request, response, next) => {
     });
 };
 
+exports.getOwnFaults = (request, response, next) => {};
+
 exports.getMyProfile = (request, response, next) => {
     const userID = request.session.userID;
     response.send("entraste");
