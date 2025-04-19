@@ -475,7 +475,10 @@ exports.getOwnFaults = (request, response, next) => {
     Employee.getOwnFaults(request.session.userID)
         .then(([faults, fieldData]) => {
             console.log(faults);
-            response.status(200);
+            response.render("employeeFaults", {
+                ...sessionVars(request),
+                faults: faults,
+            });
         })
         .catch((err) => {
             console.error("Error obtaining the faults:", err);
