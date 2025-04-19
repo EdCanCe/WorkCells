@@ -16,6 +16,7 @@ router.get("/add", isAuth, departmentController.getAddDepartment);
 router.get("/search", isAuth, departmentController.getDepartmentsPaginated);
 router.get("/paginated", isAuth, departmentController.getEmployeesPaginated);
 router.get("/employee/:userID", isAuth, employeeControllers.getEmployee);
+router.get("/:departmentID", isAuth, departmentController.getEmployees);
 router.get("/", isAuth, departmentController.getDepartments);
 
 module.exports = router;

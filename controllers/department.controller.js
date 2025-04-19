@@ -48,6 +48,23 @@ exports.getDepartments = (request, response, next) => {
     }
 };
 
+exports.getEmployees = (request, response, next) => {
+    console.log(request.params);
+    const departmentID = request.params.departmentID;
+    Department.getEmployeesInDepartmentInfo(departmentID)
+        .then(([rows, fieldData]) => {
+            console.log(rows);
+            response.render("leaderDepartmentList", {
+                ...sessionVars(request),
+                department: rows,
+                rows: rows,
+            });
+        })
+        .catch((err) => {
+            console.log("Error obtaining workers", err);
+        });
+};
+
 exports.getEmployeesPaginated = async (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
     const limit = 6;

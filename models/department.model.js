@@ -62,6 +62,19 @@ module.exports = class Department {
         );
     }
 
+    static getEmployeesInDepartmentInfo(departmenID) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
+                u.phoneNumber, d.title
+            FROM user u 
+            JOIN department d 
+                ON d.departmentID = u.prioritaryDepartmentIDFK
+            WHERE u.prioritaryDepartmentIDFK = ?
+            ORDER BY u.birthName ASC`,
+            [departmenID]
+        );
+    }
+
     static getAllDepartments() {
         return db.execute(
             `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
