@@ -359,4 +359,16 @@ module.exports = class Employee {
                 );
             });
     }
+
+    static getOwnFaults(userID) {
+        return db.execute(
+            `SELECT f.*, fm.mediaLink 
+            FROM fault f 
+            LEFT JOIN faultMedia fm 
+                ON f.faultID = fm.faultIDFK 
+            WHERE f.faultUserIDFK = ?
+            ORDER BY f.doneDate DESC`,
+            [userID]
+        );
+    }
 };
