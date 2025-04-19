@@ -21,10 +21,20 @@ Controller ->> Model : fetchAllVacation(userID)
 activate Model
 Model ->> MySQL : execute(...)
 activate MySQL
-MySQL -->> Model : rows
+MySQL -->> Model : vacations
 deactivate MySQL
-Model -->> Controller : rows
+Model -->> Controller : vacations
 deactivate Model
+
+Controller ->> Model : fetchRequestsInPeriod(userID)
+activate Model
+Model ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Model : requests
+deactivate MySQL
+Model -->> Controller : requests
+deactivate Model
+
 Controller -> Ejs : response.render('ownVacation', {...})
 deactivate Controller
 
