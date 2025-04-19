@@ -280,6 +280,25 @@ exports.getMe = (request, response, next) => {
         });
 };
 
+exports.getEmployee = (request, response, next) => {
+    const userid = request.params.userID;
+    //console.log("ID =", userid);
+
+    Employee.fetchAllDataUser(userid)
+        .then(([rows]) => {
+            response.render("employeeMe", {
+                ...sessionVars(request),
+                userData: rows[0],
+                API: process.env.GEOLOCATION_API_KEY,
+            });
+        })
+        .catch((error) => {
+            console.error("this is your error: ", error);
+            request.session.alert = "can not find user";
+            response.redirect("/error");
+        });
+};
+
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
         ...sessionVars(request),
@@ -429,6 +448,7 @@ exports.postChangePassword = (request, response, next) => {
 
             console.log("Contraseña actualizada con éxito para ID:", userID);
             request.session.info = "Contraseña actualizada correctamente.";
+            request.session.passwdFlag = 1;
             return response.redirect("/employee/me");
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);

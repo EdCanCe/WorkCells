@@ -75,8 +75,73 @@
                         class="btnPrimary"
                         >Add</a
                     >
+                    <button id="btn-delete" class="btnDanger" data-department-id="123">Delete</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Seleccionar el botón delete
+    const deleteBtn = document.getElementById('btn-delete');
+
+    deleteBtn.addEventListener('click', (event) => {
+        event.preventDefault(); // prevenir el comportamiento por defecto del botón
+
+        // Obtener el departmentID desde el atributo data
+        const departmentID = deleteBtn.getAttribute('data-department-id');
+
+        // Mostrar confirmación con SweetAlert2
+        Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción eliminará el departamento de forma permanente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            // Enviar la solicitud POST a /department/delete/:departmentID
+            fetch(`/department/delete/${departmentID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            // Puedes enviar datos adicionales en el body si fuese necesario
+            // body: JSON.stringify({ departmentID }) 
+            })
+            .then(response => {
+            if (response.ok) {
+                // Muestra un mensaje de éxito o realiza otra acción necesaria
+                Swal.fire(
+                'Eliminado',
+                'El departamento ha sido eliminado.',
+                'success'
+                );
+            } else {
+                // Manejo de errores si la respuesta no es exitosa
+                Swal.fire(
+                'Error',
+                'Hubo un problema al eliminar el departamento.',
+                'error'
+                );
+            }
+            })
+            .catch(error => {
+            // Manejo de errores de la red o la solicitud
+            Swal.fire(
+                'Error',
+                'No se pudo conectar con el servidor.',
+                'error'
+            );
+            });
+        }
+        });
+    });
+</script>

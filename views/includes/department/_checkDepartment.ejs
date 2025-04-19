@@ -1,83 +1,71 @@
-<div class="flex-1 p-6">
-    <!-- Contenido principal -->
-    <div class="max-w-7xl mx-auto">
-        <!-- Descripción y botón -->
-        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    All Departments
-                </h2>
-                <a
-                    href="/department/add"
-                    class="btnPrimary"
-                >
-                    Add Department
-                </a>
-            </div>
-        </div>
+<div class="container mx-auto p-4">
+    <h2 class="text-3xl font-semibold mb-2">All Departments</h2>
 
-        <!-- Recuadros de departamentos -->
-        <div class="space-y-6">
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">Human Resources</h3>
-                    <p class="text-lg">Department of HR</p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
+    <div
+        class="bg-neutral-700/25 flex flex-col items-center justify-start py-5"
+        id="departmentContainer"
+    ></div>
 
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">IT</h3>
-                    <p class="text-lg">
-                        Department of IT and Software Development
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
-
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">Marketing</h3>
-                    <p class="text-lg">
-                        Department of marketing and PR
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href="/department/delete"
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
-        </div>
+    <div class="flex justify-center gap-3 mt-6">
+        <button id="prevPage" class="btnPrimary">Previous</button>
+        <button id="nextPage" class="btnPrimary">Next</button>
     </div>
 </div>
+
+<script>
+    let currentPage = 1;
+
+    async function LoadDepartments(page) {
+        const response = await fetch(`/department/search?page=${page}`);
+        const data = await response.json();
+
+        let container = "";
+
+        if (data.length === 0) {
+            container += `<p>There´s no departments </p>`;
+        } else {
+            data.forEach((dept) => {
+                container += `<div class="w-[70%] bg-neutral-700/25 shadow-md rounded-2xl p-6 mb-4 flex">
+                    <div class="w-4/5 pr-6 flex flex-col justify-center">
+                <h2 class="text-2xl font-semibold mb-2">Name: ${dept.title} </h2>
+                <p class="mb-1">
+                <span class="font-medium">Status:</span>`;
+
+                if (dept.status === 1) {
+                    container += `<span class="text-green-600"> Active </span>`;
+                } else {
+                    container += `<span class="text-yellow-500"> Inactive </span>`;
+                }
+
+                container += `</p>
+                    <p><span class="font-medium">Enterprise:</span> ${dept.enterprise}</p>
+                    </div>
+                    <div class="w-1/5 flex flex-col items-end justify-center gap-2 text-center">`;
+                container += `<a href=""
+                    class="block bg-blue-500 px-4 py-2 rounded-xl w-full hover:bg-blue-600 transition">
+                    Check</a>
+                    <a href=""
+                    class="bg-yellow-500 px-4 py-2 rounded-xl w-full hover:bg-yellow-600 transition">
+                    Modify</a>
+                    </div>
+                    </div>`;
+            });
+        }
+        document.getElementById("departmentContainer").innerHTML = container;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            LoadDepartments(currentPage);
+        }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        LoadDepartments(currentPage);
+    });
+
+    // Cargar la primera página al iniciar
+    LoadDepartments(currentPage);
+</script>
