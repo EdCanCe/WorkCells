@@ -1,0 +1,33 @@
+@startuml
+actor Navegador
+boundary "vacation.routes" as Routes
+boundary "ownVacation.ejs" as Ejs
+control "vacation.controller" as Controller
+entity "vacation.model" as Model
+database "mysql" as MySQL
+
+autonumber
+
+activate Navegador
+Navegador -> Routes : GET /vacation
+deactivate Navegador
+
+activate Routes
+Routes -> Controller : getRoot(request, response, next)
+deactivate Routes
+
+activate Controller
+Controller ->> Model : fetchAllVacation(userID)
+activate Model
+Model ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Model : rows
+deactivate MySQL
+Model -->> Controller : rows
+deactivate Model
+Controller -> Ejs : response.render('ownVacation', {...})
+deactivate Controller
+
+activate Ejs
+Ejs -> Navegador : HTML
+deactivate Ejs
