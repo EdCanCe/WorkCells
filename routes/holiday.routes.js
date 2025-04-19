@@ -9,14 +9,14 @@ router.get("/", isAuth, holidayController.getHolidays);
 
 router.get("/search", isAuth, holidayController.listPaginated);
 
-router.get("/add", isAuth,holidayPrivilege, holidayController.getHolidaysAdd);
+router.get("/add", isAuth, holidayPrivilege, holidayController.getHolidaysAdd);
 
 router.post("/add", isAuth, holidayController.postHolidaysAdd);
 
-router.get("/check", isAuth, holidayController.getHoliday);
+router.get("/:id/modify", isAuth, holidayController.getHolidayModify);
+
+router.get("/:id", isAuth, holidayController.getHoliday);
 
 router.get("/used", isAuth, holidayController.getUsedHoliday); // Ver feriados usados
-
-router.get("/check/modify", isAuth, holidayController.getHolidayModify);
 
 module.exports = router;
