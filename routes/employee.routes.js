@@ -12,6 +12,7 @@ router.get(
     employeePrivilege,
     employeeControllers.getOwnFaults
 );
+router.get("/:userID/faults", isAuth, employeeControllers.getEmployeeFaults);
 router.get("/add", isAuth, employeePrivilege, employeeControllers.getAdd);
 router.post("/", isAuth, employeePrivilege, employeeControllers.postAdd);
 router.get("/me/changePassword", isAuth, employeeControllers.getChangePassword);

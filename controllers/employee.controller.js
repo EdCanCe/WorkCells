@@ -485,6 +485,21 @@ exports.getOwnFaults = (request, response, next) => {
         });
 };
 
+exports.getEmployeeFaults = (request, response, next) => {
+    const userID = request.params.userID;
+    Employee.getOwnFaults(userID)
+        .then(([faults, fieldData]) => {
+            console.log(faults);
+            response.render("employeeFaults", {
+                ...sessionVars(request),
+                faults: faults,
+            });
+        })
+        .catch((err) => {
+            console.error("Error obtaining the faults:", err);
+        });
+};
+
 exports.getMyProfile = (request, response, next) => {
     const userID = request.session.userID;
     response.send("entraste");
