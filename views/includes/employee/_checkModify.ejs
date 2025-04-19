@@ -17,7 +17,7 @@
                     />
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                         <div class="field">
-                            <label class="block text-lg font-medium"
+                            <label for="curp" class="block text-lg font-medium"
                                 >CURP</label
                             >
                             <input
@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="field">
-                            <label class="block text-lg font-medium">RFC</label>
+                            <label for="rfc" class="block text-lg font-medium">RFC</label>
                             <input
                                 type="text"
                                 id="rfc"
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="field">
-                            <label class="block text-lg font-medium"
+                            <label for="birthName" class="block text-lg font-medium"
                                 >Name</label
                             >
                             <input
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="field">
-                            <label class="block text-lg font-medium"
+                            <label for="surname" class="block text-lg font-medium"
                                 >Surname</label
                             >
                             <input
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="field">
-                            <label class="block text-lg font-medium"
+                            <label for="mail" class="block text-lg font-medium"
                                 >Email</label
                             >
                             <input
@@ -94,6 +94,20 @@
                                 id="mailFormatError"
                                 class="text-red-600 text-sm mt-2"
                             ></div>
+                        </div>
+
+                        <div class="field">
+                            <label for="phoneNumber" class="block text-lg font-medium">
+                                Phone Number
+                            </label>
+                            <input
+                                type="tel"
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                value="<%= employee.phoneNumber %>"
+                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                                required
+                            />
                         </div>
                     </div>
 
@@ -164,8 +178,8 @@
                             >
                                 <% countries.forEach(c => { %>
                                   <option 
-                                    value="<%= c.countryID %>" 
-                                    <%= c.countryID == employee.countryUserIDFK ? "selected" : "" %>>
+                                    value='<%= c.countryID %>' 
+                                    <%= c.countryID == employee.countryUserIDFK ? 'selected' : '' %>>
                                     <%= c.title %>
                                   </option>
                                 <% }) %>

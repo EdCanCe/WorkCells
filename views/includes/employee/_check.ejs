@@ -59,6 +59,19 @@
                             disabled
                         />
                     </div>
+
+                    <div class="field">
+                        <label class="block text-lg font-medium"
+                            >Phone Number</label
+                        >
+                        <input
+                            type="tel"
+                            readonly
+                            value="<%= employee.phoneNumber || 'Not registered' %>"
+                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            disabled
+                        />
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">

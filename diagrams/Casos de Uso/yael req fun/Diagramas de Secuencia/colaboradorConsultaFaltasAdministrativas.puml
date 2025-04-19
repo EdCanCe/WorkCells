@@ -1,0 +1,39 @@
+@startuml
+
+actor navegador as nav
+boundary routes
+boundary "Vista profileFaults.ejs" as pf
+control controller
+entity fault as f
+database mysql
+entity faultMedia as fm
+
+autonumber
+
+activate nav
+nav -> routes: GET /me/faults
+deactivate nav
+activate routes
+routes -> controller: getOwnFaults(req, res)
+deactivate routes
+
+activate controller
+controller ->> f: getOwnFaults(req.session.userID)
+activate f
+f ->> mysql: execute(`SELECT f.*, fm.mediaLink \nFROM fault f LEFT JOIN faultMedia as fm \nON f.faultID = fm.faultIDFK WHERE f.faultUserIDFK = ? \nORDER BY f.doneDate DESC`, [req.session.userID]) 
+activate mysql
+mysql -->> f: Query OK
+deactivate mysql
+f -->> controller: faults
+deactivate f
+
+controller -> pf: res.render("profileFaults.ejs", faults)
+deactivate controller
+activate pf
+pf -> nav: HTML
+deactivate pf
+
+activate nav
+
+
+@enduml

@@ -1,215 +1,217 @@
-<div id="navBar" class="bgNav h-screen w-fit relative">
-    <div
-        class="bgNavTwo border-b-1 h-[60px] w-full navItem"
-    >
+<% if(isLoggedIn) { %>
+    <div id="navBar" class="bgNav h-screen w-fit relative">
+        <div
+            class="bgNavTwo border-b-1 h-[60px] w-full navItem"
+        >
+            <a
+                href="/"
+                class="bgNavHead flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %> toggleText"
+            >
+                <span
+                    class="text-xl font-semibold inline-block w-full whitespace-nowrap text-center"
+                    >WorkCells</span
+                >
+            </a>
+            <div
+                id="openAndCloseNav"
+                class="bgNavHead z-10 inline-block aspect-square h-full cursor-pointer p-3 <%= navIsOpen == true ? 'rotate-180' : '' %>"
+            >
+                <img src="/icons/openArrow.svg" class="navIcon size-full" />
+            </div>
+        </div>
+
+        <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
         <a
-            href="/"
-            class="bgNavHead flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %> toggleText"
+        href="/employee/me"
+        class="bgNavOne w-full h-[60px] p-3 navItem"
+    >
+        <img
+            src="/icons/myprofile.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
-            <span
-                class="text-xl font-semibold inline-block w-full whitespace-nowrap text-center"
-                >WorkCells</span
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Profile</span
             >
+        </div>
+    </a>
+        
+        
+        
+        
+        <a
+            href="/calendar"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/calendar.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Calendar</span
+                >
+            </div>
         </a>
-        <div
-            id="openAndCloseNav"
-            class="bgNavHead z-10 inline-block aspect-square h-full cursor-pointer p-3 <%= navIsOpen == true ? 'rotate-180' : '' %>"
+
+        <a
+            href="/department"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
         >
-            <img src="/icons/openArrow.svg" class="navIcon size-full" />
-        </div>
+            <img
+                src="/icons/department.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Departments</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/vacation"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/vacation.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Vacations</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/absence"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/absence.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Absences</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/holiday"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/holiday.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Holidays</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/oneToOne"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/onetoone.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >One To One</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/fault"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/faults.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Faults</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/employee"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/employee.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Employees</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/reports"
+            class="bgNavOne w-full h-[60px] p-3 navItem"
+        >
+            <img
+                src="/icons/report.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Reports</span
+                >
+            </div>
+        </a>
+
+        <a
+            href="/logout"
+            class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-0"
+        >
+            <img
+                src="/icons/logout.svg"
+                class="navIcon z-10 inline-block aspect-square h-full scale-75"
+            />
+            <div
+                class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+            >
+                <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                    >Logout</span
+                >
+            </div>
+        </a>
+
+        <a class="block p-3"></a>
     </div>
-
-    <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
-    <a
-    href="/employee/me"
-    class="bgNavOne w-full h-[60px] p-3 navItem"
->
-    <img
-        src="/icons/myprofile.svg"
-        class="navIcon z-10 inline-block aspect-square h-full scale-75"
-    />
-    <div
-        class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-    >
-        <span class="font-medium inline-block ml-2 whitespace-nowrap"
-            >Profile</span
-        >
-    </div>
-</a>
-    
-    
-    
-    
-    <a
-        href="/calendar"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/calendar.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Calendar</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/department"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/department.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Departments</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/vacation"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/vacation.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Vacations</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/absence"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/absence.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Absences</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/holiday"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/holiday.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Holidays</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/oneToOne"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/onetoone.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >One To One</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/fault"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/faults.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Faults</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/employee"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/employee.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Employees</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/reports"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
-        <img
-            src="/icons/report.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Reports</span
-            >
-        </div>
-    </a>
-
-    <a
-        href="/logout"
-        class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-0"
-    >
-        <img
-            src="/icons/logout.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Logout</span
-            >
-        </div>
-    </a>
-
-    <a class="block p-3"></a>
-</div>
-<script src="/javascript/navBarFunctionality.js"></script>
+    <script src="/javascript/navBarFunctionality.js"></script>
+<% } %>

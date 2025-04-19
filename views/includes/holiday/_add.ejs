@@ -1,3 +1,4 @@
+<script src="/javascript/holidayDate.js"></script>
 <div class="flex justify-center">
     <div class="p-6">
         <div class="bg-neutral-800 shadow-md rounded-lg mb-6">
@@ -12,12 +13,13 @@
                     />
 
                     <div class="flex space-x-6 mb-4">
-                        <div class="field w-1/2">
+                        <div class="field w-full">
                             <label
                                 for="usedTemplateHolidayIDFK"
                                 class="block text-lg font-medium"
-                                >Select Holiday Name</label
                             >
+                                Select Holiday Name
+                            </label>
                             <select
                                 id="usedTemplateHolidayIDFK"
                                 name="usedTemplateHolidayIDFK"
@@ -27,20 +29,32 @@
                                 <option value="" selected disabled>
                                     Select Holiday
                                 </option>
-                                <%holidays.forEach(holiday => { const date = new
-                                Date(holiday.holidayDate); const formattedDate =
-                                date.toLocaleDateString('en-US', { weekday:
-                                'long', day: '2-digit', month: 'long' });%>
-                                <option value="<%=holiday.templateHolidayID %>">
-                                    <%=holiday.title %> - <%=formattedDate %>
+                                <% holidays.forEach(holiday => { const date =
+                                new Date(holiday.holidayDate); const
+                                formattedDate = date.toLocaleDateString('en-US',
+                                { weekday: 'long', day: '2-digit', month: 'long'
+                                }); const today = new Date(); const year =
+                                today.getFullYear(); const currentYearDate = new
+                                Date(year, date.getMonth(), date.getDate());
+                                const isoDate =
+                                currentYearDate.toISOString().split('T')[0]; %>
+                                <option
+                                    value="<%= holiday.templateHolidayID %>"
+                                    data-date="<%= isoDate %>"
+                                >
+                                    <%= holiday.title %>
                                 </option>
                                 <% }) %>
                             </select>
                         </div>
+
                         <div class="field w-1/2">
-                            <label for="title" class="block text-lg font-medium"
-                                >Celebration Date</label
+                            <label
+                                for="usedDate"
+                                class="block text-lg font-medium"
                             >
+                                Celebration Date
+                            </label>
                             <input
                                 type="date"
                                 id="usedDate"

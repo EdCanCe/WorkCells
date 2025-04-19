@@ -1,0 +1,35 @@
+@startuml CU09 - Colaborador modifica contraseña temporal - Diagrama de actividad
+
+|__Colaborador__|
+start
+:Ingresa su usuario y contraseña;
+
+|__Sistema__|
+
+if (¿Primera vez de ingreso de la contraseña?) then (No)
+
+:Se redirige a la página de cambio de contraseña;
+else (Si)
+:Se redirige a la página de inicio;
+|__Colaborador__|
+:El caso de uso finaliza;
+stop
+
+endif
+
+|__Colaborador__|
+:El usuario cambia su contraseña por una segura;
+
+|__Sistema__|
+while (¿La contraseña es segura?) is (No)
+    :No permitir guardar contraseña;
+    :Repetir contraseña;
+endwhile (Si)
+:Se redirige a la página de inicio;
+
+|__Colaborador__|
+:El caso de uso finaliza;
+
+stop
+
+@enduml

@@ -1,6 +1,7 @@
 const { error } = require("console");
 const Holiday = require("../models/holiday.model");
 const sessionVars = require('../util/sessionVars');
+const { response } = require("express");
 
 exports.getHolidays = (request, response, next) => {
     response.render("holiday", {
@@ -75,3 +76,25 @@ exports.getHolidayModify = (request, response, next) => {
         ...sessionVars(request),
     });
 };
+
+exports.getCheckHoliday = (request, response, next) => {
+    const usedHolidayID = request.params.usedHolidayID;
+  
+    Holiday.fetchOneUsedHoliday(usedHolidayID)
+      .then(([rows]) => {
+        if (rows.length === 0) {
+          return response.status(404).send("Feriado no encontrado.");
+        }
+  
+        const holiday = rows[0];
+        response.render("checkUsedHoliday", {
+          ...sessionVars(request),
+          holiday,
+          csrfToken: request.csrfToken()
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        response.status(500).send("Error al obtener los datos del feriado.");
+      });
+  };

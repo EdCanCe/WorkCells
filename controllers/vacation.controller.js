@@ -3,7 +3,8 @@ const Holiday = require('../models/holiday.model');
 const User = require('../models/user.model');
 const formatDate = require('../util/formatDate');
 const sessionVars = require('../util/sessionVars');
-const { end } = require('../util/database');
+const { sendTemplateMessage } = require('../util/whatsAppMessages');
+
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -627,98 +628,139 @@ exports.updateVacation = async (request, response, next) => {
 };
 
 
-exports.postRequestApprove = (request, response, next) => {
-    const vacationId = request.params.vacationID;
-    const userRole = request.session.role;
-    const userId = request.session.userID;
+exports.postRequestApprove = async (request, response, next) => {
+    try {
+        const vacationId = request.params.vacationID;
+        const userRole = request.session.role;
 
-    // Verificar si el usuario tiene permiso para aprobar esta solicitud
-    Vacation.fetchOne(vacationId)
-        .then(([rows]) => {
-            if (rows.length === 0) {
-                return response.status(404).json({
+        const [vacationRows] = await Vacation.fetchOne(vacationId);
+        if (vacationRows.length === 0) {
+            return response.status(404).json({
+            success: false,
+            message: 'Solicitud no encontrada'
+            });
+        }
+
+        const [employeeRows] = await Vacation.fetchOneEmployee(vacationRows[0]['vacationUserIDFK']);
+        // TODO: CAMBIAR LA VARIABLE phoneNumber A ALGO PARECIDO A LA VARIABLE "employeeName" PUES POR AHORA
+        // TODO: SÓLO UNA VARIABLE DE ENTORNO.
+        const phoneNumber = process.env.NUMBER_TEST;
+        const requestName = 'vacaciones';
+        const employeeName = employeeRows[0]['birthName'];
+        const statusName = 'aprobado';
+        let roleName;
+
+        // En el controlador vacations.controller.js
+        if (userRole === 'Human Resources') {
+            roleName = 'Recursos humanos';
+            try {
+                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await Vacation.updateStatusHR(vacationId, 1);
+            } catch (error) {
+                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);
+                return response.status(500).json({
                     success: false,
-                    message: 'Solicitud no encontrada'
+                    message: error.message || 'Error al procesar la solicitud'
                 });
             }
-
-            const vacation = rows[0];
-            
-            // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
-            if (userRole === 'Human Resources') {
-                return Vacation.updateStatusHR(vacationId, 1); // 1 = Aprobado
+        } else if (userRole === 'Department Leader') {
+            roleName = 'Lider de departamento';
+            try {
+                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await Vacation.updateStatusLeader(vacationId, 1);
+                // await Vacation.fetchDepartmentPaginated(userId, 1, 0);
+            } catch (error) {
+                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);  
+                return response.status(500).json({
+                    success: false,
+                    message: error.message || 'Error al procesar la solicitud'
+                });
             }
-            // Si es líder, actualiza el estado del líder
-            else if (userRole === 'Department Leader') { // Cambiado de 'Leader' a 'Department Leader'
-                return Vacation.fetchDepartmentPaginated(userId, 1, 0);
-            }
-            else {
-                throw new Error('Rol no autorizado');
-            }
-        })
-        .then(() => {
-            response.status(200).json({
-                success: true,
-                message: 'Solicitud aprobada exitosamente'
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            response.status(500).json({
+        } else {
+            return response.status(403).json({
                 success: false,
-                message: error.message || 'Error al procesar la solicitud'
+                message: 'Rol no autorizado'
             });
+        }
+
+        return response.status(200).json({
+            success: true,
+            message: 'Solicitud aprobada exitosamente'
         });
+        } catch (error) {
+        console.error(error);
+        return response.status(500).json({
+            success: false,
+            message: error.message || 'Error al procesar la solicitud'
+        });
+    }
 };
 
-exports.postRequestDeny = (request, response, next) => {
-    const vacationId = request.params.vacationID;
-    const userRole = request.session.role;
-    const userId = request.session.userID;
+exports.postRequestDeny = async (request, response, next) => {
+    try {
+        const vacationId = request.params.vacationID;
+        const userRole = request.session.role;
+        const userId = request.session.userID;
 
-    // Verificar si el usuario tiene permiso para denegar esta solicitud
-    Vacation.fetchOne(vacationId)
-        .then(([rows]) => {
-            if (rows.length === 0) {
-                return response.status(404).json({
+        const [vacationRows] = await Vacation.fetchOne(vacationId);
+        if (vacationRows.length === 0) {
+            return response.status(404).json({
+            success: false,
+            message: 'Solicitud no encontrada'
+            });
+        }
+
+        const [employeeRows] = await Vacation.fetchOneEmployee(vacationRows[0]['vacationUserIDFK']);
+        // TODO: CAMBIAR LA VARIABLE phoneNumber A ALGO PARECIDO A LA VARIABLE "employeeName" PUES POR AHORA
+        // TODO: SÓLO UNA VARIABLE DE ENTORNO.
+        const phoneNumber = process.env.NUMBER_TEST;
+        const requestName = 'vacaciones';
+        const employeeName = employeeRows[0]['birthName'];
+        const statusName = 'denegado';
+        let roleName;
+        if (userRole === 'Human Resources') {
+            roleName = 'Recursos humanos';
+            try {
+                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await Vacation.updateStatusHR(vacationId, 0);
+            } catch (error) {
+                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);
+                return response.status(500).json({
                     success: false,
-                    message: 'Solicitud no encontrada'
+                    message: error.message || 'Error al procesar la solicitud'
                 });
             }
-            const vacation = rows[0];
-            // Si es RRHH, actualiza el estado de RRHH sin importar el estado del líder
-            if (userRole === 'Human Resources') {
-                // Elimina la restricción de verificar el estado del líder
-                return Vacation.updateStatusHR(vacationId, 0); // 0 = Denegado
+        } else if (userRole === 'Department Leader') {
+            roleName = 'Lider de departamento';
+            try {
+                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await Vacation.updateStatusLeader(vacationId, 0);
+                // await Vacation.fetchDepartmentPaginated(userId, 1, 0);
+            } catch (error) {
+                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);  
+                return response.status(500).json({
+                    success: false,
+                    message: error.message || 'Error al procesar la solicitud'
+                });
             }
-            // Si es líder, actualiza el estado del líder
-            else if (userRole === 'Department Leader') {
-                return Vacation.fetchDepartmentPaginated(userId, 1, 0)
-                    .then(([departmentVacations]) => {
-                        const hasPermission = departmentVacations.some(v => v.vacationID === vacationId);
-                        if (!hasPermission) {
-                            throw new Error('No tienes permiso para denegar esta solicitud');
-                        }
-                        return Vacation.updateStatusLeader(vacationId, 0);
-                    });
-            }
-            else {
-                throw new Error('Rol no autorizado');
-            }
-        })
-        .then(() => {
-            response.status(200).json({
-                success: true,
-                message: 'Solicitud denegada exitosamente'
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-            response.status(500).json({
+        } else {
+            return response.status(403).json({
                 success: false,
-                message: error.message || 'Error al procesar la solicitud'
+                message: 'Rol no autorizado'
             });
+        }
+
+        return response.status(200).json({
+            success: true,
+            message: 'Solicitud aprobada exitosamente'
         });
+        } catch (error) {
+        console.error(error);
+        return response.status(500).json({
+            success: false,
+            message: error.message || 'Error al procesar la solicitud'
+        });
+    }
 };
 
 
@@ -750,8 +792,6 @@ exports.PostDeleteVacation = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     const userID = request.session.userID;
-    // const userRole = request.session.role;
-    // console.log('userRole', userRole);
     Vacation.fetchAllVacation(userID)
         .then(([rows]) => {
             // Vacaciones aprobadas: ambas aprobadas (valor 1)
@@ -759,13 +799,11 @@ exports.getRoot = (request, response, next) => {
                 (vacation) =>
                     vacation.leaderStatus === 1 && vacation.hrStatus === 1
             );
-
             // Vacaciones pendientes: si alguno está pendiente (valor 2)
             const pendingVacations = rows.filter(
                 (vacation) =>
                     vacation.leaderStatus === 2 || vacation.hrStatus === 2
             );
-
             response.render('ownVacation', {
                 ...sessionVars(request),
                 approvedVacations,

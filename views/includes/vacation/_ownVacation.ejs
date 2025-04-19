@@ -1,4 +1,4 @@
-<div class="flex">
+<div class="flex-1 p-6">
     <aside class="w-64"></aside>
     <div class="p-6">
         <!-- Historial de Vacaciones (Aprobadas) -->
@@ -8,16 +8,14 @@
                     History of vacations
                 </h2>
                 <div class="flex space-x-4">
-                    <% privilegios.forEach(privilegio => { %>
-                        <% if (privilegio.title === "Líder registra respuesta hacia solicitud de vacaciones de colaborador") { %>
-                            <a href="/vacation/requests" class="btnPrimary">
-                                Requests
-                            </a>
-                        <% } %>
-                    <% }) %>
                     <a href="/vacation/add" class="btnPrimary">
                         New request
                     </a>
+                    <% if (role === 'Department Leader' || role === 'Human Resources') { %>
+                        <a href="/vacation/requests" class="btnPrimary">
+                            Employees requests
+                        </a>
+                    <% } %>
                 </div>
             </div>
             <div class="p-6">

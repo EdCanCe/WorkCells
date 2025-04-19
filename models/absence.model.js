@@ -66,6 +66,15 @@ ORDER BY startDate DESC`);
         );
     }
 
+    static fetchOneEmployee(absenceUserID) {
+        return db.execute(
+            `SELECT *
+            FROM user
+            WHERE userID = ?`,
+            [absenceUserID]
+        );
+    }
+
     static fetch(id) {
         if (id) {
             return this.fetchOne(id);
@@ -167,6 +176,16 @@ ORDER BY startDate DESC`);
                 LIMIT ? OFFSET ?`,
                 [userId, limit, offset]
             );
+            // Posible nueva implementación:
+            // SELECT u.*
+            // FROM user AS u
+            // JOIN (
+            //     SELECT prioritaryDepartmentIDFK
+            //     FROM user
+            //     WHERE userID = '2836ef6d-af85-44c1-8f6f-ed131015d8d2'
+            // ) AS leader
+            // ON u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
+            // ORDER BY u.;
         } else {
             // Para otros roles, retornar un array vacío
             return Promise.resolve([[]]);

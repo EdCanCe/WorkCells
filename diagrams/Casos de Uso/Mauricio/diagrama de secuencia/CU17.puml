@@ -1,4 +1,4 @@
-@startuml CU017 - Líder consulta respuesta hacia ausencia de colaborador - Diagrama de secuencia
+@startuml CU09 - Líder consulta respuesta hacia ausencia de colaborador - Diagrama de secuencia
 actor Navegador
 boundary "absence.routes" as Routes
 boundary "absence.view" as View

@@ -1,0 +1,109 @@
+@startuml
+actor Navegador
+boundary "department.routes" as Routes
+boundary "error.routes" as Error
+boundary "addDepartment.ejs" as Ejs
+control "department.controller" as Controller
+entity "enterprise" as Enterprise
+entity "department" as Department
+entity "employee" as Employee
+entity "enterprise.model" as EnterpriseModel
+entity "employee.model" as EmployeeModel
+database "mysql" as MySQL
+
+autonumber
+
+activate Navegador
+Navegador -> Routes : GET /department/add
+deactivate Navegador
+
+activate Routes
+Routes -> Controller : getAdd(request, response, next)
+deactivate Routes
+
+activate Controller
+
+Controller ->> EnterpriseModel : fetchAll()
+activate EnterpriseModel
+EnterpriseModel ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> EnterpriseModel : enterprises
+deactivate MySQL
+EnterpriseModel -->> Controller : enterprises
+deactivate EnterpriseModel
+
+Controller ->> EmployeeModel : fetchAllUserRoles()
+activate EmployeeModel
+EmployeeModel ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> EmployeeModel : enterprises
+deactivate MySQL
+EmployeeModel -->> Controller : employees
+deactivate EmployeeModel
+
+Controller -> Ejs : response.render('departmentAdd', {...})
+deactivate Controller
+
+activate Ejs
+Ejs -> Navegador : HTML
+deactivate Ejs
+
+activate Navegador
+Navegador -> Routes : POST /department/add
+deactivate Navegador
+
+activate Routes
+Routes -> Controller : postAdd(request, response, next)
+deactivate Routes
+
+activate Controller
+
+Controller ->> EnterpriseModel : fetchByName(request.body.enterprise)
+activate EnterpriseModel
+EnterpriseModel ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> EnterpriseModel : enterprise
+deactivate MySQL
+EnterpriseModel -->> Controller : enterprise
+deactivate EnterpriseModel
+
+alt enterprise.length == 0
+    create Enterprise
+    Controller -> Enterprise : new Enterprise(request.body.enterprise)
+    activate Enterprise
+    Controller ->> Enterprise : save()
+    Enterprise ->> MySQL : execute(...)
+    activate MySQL
+    MySQL -->> Enterprise : enterpriseID
+    deactivate MySQL
+    Enterprise -->> Controller : enterpriseID
+    deactivate Enterprise
+end
+
+create Department
+Controller -> Department : new Department(enterpriseID, request.body.department, request.body.leaderID)
+activate Department
+Controller ->> Department : save()
+Department ->> MySQL : execute(...)
+activate MySQL
+MySQL -->> Department : departmentID
+deactivate MySQL
+Department -->> Controller : departmentID
+deactivate Department
+
+loop para cada colaborador
+    create Employee
+    Controller -> Employee : new Employee(request.body[`employee${index}`], departmentID)
+    activate Employee
+    Controller ->> Employee : updateDepartment()
+    Employee ->> MySQL : execute(...)
+    activate MySQL
+    MySQL -->> Employee : query OK
+    deactivate MySQL
+    Employee -->> Controller : query OK
+    deactivate Employee
+end
+
+Controller -> Routes : response.redirect(`/department/${departmentID}`)
+
+deactivate Controller
