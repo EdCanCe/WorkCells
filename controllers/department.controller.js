@@ -36,7 +36,6 @@ exports.getDepartments = (request, response, next) => {
     else {
         Department.getAllDepartments()
             .then(([rows, fieldData]) => {
-                console.log(rows);
                 response.render("checkDepartment", {
                     ...sessionVars(request),
                     rows: rows,
@@ -46,6 +45,47 @@ exports.getDepartments = (request, response, next) => {
                 console.log(err);
             });
     }
+};
+
+exports.getEmployees = (req, res, next) => {
+    const departmentID = req.params.departmentID;
+
+    Promise.all([
+        Department.getDepartmentById(departmentID), // → [[{ departmentID, title }], …]
+        Department.getEmployeesInDepartmentInfo(departmentID), // → [[…empleados…], …]
+    ])
+        .then(([[deptRows], [empRows]]) => {
+            if (!deptRows.length) {
+                return res.status(404).render("404");
+            }
+
+            res.render("RHDepartmentList", {
+                ...sessionVars(req),
+                department: deptRows[0], // un objeto { departmentID, title }
+                employees: empRows, // array de empleados
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
+exports.getPaginatedEmployeesRH = (req, res, next) => {
+    const departmentID = req.params.departmentID;
+    console.log(departmentID);
+    const page = parseInt(req.query.page) || 1;
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    Department.getEmployeesInDepartmentInfoPaginated(
+        departmentID,
+        limit,
+        offset
+    )
+        .then(([rows]) => {
+            res.json(rows);
+        })
+        .catch(next);
 };
 
 exports.getEmployeesPaginated = async (request, response, next) => {

@@ -11,6 +11,7 @@
     --color-red-600: oklch(0.577 0.245 27.325);
     --color-red-700: oklch(0.505 0.213 27.518);
     --color-red-800: oklch(0.444 0.177 26.899);
+    --color-orange-600: oklch(0.646 0.222 41.116);
     --color-amber-400: oklch(0.828 0.189 84.429);
     --color-amber-600: oklch(0.666 0.179 58.318);
     --color-amber-900: oklch(0.414 0.112 45.904);
@@ -974,6 +975,9 @@
   .text-neutral-700 {
     color: var(--color-neutral-700);
   }
+  .text-orange-600 {
+    color: var(--color-orange-600);
+  }
   .text-purple-500 {
     color: var(--color-purple-500);
   }
@@ -991,6 +995,9 @@
   }
   .text-yellow-500 {
     color: var(--color-yellow-500);
+  }
+  .text-yellow-600 {
+    color: var(--color-yellow-600);
   }
   .uppercase {
     text-transform: uppercase;
