@@ -11,7 +11,10 @@ module.exports = class Holiday {
 
         const checkDateQuery = `SELECT usedDate, usedTemplateHolidayIDFK FROM usedHoliday WHERE usedDate = ? AND usedTemplateHolidayIDFK = ?`;
         return db
-            .execute(checkDateQuery, [this.usedDate, this.usedTemplateHolidayIDFK])
+            .execute(checkDateQuery, [
+                this.usedDate,
+                this.usedTemplateHolidayIDFK,
+            ])
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(
@@ -38,15 +41,25 @@ module.exports = class Holiday {
 
     static fetchUsedHoliday() {
         return db.execute(
-            `SELECT usedDate, title FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID`
+            `SELECT usedDate, title, usedHolidayID FROM usedHoliday, templateHoliday WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID`
+        );
+    }
+
+    static fetchOneUsedHoliday(usedHolidayID) {
+        return db.execute(
+            `SELECT usedDate, title, usedHolidayID 
+            FROM usedHoliday, templateHoliday 
+            WHERE usedHoliday.usedTemplateHolidayIDFK = templateHoliday.templateHolidayID
+            AND usedHolidayID = ?`,
+            [usedHolidayID]
         );
     }
 
     /**
      * Regresa los días ferioados 2 fechas.
-     * 
+     *
      * @param string startDate  La fecha inicial
-     * @param string endDate    La fecha final 
+     * @param string endDate    La fecha final
      * @returns Los días feriados esas fechas
      */
     static fetchByDateType(startDate, endDate) {
@@ -64,14 +77,35 @@ module.exports = class Holiday {
     static getHolidayPaginated(limit, offset) {
         return db.execute(
             `SELECT 
-    t.title AS nombre, 
-    u.usedDate AS fecha 
-    FROM templateHoliday t, usedHoliday u
-    WHERE u.usedTemplateHolidayIDFK = t.templateHolidayID
-    ORDER BY u.usedDate DESC
-    LIMIT ? OFFSET ?;
-`,
+                t.title AS nombre, 
+                u.usedDate AS fecha,
+                u.usedHolidayID
+            FROM templateHoliday t, usedHoliday u
+            WHERE u.usedTemplateHolidayIDFK = t.templateHolidayID
+            ORDER BY u.usedDate DESC
+            LIMIT ? OFFSET ?;`,
             [limit, offset]
         );
+    }
+
+    static updateDate(usedHolidayID, newDate) {
+        const checkDateQuery = `SELECT usedDate, usedTemplateHolidayIDFK FROM usedHoliday WHERE usedDate = ? AND usedHolidayID != ?`;
+        return db
+            .execute(checkDateQuery, [newDate, usedHolidayID])
+            .then(([rows]) => {
+                if (rows.length > 0) {
+                    throw new Error(
+                        "La fecha que deseas asignar ya está ocupada por otro feriado."
+                    );
+                }
+
+                // Si no está ocupada, actualizamos la fecha
+                const query = `UPDATE usedHoliday SET usedDate = ? WHERE usedHolidayID = ?`;
+                return db.execute(query, [newDate, usedHolidayID]);
+            })
+            .catch((error) => {
+                console.error("Error al actualizar el feriado:", error.message);
+                throw error;
+            });
     }
 };

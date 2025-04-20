@@ -1,11 +1,11 @@
 <div class="flex-1 p-6">
     <aside class="w-64"></aside>
     <div class="p-6">
-        <!-- Historial de Vacaciones (Aprobadas) -->
+        <!-- Historial de vacaciones tomadas anteriormente -->
         <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
             <div class="p-6 flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">
-                    History of vacations
+                    History of taken vacations:
                 </h2>
                 <div class="flex space-x-4">
                     <a href="/vacation/add" class="btnPrimary">
@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% approvedVacations.forEach(vacation => { %>
+                            <% usedVacations.forEach(vacation => { %>
                             <tr class="border-b">
                                 <td class="px-4 py-2"><%= vacation.reason %></td>
                                 <td class="px-4 py-2">
@@ -68,11 +68,11 @@
             </div>
         </div>
 
-        <!-- Vacaciones Pendientes por Aprobar -->
+        <!-- Solicitudes aprovadas que aún no suceden -->
         <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
             <div class="p-6">
                 <h2 class="text-2xl font-semibold mb-4">
-                    Vacation awaiting approval...
+                    Accepted vacation requests in current period:
                 </h2>
             </div>
             <div class="p-6">
@@ -89,7 +89,137 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% pendingVacations.forEach(vacation => { %>
+                            <% approvedRequests.forEach(vacation => { %>
+                            <tr class="border-b">
+                                <!-- Se muestra el motivo sin enlace -->
+                                <td class="px-4 py-2"><%= vacation.reason %></td>
+                                <td class="px-4 py-2">
+                                    <%= new Date(vacation.startDate).toLocaleDateString('es-MX') %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= new Date(vacation.endDate).toLocaleDateString('es-MX') %>
+                                </td>
+                                <!-- Estado de RH -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.hrStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.hrStatus === 0) { %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500">Pending...</span>
+                                    <% } %>
+                                </td>
+                                <!-- Estado del Líder -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.leaderStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.leaderStatus === 0) { %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500">Pending...</span>
+                                    <% } %>
+                                </td>
+                                <!-- Botón para ver detalles de la vacación -->
+                                <td class="px-4 py-2">
+                                    <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">
+                                        Check
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solicitudes pendientes por aprobar en periodo actual -->
+        <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">
+                    Pending vacation requests in current period:
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="content has-text-centered box">
+                    <table class="table w-full text-sm text-left">
+                        <thead class="bg-neutral-700/50">
+                            <tr>
+                                <th class="px-4 py-2">REASON</th>
+                                <th class="px-4 py-2">START DATE</th>
+                                <th class="px-4 py-2">END DATE</th>
+                                <th class="px-4 py-2">HR STATUS</th>
+                                <th class="px-4 py-2">LEADER STATUS</th>
+                                <th class="px-4 py-2">CHECK ONE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% pendingRequests.forEach(vacation => { %>
+                            <tr class="border-b">
+                                <!-- Se muestra el motivo sin enlace -->
+                                <td class="px-4 py-2"><%= vacation.reason %></td>
+                                <td class="px-4 py-2">
+                                    <%= new Date(vacation.startDate).toLocaleDateString('es-MX') %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= new Date(vacation.endDate).toLocaleDateString('es-MX') %>
+                                </td>
+                                <!-- Estado de RH -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.hrStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.hrStatus === 0) { %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500">Pending...</span>
+                                    <% } %>
+                                </td>
+                                <!-- Estado del Líder -->
+                                <td class="px-4 py-2">
+                                    <% if (vacation.leaderStatus === 1) { %>
+                                    <span class="text-green-500">Approved</span>
+                                    <% } else if (vacation.leaderStatus === 0) { %>
+                                    <span class="text-red-500">Denied</span>
+                                    <% } else { %>
+                                    <span class="text-yellow-500">Pending...</span>
+                                    <% } %>
+                                </td>
+                                <!-- Botón para ver detalles de la vacación -->
+                                <td class="px-4 py-2">
+                                    <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">
+                                        Check
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solicitudes rechazadas en el periodo actual -->
+        <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold mb-4">
+                    Denied vacation requests in current period:
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="content has-text-centered box">
+                    <table class="table w-full text-sm text-left">
+                        <thead class="bg-neutral-700/50">
+                            <tr>
+                                <th class="px-4 py-2">REASON</th>
+                                <th class="px-4 py-2">START DATE</th>
+                                <th class="px-4 py-2">END DATE</th>
+                                <th class="px-4 py-2">HR STATUS</th>
+                                <th class="px-4 py-2">LEADER STATUS</th>
+                                <th class="px-4 py-2">CHECK ONE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% deniedRequests.forEach(vacation => { %>
                             <tr class="border-b">
                                 <!-- Se muestra el motivo sin enlace -->
                                 <td class="px-4 py-2"><%= vacation.reason %></td>

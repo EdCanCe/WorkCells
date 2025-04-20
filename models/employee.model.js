@@ -359,4 +359,31 @@ module.exports = class Employee {
                 );
             });
     }
+
+    static getOwnFaults(userID) {
+        return db.execute(
+            `SELECT f.*, fm.mediaLink, u.birthName, u.surname
+            FROM fault f 
+            LEFT JOIN faultMedia fm 
+                ON f.faultID = fm.faultIDFK
+            JOIN user u 
+                ON u.userID = f.faultUserIDFK
+            WHERE f.faultUserIDFK = ?
+            ORDER BY f.doneDate DESC`,
+            [userID]
+        );
+    }
+
+    /**
+     * Obtiene todos los usuarios junto con su rol y departamento
+     * 
+     * @returns Los datos de los usuarios
+     */
+    static fetchAllUserRoles() {
+        return db.execute(`SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
+        FROM user u
+        JOIN role r ON u.userRoleIDFK = r.roleID
+        LEFT JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
+        LEFT JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID`);
+    }
 };
