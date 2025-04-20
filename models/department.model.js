@@ -2,25 +2,32 @@ const db = require("../util/database");
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = class Department {
-    constructor(title, flag, enterpriseIDFK, departmentLeaderIDFK) {
+
+    /**
+     * Crea un objeto de departamento
+     * 
+     * @param string title      El nombre del nuevo departamento
+     * @param string leader     El ID del líder de departamento
+     * @param string enterprise     El ID de la empresa a la que pertenece el departamento
+     * @param string collaborators      Los ID's de los colaboradores que pertenecen al departamento
+     */
+    constructor(title, leader, enterprise, collaborators) {
+        this.id = uuidv4();
         this.title = title;
-        this.flag = flag;
-        this.enterpriseIDFK = enterpriseIDFK;
-        this.departmentLeaderIDFK = departmentLeaderIDFK;
+        this.leader = leader;
+        this.enterprise = enterprise;
+        this.collaborators = collaborators;
     }
 
+    /**
+     * Guarda el departamento en la base de datos.
+     * @returns El ID del nuevo departamento.
+     */
     save() {
-        const departmentID = uuidv4();
-        return db.execute(
-            `INSERT INTO department(departmentID, title, flag, enterpriseIDFK, departmentLeaderIDFK) VALUES (?,?,?,?,?)`,
-            [
-                departmentID,
-                this.title,
-                this.flag,
-                this.enterpriseIDFK,
-                this.departmentLeaderIDFK,
-            ]
-        );
+        return db.execute('CALL CreateDepartment(?, ?, ?, ?, ?)', [this.id, this.title, this.leader, this.enterprise, this.collaborators])
+            .then(() => {
+                return this.id;
+            });
     }
 
     static getLeaderDepartment(userID) {
