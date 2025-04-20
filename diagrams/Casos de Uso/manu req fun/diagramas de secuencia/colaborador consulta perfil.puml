@@ -1,42 +1,98 @@
 @startuml
-actor Colaborador
-boundary myprofile.ejs
-boundary user.routes
-control user.controller
-entity user.model
+actor Navegador
+boundary employeeMe.ejs
+boundary employee.routes
+control employee.controller
+entity employee.model
 database mysql
+boundary geolocationApi.js
+boundary GeoapifyAPI
+boundary NominatimAPI
+boundary LeafletMapService
 
 autonumber
-' Inicio del flujo
-activate Colaborador
-Colaborador -> user.routes : GET /myprofile
-deactivate Colaborador
-activate user.routes
 
-user.routes -> user.controller : getProfile(req, res)
-deactivate user.routes
-activate user.controller
+Navegador -> employee.routes : GET /me
+activate employee.routes
 
-user.controller ->> user.model : fetchProfile(id)
-activate user.model
+employee.routes -> employee.controller : getMe(req, res, next)
+deactivate employee.routes
 
-user.model ->> mysql : SELECT * FROM users WHERE userId = ?
+activate employee.controller
+employee.controller ->> employee.model : fetchAllDataUser(userID)
+activate employee.model
+
+employee.model ->> mysql : SELECT * FROM user u, country c WHERE u.userID = ? AND u.countryUserIDFK = c.countryID
 activate mysql
-mysql -->> user.model : Datos del perfil
+mysql -->> employee.model : [rows]
 deactivate mysql
 
-user.model -->> user.controller : Datos
-deactivate user.model
+alt Datos de usuario encontrados
+  employee.model -->> employee.controller : rows
+  deactivate employee.model
 
-user.controller -> myprofile.ejs : render(myprofile)
-deactivate user.controller
-activate myprofile.ejs
-myprofile.ejs -> Colaborador : HTML
-deactivate myprofile.ejs
-activate Colaborador
-deactivate Colaborador
+  employee.controller -> employeeMe.ejs : render("employeeMe", { userData, API, sessionVars })
+  deactivate employee.controller
 
+  activate employeeMe.ejs
+
+  ' Llama a la función cliente geolocationApi.js
+  employeeMe.ejs -> geolocationApi.js : AdressLoader(apiKey, adressHtml, mapContainerHtml, street, houseNum, colony, zipCode, country)
+  activate geolocationApi.js
+
+  ' Paso 1: Obtener dirección con Geoapify
+  geolocationApi.js -> GeoapifyAPI : getAdress(street, houseNum, colony, zipCode, country)
+  activate GeoapifyAPI
+  GeoapifyAPI -->> geolocationApi.js : {city, state, lat, lon, display}
+  deactivate GeoapifyAPI
+
+  alt Geoapify OK
+    ' Paso 2: Obtener coordenadas con Nominatim
+    geolocationApi.js -> NominatimAPI : getCoords(street, houseNum, colony, zipCode, city, state, country)
+    activate NominatimAPI
+    NominatimAPI -->> geolocationApi.js : {lat, lon}
+    deactivate NominatimAPI
+
+    alt Nominatim OK
+      ' Paso 3: Mostrar mapa con Leaflet
+      geolocationApi.js -> LeafletMapService : showMap(lat, lon, display)
+      activate LeafletMapService
+      LeafletMapService -->> geolocationApi.js : mapa renderizado
+      deactivate LeafletMapService
+
+      geolocationApi.js -> employeeMe.ejs : callback with mapa y dirección
+      employeeMe.ejs -> Navegador : HTML con perfil, dirección y mapa
+
+    else Nominatim falla (fallback)
+      geolocationApi.js -> LeafletMapService : showMap(fallbackLat, fallbackLon, display)
+      activate LeafletMapService
+      LeafletMapService -->> geolocationApi.js : mapa renderizado o error
+      deactivate LeafletMapService
+
+      alt Fallback OK
+        geolocationApi.js -> employeeMe.ejs : callback con mapa (coords fallback)
+        employeeMe.ejs -> Navegador : HTML con perfil, dirección y mapa (coords fallback)
+      else Fallback falla
+        geolocationApi.js -> employeeMe.ejs : callback con error
+        employeeMe.ejs -> Navegador : HTML con perfil y mensaje "Lugar no encontrado"
+      end
+    end
+
+  else Geoapify falla
+    geolocationApi.js -> employeeMe.ejs : callback con error
+    employeeMe.ejs -> Navegador : HTML con perfil y mensaje error.message
+  end
+
+  deactivate geolocationApi.js
+  deactivate employeeMe.ejs
+
+else Error al obtener datos de usuario
+  employee.model -->> employee.controller : error
+  deactivate employee.model
+
+  employee.controller -> employee.routes : session.alert = "can not find user"
+  employee.controller -> employee.routes : redirect("/error")
+  deactivate employee.controller
+end
 
 @enduml
-
-modificalo
