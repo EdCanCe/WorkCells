@@ -14,7 +14,7 @@ database "mysql" as MySQL
 autonumber
 
 activate Navegador
-Navegador -> Routes : GET /department/add
+Navegador -> Routes : GET /department/:departmentID/modify
 deactivate Navegador
 
 activate Routes
@@ -27,9 +27,9 @@ Controller ->> EnterpriseModel : fetchByID(request.params.departmentID)
 activate EnterpriseModel
 EnterpriseModel ->> MySQL : execute(...)
 activate MySQL
-MySQL -->> EnterpriseModel : enterprise
+MySQL -->> EnterpriseModel : department
 deactivate MySQL
-EnterpriseModel -->> Controller : enterprise
+EnterpriseModel -->> Controller : department
 deactivate EnterpriseModel
 
 Controller ->> EmployeeModel : fetchAllUsersByDepartment(request.params.departmentID)
@@ -67,7 +67,7 @@ Ejs -> Navegador : HTML
 deactivate Ejs
 
 activate Navegador
-Navegador -> Routes : POST /department/add
+Navegador -> Routes : POST /department/:departmentID/modify
 deactivate Navegador
 
 activate Routes
