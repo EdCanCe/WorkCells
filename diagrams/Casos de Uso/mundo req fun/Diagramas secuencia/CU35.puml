@@ -36,7 +36,7 @@ Controller ->> EmployeeModel : fetchAllUserRoles()
 activate EmployeeModel
 EmployeeModel ->> MySQL : execute(...)
 activate MySQL
-MySQL -->> EmployeeModel : enterprises
+MySQL -->> EmployeeModel : employees
 deactivate MySQL
 EmployeeModel -->> Controller : employees
 deactivate EmployeeModel
