@@ -1,147 +1,250 @@
 <div class="flex">
     <aside class="w-64"></aside>
-
     <div class="p-6">
         <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <div class="p-6">
+            <form id="departmentMethod" method="post" action="/department/<%= departmentID %>/modify" class="p-6">
+
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
                 <h2 class="text-2xl font-semibold mb-6">
-                    Enter new data for the department
+                    Fill the data in order to modify an existing department
                 </h2>
 
                 <div class="mb-4">
                     <label class="block text-lg font-medium mb-2"
-                        >Department name:</label
+                        >Department Name:</label
                     >
                     <input
                         type="text"
-                        class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        class="w-full input"
                         placeholder="Human Resources"
+                        name="department"
+                        value="<%= department.department %>"
+                        required
                     />
                 </div>
 
+                <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
                 <div class="mb-4">
                     <label class="block text-lg font-medium mb-2"
                         >Enterprise of origin:</label
                     >
+                    <select
+                        class="w-full input"
+                        id="enterpriseSelect"
+                        required
+                    >
+                        <option value="newOne">New Enterprise</option>
+                        <% enterprises.forEach((enterprise) => { %>
+                            <option value="<%= enterprise.title %>" <%= enterprise.title == department.enterprise ? 'selected' : '' %>><%= enterprise.title %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="mb-4">
                     <input
                         type="text"
-                        class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                        placeholder="Nuclea Solutions"
+                        class="w-full input hidden"
+                        placeholder="Write the enterprise name"
+                        id="enterpriseInput"
+                        name="enterprise"
+                        value="<%= department.enterprise %>"
                     />
                 </div>
 
-                <div class="bg-neutral-800/50 p-6 rounded-lg mb-6">
-                    <h3 class="text-xl font-semibold mb-4">
-                        Add employees / Department Leader
-                    </h3>
-
-                    <div class="mb-4">
-                        <label class="block text-lg font-medium mb-2"
-                            >Name(s) of the employee:</label
-                        >
-                        <input
-                            type="text"
-                            class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                            placeholder="Joel Antonio"
-                        />
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-lg font-medium mb-2"
-                            >Surname(s) of the employee:</label
-                        >
-                        <input
-                            type="text"
-                            class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                            placeholder="Mendez Mendiola"
-                        />
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block text-lg font-medium mb-2"
-                            >Mail of the employee</label
-                        >
-                        <input
-                            type="text"
-                            class="w-full px-4 py-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                            placeholder="ROHJ030618HGTDRSA5"
-                        />
-                    </div>
-                </div>
-
-                <div class="flex justify-center space-x-4">
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Add</a
+                <!-- Selecciona el líder del departamento -->
+                <div class="mb-4">
+                    <label class="block text-lg font-medium mb-2"
+                        >Select the leader:</label
                     >
-                    <button id="btn-delete" class="btnDanger" data-department-id="123">Delete</button>
+                    <select
+                        id="leaderInput"
+                        class="w-full input"
+                        name="leader"
+                        required
+                    >
+                        <% leaders.forEach((employee) => { %>
+                            <option value="<%= employee.userID %>" <%= employee.userID == departmentLeader.userID ? 'selected' : '' %>><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
+                        <% }) %>
+                    </select>
                 </div>
-            </div>
+
+                <!-- Selecciona los colaboradores que serán parte del departamento -->
+                <input id="collaboratorQuantity" name="collaboratorQuantity" type="hidden">
+                <input id="collaboratorArray" name="collaboratorArray" type="hidden">
+
+                <div class="mb-4">
+                    <label class="block text-lg font-medium mb-2"
+                        >Select the collaborators:</label
+                    >
+                    <div class="flex flex-column gap-3">
+                        <select
+                            class="w-full input block"
+                            id="collaboratorsSelect"
+                        >
+                            <option value="none" selected disabled>Select here</option>
+                            <% collaborators.forEach((employee) => { %>
+                                <option value="<%= `${employee.birthName} ${employee.surname}|${employee.userID}` %>"><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
+                            <% }) %>
+                        </select>
+                        <button id="collaboratorAdd" class="btnPrimary !block">+</button>
+                    </div>
+                </div>
+                
+                <div 
+                    id="collaboratorsContainer"
+                >
+                    <h2 class="font-bold">Collaborators:</h2>
+                    <ul id="collaboratorsList" class="list-disc pl-10">
+                        <!-- Añado los colaboradores actuales a la tabla -->
+                        <% departmentCollaborators.forEach((employee) => { %>
+                            <li class='m-2 flex flex-column'>
+                                <span class='height-full'><%= `${employee.birthName} ${employee.surname}` %></span>
+                                <div class='border-b-1 border-neutral-700 flex-1'></div>
+                                <button class='eraseCollaborator btnPrimary !pt-0 !pb-0 !pl-4 !pr-4' value='<%= employee.userID %>'>-</button>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+
+                <button id="sendForm" class="btnPrimary" type="submit">Modify Department</button>
+            </form>
         </div>
     </div>
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-  // Seleccionar el botón delete
-    const deleteBtn = document.getElementById('btn-delete');
+    const enterpriseSelect = document.getElementById('enterpriseSelect');
+    const enterpriseInput = document.getElementById('enterpriseInput');
+    
+    // Verifica si se quiere añadir una nueva empresa y añade un input text
+    enterpriseSelect.addEventListener('change', () => {
+        if(enterpriseSelect.value == "newOne") {
+            // En caso de que sea nueva empresa habilita el input text
+            enterpriseInput.value = "";
+            enterpriseInput.classList.remove('hidden');
+            showStatus('Info', 'Please fill the enterprise name');
+        } else {
+            // En caso de que ya exista, deshabilita el input text
 
-    deleteBtn.addEventListener('click', (event) => {
-        event.preventDefault(); // prevenir el comportamiento por defecto del botón
-
-        // Obtener el departmentID desde el atributo data
-        const departmentID = deleteBtn.getAttribute('data-department-id');
-
-        // Mostrar confirmación con SweetAlert2
-        Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción eliminará el departamento de forma permanente.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-        }).then((result) => {
-        if (result.isConfirmed) {
-            // Enviar la solicitud POST a /department/delete/:departmentID
-            fetch(`/department/delete/${departmentID}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-            // Puedes enviar datos adicionales en el body si fuese necesario
-            // body: JSON.stringify({ departmentID }) 
-            })
-            .then(response => {
-            if (response.ok) {
-                // Muestra un mensaje de éxito o realiza otra acción necesaria
-                Swal.fire(
-                'Eliminado',
-                'El departamento ha sido eliminado.',
-                'success'
-                );
-            } else {
-                // Manejo de errores si la respuesta no es exitosa
-                Swal.fire(
-                'Error',
-                'Hubo un problema al eliminar el departamento.',
-                'error'
-                );
-            }
-            })
-            .catch(error => {
-            // Manejo de errores de la red o la solicitud
-            Swal.fire(
-                'Error',
-                'No se pudo conectar con el servidor.',
-                'error'
-            );
-            });
+            // Le añade el valor actual del select al input
+            enterpriseInput.value = enterpriseSelect.value;
+            enterpriseInput.classList.add('hidden');
         }
+    });
+
+    const collaboratorAdd = document.getElementById('collaboratorAdd');
+    const collaboratorsSelect = document.getElementById('collaboratorsSelect');
+    const collaboratorsContainer = document.getElementById('collaboratorsContainer');
+    const collaboratorsList = document.getElementById('collaboratorsList');
+    const formCollaboratorQuantity = document.getElementById('collaboratorQuantity');
+    const formCollaboratorArray = document.getElementById('collaboratorArray');
+    const collaboratorsArray = [];
+
+    // Añado los colaboradores actuales al arreglo
+    <% departmentCollaborators.forEach((employee) => { %>
+        collaboratorsArray.push('<%= employee.userID %>');
+    <% }) %>
+
+    // Añado los colaboradores actuales al formulario
+    formCollaboratorQuantity.value = collaboratorsArray.length;
+    formCollaboratorArray.value = collaboratorsArray.join('|');
+
+    // Le añade a los botones de eliminar un eventListener
+    const eraseButtons = document.querySelectorAll('.eraseCollaborator');
+    eraseButtons.forEach((eraseButton) => {
+        eraseButton.addEventListener('click', (event) => {
+            // Evito el redireccionamiento
+            event.preventDefault();
+
+            // Elimino el usuario del arreglo
+            collaboratorsArray.splice((collaboratorsArray.indexOf(event.target.value)), 1);
+
+            // Cambio los elementos del form
+            formCollaboratorQuantity.value = collaboratorsArray.length;
+            formCollaboratorArray.value = collaboratorsArray.join('|');
+
+            // Elimino el colaborador de la lista
+            event.target.parentElement.remove();
         });
     });
+
+    // Añade los colaboradores a la lista de colaboradores
+    collaboratorAdd.addEventListener('click', (event) => {
+        // Permite que no te redireccione
+        event.preventDefault();
+
+        // Obtiene el valor del colaborador
+        const collaborator = collaboratorsSelect.value;
+
+        if (collaborator === "none") {
+            // En caso de ser nulo, no ha seleccionado usuario
+            showStatus('Alert', 'Please select a user');
+            return;
+        }
+
+        // Obtiene el ID y nombre del colaborador
+        const collaboratorData = collaborator.split('|');
+        const collaboratorName = collaboratorData[0];
+        const collaboratorID = collaboratorData[1];
+
+        if (collaboratorsArray.includes(collaboratorID)) {
+            // Si existe, significa que no debería hacer nada
+            showStatus('Warning', 'This user is already on the department');
+            return;
+        }
+
+        // A partir de éste punto significa que se tiene que añadir el empleado
+        if (collaboratorsArray.length == 0) {
+            // Si tiene longitud de 0, hacer visible la lista
+            collaboratorsContainer.classList.remove('hidden');
+        }
+        collaboratorsArray.push(collaboratorID);
+
+        // Paso los valores a sus input
+        formCollaboratorQuantity.value = collaboratorsArray.length;
+        formCollaboratorArray.value = collaboratorsArray.join('|');
+
+        // Muestro el nuevo colaborador en formato de lista
+        collaboratorsList.innerHTML += `<li class='m-2 flex flex-column'><span class='height-full'>${collaboratorName}</span><div class='border-b-1 border-neutral-700 flex-1'></div><button class='eraseCollaborator btnPrimary !pt-0 !pb-0 !pl-4 !pr-4' value='${collaboratorID}'>-</button></li>`; 
+
+        // Le añade a los botones de eliminar un eventListener
+        const eraseButtons = document.querySelectorAll('.eraseCollaborator');
+        eraseButtons.forEach((eraseButton) => {
+            eraseButton.addEventListener('click', (event) => {
+                // Evito el redireccionamiento
+                event.preventDefault();
+
+                // Elimino el usuario del arreglo
+                collaboratorsArray.splice((collaboratorsArray.indexOf(event.target.value)), 1);
+
+                // Cambio los elementos del form
+                formCollaboratorQuantity.value = collaboratorsArray.length;
+                formCollaboratorArray.value = collaboratorsArray.join('|');
+
+                // Elimino el colaborador de la lista
+                event.target.parentElement.remove();
+            });
+        });
+    });
+
+    // Hace las verificaciones de los datos antes de enviarlos
+    const leaderInput = document.getElementById('leaderInput');
+    const submitButton = document.getElementById('sendForm');
+    submitButton.addEventListener('click', (event) => {
+        // En caso de que no haya seleccionado la empresa
+        if (enterpriseInput.value === "" ) {
+            showStatus('Alert', 'You need to select an enterprise');
+            event.preventDefault();
+            return;
+        }
+
+        // En caso de que no haya seleccionado un líder
+        if (leaderInput.value === "none" ) {
+            showStatus('Alert', 'You need to select a department leader');
+            event.preventDefault();
+            return;
+        }
+
+    })
 </script>

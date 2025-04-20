@@ -386,4 +386,20 @@ module.exports = class Employee {
         LEFT JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
         LEFT JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID`);
     }
+
+    /**
+     * Obtiene los datos de los empleados en un departamento
+     * 
+     * @param string departmentID      El ID del departamento.
+     * @returns Los datos de los empleados.
+     */
+    static fetchAllUsersByDepartment(departmentID) {
+        return db.execute(`SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
+        FROM user u
+        JOIN role r ON u.userRoleIDFK = r.roleID
+        JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
+        JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID
+        AND d.departmentID = ?`,
+        [departmentID]);
+    }
 };

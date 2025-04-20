@@ -68,7 +68,7 @@ CREATE TABLE user (
     countryUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
     prioritaryDepartmentIDFK VARCHAR(40),
-    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID)
+    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID) ON DELETE SET NULL;
 );
 
 ALTER TABLE department 
