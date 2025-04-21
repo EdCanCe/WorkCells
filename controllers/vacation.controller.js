@@ -788,27 +788,48 @@ exports.PostDeleteVacation = (request, response, next) => {
     
 };
 
-
-
 exports.getRoot = (request, response, next) => {
+    // El ID del usuario actual
     const userID = request.session.userID;
+
+    // Obtiene todas las vacaciones relacionadas a ese usuario
     Vacation.fetchAllVacation(userID)
-        .then(([rows]) => {
-            // Vacaciones aprobadas: ambas aprobadas (valor 1)
-            const approvedVacations = rows.filter(
-                (vacation) =>
-                    vacation.leaderStatus === 1 && vacation.hrStatus === 1
-            );
-            // Vacaciones pendientes: si alguno está pendiente (valor 2)
-            const pendingVacations = rows.filter(
-                (vacation) =>
-                    vacation.leaderStatus === 2 || vacation.hrStatus === 2
-            );
-            response.render('ownVacation', {
-                ...sessionVars(request),
-                approvedVacations,
-                pendingVacations,
-            });
+        .then(([vacations]) => {
+            // Obtiene las solicitudes del usuario en el periodo actual
+            Vacation.fetchRequestsInPeriod(userID)
+                .then(([requests]) => {
+                    // Obtiene la fecha actual para saber si la solicitud ya pasó
+                    const currentDate = new Date();
+
+                    // Vacaciones anteriormente tomadas (todos los periodos)
+                    const usedVacations = vacations.filter((vacation) =>
+                        vacation.leaderStatus === 1 && vacation.hrStatus === 1 && (new Date(vacation.startDate) <= currentDate)
+                    );
+
+                    // Solicitudes aprobadas
+                    const approvedRequests = requests.filter((vacation) =>
+                        vacation.leaderStatus === 1 && vacation.hrStatus === 1 && (new Date(vacation.startDate) > currentDate)
+                    );
+
+                    // Solicitudes pendientes por responder
+                    const pendingRequests = requests.filter((vacation) =>
+                        !(vacation.leaderStatus === 1 && vacation.hrStatus === 1) && !(vacation.leaderStatus === 0 || vacation.hrStatus === 0) && vacation.vacationID != null
+                    );
+
+                    // Solicitudes denegadas por alguien
+                    const deniedRequests = requests.filter((vacation) =>
+                        vacation.leaderStatus === 0 || vacation.hrStatus === 0
+                    );
+                    
+                    response.render('ownVacation', {
+                        ...sessionVars(request),
+                        usedVacations,
+                        approvedRequests,
+                        pendingRequests,
+                        deniedRequests,
+                    });
+
+                });
         })
         .catch((error) => {
             console.error(error);

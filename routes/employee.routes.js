@@ -5,12 +5,22 @@ const employeeControllers = require("../controllers/employee.controller");
 const isAuth = require("../util/is-auth");
 const employeePrivilege = require("../util/employeePrivilege/employeePrivilege");
 
-
 router.get("/me", isAuth, employeeControllers.getMe);
+router.get(
+    "/me/faults",
+    isAuth,
+    employeePrivilege,
+    employeeControllers.getOwnFaults
+);
+router.get("/:userID/faults", isAuth, employeeControllers.getEmployeeFaults);
 router.get("/add", isAuth, employeePrivilege, employeeControllers.getAdd);
 router.post("/", isAuth, employeePrivilege, employeeControllers.postAdd);
-router.get("/me/changePassword", isAuth,  employeeControllers.getChangePassword);
-router.post("/me/changePassword", isAuth, employeeControllers.postChangePassword);
+router.get("/me/changePassword", isAuth, employeeControllers.getChangePassword);
+router.post(
+    "/me/changePassword",
+    isAuth,
+    employeeControllers.postChangePassword
+);
 router.get(
     "/:id/modify",
     isAuth,

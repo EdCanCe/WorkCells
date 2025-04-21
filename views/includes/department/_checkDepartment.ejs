@@ -1,6 +1,10 @@
 <div class="container mx-auto p-4">
     <h2 class="text-3xl font-semibold mb-2">All Departments</h2>
 
+    <% if (role == 'Human Resources') { %>
+        <a class="btnPrimary" href="/department/add">Add department</a>
+    <% } %>
+
     <div
         class="bg-neutral-700/25 flex flex-col items-center justify-start py-5"
         id="departmentContainer"
@@ -41,10 +45,10 @@
                     <p><span class="font-medium">Enterprise:</span> ${dept.enterprise}</p>
                     </div>
                     <div class="w-1/5 flex flex-col items-end justify-center gap-2 text-center">`;
-                container += `<a href=""
+                container += `<a href="/department/${dept.departmentID}"
                     class="block bg-blue-500 px-4 py-2 rounded-xl w-full hover:bg-blue-600 transition">
                     Check</a>
-                    <a href=""
+                    <a href="/department/${dept.departmentID}/modify"
                     class="bg-yellow-500 px-4 py-2 rounded-xl w-full hover:bg-yellow-600 transition">
                     Modify</a>
                     </div>

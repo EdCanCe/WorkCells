@@ -223,6 +223,13 @@
            dark:border-(--darkBtnPrimary);
 }
 
+/* Input */
+
+.input {
+    @apply px-4 py-2 border rounded-md
+           dark:bg-neutral-700/50 dark:border-neutral-600/50;
+}
+
 /* Scrollbar */
 
 ::-webkit-scrollbar {

@@ -280,6 +280,26 @@ exports.getMe = (request, response, next) => {
         });
 };
 
+exports.getEmployee = (request, response, next) => {
+    const userid = request.params.userID;
+    //console.log("ID =", userid);
+
+    Employee.fetchAllDataUser(userid)
+        .then(([rows]) => {
+            console.log(rows);
+            response.render("employeeProfile", {
+                ...sessionVars(request),
+                userData: rows[0],
+                API: process.env.GEOLOCATION_API_KEY,
+            });
+        })
+        .catch((error) => {
+            console.error("this is your error: ", error);
+            request.session.alert = "can not find user";
+            response.redirect("/error");
+        });
+};
+
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
         ...sessionVars(request),
@@ -449,6 +469,35 @@ exports.postChangePassword = (request, response, next) => {
             return response.redirect("/employee/me/changePassword");
         }
     });
+};
+
+exports.getOwnFaults = (request, response, next) => {
+    Employee.getOwnFaults(request.session.userID)
+        .then(([faults, fieldData]) => {
+            console.log(faults);
+            response.render("employeeFaults", {
+                ...sessionVars(request),
+                faults: faults,
+            });
+        })
+        .catch((err) => {
+            console.error("Error obtaining the faults:", err);
+        });
+};
+
+exports.getEmployeeFaults = (request, response, next) => {
+    const userID = request.params.userID;
+    Employee.getOwnFaults(userID)
+        .then(([faults, fieldData]) => {
+            console.log(faults);
+            response.render("employeeFaults", {
+                ...sessionVars(request),
+                faults: faults,
+            });
+        })
+        .catch((err) => {
+            console.error("Error obtaining the faults:", err);
+        });
 };
 
 exports.getMyProfile = (request, response, next) => {

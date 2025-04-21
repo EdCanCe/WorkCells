@@ -204,7 +204,7 @@ AND d.departmentLeaderIDFK = ?
 
     static fetchAllVacation(userID) {
         return db.execute(
-            `SELECT v.vacationID,v.reason,v.startDate, v.endDate,
+            `SELECT v.vacationID, v.reason, v.startDate, v.endDate,
             v.leaderStatus, v.hrStatus 
             FROM vacation v
             WHERE vacationUserIDFK = ?`,
@@ -256,44 +256,96 @@ AND d.departmentLeaderIDFK = ?
      */
     static fetchVacationsInPeriod(userID) {
         return db.execute(`
-SELECT 
-    v.startDate, 
-    v.endDate, 
-    v.leaderStatus, 
-    d.startDate AS mapStart, 
-    d.endDate AS mapEnd
-FROM 
-    (
         SELECT 
-            STR_TO_DATE(CONCAT_WS('-', 
-                IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) ,
-                d.startMonth, 
-                d.startDay
-            ), '%Y-%m-%d') AS startDate,
-            STR_TO_DATE(CONCAT_WS('-', 
-                IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) ,
-                d.startMonth, 
-                d.startDay
-            ), '%Y-%m-%d') AS endDate
+            v.startDate, 
+            v.endDate, 
+            v.leaderStatus, 
+            d.startDate AS mapStart, 
+            d.endDate AS mapEnd
         FROM 
             (
                 SELECT 
-                    MONTH(w.startDate) AS startMonth, 
-                    DAY(w.startDate) AS startDay,
-                    STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS startDate,
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS endDate
                 FROM 
-                    user u
-                    JOIN workStatus w ON u.userID = w.userStatusIDFK
-                WHERE 
-                    u.userID = ?
-                GROUP BY u.userID
-                LIMIT 1
+                    (
+                        SELECT 
+                            MONTH(w.startDate) AS startMonth, 
+                            DAY(w.startDate) AS startDay,
+                            STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+                        FROM 
+                            user u
+                            JOIN workStatus w ON u.userID = w.userStatusIDFK
+                        WHERE 
+                            u.userID = ?
+                        GROUP BY u.userID
+                        LIMIT 1
+                    ) AS d
             ) AS d
-    ) AS d
-LEFT JOIN vacation v 
-    ON v.startDate BETWEEN d.startDate AND d.endDate 
-    AND v.vacationUserIDFK = ?
-    AND v.hrStatus * v.leaderStatus != 0;
+        LEFT JOIN vacation v 
+            ON v.startDate BETWEEN d.startDate AND d.endDate 
+            AND v.vacationUserIDFK = ?
+            AND v.hrStatus * v.leaderStatus != 0;
+`,
+        [userID, userID]);
+    }
+
+    /**
+     * Regresa las solicitudes que el usuario ha solicitado en el periodo actual
+     * 
+     * @param string userID El usuario del cuál se verificarán sus solicitudes 
+     * @returns Las solicitudes del usuario en el periodo actual
+     */
+    static fetchRequestsInPeriod(userID) {
+        return db.execute(`
+        SELECT 
+            v.vacationID,
+            v.startDate, 
+            v.endDate, 
+            v.reason,
+            v.leaderStatus, 
+            v.hrStatus,
+            d.startDate AS mapStart, 
+            d.endDate AS mapEnd
+        FROM 
+            (
+                SELECT 
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS startDate,
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS endDate
+                FROM 
+                    (
+                        SELECT 
+                            MONTH(w.startDate) AS startMonth, 
+                            DAY(w.startDate) AS startDay,
+                            STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+                        FROM 
+                            user u
+                            JOIN workStatus w ON u.userID = w.userStatusIDFK
+                        WHERE 
+                            u.userID = ?
+                        GROUP BY u.userID
+                        LIMIT 1
+                    ) AS d
+            ) AS d
+        LEFT JOIN vacation v 
+            ON v.startDate BETWEEN d.startDate AND d.endDate 
+            AND v.vacationUserIDFK = ?;
 `,
         [userID, userID]);
     }

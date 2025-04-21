@@ -2,12 +2,12 @@
     <aside class="w-64"></aside>
     <div class="p-6">
         <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <form id="departmentMethod" method="post" action="/department/<%= departmentID %>/modify" class="p-6">
+            <form id="departmentMethod" method="post" action="/department/add" class="p-6">
 
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
                 <h2 class="text-2xl font-semibold mb-6">
-                    Fill the data in order to modify an existing department
+                    Fill the data in order to create a new department
                 </h2>
 
                 <div class="mb-4">
@@ -19,7 +19,6 @@
                         class="w-full input"
                         placeholder="Human Resources"
                         name="department"
-                        value="<%= department.department %>"
                         required
                     />
                 </div>
@@ -34,9 +33,10 @@
                         id="enterpriseSelect"
                         required
                     >
+                        <option value="none" selected disabled>Select here</option>
                         <option value="newOne">New Enterprise</option>
                         <% enterprises.forEach((enterprise) => { %>
-                            <option value="<%= enterprise.title %>" <%= enterprise.title == department.enterprise ? 'selected' : '' %>><%= enterprise.title %></option>
+                            <option value="<%= enterprise.title %>"><%= enterprise.title %></option>
                         <% }) %>
                     </select>
                 </div>
@@ -48,7 +48,7 @@
                         placeholder="Write the enterprise name"
                         id="enterpriseInput"
                         name="enterprise"
-                        value="<%= department.enterprise %>"
+                        value=""
                     />
                 </div>
 
@@ -63,8 +63,9 @@
                         name="leader"
                         required
                     >
+                        <option value="none" selected disabled>Select here</option>
                         <% leaders.forEach((employee) => { %>
-                            <option value="<%= employee.userID %>" <%= employee.userID == departmentLeader.userID ? 'selected' : '' %>><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
+                            <option value="<%= employee.userID %>"><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
                         <% }) %>
                     </select>
                 </div>
@@ -93,22 +94,13 @@
                 
                 <div 
                     id="collaboratorsContainer"
+                    class="hidden"
                 >
                     <h2 class="font-bold">Collaborators:</h2>
-                    <ul id="collaboratorsList" class="list-disc pl-10">
-                        <!-- Añado los colaboradores actuales a la tabla -->
-                        <% departmentCollaborators.forEach((employee) => { %>
-                            <li class='m-2 flex flex-column'>
-                                <span class='height-full'><%= `${employee.birthName} ${employee.surname}` %></span>
-                                <div class='border-b-1 border-neutral-700 flex-1'></div>
-                                <button class='eraseCollaborator btnPrimary !pt-0 !pb-0 !pl-4 !pr-4' value='<%= employee.userID %>'>-</button>
-                            </li>
-                        <% }) %>
-                    </ul>
+                    <ul id="collaboratorsList" class="list-disc pl-10"></ul>
                 </div>
 
-                <button id="sendForm" class="btnPrimary" type="submit">Modify Department</button>
-                <a class="btnDanger" href="/department/<%= departmentID %>/delete/" type="submit">Erase Department</a>
+                <button id="sendForm" class="btnPrimary" type="submit">Register Department</button>
             </form>
         </div>
     </div>
@@ -141,34 +133,6 @@
     const formCollaboratorQuantity = document.getElementById('collaboratorQuantity');
     const formCollaboratorArray = document.getElementById('collaboratorArray');
     const collaboratorsArray = [];
-
-    // Añado los colaboradores actuales al arreglo
-    <% departmentCollaborators.forEach((employee) => { %>
-        collaboratorsArray.push('<%= employee.userID %>');
-    <% }) %>
-
-    // Añado los colaboradores actuales al formulario
-    formCollaboratorQuantity.value = collaboratorsArray.length;
-    formCollaboratorArray.value = collaboratorsArray.join('|');
-
-    // Le añade a los botones de eliminar un eventListener
-    const eraseButtons = document.querySelectorAll('.eraseCollaborator');
-    eraseButtons.forEach((eraseButton) => {
-        eraseButton.addEventListener('click', (event) => {
-            // Evito el redireccionamiento
-            event.preventDefault();
-
-            // Elimino el usuario del arreglo
-            collaboratorsArray.splice((collaboratorsArray.indexOf(event.target.value)), 1);
-
-            // Cambio los elementos del form
-            formCollaboratorQuantity.value = collaboratorsArray.length;
-            formCollaboratorArray.value = collaboratorsArray.join('|');
-
-            // Elimino el colaborador de la lista
-            event.target.parentElement.remove();
-        });
-    });
 
     // Añade los colaboradores a la lista de colaboradores
     collaboratorAdd.addEventListener('click', (event) => {
