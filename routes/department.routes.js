@@ -7,7 +7,8 @@ const departmentPrivilege = require("../util/departmentPrivilege/departmentPrivi
 const isAuth = require("../util/is-auth");
 
 router.get("/check", isAuth, departmentController.getCheckDepartment);
-router.get("/check/modify", isAuth, departmentController.getModifyDepartment);
+router.get("/:departmentID/modify", isAuth, departmentController.getModifyDepartment);
+router.post("/:departmentID/modify", isAuth, departmentController.postModifyDepartment);
 router.post(
     "/delete/:departmentID",
     isAuth,

@@ -167,12 +167,12 @@ exports.postAddDepartment = (request, response, next) => {
     // Crea el departamento
     const createDepartment = (enterpriseID) => {
         // Llena los datos del departamento
-        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray);
+        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray, null);
 
         // Guarda el departamento en la base de datos
         department.save()
-            .then((departamentID) => {
-                response.redirect(`/department/${departamentID}`);
+            .then((departmentID) => {
+                response.redirect(`/department/${departmentID}`);
             });
     };
 
@@ -202,9 +202,81 @@ exports.postDeleteDeparment = (request, response, next) => {
     console.log(request.session);
 };
 
-exports.getModifyDepartment = (request, response, next) => {
-    response.render("modifyDepartment", {
-        ...sessionVars(request),
-        // TODO: Hacer la fokin conexión con la base de datos para obtener el fokin id del departamento
-    });
+exports.getModifyDepartment = async (request, response, next) => {
+    try{
+        // Obtiene los datos del departamento
+        const [department] = await Department.fetchByID(request.params.departmentID);
+
+        // Obtiene los trabajadores del departamento
+        const [departmentEmployees] = await Employee.fetchAllUsersByDepartment(request.params.departmentID);
+
+        // Filtra los empleados por colaboradores
+        const departmentCollaborators = departmentEmployees.filter((employee) =>
+            employee.role === "Colaborator"
+        );
+
+        // Filtra los empleados por líderes de departamento
+        const departmentLeader = departmentEmployees.filter((employee) =>
+            employee.role === "Department Leader"
+        );
+
+        // Obtiene todas las empresas
+        const [enterprises] = await Enterprise.fetchAll();
+
+        // Obtiene todos los datos de los empleados
+        const [employees] = await Employee.fetchAllUserRoles();
+
+        // Filtra los empleados por colaboradores
+        const collaborators = employees.filter((employee) =>
+            employee.role === "Colaborator"
+        );
+
+        // Filtra los empleados por líderes de departamento
+        const leaders = employees.filter((employee) =>
+            employee.role === "Department Leader"
+        );
+
+        response.render("modifyDepartment", {
+            ...sessionVars(request),
+            departmentCollaborators,
+            enterprises,
+            collaborators,
+            leaders,
+            departmentID: request.params.departmentID,
+            department: department[0],
+            departmentLeader: departmentLeader[0],
+        });
+    }
+    catch(error) {
+        console.log(error);
+    }
+};
+
+exports.postModifyDepartment = (request, response, next) => {
+    // Crea el departamento
+    const updateDepartment = (enterpriseID) => {
+        // Llena los datos del departamento
+        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray, request.params.departmentID);
+
+        // Guarda el departamento en la base de datos
+        department.update()
+            .then((departmentID) => {
+                response.redirect(`/department/${departmentID}`);
+            });
+    };
+
+    // Obtiene el ID de la empresa generada
+    Enterprise.fetchByName(request.body.enterprise)
+        .then(([enterprise]) => {
+            // En caso de que no exista, se crea la empresa
+            if (enterprise.length == 0) {
+                const enterprise = new Enterprise(request.body.enterprise);
+                enterprise.save()
+                    .then((newEnterprise) => {
+                        updateDepartment(newEnterprise);
+                    });
+            } else {
+                updateDepartment(enterprise[0].enterpriseID);
+            }
+        })
 };
