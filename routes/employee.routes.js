@@ -9,7 +9,6 @@ router.get("/me", isAuth, employeeControllers.getMe);
 router.get(
     "/me/faults",
     isAuth,
-    employeePrivilege,
     employeeControllers.getOwnFaults
 );
 router.get("/:userID/faults", isAuth, employeeControllers.getEmployeeFaults);
