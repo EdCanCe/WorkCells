@@ -7,13 +7,6 @@ document.head.appendChild(leafletCSS);
 // Agregar el script de Leaflet
 const leafletScript = document.createElement('script');
 leafletScript.src = 'https://unpkg.com/leaflet/dist/leaflet.js';
-leafletScript.onload = () => {
-    // Ya se cargó Leaflet, puedes empezar a usarlo aquí
-    const map = L.map('map').setView([51.505, -0.09], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-};
 document.body.appendChild(leafletScript);
 
 /**
@@ -79,6 +72,8 @@ const getCoords = (street, houseNum, colony, zipCode, city, state, country) => {
     }).then((result) => {
         return result.json();
     }).then((data) => {
+        console.log(data);
+
         // Verifica que si haya datos
         if (data[0].lat === undefined) {
             throw new Error('It was not possible to retrieve the map data.');
@@ -112,7 +107,7 @@ const showMap = (mapContainer, lat, lon, fullAdress) => {
     let map;
 
     // Agrega un contenedor para renderizar el mapa
-    mapContainer.innerHTML = '<div id="mapRender" class="w-full min-h-[200px] rounded-lg"></div>'
+    mapContainer.innerHTML = '<div id="mapRender" class="w-full h-full rounded-lg"></div>'
 
     // Crea el mapa
     map = L.map('mapRender').setView([lat, lon], 16);
@@ -142,14 +137,14 @@ const showMap = (mapContainer, lat, lon, fullAdress) => {
 */
 const addressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, colony, zipCode, country) => {
     // Muestra mensaje para que el usuario sepa que se está realizando la petición
-    adressHtml.innerHTML = "Waiting for result...";
+    adressHtml.innerHTML = "Waiting for adress...";
     getAdress(apiKey, street, houseNum, colony, zipCode, country)
         .then((fullAdress) => {
             // Renderiza la dirección
             adressHtml.innerHTML = fullAdress.display;
 
             // Muestra mensaje para que el usuario sepa que se está realizando la petición
-            mapContainerHtml.innerHTML = 'Waiting for results..';
+            mapContainerHtml.innerHTML = '<p class="font-bold text-2xl">Waiting for coordinates...</p>';
 
             // Obtiene el mapa de la dirección
             getCoords(street,houseNum,colony,zipCode,fullAdress.city,fullAdress.state,country)
