@@ -1,3 +1,4 @@
+const { endianness } = require("os");
 const Report = require("../models/report.model");
 const sessionVars = require("../util/sessionVars");
 
@@ -70,9 +71,7 @@ exports.getEmployeeRotation = (request, response, next) => {
 };
 
 exports.getOneonOneDepartment = (request, response, next) => {
-    // fecha actual
     const now = new Date();
-    // fecha de inicio del mes actual
     const start = new Date(now.getFullYear(), now.getMonth(), 1)
         .toISOString()
         .split("T")[0];
@@ -80,53 +79,88 @@ exports.getOneonOneDepartment = (request, response, next) => {
     const end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
         .toISOString()
         .split("T")[0];
-    // información de usuarios activos, inactivos y departamentos
-    const activeUsers = Report.getInfoActives(start, end);
-    const inactiveUsers = Report.getInfoInactives(start, end);
-    const departments = Report.getAllDepartments();
-    // fecha inicial del año
-    const startYear = new Date(now.getFullYear(), 0, 1)
-        .toISOString()
-        .split("T")[0];
-    // fecha final del año
-    const endYear = new Date(now.getFullYear(), 11, 31)
-        .toISOString()
-        .split("T")[0];
-    // cantidad de empleados activos e inactivos por mes del año actual
-    const activesPerMonth = Report.getActivesPerMonth(startYear, endYear);
-    const inactivesPerMonth = Report.getInactivesPerMonth(startYear, endYear);
-    // recibir las promesas de todas las consultas
-    Promise.all([
-        activeUsers,
-        inactiveUsers,
-        departments,
-        activesPerMonth,
-        inactivesPerMonth,
-    ])
-        .then(
-            ([
-                [activeUsers],
-                [inactiveUsers],
-                [departments],
-                [activesPerMonth],
-                [inactivesPerMonth],
-            ]) => {
-                response.render("oneOnOne", {
+
+    const departmentID = request.params.departmentID;
+    console.log("ID del departamento:", departmentID);
+
+    Report.fetchDepartment()
+        .then(([departments]) => {
+            if (!departmentID) {
+                return response.render("oneOnOne", {
                     ...sessionVars(request),
-                    activeUsers: activeUsers,
-                    inactiveUsers: inactiveUsers,
-                    departments: departments,
-                    activesPerMonth: activesPerMonth,
-                    inactivesPerMonth: inactivesPerMonth,
-                    activeSize: activeUsers.length,
-                    inactiveSize: inactiveUsers.length,
+                    departments,
+                    workload: [],
+                    physicalHealth: [],
+                    acknowledgement: [],
+                    workLifeBalance: [],
+                    emotionalHealth: [],
                     currentMonthStart: start,
                     currentMonthEnd: end,
                 });
             }
-        )
-        .catch((err) => {
-            console.error(err);
-            next(err);
-        });
+
+            return Promise.all([
+                Report.getAnswerWorkload(departmentID),
+                Report.getAnswerPhysicalHealth(departmentID),
+                Report.getAnswerAcknowledgement(departmentID),
+                Report.getAnswerWorkLifeBalance(departmentID),
+                Report.getAnswerEmotionalHealth(departmentID),
+            ]).then(
+                ([
+                    [workloadRows],
+                    [physicalHealthRows],
+                    [acknowledgementRows],
+                    [workLifeBalanceRows],
+                    [emotionalHealthRows],
+                ]) => {
+                    console.log("Respuestas Workload:", workloadRows);
+                    console.log(
+                        "Respuestas Physical Health:",
+                        physicalHealthRows
+                    );
+                    console.log(
+                        "Respuestas Acknowledgement:",
+                        acknowledgementRows
+                    );
+                    console.log(
+                        "Respuestas Work-Life Balance:",
+                        workLifeBalanceRows
+                    );
+                    console.log(
+                        "Respuestas Emotional Health Balance:",
+                        emotionalHealthRows
+                    );
+                    // Si es AJAX (JSON), sólo devolvemos los arreglos
+                    if (
+                        request.xhr ||
+                        request.headers.accept.includes("application/json")
+                    ) {
+                        return response.json({
+                            workload: workloadRows,
+                            physicalHealth: physicalHealthRows,
+                            acknowledgement: acknowledgementRows,
+                            workLifeBalance: workLifeBalanceRows,
+                            emotionalHealth: emotionalHealthRows,
+                            currentMonthStart: start,
+                            currentMonthEnd: end,
+                        });
+                    }
+
+                    // Render normal con todos los datos
+                    response.render("oneOnOne", {
+                        ...sessionVars(request),
+                        departments,
+                        workload: workloadRows,
+                        physicalHealth: physicalHealthRows,
+                        acknowledgement: acknowledgementRows,
+                        workLifeBalance: workLifeBalanceRows,
+                        emotionalHealth: emotionalHealthRows,
+                        selectedDepartmentID: departmentID,
+                        currentMonthStart: start,
+                        currentMonthEnd: end,
+                    });
+                }
+            );
+        })
+        .catch((error) => next(error));
 };

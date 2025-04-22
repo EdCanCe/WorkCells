@@ -87,7 +87,8 @@ module.exports = class Report {
             AND u.prioritaryDepartmentIDFK = d.departmentID
             AND d.enterpriseIDFK = e.enterpriseID
             AND d.departmentLeaderIDFK = l.userID
-            AND m.measurableIDFK = '15125ff3-f1c8-4260-872a-fdea4e7592a5'
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = '308c7eb9-2f2e-435f-ba7f-35e2f5891ba5'
             AND d.departmentID = ?
             ORDER BY e.title;`,
             [department]
@@ -104,7 +105,8 @@ module.exports = class Report {
             AND u.prioritaryDepartmentIDFK = d.departmentID
             AND d.enterpriseIDFK = e.enterpriseID
             AND d.departmentLeaderIDFK = l.userID
-            AND m.measurableIDFK = '5bb474dc-76c5-4561-84a6-5ef52c440a3e'
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = '39af57d5-3d6a-4bc8-b907-aa3a8ba01c6b'
             AND d.departmentID = ?
             ORDER BY e.title;`,
             [department]
@@ -121,7 +123,26 @@ module.exports = class Report {
             AND u.prioritaryDepartmentIDFK = d.departmentID
             AND d.enterpriseIDFK = e.enterpriseID
             AND d.departmentLeaderIDFK = l.userID
-            AND m.measurableIDFK = 'ea9d0fd3-2bed-4b2e-9de8-1e297982d080'
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = 'c345cbc6-a445-45da-a73b-6343e04334c2'
+            AND d.departmentID = ?
+            ORDER BY e.title;`,
+            [department]
+        );
+    }
+
+    static getAnswerEmotionalHealth(department) {
+        return db.execute(
+            `SELECT m.evaluation, o.summary, d.title AS 'Departamento', e.title AS 'Empresa', l.birthName
+            FROM oneOnOneMeasure m, oneOnOneMeasurable o, oneOnOne n, user u, department d, enterprise e, user l
+            WHERE m.measurableIDFK = o.measurableID 
+            AND m.measureOneOnOneIDFK = n.oneOnOneID
+            AND n.oneOnOneUserIDFK = u.userID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND d.departmentLeaderIDFK = l.userID
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = 'e2df8a14-2154-49a3-b049-2f4c7cd66776'
             AND d.departmentID = ?
             ORDER BY e.title;`,
             [department]
@@ -138,7 +159,8 @@ module.exports = class Report {
             AND u.prioritaryDepartmentIDFK = d.departmentID
             AND d.enterpriseIDFK = e.enterpriseID
             AND d.departmentLeaderIDFK = l.userID
-            AND m.measurableIDFK = 'fd306cbf-90f3-498d-9e37-0370ddf0cb91'
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = 'f1e24a8c-aa83-4354-bd1e-f4d9891e0916'
             AND d.departmentID = ?
             ORDER BY e.title;`,
             [department]
