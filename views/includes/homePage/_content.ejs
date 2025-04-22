@@ -23,6 +23,7 @@
             Calendar
         </div>
         <!--Card-->
+        <% if (role === 'Human Resources') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -35,6 +36,7 @@
             />
             Departments
         </div>
+        <% } %>
         <!--Card-->
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
@@ -88,6 +90,7 @@
             OneToOne
         </div>
         <!--Card-->
+        <% if (role === 'Human Resources') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -101,7 +104,9 @@
 
             Faults
         </div>
+        <% } %>
         <!--Card-->
+        <% if (role === 'Human Resources') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -114,7 +119,9 @@
             />
             Employees
         </div>
+        <% } %>
         <!--Card-->
+        <% if (role === 'Human Resources') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -127,5 +134,6 @@
             />
             Reports
         </div>
+        <% } %>
     </div>
 </div>

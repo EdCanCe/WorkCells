@@ -57,7 +57,7 @@
                 >
             </div>
         </a>
-
+        <% if (role === 'Human Resources') { %>
         <a
             href="/department"
             class="bgNavOne w-full h-[60px] p-3 navItem"
@@ -74,7 +74,7 @@
                 >
             </div>
         </a>
-
+        <% } %>
         <a
             href="/vacation"
             class="bgNavOne w-full h-[60px] p-3 navItem"
@@ -142,7 +142,7 @@
                 >
             </div>
         </a>
-
+        <% if (role === 'Human Resources') { %>
         <a
             href="/fault"
             class="bgNavOne w-full h-[60px] p-3 navItem"
@@ -159,7 +159,8 @@
                 >
             </div>
         </a>
-
+        <% } %>
+        <% if (role === 'Human Resources') { %>
         <a
             href="/employee"
             class="bgNavOne w-full h-[60px] p-3 navItem"
@@ -176,7 +177,8 @@
                 >
             </div>
         </a>
-
+        <% } %>
+        <% if (role === 'Human Resources') { %>
         <a
             href="/reports"
             class="bgNavOne w-full h-[60px] p-3 navItem"
@@ -193,7 +195,7 @@
                 >
             </div>
         </a>
-
+        <% } %>
         <a
             href="/logout"
             class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-0"
