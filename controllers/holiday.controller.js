@@ -4,7 +4,7 @@ const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
 
 exports.getHolidays = (request, response, next) => {
-    response.render("holiday", {
+    response.render("usedHoliday", {
         ...sessionVars(request),
     });
 };

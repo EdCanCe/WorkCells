@@ -1,7 +1,14 @@
 <div class="min-h-screen">
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold mb-6">Holidays</h1>
-
+        
+        <% if (role === 'Human Resources') { %>
+        <div class="flex justify-end mb-4">
+            <a href="/holiday/add" class="btnPrimary">
+              Add
+            </a>
+          </div>
+          <% } %>
         <div
             id="holidaysTable"
             class="overflow-x-auto bg-white rounded-lg shadow"
