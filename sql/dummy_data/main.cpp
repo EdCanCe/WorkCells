@@ -50,11 +50,9 @@ int main() {
     createCountries();
     countries.print();
     
-    createEnterprise(7);
-    enterprise.print();
+    createEnterprise();
 
-    createDepartment(25);
-    department.print();
+    createDepartment();
 
     createUsers(100);
     users.print();
