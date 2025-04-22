@@ -347,6 +347,9 @@
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
   }
+  .ml-4 {
+    margin-left: calc(var(--spacing) * 4);
+  }
   .\!block {
     display: block !important;
   }
@@ -1207,6 +1210,26 @@
       }
     }
   }
+  .print\:\!h-auto {
+    @media print {
+      height: auto !important;
+    }
+  }
+  .print\:\!max-h-none {
+    @media print {
+      max-height: none !important;
+    }
+  }
+  .print\:\!overflow-visible {
+    @media print {
+      overflow: visible !important;
+    }
+  }
+  .print\:overflow-visible {
+    @media print {
+      overflow: visible;
+    }
+  }
 }
 @font-face {
   font-family: "Gotham";
@@ -1604,6 +1627,41 @@
 }
 .statusBarAnimate {
   animation: statusBar 7s linear forwards;
+}
+@page {
+  size: A4 landscape;
+  margin: 0.5cm 0.5cm 2cm 2cm;
+}
+@media print {
+  html, body {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .container, .report-container {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  #navBar, .bgNav, .bgNavTwo, .bgNavHead, .toggleText {
+    display: none !important;
+  }
+  #navItem {
+    display: none !important;
+  }
+  .btnPrimary {
+    display: none !important;
+  }
+  .btnContainer {
+    display: none !important;
+  }
+  .pageBreak {
+    break-after: page;
+  }
+  .avoidBreak {
+    break-inside: avoid-page;
+  }
 }
 @property --tw-scale-x {
   syntax: "*";

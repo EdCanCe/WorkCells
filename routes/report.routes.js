@@ -12,7 +12,7 @@ router.get(
     reportControllers.getOneonOneDepartment
 );
 
-router.get("/staffRotation", reportControllers.getEmployeeRotation);
+router.get("/staffRotation", isAuth, reportControllers.getEmployeeRotation);
 router.get("/staffRotationReport", isAuth, reportControllers.getRotationPDF);
 router.get("/", isAuth, reportControllers.getRoot);
 

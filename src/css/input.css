@@ -108,7 +108,7 @@
 }
 
 .statusBarContainer {
-    @apply  h-fit pt-3 overflow-hidden;
+    @apply h-fit pt-3 overflow-hidden;
 }
 
 .statusBar {
@@ -116,7 +116,7 @@
 }
 
 .primaryContainer {
-    @apply max-w-[900px] min-h-full m-auto p-0
+    @apply max-w-[900px] min-h-full m-auto p-0;
 }
 
 /* Backgrounds & Text */
@@ -297,4 +297,47 @@
 
 .statusBarAnimate {
     animation: statusBar 7s linear forwards;
+}
+
+@page {
+    size: A4 landscape;
+    margin: 0.5cm 0.5cm 2cm 2cm;
+}
+
+@media print {
+    html,
+    body {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    .container,
+    .report-container {
+        display: block !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    #navBar,
+    .bgNav,
+    .bgNavTwo,
+    .bgNavHead,
+    .toggleText {
+        display: none !important;
+    }
+    #navItem {
+        display: none !important;
+    }
+    .btnPrimary {
+        display: none !important;
+    }
+    .btnContainer {
+        display: none !important;
+    }
+    .pageBreak {
+        break-after: page;
+    }
+    .avoidBreak {
+        break-inside: avoid-page;
+    }
 }

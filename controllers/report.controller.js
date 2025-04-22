@@ -168,18 +168,12 @@ exports.getOneonOneDepartment = (request, response, next) => {
 exports.getRotationPDF = async (request, response, next) => {
     const urlLocal = "http://localhost:3000/reports/staffRotation";
     const urlDeploy = "https://tec1.nuclea.solutions/reports/staffRotation";
-    const browser = await puppeteer.launch({
-        headless: true,
-        defaultViewport: {
-            width: 750,
-            height: 500,
-            deviceScaleFactor: 1,
-            isMobile: false,
-            hasTouch: false,
-            isLandscape: false,
-        },
-    });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
+    const cookieHeader = request.headers.cookie;
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    await page.setExtraHTTPHeaders({ Cookie: cookieHeader });
     /**
      * ! Alert: Cuando esté en producción cambiar por la variable de urlDeploy
      */
@@ -187,16 +181,25 @@ exports.getRotationPDF = async (request, response, next) => {
         waitUntil: "networkidle0",
     });
 
-    await page.waitForSelector("canvas");
-    await page.emulateMediaType("screen");
+    await page.waitForSelector("#rotationChart");
+    await page.waitForFunction(() => {
+        const canvas = document.getElementById("rotationChart");
+        return canvas && canvas.offsetHeight > 0;
+    });
+    await delay(1000);
+
+    await page.emulateMediaType("print");
+
+    const height = await page.evaluate(
+        () => document.documentElement.scrollHeight
+    );
 
     const pdf = await page.pdf({
-        format: "A4",
         printBackground: true,
-        margin: { left: "0.5cm", top: "2cm", right: "0.5cm", bottom: "2cm" },
+        width: "1122px", // A4 landscape
+        height: `${height}px`,
     });
-    console.log("PDF length:", pdf.length);
-    console.log("Magic bytes:", pdf.slice(0, 5).toString());
+
     await browser.close();
 
     response
