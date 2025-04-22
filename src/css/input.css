@@ -305,39 +305,47 @@
 }
 
 @media print {
-    html,
-    body {
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-    .container,
-    .report-container {
-        display: block !important;
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
+    /* Oculta elementos no deseados */
     #navBar,
     .bgNav,
     .bgNavTwo,
     .bgNavHead,
-    .toggleText {
+    .toggleText,
+    #navItem,
+    .btnPrimary,
+    #btnContainer {
         display: none !important;
     }
-    #navItem {
-        display: none !important;
-    }
-    .btnPrimary {
-        display: none !important;
-    }
-    .btnContainer {
-        display: none !important;
-    }
+
+    /* Control de saltos moderno y legacy */
     .pageBreak {
         break-after: page;
+        page-break-after: always !important;
     }
+
     .avoidBreak {
         break-inside: avoid-page;
+        page-break-inside: avoid !important;
+    }
+
+    /* Asegura que las tablas se rompan correctamente */
+    table {
+        break-inside: auto;
+        page-break-inside: auto !important;
+    }
+
+    tr {
+        break-inside: avoid-page;
+        page-break-inside: avoid !important;
+    }
+
+    /* Elimina límites de altura */
+    html,
+    body,
+    .container,
+    .report-container {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
     }
 }

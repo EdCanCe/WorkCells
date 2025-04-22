@@ -180,7 +180,7 @@ exports.getRotationPDF = async (request, response, next) => {
     await page.goto(urlLocal, {
         waitUntil: "networkidle0",
     });
-
+    await page.setViewport({ width: 1680, height: 1050 });
     await page.waitForSelector("#rotationChart");
     await page.waitForFunction(() => {
         const canvas = document.getElementById("rotationChart");
@@ -190,14 +190,10 @@ exports.getRotationPDF = async (request, response, next) => {
 
     await page.emulateMediaType("print");
 
-    const height = await page.evaluate(
-        () => document.documentElement.scrollHeight
-    );
-
     const pdf = await page.pdf({
         printBackground: true,
-        width: "1122px", // A4 landscape
-        height: `${height}px`,
+        format: "A4",
+        //landscape: true,
     });
 
     await browser.close();

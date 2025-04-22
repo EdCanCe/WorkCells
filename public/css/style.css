@@ -1630,37 +1630,17 @@
 }
 @page {
   size: A4 landscape;
-  margin: 0.5cm 0.5cm 2cm 2cm;
+  margin: 5cm 0.5cm 2cm 2cm;
 }
 @media print {
-  html, body {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-  .container, .report-container {
+  .report-container {
     display: block !important;
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
   }
-  #navBar, .bgNav, .bgNavTwo, .bgNavHead, .toggleText {
+  #navBar, #btnContainer {
     display: none !important;
-  }
-  #navItem {
-    display: none !important;
-  }
-  .btnPrimary {
-    display: none !important;
-  }
-  .btnContainer {
-    display: none !important;
-  }
-  .pageBreak {
-    break-after: page;
-  }
-  .avoidBreak {
-    break-inside: avoid-page;
   }
 }
 @property --tw-scale-x {
