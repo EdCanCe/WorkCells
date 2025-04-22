@@ -49,30 +49,32 @@ exports.getUsedHoliday = (request, response, next) => {
         .then(([rows, fieldData]) => {
             response.render("usedHoliday", {
                 ...sessionVars(request),
-                holidays: rows, // Cambio aquí por claridad semántica
+                holidays: rows, 
             });
         })
         .catch((error) => {
-            console.error(error); // Mejor manejo de error
+            console.error(error); 
             response.status(500).send("Error al obtener los días feriados.");
         });
 };
 
-exports.listPaginated = async (request, response) => {
-    const page = parseInt(request.query.page) || 1;
+exports.listPaginated = (request, response) => {
+    const page = parseInt(request.query.page, 10) || 1;
     const limit = 10;
     const offset = (page - 1) * limit;
-
-    try {
-        const [rows] = await Holiday.getHolidayPaginated(limit, offset); // <== AQUÍ EL CAMBIO
+  
+    Holiday.getHolidayPaginated(limit, offset)
+      .then(([rows]) => {
         response.json(rows);
-    } catch (err) {
+      })
+      .catch(err => {
         console.error(err);
         response
-            .status(500)
-            .json({ error: "Error al obtener los días registrados." });
-    }
-};
+          .status(500)
+          .json({ error: "Error al obtener los días registrados." });
+      });
+  };
+  
 
 exports.getHolidayModify = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;

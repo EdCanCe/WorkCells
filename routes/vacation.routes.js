@@ -9,17 +9,9 @@ router.use(methodOverride("_method"));
 
 router.get("/check/:vacationID", isAuth, vacationController.getCheckVacation);
 
-router.get(
-    "/check/modify/:vacationID",
-    isAuth,
-    vacationController.getModifyVacation
-);
+router.get("/check/modify/:vacationID",isAuth,vacationController.getModifyVacation);
 
-router.post(
-    "/check/delete/:vacationID",
-    isAuth,
-    vacationController.PostDeleteVacation
-);
+router.post("/check/delete/:vacationID",isAuth,vacationController.PostDeleteVacation);
 
 // Página para añadir una solicitud de vacaciones
 router.get("/add", isAuth, vacationController.getAddVacation);

@@ -6,11 +6,7 @@ const isAuth = require("../util/is-auth");
 
 router.get("/oneOnOne", isAuth, reportControllers.getOneonOneDepartment);
 
-router.get(
-    "/oneOnOne/:departmentID?",
-    isAuth,
-    reportControllers.getOneonOneDepartment
-);
+router.get("/oneOnOne/:departmentID?",isAuth,reportControllers.getOneonOneDepartment);
 
 router.get("/staffRotation", isAuth, reportControllers.getEmployeeRotation);
 router.get("/", isAuth, reportControllers.getRoot);

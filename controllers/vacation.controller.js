@@ -330,7 +330,7 @@ exports.getModifyVacation = async (request, response, next) => {
         const [rows] = await Vacation.fetchOne(vacationID);
 
         if (rows.length === 0) {
-            return response.status(404).send('Vacación no encontrada.');
+            return response.status(404).send('Vacation not found.');
         }
 
         const selectedVacation = rows[0];
@@ -339,7 +339,7 @@ exports.getModifyVacation = async (request, response, next) => {
         // 1. Obtener el período vigente de vacaciones (se asume que fetchVacationsInPeriod retorna mapStart y mapEnd)
         const [periodRows] = await Vacation.fetchVacationsInPeriod(userID);
         if (!periodRows || periodRows.length === 0) {
-            throw new Error("No se pudo determinar el período de vacaciones.");
+            throw new Error("Error with the period of vacation.");
         }
         const periodStart = periodRows[0].mapStart;
         const periodEnd = periodRows[0].mapEnd;
@@ -351,8 +351,8 @@ exports.getModifyVacation = async (request, response, next) => {
         // 3. Función auxiliar: construir un mapa de días para un rango dado
         const buildDayMap = (start, end, holidays) => {
             const map = new Map();
-            let current = new Date(start);
             const endDateLoop = new Date(end);
+            let current = new Date(start);
 
             while (current <= endDateLoop) {
                 const dateStr = formatDate.forSql(current);
@@ -441,15 +441,12 @@ exports.updateVacation = async (request, response, next) => {
     const vacationId = request.params.vacationID;
     const { startDate, endDate, reason } = request.body;
 
-    // Log para identificar si availableDays está definido en la sesión
-    console.log("Días disponibles asignados a la sesión:", request.session.availableDays || "No definido");
-
     if (!startDate || !endDate || !reason) {
-        request.session.info = 'Todos los campos son obligatorios.';
+        request.session.info = 'You need to complete all the fields.';
         try {
             const [rows] = await Vacation.fetchOne(vacationId);
             if (rows.length === 0) {
-                return response.status(404).send('Vacación no encontrada.');
+                return response.status(404).send('Vacation not found.');
             }
             return response.render('modifyVacation', {
                 ...sessionVars(request),
@@ -463,7 +460,7 @@ exports.updateVacation = async (request, response, next) => {
     }
 
     if (new Date(startDate) > new Date(endDate)) {
-        request.session.alert = "La fecha de inicio debe ser anterior a la fecha final.";
+        request.session.alert = "The end date needs to be more recents that the started date.";
         return response.redirect(`/vacation/check/modify/${vacationId}`);
     }
 
@@ -473,8 +470,8 @@ exports.updateVacation = async (request, response, next) => {
 
         const buildDayMap = (start, end, holidays) => {
             const map = new Map();
-            let current = new Date(start);
             const endDateLoop = new Date(end);
+            let current = new Date(start);
             while (current <= endDateLoop) {
                 const dateStr = formatDate.forSql(current);
                 map.set(dateStr, {
@@ -509,15 +506,15 @@ exports.updateVacation = async (request, response, next) => {
         const calculateAvailableDays = async (userID, holidays) => {
             const [periodRows] = await Vacation.fetchVacationsInPeriod(userID);
             if (!periodRows || periodRows.length === 0) {
-                throw new Error("No se pudo determinar el período de vacaciones.");
+                throw new Error("Error with the period.");
             }
             const periodStart = periodRows[0].mapStart;
             const periodEnd = periodRows[0].mapEnd;
 
             const vacations = periodRows;
             const dayMap = new Map();
-            let current = new Date(periodStart);
             const endDateLoop = new Date(periodEnd);
+            let current = new Date(periodStart);
             while (current <= endDateLoop) {
                 const dateStr = formatDate.forSql(current);
                 dayMap.set(dateStr, {
@@ -574,18 +571,13 @@ exports.updateVacation = async (request, response, next) => {
         const recalculatedAvailableDays = await calculateAvailableDays(request.session.userID, holidays);
         const availableIncludingOriginal = recalculatedAvailableDays + originalTotalDays;
 
-        console.log("Días solicitados (válidos):", totalDaysRequested);
-        console.log("Días disponibles (ajustados):", availableIncludingOriginal);
-
         if (totalDaysRequested > availableIncludingOriginal) {
-            request.session.alert = `No puede actualizar la solicitud con más días de los disponibles. (Disponibles: ${availableIncludingOriginal}, Solicitados: ${totalDaysRequested})`;
+            request.session.alert = `Can not update the request with more days that you have (available: ${availableIncludingOriginal}, Requested: ${totalDaysRequested})`;
             return response.redirect(`/vacation/check/modify/${vacationId}`);
         }
 
         // Obtener el ID del usuario asociado a la vacación
         const getUserResult = await Vacation.getUserID(vacationId);
-        console.log("Resultado de getUserID:", getUserResult);
-
         // Verificar el formato del resultado
         let userRows;
         if (Array.isArray(getUserResult)) {
@@ -593,29 +585,28 @@ exports.updateVacation = async (request, response, next) => {
         } else if (getUserResult && getUserResult.rows) {
             userRows = getUserResult.rows;
         } else {
-            console.error("Vacation.getUserID retornó un valor inesperado:", getUserResult);
-            throw new Error("Error al obtener la identificación de usuario para la vacación.");
+            throw new Error("Error with the id of user to the vacation");
         }
 
         if (!userRows || userRows.length === 0) {
-            request.session.alert = "Vacación no encontrada.";
+            request.session.alert = "Vacation not found";
             return response.redirect("/vacation");
         }
         if (userRows[0].vacationUserIDFK != request.session.userID) {
-            request.session.alert = "No puedes modificar una solicitud que no es tuya.";
+            request.session.alert = "Cannot change the request of other";
             return response.redirect("/vacation");
         }
 
         // Actualizar la vacación
         await Vacation.updateVacation(vacationId, startDate, endDate, reason);
-        request.session.info = 'Solicitud de vacaciones actualizada exitosamente.';
+        request.session.info = 'Update of the vacation correctly';
 
         // Luego de actualizar, redirigimos a la ruta de listado o historial de vacaciones.
         return response.redirect('/vacation');
 
     } catch (error) {
         console.error('Error al actualizar la vacación:', error);
-        request.session.info = 'Error al actualizar la solicitud.';
+        request.session.info = 'Error for update the request';
         try {
             const [rows] = await Vacation.fetchOne(vacationId);
             // Se decide redirigir en lugar de renderizar para mantener consistencia
