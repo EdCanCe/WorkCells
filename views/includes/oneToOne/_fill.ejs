@@ -189,12 +189,7 @@
         // Al clickear pinta los antecesores del botón
         measureButton.addEventListener("click", () =>{
             // En caso de presionar el botón con el valor actual, lo resetea a 0
-            if(measure.value == value) {
-                value = 0;
-            }
-
-            measure.value = value;
-            console.log(measure, value);
+            measure.value = measure.value == value ? '0' : value;
             clickButtons(question);
         });
 
