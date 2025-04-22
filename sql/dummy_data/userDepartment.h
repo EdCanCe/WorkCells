@@ -46,7 +46,7 @@ string UserDepartment::getUserID() {
 
 void createUserDepartment() {
     for (int i = 0; i < users.size(); i++) {
-        UserDepartment aux = UserDepartment(department.random().getId(), users.get(i).getId());
+        UserDepartment aux = UserDepartment(department[getRandom(department.size())].getId(), users.get(i).getId());
         userDepartment.add(aux);
         if(users.get(i).getRole() == "Department Leader") {
             cout << "UPDATE department SET departmentLeaderIDFK = '" << aux.getUserID() << "' WHERE departmentID = '" << aux.getDepartmentID() << "'; \n";

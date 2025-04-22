@@ -43,6 +43,7 @@ CREATE TABLE enterprise (
 CREATE TABLE department (
     departmentID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(60) NOT NULL,
+    flag BOOLEAN DEFAULT '1',
     enterpriseIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
 );
@@ -68,7 +69,7 @@ CREATE TABLE user (
     countryUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
     prioritaryDepartmentIDFK VARCHAR(40),
-    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID) ON DELETE SET NULL;
+    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID) ON DELETE SET NULL
 );
 
 ALTER TABLE department 
