@@ -1,0 +1,148 @@
+<div class="container mx-auto p-4">
+    <div class="bg-neutral-700/25 shadow rounded-lg overflow-hidden">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-4">One On One Answers</h2>
+        </div>
+        <div class="mr-10 p-6">
+            <label for="department" class="block text-lg font-medium mb-2">
+                Department
+            </label>
+            <select
+                id="department"
+                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+            >
+                <option selected disabled>Select department</option>
+                <% departments.forEach(dept => { %>
+                <option value="<%= dept.departmentID %>">
+                    <%= dept.departmentTitle %> – <%= dept.enterpriseTitle %>
+                </option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="mr-10 p-6">
+            <h2 class="text-2xl font-bold mb-4">
+                From <%= currentMonthStart %> To <%= currentMonthEnd %>
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+            <div>
+                <h3 class="text-center flex flex-col items-center">Workload</h3>
+                <canvas id="workloadChart" height="200"></canvas>
+            </div>
+            <div>
+                <h3 class="text-center flex flex-col items-center">
+                    Physical Health
+                </h3>
+                <canvas id="physicalHealthChart" height="200"></canvas>
+            </div>
+            <div>
+                <h3 class="text-center flex flex-col items-center">
+                    Acknowledgement
+                </h3>
+                <canvas id="acknowledgementChart" height="200"></canvas>
+            </div>
+            <div>
+                <h3 class="text-center flex flex-col items-center">
+                    Emotional Health
+                </h3>
+                <canvas id="chartEmotional" height="200"></canvas>
+            </div>
+            <div>
+                <h3 class="text-center flex flex-col items-center">
+                    Work-Life Balance
+                </h3>
+                <canvas id="workLifeBalanceChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inyecta los datos completos del servidor -->
+<script>
+    const initialData = {
+      workload:       <%- JSON.stringify(workload) %>,
+      physicalHealth: <%- JSON.stringify(physicalHealth) %>,
+      acknowledgement:<%- JSON.stringify(acknowledgement) %>,
+      workLifeBalance:<%- JSON.stringify(workLifeBalance) %>,
+      emotionalHealth:<%- JSON.stringify(emotionalHealth) %>
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Contar frecuencias de evaluation (0–5)
+    function countFrequenciesFromObjects(arr) {
+        const counts = [0, 0, 0, 0, 0, 0];
+        arr.forEach((item) => {
+            const v = Number(item.evaluation);
+            if (Number.isInteger(v) && v >= 0 && v <= 5) counts[v]++;
+        });
+        return counts;
+    }
+
+    // Inicializar gráfica de 6 barras
+    function initBarChart(canvasID, label) {
+        const ctx = document.getElementById(canvasID).getContext("2d");
+        return new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["0", "1", "2", "3", "4", "5"],
+                datasets: [
+                    {
+                        label,
+                        data: [0, 0, 0, 0, 0, 0],
+                        borderRadius: 10,
+                        barThickness: 30,
+                    },
+                ],
+            },
+            options: {
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                plugins: { legend: { display: false } },
+                responsive: true,
+            },
+        });
+    }
+
+    const charts = {
+        workload: initBarChart("workloadChart", "Workload"),
+        physicalHealth: initBarChart("physicalHealthChart", "Physical Health"),
+        acknowledgement: initBarChart(
+            "acknowledgementChart",
+            "Acknowledgement"
+        ),
+        workLifeBalance: initBarChart(
+            "workLifeBalanceChart",
+            "Work-Life Balance"
+        ),
+        emotionalHealth: initBarChart("chartEmotional", "Emotional Health"),
+    };
+
+    // Pinta datos iniciales
+    Object.entries(initialData).forEach(([key, arr]) => {
+        charts[key].data.datasets[0].data = countFrequenciesFromObjects(arr);
+        charts[key].update();
+    });
+
+    // Actualización AJAX al cambiar departamento
+    document
+        .getElementById("department")
+        .addEventListener("change", async (e) => {
+            const deptID = e.target.value;
+            if (!deptID) return;
+            try {
+                const res = await fetch(`/reports/oneOnOne/${deptID}`, {
+                    headers: { Accept: "application/json" },
+                });
+                const data = await res.json();
+                console.log(data);
+                Object.entries(data).forEach(([key, arr]) => {
+                    charts[key].data.datasets[0].data =
+                        countFrequenciesFromObjects(arr);
+                    charts[key].update();
+                });
+                Object.values(charts).forEach((c) => c.update());
+            } catch (err) {
+                console.error("Error AJAX:", err);
+            }
+        });
+</script>

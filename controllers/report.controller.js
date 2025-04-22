@@ -1,3 +1,4 @@
+const { endianness } = require("os");
 const Report = require("../models/report.model");
 const sessionVars = require("../util/sessionVars");
 
@@ -67,4 +68,99 @@ exports.getEmployeeRotation = (request, response, next) => {
             console.error(err);
             next(err);
         });
+};
+
+exports.getOneonOneDepartment = (request, response, next) => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1)
+        .toISOString()
+        .split("T")[0];
+    // fecha del ultimo día del mes actual
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+        .toISOString()
+        .split("T")[0];
+
+    const departmentID = request.params.departmentID;
+    console.log("ID del departamento:", departmentID);
+
+    Report.fetchDepartment()
+        .then(([departments]) => {
+            if (!departmentID) {
+                return response.render("oneOnOne", {
+                    ...sessionVars(request),
+                    departments,
+                    workload: [],
+                    physicalHealth: [],
+                    acknowledgement: [],
+                    workLifeBalance: [],
+                    emotionalHealth: [],
+                    currentMonthStart: start,
+                    currentMonthEnd: end,
+                });
+            }
+
+            return Promise.all([
+                Report.getAnswerWorkload(departmentID),
+                Report.getAnswerPhysicalHealth(departmentID),
+                Report.getAnswerAcknowledgement(departmentID),
+                Report.getAnswerWorkLifeBalance(departmentID),
+                Report.getAnswerEmotionalHealth(departmentID),
+            ]).then(
+                ([
+                    [workloadRows],
+                    [physicalHealthRows],
+                    [acknowledgementRows],
+                    [workLifeBalanceRows],
+                    [emotionalHealthRows],
+                ]) => {
+                    console.log("Respuestas Workload:", workloadRows);
+                    console.log(
+                        "Respuestas Physical Health:",
+                        physicalHealthRows
+                    );
+                    console.log(
+                        "Respuestas Acknowledgement:",
+                        acknowledgementRows
+                    );
+                    console.log(
+                        "Respuestas Work-Life Balance:",
+                        workLifeBalanceRows
+                    );
+                    console.log(
+                        "Respuestas Emotional Health Balance:",
+                        emotionalHealthRows
+                    );
+                    // Si es AJAX (JSON), sólo devolvemos los arreglos
+                    if (
+                        request.xhr ||
+                        request.headers.accept.includes("application/json")
+                    ) {
+                        return response.json({
+                            workload: workloadRows,
+                            physicalHealth: physicalHealthRows,
+                            acknowledgement: acknowledgementRows,
+                            workLifeBalance: workLifeBalanceRows,
+                            emotionalHealth: emotionalHealthRows,
+                            currentMonthStart: start,
+                            currentMonthEnd: end,
+                        });
+                    }
+
+                    // Render normal con todos los datos
+                    response.render("oneOnOne", {
+                        ...sessionVars(request),
+                        departments,
+                        workload: workloadRows,
+                        physicalHealth: physicalHealthRows,
+                        acknowledgement: acknowledgementRows,
+                        workLifeBalance: workLifeBalanceRows,
+                        emotionalHealth: emotionalHealthRows,
+                        selectedDepartmentID: departmentID,
+                        currentMonthStart: start,
+                        currentMonthEnd: end,
+                    });
+                }
+            );
+        })
+        .catch((error) => next(error));
 };
