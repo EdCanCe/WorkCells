@@ -1,0 +1,27 @@
+:root {
+    /* Backgrounds & Text */
+    --lightColorNavBase: #e5e5e5;
+    --darkColorNavBase: #171717;
+
+    --lightColorNavOne: #a1a1a1;
+    --darkColorNavOne: #404040;
+
+    --lightColorNavTwo: #d4d4d4;
+    --darkColorNavTwo: #262626;
+
+    --lightColorBase: #fafafa;
+    --darkColorBase: #0a0a0a;
+
+    /* Botones */
+    --lightBtnPrimary: #1dd2b4;
+    --darkBtnPrimary: #1b3f43;
+
+    --lightBtnPrimaryLowOpacity: #1dd2b466;
+    --darkBtnPrimaryLowOpacity: #1b3f4366;
+
+    --lightBtnSuccess: #30e16e;
+    --darkBtnSuccess: #029033;
+
+    --lightBtnDanger: #ef325e;
+    --darkBtnDanger: #9a0000;
+}
