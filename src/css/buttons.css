@@ -1,0 +1,23 @@
+.btnPrimary {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+           bg-(--lightBtnPrimary) hover:bg-(--lightBtnPrimary)/80 text-(--darkColorBase)
+           dark:bg-(--darkBtnPrimary) dark:hover:bg-(--darkBtnPrimary)/50 dark:text-(--lightColorBase);
+}
+
+.btnSuccess {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+           bg-(--lightBtnSuccess) hover:bg-(--lightBtnSuccess)/80 text-(--darkColorBase)
+           dark:bg-(--darkBtnSuccess) dark:hover:bg-(--darkBtnSuccess)/50 dark:text-(--lightColorBase);
+}
+
+.btnDanger {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block
+           bg-(--lightBtnDanger) hover:bg-(--lightBtnDanger)/80 text-(--darkColorBase)
+           dark:bg-(--darkBtnDanger) dark:hover:bg-(--darkBtnDanger)/50 dark:text-(--lightColorBase);
+}
+
+.btnMeasure {
+    @apply px-6 py-2 rounded-md cursor-pointer inline-block border-[1px]
+           border-(--lightBtnPrimary)
+           dark:border-(--darkBtnPrimary);
+}
