@@ -45,10 +45,10 @@ const getAdress = (apiKey, street, houseNum, colony, zipCode, country) => {
             state,
             lat,
             lon,
-            display: `${street} ${houseNum}, Col. ${colony}. ${city}, ${state}, ${country}. ${zipCode}`,
+            display: `${street} ${houseNum}, ${colony}, ${zipCode}, ${city}, ${state}, ${country}.`,
         }
     }).catch(() => {
-        throw new Error('It was not possible to retrieve the address data.');
+        throw new Error('It was not possible to retrieve the exact address data.');
     });
 };
 
@@ -136,8 +136,11 @@ const showMap = (mapContainer, lat, lon, fullAdress) => {
  * @param string country    El país del usuario
 */
 const addressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, colony, zipCode, country) => {
+    // Guarda la dirección inicial
+    const initialAdress = adressHtml.innerHTML;
+
     // Muestra mensaje para que el usuario sepa que se está realizando la petición
-    adressHtml.innerHTML = "Waiting for adress...";
+    adressHtml.innerHTML = `${initialAdress} | Waiting for adress...`;
     getAdress(apiKey, street, houseNum, colony, zipCode, country)
         .then((fullAdress) => {
             // Renderiza la dirección
@@ -158,6 +161,6 @@ const addressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, c
                     }
                 });      
         }).catch((error) => {
-            adressHtml.innerHTML = error.message;
+            adressHtml.innerHTML = `${initialAdress} | ${error.message}`;
         });
 }

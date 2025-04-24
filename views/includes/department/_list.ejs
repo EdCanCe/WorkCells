@@ -1,6 +1,4 @@
-<div
-    class="container mx-auto mt-6 pt-10 px-4 bg-neutral-700/25 shadow rounded-lg overflow-hidden mb-6"
->
+<div class="fullContainer">
     <!-- Título del departamento -->
     <h2 class="text-4xl font-bold mb-8 text-center">
         Department: <%= department[0].title %>
@@ -8,16 +6,17 @@
 
     <!-- Grid centrado de 3 tarjetas por fila -->
     <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center mb-8"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8 items-center"
         id="employeesContainer"
-    ></div>
+    >
+        <!-- inicialmente vacío; lo llenamos con JS -->
+    </div>
 
     <div class="flex justify-center gap-3 mt-6 mb-4">
         <button id="prevPage" class="btnPrimary">Previous</button>
         <button id="nextPage" class="btnPrimary">Next</button>
     </div>
 </div>
-
 <script>
     let currentPage = 1;
 
@@ -54,7 +53,7 @@
                     container += `N/A`;
                 }
                 container += `</p> <a href="department/employee/${user.userID}"
-                    class="btnPrimary mt-2 text-center">
+                    class="btnPrimary mt-3 text-center">
                     Check</a> </div>`;
             });
         }

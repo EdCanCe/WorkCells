@@ -3,5 +3,17 @@
 }
 
 .primaryContainer {
-    @apply max-w-[900px] min-h-full m-auto p-0
+    @apply max-w-[960px] min-h-full m-auto p-6;
+}
+
+.fullContainer {
+    @apply max-w-full min-h-full p-6;
+}
+
+.center {
+    @apply !block w-fit mr-auto ml-auto;
+}
+
+.centerItem {
+    @apply flex justify-center items-center;
 }
