@@ -5,7 +5,7 @@ async function loadHolidays(page) {
   const data = await res.json();
 
   let table = `
-    <table class="min-w-full divide-y divide-emerald-200">
+    <table class="min-w-full divide-y divide-gray-400">
       <thead class="bg-neutral-800 text-white text-left text-lg">
         <tr>
           <th class="px-6 py-4">Holidays</th>

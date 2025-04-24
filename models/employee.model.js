@@ -127,10 +127,13 @@ module.exports = class Employee {
 
     static fetchAllDataUser(userID) {
         return db.execute(
-            `SELECT *
-        FROM user u, country c
-        WHERE u.userID = ?
-        AND u.countryUserIDFK = c.countryID`,
+            `SELECT *, c.title as country, r.title as role, d.title as department, e.title as enterprise
+            FROM user u, country c, role r, department d, enterprise e
+            WHERE u.countryUserIDFK = c.countryID
+            AND u.userRoleIDFK = r.roleID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userID = ?`,
             [userID]
         );
     }

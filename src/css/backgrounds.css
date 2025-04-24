@@ -59,6 +59,10 @@
            dark:bg-(--darkColorBase) dark:text-(--lightColorBase);
 }
 
+.bgContainer1 {
+    @apply bg-neutral-700/10
+}
+
 .bgPrimary {
     @apply bg-(--lightBtnPrimary)
            dark:bg-(--darkBtnPrimary);

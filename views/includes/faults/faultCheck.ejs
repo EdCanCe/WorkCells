@@ -1,53 +1,50 @@
-<div class="container mx-auto p-4">
-    <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
-      <div class="card-content">
-        <!-- Título -->
-        <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
-          Administrative Faults
-        </h1>
-  
-        <!-- Barra de búsqueda, filtro y botón de registrar -->
-        <div class="flex justify-center w-full mb-4">
-          <div class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl">
-            <img 
-              src="/icons/search.svg" 
-              alt="search" 
-              class="navIcon absolute w-6 h-6 text-white"
+<div class="fullContainer">
+    <!-- Título -->
+    <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
+        Administrative Faults
+    </h1>
+
+    <!-- Barra de búsqueda, filtro y botón de registrar -->
+    <div class="flex justify-center w-full mb-4">
+        <div
+            class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
+        >
+            <img
+                src="/icons/search.svg"
+                alt="search"
+                class="navIcon absolute w-6 h-6 text-white"
             />
             <input
-              id="search"
-              name="search"
-              type="text"
-              placeholder="Search by name..."
-              class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+                id="search"
+                name="search"
+                type="text"
+                placeholder="Search by name..."
+                class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
             />
-          </div>
-          <div class="p-4 rounded-md">
+        </div>
+        <div class="p-4 rounded-md">
             <select id="filterSelect" class="btnPrimary">
-              <option value="all">All</option>
-              <option value="active">Actives</option>
-              <option value="inactive">Inactives</option>
+                <option value="all">All</option>
+                <option value="active">Actives</option>
+                <option value="inactive">Inactives</option>
             </select>
-          </div>
-          <div class="p-4 rounded-md">
+        </div>
+        <div class="p-4 rounded-md">
             <a href="/fault/add" class="btnPrimary">Add new fault</a>
-          </div>
         </div>
-  
-        <!-- Tabla -->
-        <div 
-          id="faltasTable" 
-          class="flex content justify-center p-4 rounded-md list space-y-4 overflow-x-auto"
-        ></div>
-  
-        <!-- Paginación -->
-        <div class="flex justify-center gap-3 mt-6">
-          <button id="prevBtn" class="btnPrimary">Previous</button>
-          <button id="nextBtn" class="btnPrimary">Next</button>
-        </div>
-      </div>
     </div>
-  </div>
-  
-  <script src="/javascript/paginedFaults.js"></script>
-  
+
+    <!-- Tabla -->
+    <div
+        id="faltasTable"
+        class="flex content justify-center p-4 rounded-md list space-y-4 overflow-x-auto"
+    ></div>
+
+    <!-- Paginación -->
+    <div class="flex justify-center gap-3 mt-6">
+        <button id="prevBtn" class="btnPrimary">Previous</button>
+        <button id="nextBtn" class="btnPrimary">Next</button>
+    </div>
+</div>
+
+<script src="/javascript/paginedFaults.js"></script>

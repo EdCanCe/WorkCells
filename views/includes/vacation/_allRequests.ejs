@@ -1,68 +1,66 @@
-<div class="flex-1 p-6">
-    <div class="max-w-7xl mx-auto">
-        <div class="bg-neutral-700/25 shadow-lg rounded-lg">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    All vacations requests
-                </h2>
-            </div>
-            <div class="p-6">
-                <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
-                    <% if (vacations.length === 0) { %>
-                    <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
-                        <p class="text-center text-gray-400 text-xl">No previous requests done</p>
-                    </div>
-                    <% } else { %>
-                    <table id="vacations-table" class="min-w-full table-auto">
-                        <thead class="bg-neutral-800">
-                            <tr>
-                                <th class="px-4 py-2 text-left">Full name</th>
-                                <th class="px-4 py-2 text-left">Reason</th>
-                                <th class="px-4 py-2 text-left">Start date</th>
-                                <th class="px-4 py-2 text-left">End date</th>
-                                <th class="px-4 py-2 text-left">Duration</th>
-                                <th class="px-4 py-2 text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% vacations.forEach(vacation => { %>
-                            <tr class="border-b hover:bg-neutral-800">
-                                <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
-                                <td class="px-4 py-2"><%= vacation.reason %></td>
-                                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                                <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
-                                <% if (role === "Department Leader") { %>
-                                <td class="px-4 py-2 text-center">
-                                    <% if (vacation.leaderStatus === 1) { %>
-                                        <div class="text-green-500 text-center font-semibold">Approved</div>
-                                    <% } else if (vacation.leaderStatus === 0) { %>
-                                        <div class="text-red-500 text-center font-semibold">Denied</div>
-                                    <% } %>
-                                </td>
-                                <% } else if (role === "Human Resources") { %>
-                                <td class="px-4 py-2 text-center">
-                                    <% if (vacation.hrStatus === 1) { %>
-                                        <div class="text-green-500 text-center font-semibold">Approved</div>
-                                    <% } else if (vacation.hrStatus === 0) { %>
-                                        <div class="text-red-500 text-center font-semibold">Denied</div>
-                                    <% } %>
-                                </td>
-                                <% } %>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
-                    <% } %>
+<div class="primaryContainer bgContainer1">
+    <div>
+        <div class="p-6">
+            <h2 class="text-2xl font-semibold mb-4">
+                All vacations requests
+            </h2>
+        </div>
+        <div>
+            <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
+                <% if (vacations.length === 0) { %>
+                <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
+                    <p class="text-center text-gray-400 text-xl">No previous requests done</p>
                 </div>
+                <% } else { %>
+                <table id="vacations-table" class="min-w-full table-auto">
+                    <thead class="bg-neutral-800">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Full name</th>
+                            <th class="px-4 py-2 text-left">Reason</th>
+                            <th class="px-4 py-2 text-left">Start date</th>
+                            <th class="px-4 py-2 text-left">End date</th>
+                            <th class="px-4 py-2 text-left">Duration</th>
+                            <th class="px-4 py-2 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% vacations.forEach(vacation => { %>
+                        <tr class="border-b hover:bg-neutral-800">
+                            <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
+                            <td class="px-4 py-2"><%= vacation.reason %></td>
+                            <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                            <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                            <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
+                            <% if (role === "Department Leader") { %>
+                            <td class="px-4 py-2 text-center">
+                                <% if (vacation.leaderStatus === 1) { %>
+                                    <div class="text-green-500 text-center font-semibold">Approved</div>
+                                <% } else if (vacation.leaderStatus === 0) { %>
+                                    <div class="text-red-500 text-center font-semibold">Denied</div>
+                                <% } %>
+                            </td>
+                            <% } else if (role === "Human Resources") { %>
+                            <td class="px-4 py-2 text-center">
+                                <% if (vacation.hrStatus === 1) { %>
+                                    <div class="text-green-500 text-center font-semibold">Approved</div>
+                                <% } else if (vacation.hrStatus === 0) { %>
+                                    <div class="text-red-500 text-center font-semibold">Denied</div>
+                                <% } %>
+                            </td>
+                            <% } %>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
             </div>
         </div>
-        <div class="pagination-controls mt-4 mb-4 flex justify-between">
-            <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
-            <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
-        </div>
-        <a href="/vacation/requests" class="btnPrimary">Back</a>
     </div>
+    <div class="pagination-controls mt-4 mb-4 flex justify-between">
+        <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
+        <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
+    </div>
+    <a href="/vacation/requests" class="btnPrimary">Back</a>
 </div>
 
 <script>

@@ -1,83 +1,81 @@
-<div class="container mx-auto p-6 max-w-2xl">
-    <div class="bg-neutral-700/25 shadow-lg rounded-lg overflow-hidden">
-        <!-- Encabezado -->
-        <h2 class="text-2xl font-semibold text-center">Request Vacation</h2>
+<div class="primaryContainer bgContainer1">
+    <!-- Encabezado -->
+    <h2 class="text-2xl font-semibold text-center">Request Vacation</h2>
 
-        <p class="text-center">You have <%= availableDays %> available days for vacations</p>
+    <p class="text-center">You have <%= availableDays %> available days for vacations</p>
 
-        <% if (availableDays <= 0) { %>
-            <p>You cannot request more vacations in this period.</p>
+    <% if (availableDays <= 0) { %>
+        <p>You cannot request more vacations in this period.</p>
 
-        <% } else { %>
+    <% } else { %>
 
-            <!-- Formulario -->
-            <form action="/vacation/add" method="POST" class="p-6 space-y-6">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <!-- Formulario -->
+    <form action="/vacation/add" method="POST" class="p-6 space-y-6">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-                <div class="m-0 p-0">
-                    <!-- Fechas -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label
-                                class="block text-lg font-medium text-neutral-100"
-                            >
-                                Start date
-                            </label>
-                            <input
-                                id="startDateInput"
-                                type="date"
-                                name="startDate"
-                                class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                                min="<%= startDate %>"
-                                max="<%= endDate %>"
-                                required
-                            />
-                        </div>
-
-                        <div class="space-y-2">
-                            <label
-                                class="block text-lg font-medium text-neutral-100"
-                            >
-                                End date
-                            </label>
-                            <input
-                                id="endDateInput"
-                                type="date"
-                                name="endDate"
-                                class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                                min="<%= startDate %>"
-                                max="<%= endDate %>"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Descripción -->
-                    <div class="space-y-2">
-                        <label class="block text-lg font-medium text-neutral-100">
-                            Reason to request vacations:
-                        </label>
-                        <textarea
-                            name="reason"
-                            rows="4"
-                            class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
-                            placeholder="Enter the reason you´d like to the a vacation..."
-                            required
-                        ></textarea>
-                    </div>
-
-                    <!-- Botones -->
-                    <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4">
-                        <button
-                            type="submit"
-                            class="btnPrimary"
-                        >
-                            Submit
-                        </button>
-                    </div>
+        <div class="m-0 p-0">
+            <!-- Fechas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label
+                        class="block text-lg font-medium text-neutral-100"
+                    >
+                        Start date
+                    </label>
+                    <input
+                        id="startDateInput"
+                        type="date"
+                        name="startDate"
+                        class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        min="<%= startDate %>"
+                        max="<%= endDate %>"
+                        required
+                    />
                 </div>
-            </form>
+
+                <div class="space-y-2">
+                    <label
+                        class="block text-lg font-medium text-neutral-100"
+                    >
+                        End date
+                    </label>
+                    <input
+                        id="endDateInput"
+                        type="date"
+                        name="endDate"
+                        class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                        min="<%= startDate %>"
+                        max="<%= endDate %>"
+                        required
+                    />
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="space-y-2">
+                <label class="block text-lg font-medium text-neutral-100">
+                    Reason to request vacations:
+                </label>
+                <textarea
+                    name="reason"
+                    rows="4"
+                    class="w-full p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                    placeholder="Enter the reason you´d like to the a vacation..."
+                    required
+                ></textarea>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4">
+                <button
+                    type="submit"
+                    class="btnPrimary"
+                >
+                    Submit
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
+</div>
 
 <% } %>

@@ -1,5 +1,5 @@
-<div class="min-h-screen">
-    <div class="container mx-auto p-6">
+<div class="primaryContainer bgContainer1">
+    <div class="center !w-full">
         <h1 class="text-3xl font-bold mb-6">Holidays</h1>
         
         <% if (role === 'Human Resources') { %>
@@ -27,12 +27,7 @@
             >
                 Next
             </button>
-
-            <!-- Atención: revisa si este enlace corresponde a días feriados -->
         </div>
     </div>
-
-    <script src="/javascript/paginedHoliday.js"></script>
 </div>
-
-<%- include('../_footer') %>
+<script src="/javascript/paginedHoliday.js"></script>

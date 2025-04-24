@@ -267,7 +267,7 @@ exports.getMe = (request, response, next) => {
 
     Employee.fetchAllDataUser(userid)
         .then(([rows]) => {
-            response.render("employeeMe", {
+            response.render("employeeProfile", {
                 ...sessionVars(request),
                 userData: rows[0],
                 API: process.env.GEOLOCATION_API_KEY,
