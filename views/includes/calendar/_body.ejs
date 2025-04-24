@@ -264,6 +264,7 @@
             `;
         };
 
+        // Obtiene los datos al moverse en el calendario
         fetch(`/calendar/${usedDate}`, {
             method: "GET",
             headers: {
@@ -271,24 +272,27 @@
             },
         })
             .then((result) => {
-                return result.json(); //Regresa otra promesa
+                return result.json();
             })
             .then((data) => {
+                // Limpia el calendario
                 calendarContainer.innerHTML = "";
 
+                // Crea los días en el HTML
                 data.days.forEach((day) => {
                     calendarContainer.innerHTML =
                         calendarContainer.innerHTML + createDay(day);
                 });
 
+                // Cambia el título correspondiente a las fechas
                 dateTitle.innerHTML = isMonthView
                     ? data.formattedMonth
                     : data.formattedStart + " - " + data.formattedEnd;
 
                 currentDate.setAttribute("content", usedDate);
 
+                // Carga los filtros que el usuario tenía al activarlo
                 loadFilters();
-                console.log(data);
             })
             .catch((err) => {
                 console.log(err);

@@ -1,111 +1,109 @@
-<div class="container mx-auto p-6 max-w-4xl">
-    <div class="bg-neutral-700/25 shadow-lg rounded-lg overflow-hidden">
-        <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
+<div class="primaryContainer bgContainer1">
+    <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
 
-        <!-- Muestra los datos de la sesión One On One -->
-        <h3 class="text-2xl font-semibold text-center">
-            <%= name %> | <%= meetingDate %>
-        </h3>
+    <!-- Muestra los datos de la sesión One On One -->
+    <h3 class="text-2xl font-semibold text-center">
+        <%= name %> | <%= meetingDate %>
+    </h3>
 
-        <% if (meetingLink) { %>
-            <a target="_blank" href="<%= meetingLink %>" class="btnPrimary !block w-fit m-auto mt-5">Google Meet Link</a>
-        <% } %>
+    <% if (meetingLink) { %>
+        <a target="_blank" href="<%= meetingLink %>" class="btnPrimary !block w-fit m-auto mt-5">Google Meet Link</a>
+    <% } %>
 
-        <!-- Formulario -->
-        <form
-            id="fillForm"
-            action="/oneToOne/<%= sessionID %>/fill"
-            method="POST"
-            class="p-6 space-y-8"
-        >
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <!-- Formulario -->
+    <form
+        id="fillForm"
+        action="/oneToOne/<%= sessionID %>/fill"
+        method="POST"
+        class="p-6 space-y-8"
+    >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-            <!-- Preguntas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Preguntas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Obtiene la cantidad de preguntas -->
-                <input type="hidden" name="numQuestions" value="<%= questions.length %>" />
+            <!-- Obtiene la cantidad de preguntas -->
+            <input type="hidden" name="numQuestions" value="<%= questions.length %>" />
 
-                <!-- Ciclo para cada pregunta -->
-                <% questions.forEach((question, index) => { %>
-                <div class="space-y-2">
-                    <label class="block text-lg font-medium text-neutral-100">
-                        <%= question.question %>
-                    </label>
+            <!-- Ciclo para cada pregunta -->
+            <% questions.forEach((question, index) => { %>
+            <div class="space-y-2">
+                <label class="block text-lg font-medium text-neutral-100">
+                    <%= question.question %>
+                </label>
 
-                    <!-- Relaciona la respuesta con la pregunta por medio de su ID -->
-                    <input
-                        type="hidden"
-                        name="questionID<%= index + 1 %>"
-                        value="<%= question.questionID %>"
-                    />
+                <!-- Relaciona la respuesta con la pregunta por medio de su ID -->
+                <input
+                    type="hidden"
+                    name="questionID<%= index + 1 %>"
+                    value="<%= question.questionID %>"
+                />
 
-                    <textarea
-                        name="question<%= index + 1 %>"
-                        rows="3"
-                        class="questionInput w-full h-40 max-h-40 resize-none p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
-                        placeholder="Please provide your answer..."
-                        required
-                    ></textarea>
+                <textarea
+                    name="question<%= index + 1 %>"
+                    rows="3"
+                    class="questionInput w-full h-40 max-h-40 resize-none p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
+                    placeholder="Please provide your answer..."
+                    required
+                ></textarea>
+            </div>
+            <% }); %>
+        </div>
+
+        <!-- Métricas -->
+        <div class="space-y-8">
+
+            <!-- Obtiene la cantidad de preguntas -->
+            <input type="hidden" name="numMeasures" value="<%= measurables.length %>" />
+
+            <!-- Ciclo para cada pregunta -->
+            <% measurables.forEach((measurable, qIndex) => { %>
+            <div class="space-y-4">
+                <label class="block text-lg font-medium text-neutral-100">
+                    <%= measurable.summary %>
+                </label>
+
+                    <!-- Relaciona la respuesta con la métrica por medio de su ID -->
+                <input
+                    type="hidden"
+                    name="measurableID<%= qIndex + 1 %>"
+                    value="<%= measurable.measurableID %>"
+                />
+
+                <input
+                    id="measureSlider<%= qIndex + 1 %>"
+                    type="range"
+                    name="measure<%= qIndex + 1 %>"
+                    min="0"
+                    max="5"
+                    value="0"
+                    step="1"
+                    class="hidden range-input"
+                    data-measurable="<%= qIndex + 1 %>"
+                />
+
+                <!-- Generación de botones -->
+                <div id="measureContainer<%= qIndex + 1 %>" question="<%= qIndex %>" class="w-[90%] h-7 m-auto flex flex-row gap-5 place-content-between">
+                    <% for(let i=0; i<5; i++) { %>
+                        <!-- La clase value es necesaria para JS, no modificar -->
+                        <p class="value<%= i+1 %> btnMeasure h-full flex-1"></p>
+                    <% } %>
                 </div>
-                <% }); %>
+
             </div>
+            <% }); %>
+        </div>
 
-            <!-- Métricas -->
-            <div class="space-y-8">
-
-                <!-- Obtiene la cantidad de preguntas -->
-                <input type="hidden" name="numMeasures" value="<%= measurables.length %>" />
-
-                <!-- Ciclo para cada pregunta -->
-                <% measurables.forEach((measurable, qIndex) => { %>
-                <div class="space-y-4">
-                    <label class="block text-lg font-medium text-neutral-100">
-                        <%= measurable.summary %>
-                    </label>
-
-                     <!-- Relaciona la respuesta con la métrica por medio de su ID -->
-                    <input
-                        type="hidden"
-                        name="measurableID<%= qIndex + 1 %>"
-                        value="<%= measurable.measurableID %>"
-                    />
-
-                    <input
-                        id="measureSlider<%= qIndex + 1 %>"
-                        type="range"
-                        name="measure<%= qIndex + 1 %>"
-                        min="0"
-                        max="5"
-                        value="0"
-                        step="1"
-                        class="hidden range-input"
-                        data-measurable="<%= qIndex + 1 %>"
-                    />
-
-                    <!-- Generación de botones -->
-                    <div id="measureContainer<%= qIndex + 1 %>" question="<%= qIndex %>" class="w-[90%] h-7 m-auto flex flex-row gap-5 place-content-between">
-                        <% for(let i=0; i<5; i++) { %>
-                            <!-- La clase value es necesaria para JS, no modificar -->
-                            <p class="value<%= i+1 %> btnMeasure h-full flex-1"></p>
-                        <% } %>
-                    </div>
-
-                </div>
-                <% }); %>
-            </div>
-
-            <!-- Botón para enviar -->
-            <div class="flex justify-end pt-6">
-                <button
-                    type="submit"
-                    class="btnPrimary"
-                >
-                    Submit
-                </button>
-            </div>
-        </form>
-    </div>
+        <!-- Botón para enviar -->
+        <div class="flex justify-end pt-6">
+            <button
+                type="submit"
+                class="btnPrimary"
+            >
+                Submit
+            </button>
+        </div>
+    </form>
 </div>
 
 <script>
