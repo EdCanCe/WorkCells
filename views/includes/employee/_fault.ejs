@@ -47,13 +47,16 @@
                                 </td>
                                 <td class="px-4 py-2">
                                     <% if (f.mediaLink) { %>
-                                    <a
-                                        target="_blank"
-                                        href="<%= f.mediaLink %>"
-                                        class="text-blue-500"
-                                        >Check Evidence</a
-                                    >
-                                    <% } else { %> No evidence <% } %>
+                                        <a
+                                          target="_blank"
+                                          href="/uploads/<%= encodeURIComponent(f.mediaLink) %>"
+                                          class="text-blue-500"
+                                        >
+                                          Check Evidence
+                                        </a>
+                                      <% } else { %>
+                                        No evidence
+                                      <% } %>                                      
                                 </td>
                             </tr>
                             <% }) %>

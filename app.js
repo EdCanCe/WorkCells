@@ -64,6 +64,11 @@ const fileStorage = multer.diskStorage({
 //'archivo' es el nombre del input tipo file de la forma
 app.use(multer({ storage: fileStorage }).single("evidence"));
 
+app.use(
+    "/uploads",
+    express.static(path.join(__dirname, "uploads"))
+  );
+
 app.use(csrfProtection);
 
 const authRouter = require("./routes/auth.routes");

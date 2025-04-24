@@ -82,7 +82,7 @@ class Fault {
             `SELECT u.birthName AS nombre, u.mail AS correo, 
       f.doneDate AS fecha_falta, COUNT(f.faultUserIDFK) 
       AS num_faltas, faultUserIDFK 
-      FROM  user u, fault f 
+      FROM  user u, fault f
       WHERE u.userId = f.faultUserIDFK 
       GROUP BY  u.userId 
       ORDER BY num_faltas desc 
@@ -118,7 +118,8 @@ class Fault {
           u.birthName AS nombre, 
           u.mail AS correo, 
           MAX(f.doneDate) AS fecha_falta, 
-          COUNT(f.faultUserIDFK) AS num_faltas
+          COUNT(f.faultUserIDFK) AS num_faltas,
+          faultUserIDFK 
        FROM user u
        JOIN fault f ON u.userId = f.faultUserIDFK
        WHERE (u.birthName LIKE ? OR u.mail LIKE ?)
@@ -130,7 +131,11 @@ class Fault {
   }
   
   static fetchByID(faultID) {
-    return db.execute('SELECT * FROM fault WHERE faultID = ?', [faultID]);
+    return db.execute(
+    `SELECT f.*, m.mediaLink 
+    FROM fault f, faultMedia m 
+    WHERE faultID = faultIDFK
+    faultID = ?`, [faultID]);
   }
 
 }
