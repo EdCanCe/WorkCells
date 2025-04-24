@@ -1,8 +1,11 @@
 <div class="primaryContainer bgContainer1">
     <div class="">
         <div class="px-6 py-4 flex justify-end">
-            <% if (role === 'Department Leader' || role === 'Human Resources') {%>
-                <a href="/absence/requests" class="btnPrimary mr-4">Employees requests</a>
+            <% if (role === 'Department Leader' || role === 'Human Resources')
+            {%>
+            <a href="/absence/requests" class="btnPrimary mr-4"
+                >Employees requests</a
+            >
             <% } %>
             <a href="/absence/add" class="btnPrimary mr-4">Add</a>
         </div>
@@ -88,7 +91,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm">`;
 
                 if (ab.mediaLink) {
-                    table += `<a href="/uploads/${ab.mediaLink}" target="_blank" class="text-blue-600 hover:underline">Check Evidence</a>`;
+                    table += `<a href="/uploads/absence/${encodeURIComponent(
+                        ab.mediaLink
+                    )}" target="_blank" class="text-blue-600 hover:underline">Check Evidence</a>`;
                 } else {
                     table += `No Evidence`;
                 }

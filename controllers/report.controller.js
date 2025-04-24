@@ -1,6 +1,6 @@
-const { endianness } = require("os");
 const Report = require("../models/report.model");
 const sessionVars = require("../util/sessionVars");
+const puppeteer = require("puppeteer");
 
 exports.getRoot = (request, response, next) => {
     response.render("reportsMenu", {
@@ -163,4 +163,47 @@ exports.getOneonOneDepartment = (request, response, next) => {
             );
         })
         .catch((error) => next(error));
+};
+
+exports.getRotationPDF = async (request, response, next) => {
+    const urlLocal = "http://localhost:3000/reports/staffRotation";
+    const urlDeploy = "https://tec1.nuclea.solutions/reports/staffRotation";
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    const cookieHeader = request.headers.cookie;
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    await page.setExtraHTTPHeaders({ Cookie: cookieHeader });
+    /**
+     * ! Alert: Cuando esté en producción cambiar por la variable de urlDeploy
+     */
+    await page.goto(urlLocal, {
+        waitUntil: "networkidle0",
+    });
+    await page.setViewport({ width: 1680, height: 1050 });
+    await page.waitForSelector("#rotationChart");
+    await page.waitForFunction(() => {
+        const canvas = document.getElementById("rotationChart");
+        return canvas && canvas.offsetHeight > 0;
+    });
+    await delay(1000);
+
+    await page.emulateMediaType("print");
+
+    const pdf = await page.pdf({
+        printBackground: true,
+        format: "A4",
+        //landscape: true,
+    });
+
+    await browser.close();
+
+    response
+        .status(200)
+        .set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": 'attachment; filename="reporte.pdf"',
+            "Content-Length": pdf.length,
+        })
+        .end(pdf);
 };
