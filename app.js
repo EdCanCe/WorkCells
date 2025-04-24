@@ -43,7 +43,7 @@ app.use(cookieParser());
 const fileStorage = multer.diskStorage({
     destination: (request, file, callback) => {
         //'uploads': Es el directorio del servidor donde se subirán los archivos
-        callback(null, "public/uploads");
+        callback(null, "uploads");
     },
     filename: (request, file, callback) => {
         //aquí configuramos el nombre que queremos que tenga el archivo en el servidor,
@@ -97,6 +97,9 @@ app.use("/reports", reportRouter);
 const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
+
+const uploadRouter = require("./routes/uploads.routes.js");
+app.use("/uploads", uploadRouter);
 
 const sessionVars = require("./util/sessionVars");
 app.use((request, response, next) => {

@@ -1630,17 +1630,32 @@
 }
 @page {
   size: A4 landscape;
-  margin: 5cm 0.5cm 2cm 2cm;
+  margin: 0.5cm 0.5cm 2cm 2cm;
 }
 @media print {
-  .report-container {
-    display: block !important;
+  #navBar, .bgNav, .bgNavTwo, .bgNavHead, .toggleText, #navItem, .btnPrimary, #btnContainer {
+    display: none !important;
+  }
+  .pageBreak {
+    break-after: page;
+    page-break-after: always !important;
+  }
+  .avoidBreak {
+    break-inside: avoid-page;
+    page-break-inside: avoid !important;
+  }
+  table {
+    break-inside: auto;
+    page-break-inside: auto !important;
+  }
+  tr {
+    break-inside: avoid-page;
+    page-break-inside: avoid !important;
+  }
+  html, body, .container, .report-container {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
-  }
-  #navBar, #btnContainer {
-    display: none !important;
   }
 }
 @property --tw-scale-x {
