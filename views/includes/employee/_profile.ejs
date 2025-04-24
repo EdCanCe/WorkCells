@@ -21,9 +21,16 @@
             </div>
     
             <div class="flex justify-end">
+                <% if (userData.userID === userID) { %>
                 <a href="/employee/me/faults" class="btnPrimary m-2"
                     >Check Faults</a
                 >
+                <% } else { %>
+                    <a href="/employee/<%= userData.userID %>/faults" class="btnPrimary m-2"
+                    >Check Faults</a
+                >
+                <% } %>
+                
                 <a href="/employee/me/changePassword" class="btnPrimary m-2">
                     Change Password
                 </a>

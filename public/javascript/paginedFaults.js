@@ -43,7 +43,7 @@ let currentPage = 1;
                 ${new Date(falta.fecha_falta).toLocaleDateString("es-MX")}
               </td>
               <td class="px-6 py-4 text-white font-semibold">${falta.num_faltas}</td>
-              <td class="px-6 py-4 text-white"><a href="/fault/${falta.id_falta}" class="btnPrimary">Check</a></td>
+              <td class="px-6 py-4 text-white"><a href="/employee/${falta.faultUserIDFK}/faults" class="btnPrimary">Check</a></td>
             </tr>
           `;
         });
