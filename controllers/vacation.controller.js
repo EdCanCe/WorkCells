@@ -138,7 +138,7 @@ exports.getAddVacation = (request, response, next) => {
                             holidays.forEach((holiday) => {
                                 const date = new Date(holiday.usedDate);
                                 const day = daysMap.get(formatDate.forSql(date));
-                                if (day) {
+                                if (day !== undefined) {
                                     day.holiday = 1;
                                 }
                             });
@@ -157,7 +157,7 @@ exports.getAddVacation = (request, response, next) => {
                                     const day = daysMap.get(dateStr);
 
                                     // Verifica que no sea día festivo o fin de semana
-                                    if (day && day.holiday == 0 && day.dayType != 0 && day.dayType != 6) {
+                                    if (day !== undefined && day.holiday === 0 && day.dayType !== 0 && day.dayType !== 6) {
                                         totalUsedDays += 1;
                                     }
                                     current.setDate(current.getDate() + 1);
@@ -178,6 +178,7 @@ exports.getAddVacation = (request, response, next) => {
                                 return baseDays > 20 ? 20 : baseDays;
                             }
 
+                            // Obtiene la cantidad total de días disponibles
                             const availableDays = totalDays() - totalUsedDays;
 
                             request.session.availableDays = availableDays;
@@ -191,10 +192,7 @@ exports.getAddVacation = (request, response, next) => {
                                 availableDays,
                                 startDate: `${startDateTextAux.getFullYear()}-${String(startDateTextAux.getMonth() + 1).padStart(2, '0')}-${String(startDateTextAux.getDate()).padStart(2, '0')}`,
                                 endDate: `${endDateTextAux.getFullYear()}-${String(endDateTextAux.getMonth() + 1).padStart(2, '0')}-${String(endDateTextAux.getDate()).padStart(2, '0')}`,
-
-                            })
-
-
+                            });
                         });
                 });
         })
@@ -207,13 +205,11 @@ exports.getAddVacation = (request, response, next) => {
 exports.postAddVacation = (request, response, next) => {
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
-
-    console.log("Fecha inicio", startDate);
  
     // En caso de que la fecha de inicio sea posterior a la final
     if ((new Date(startDate)) > (new Date(endDate))) {
-        request.session.alert = "The start date must be before the end date";
-        return response.redirect("/vacation/add");
+        request.session.alert = 'The start date must be before the end date';
+        return response.redirect('/vacation/add');
     }
 
     // Obtiene los días feriados durante el periodo que solicitó el usuario
@@ -263,13 +259,13 @@ exports.postAddVacation = (request, response, next) => {
             // Obtiene los días válidos que solicitó el usuario
             const dateDiff = Number(new Date(endDate)) - Number(new Date(startDate));
             const requestDays = Math.ceil(dateDiff / (1000 * 60 * 60 * 24)) + 1 - nonusableDays;
-            console.log("requested: ", requestDays);
-            console.log("nonusable: ", nonusableDays);
+            console.log('requested: ', requestDays);
+            console.log('nonusable: ', nonusableDays);
 
             // En caso de que el usuario haya solicitado más días de los que tiene disponibles
             if(requestDays > request.session.availableDays){
-                request.session.alert = "You cannot request more days than the ones available";
-                return response.redirect("/vacation/add");
+                request.session.alert = 'You cannot request more days than the ones available';
+                return response.redirect('/vacation/add');
             }
 
             // Genera la vacación

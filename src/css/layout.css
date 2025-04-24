@@ -3,9 +3,6 @@
 }
 
 .primaryContainer {
-<<<<<<< HEAD
-    @apply max-w-[900px] min-h-full m-auto p-0
-=======
     @apply max-w-[960px] min-h-full m-auto p-6;
 }
 
@@ -19,5 +16,4 @@
 
 .centerItem {
     @apply flex justify-center items-center;
->>>>>>> mundo/correccionUsabilidadEstilos
 }
