@@ -91,7 +91,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm">`;
 
                 if (ab.mediaLink) {
-                    table += `<a href="/uploads/absence/${ab.mediaLink}" target="_blank" class="text-blue-600 hover:underline">Check Evidence</a>`;
+                    table += `<a href="/uploads/absence/${encodeURIComponent(
+                        ab.mediaLink
+                    )}" target="_blank" class="text-blue-600 hover:underline">Check Evidence</a>`;
                 } else {
                     table += `No Evidence`;
                 }
