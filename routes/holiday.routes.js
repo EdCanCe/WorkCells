@@ -7,9 +7,23 @@ const holidayPrivilege = require("../util/holidayPrivilege/holidayPrivilege");
 
 router.get("/check/:usedHolidayID", isAuth, holidayController.getCheckHoliday);
 
-router.get("/check/modify/:usedHolidayID",isAuth,holidayController.getHolidayModify);
+router.get(
+    "/check/modify/:usedHolidayID",
+    isAuth,
+    holidayController.getHolidayModify
+);
 
-router.post("/check/:usedHolidayID",isAuth,holidayController.postHolidayModify);
+router.post(
+    "/check/delete/:usedHolidayID",
+    isAuth,
+    holidayController.postHolidayDelete
+);
+
+router.post(
+    "/check/:usedHolidayID",
+    isAuth,
+    holidayController.postHolidayModify
+);
 
 router.get("/", isAuth, holidayController.getHolidays);
 
