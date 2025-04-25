@@ -23,4 +23,10 @@ module.exports = class FaultMedia {
             );
         });
     }
+
+    static clear(faultID) {
+        return db.execute(
+            `DELETE FROM faultMedia WHERE faultID = ?;`,
+            [faultID]);
+    }
 };

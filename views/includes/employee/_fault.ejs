@@ -30,6 +30,7 @@
                                 <th class="px-4 py-2">Reason</th>
                                 <th class="px-4 py-2">Done date</th>
                                 <th class="px-4 py-2">Evidence</th>
+                                <th class = "px-4 py-2">Modify</th>
                                 <th class="px-4 py-2">Delete</th>
                             </tr>
                         </thead>
@@ -62,7 +63,10 @@
                                       <% } %>                                      
                                 </td>
                                 <td>
-                                    <button id="deleteIt<%= i %>" class="deleteFunc btnPrimary">Delete</button>
+                                    <a class= "btnPrimary" href="/fault/modify/<%= f.faultID %>">Modify</a>
+                                </td>
+                                <td>
+                                    <button id="deleteIt<%= i %>" class="deleteFunc btnDanger">Delete</button>
                                     <form id="form<%= i %>" class="hidden" id="form" action="/fault/delete" method="POST">
                                         <input
                                             type="hidden"
@@ -84,7 +88,7 @@
                                     </form>
                                 </td>
                             </tr>
-                            <% }) %>
+                            <% }) %> 
                         </tbody>
                         <% } else { %>
                         <tr>

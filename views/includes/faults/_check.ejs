@@ -1,0 +1,85 @@
+<div class="flex">  
+    <!-- Contenedor que envolverá tu formulario, con margin auto para centrar -->
+    <div class="p-6 mx-auto">
+        <!-- Mantén la parte del formulario tal cual, respetando su diseño -->
+        <div class="bg-neutral-700/25 shadow-lg rounded-lg p-6 max-w-md w-full">
+            <div class="mb-4">
+                <h2 class="text-2xl font-semibold mb-4 text-center">
+                    Modify Fault
+                </h2>
+            </div>
+
+                <form action="/fault/update/<%= fault.faultID %>" method="POST">
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <div class="mb-4">
+                        <label for="reason" class="block text-sm font-medium text-neutral-100 mb-2">
+                            Reason
+                        </label>
+                        <input
+                            type="text"
+                            id="reason"
+                            name="reason"
+                            class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            value="<%= fault.summary %>"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Date" class="block text-sm font-medium text-neutral-100 mb-2">
+                            Date
+                        </label>
+                        <input
+                            type="date"
+                            id="Date"
+                            name="doneDate"
+                            class="w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-md"
+                            value="<%= fault.Date%>"
+                            required
+                        />
+                    </div>
+
+                            <!-- Campo para subir archivos -->
+        <div class="mb-6">
+            <label class="block text-neutral-100 font-semibold mb-2">
+                Evidence (optional):
+            </label>
+            <input
+                id="faultEvidenceInput"
+                class="w-full md:w-full p-2 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
+                type="file"
+                name="evidence"
+                accept=".jpg, .png, .docx, .jpeg, .pdf"
+            />
+        </div>
+
+                    <div class="flex justify-center mt-6">
+                        <button type="submit" class="btnPrimary">
+                            Accept Changes
+                        </button>
+                    </div>
+                </form>
+        </div>
+    </div>
+
+    <script>
+        const evidenceInput = document.getElementById("faultEvidenceInput");
+
+        evidenceInput.addEventListener("change", function () {
+            const file = this.files[0]; // Obtiene el archivo seleccionado
+            const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+
+            if (file) {
+                if (file.size > maxSize) {
+                    alert(
+                        `The file is too heavy, the maximun allowed is 10mb.`
+                    );
+                    this.value = ""; // Borra el archivo seleccionado
+                }
+            }
+        });
+    </script>
+
+</div>
+
