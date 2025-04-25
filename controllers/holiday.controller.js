@@ -49,11 +49,11 @@ exports.getUsedHoliday = (request, response, next) => {
         .then(([rows, fieldData]) => {
             response.render("usedHoliday", {
                 ...sessionVars(request),
-                holidays: rows, 
+                holidays: rows,
             });
         })
         .catch((error) => {
-            console.error(error); 
+            console.error(error);
             response.status(500).send("Error al obtener los días feriados.");
         });
 };
@@ -62,19 +62,18 @@ exports.listPaginated = (request, response) => {
     const page = parseInt(request.query.page, 10) || 1;
     const limit = 10;
     const offset = (page - 1) * limit;
-  
+
     Holiday.getHolidayPaginated(limit, offset)
-      .then(([rows]) => {
-        response.json(rows);
-      })
-      .catch(err => {
-        console.error(err);
-        response
-          .status(500)
-          .json({ error: "Error al obtener los días registrados." });
-      });
-  };
-  
+        .then(([rows]) => {
+            response.json(rows);
+        })
+        .catch((err) => {
+            console.error(err);
+            response
+                .status(500)
+                .json({ error: "Error al obtener los días registrados." });
+        });
+};
 
 exports.getHolidayModify = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
@@ -144,5 +143,18 @@ exports.getCheckHoliday = (request, response, next) => {
             response
                 .status(500)
                 .send("Error al obtener los datos del feriado.");
+        });
+};
+
+exports.postHolidayDelete = (request, response, next) => {
+    const usedHolidayID = request.params.usedHolidayID;
+
+    Holiday.deleteUsedHoliday(usedHolidayID)
+        .then(() => {
+            response.status(200).json({ success: true });
+        })
+        .catch((error) => {
+            console.error("Error al eliminar el feriado:", error.message);
+            response.status(500).json({ success: false, error: error.message });
         });
 };
