@@ -30,11 +30,14 @@
                                 <th class="px-4 py-2">Reason</th>
                                 <th class="px-4 py-2">Done date</th>
                                 <th class="px-4 py-2">Evidence</th>
+                                <th class="px-4 py-2">Delete</th>
                             </tr>
                         </thead>
-                        <% if(faults.length > 0) { %>
+                        <% if(faults.length > 0) { 
+                        let i = 0;%>
                         <tbody>
-                            <% faults.forEach(f => { %>
+                            <% faults.forEach(f => {
+                            i++; %>
                             <tr class="border-b">
                                 <td class="px-4 py-2">
                                     <%= f.birthName %> <%= f.surname %>
@@ -58,13 +61,35 @@
                                         No evidence
                                       <% } %>                                      
                                 </td>
+                                <td>
+                                    <button id="deleteIt<%= i %>" class="deleteFunc btnPrimary">Delete</button>
+                                    <form id="form<%= i %>" class="hidden" id="form" action="/fault/delete" method="POST">
+                                        <input
+                                            type="hidden"
+                                            name="_csrf"
+                                            value="<%= csrfToken %>"
+                                        />
+
+                                        <input
+                                            type="hidden"
+                                            name="faultID"
+                                            value="<%= f.faultID %>"
+                                        />
+
+                                        <input
+                                            type="hidden"
+                                            name="userID"
+                                            value="<%= f.faultUserIDFK %>"
+                                        />
+                                    </form>
+                                </td>
                             </tr>
                             <% }) %>
                         </tbody>
                         <% } else { %>
                         <tr>
                             <td colspan="4" class="text-center">
-                                There´s no faults
+                                There are no faults
                             </td>
                         </tr>
                         <% } %>
@@ -74,3 +99,12 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelectorAll(".deleteFunc").forEach((element) => {
+        element.addEventListener("click", (e) => {
+            const faultNumber = element.id.split('deleteIt')[1];
+            console.log(faultNumber);
+            document.getElementById(`form${faultNumber}`).submit();
+        });
+    })
+</script>
