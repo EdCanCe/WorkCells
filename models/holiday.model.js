@@ -108,4 +108,9 @@ module.exports = class Holiday {
                 throw error;
             });
     }
+
+    static deleteUsedHoliday(usedHolidayID) {
+        const query = `DELETE FROM usedHoliday WHERE usedHolidayID = ?`;
+        return db.execute(query, [usedHolidayID]);
+    }
 };
