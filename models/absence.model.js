@@ -120,10 +120,11 @@ ORDER BY startDate DESC`);
         if (userRole === "Human Resources") {
             // RRHH: Ver todas las solicitudes pendientes para RRHH (justified = 2)
             return db.execute(
-                `SELECT a.*, u.birthName, u.surname, r.title
+                `SELECT a.*, u.birthName, u.surname, r.title, am.mediaLink
                 FROM absence AS a
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
+                JOIN absenceMedia as am ON a.absenceID = am.absenceIDFK
                 WHERE a.hrStatus = 2
                 ORDER BY a.startDate DESC
                 LIMIT ? OFFSET ?`,
@@ -132,11 +133,12 @@ ORDER BY startDate DESC`);
         } else if (userRole === "Department Leader") {
             // Líder: Ver solo solicitudes pendientes de su departamento
             return db.execute(
-                `SELECT a.*, u.birthName, u.surname, r.title
+                `SELECT a.*, u.birthName, u.surname, r.title, am.mediaLink
                 FROM absence AS a
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
                 JOIN user AS leader ON leader.userID = ?
+                JOIN absenceMedia as am ON a.absenceID = am.absenceIDFK
                 WHERE a.leaderStatus = 2
                 AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
                 ORDER BY a.startDate DESC
@@ -153,10 +155,11 @@ ORDER BY startDate DESC`);
         if (userRole === "Human Resources") {
             // RRHH: Ver todas las solicitudes aprobadas o rechazadas (justified = 0 o 1)
             return db.execute(
-                `SELECT a.*, u.birthName, u.surname, r.title
+                `SELECT a.*, u.birthName, u.surname, r.title, am.mediaLink
                 FROM absence AS a
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
+                JOIN absenceMedia as am ON a.absenceID = am.absenceIDFK
                 WHERE (a.hrStatus = 0 OR a.hrStatus = 1)
                 ORDER BY a.startDate DESC
                 LIMIT ? OFFSET ?`,
@@ -165,11 +168,12 @@ ORDER BY startDate DESC`);
         } else if (userRole === "Department Leader") {
             // Líder: Ver solicitudes aprobadas o rechazadas de su departamento
             return db.execute(
-                `SELECT a.*, u.birthName, u.surname, r.title
+                `SELECT a.*, u.birthName, u.surname, r.title, am.mediaLink
                 FROM absence AS a
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
                 JOIN user AS leader ON leader.userID = ?
+                JOIN absenceMedia as am ON a.absenceID = am.absenceIDFK
                 WHERE (a.leaderStatus = 0 OR a.leaderStatus = 1)
                 AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
                 ORDER BY a.startDate DESC
