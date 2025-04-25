@@ -135,7 +135,20 @@ class Fault {
     `SELECT f.*, m.mediaLink 
     FROM fault f, faultMedia m 
     WHERE faultID = faultIDFK
-    faultID = ?`, [faultID]);
+    AND faultID = ?`, [faultID]);
+  }
+
+  static updateFault({ faultID, reason, doneDate }) {
+    // 2) si existe, actualiza el fault existente
+    const updateSql = `
+      UPDATE fault
+         SET summary = ?,
+             doneDate = ?
+       WHERE faultID = ?
+    `;
+      return db.execute(updateSql, [reason, doneDate, faultID]);
+    
+
   }
 
 }

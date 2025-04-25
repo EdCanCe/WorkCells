@@ -30,6 +30,7 @@
                                 <th class="px-4 py-2">Reason</th>
                                 <th class="px-4 py-2">Done date</th>
                                 <th class="px-4 py-2">Evidence</th>
+                                <th class = "px-4 py-2">Modify</th>
                             </tr>
                         </thead>
                         <% if(faults.length > 0) { %>
@@ -58,8 +59,11 @@
                                         No evidence
                                       <% } %>                                      
                                 </td>
+                                <td>
+                                    <a class= "btnPrimary" href="/fault/modify/<%= f.faultID %>">Modify</a>
+                                </td>
                             </tr>
-                            <% }) %>
+                            <% }) %> 
                         </tbody>
                         <% } else { %>
                         <tr>

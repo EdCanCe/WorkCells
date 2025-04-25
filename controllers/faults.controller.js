@@ -1,6 +1,6 @@
 const Fault = require("../models/faults.model");
 const FaultMedia = require("../models/faultsMedia.model");
-const sessionVars = require('../util/sessionVars');
+const sessionVars = require("../util/sessionVars");
 
 exports.getAdd = (request, response, next) => {
     response.render("faultsAdd", {
@@ -10,7 +10,7 @@ exports.getAdd = (request, response, next) => {
 
 exports.postAdd = (request, response, next) => {
     if (!request.body.reason || !request.body.doneDate || !request.body.email) {
-         // Validación de valores en el cuerpo de la solicitud
+        // Validación de valores en el cuerpo de la solicitud
         return response.redirect("/error"); // Redirigir a una página de error si faltan datos
     }
 
@@ -19,8 +19,7 @@ exports.postAdd = (request, response, next) => {
         reason: request.body.reason,
         doneDate: request.body.doneDate,
         email: request.body.email,
-    }
-    );
+    });
 
     faults
         .save()
@@ -45,17 +44,15 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getCheck = (request, response, next) => {
-
     // TODO: Checar que si pueda acceder a verlo
     console.log(request.params);
 
-    Fault.fetchByID(request.params.faultID)
-        .then(([rows]) => {
-            response.render("checkFault", {
-                ...sessionVars(request),
-                fault: rows[0],
-            });
-        })
+    Fault.fetchByID(request.params.faultID).then(([rows]) => {
+        response.render("checkFault", {
+            ...sessionVars(request),
+            fault: rows[0],
+        });
+    });
 };
 
 exports.getRoot = (request, response, next) => {
@@ -77,28 +74,25 @@ exports.getSearch = (request, response) => {
     const query = request.query.query || "";
     const limit = 6;
     const offset = (page - 1) * limit;
-  
+
     let searchPromise;
     if (query) {
-      // Si se proporciona una consulta, se usa el método de búsqueda
-      searchPromise = Fault.searchByQuery(query, limit, offset);
+        // Si se proporciona una consulta, se usa el método de búsqueda
+        searchPromise = Fault.searchByQuery(query, limit, offset);
     } else {
-      // Si no hay búsqueda, se usa la paginación estándar
-      searchPromise = Fault.getFaltasPaginated(limit, offset);
+        // Si no hay búsqueda, se usa la paginación estándar
+        searchPromise = Fault.getFaltasPaginated(limit, offset);
     }
-  
+
     searchPromise
-      .then(([rows]) => {
-        response.json({ faults: rows, page, query });
-      })
-      .catch((error) => {
-        console.error("Error al obtener las faltas:", error);
-        response
-          .status(500)
-          .json({ error: "Error al obtener las faltas" });
-      });
-  };
-  
+        .then(([rows]) => {
+            response.json({ faults: rows, page, query });
+        })
+        .catch((error) => {
+            console.error("Error al obtener las faltas:", error);
+            response.status(500).json({ error: "Error al obtener las faltas" });
+        });
+};
 
 exports.postDelete = (request, response, next) => {
     const fault = new Fault({
@@ -106,13 +100,51 @@ exports.postDelete = (request, response, next) => {
         userID: request.body.userID,
     });
 
-    fault.delete()
+    fault
+        .delete()
         .then(() => {
-            request.session.info = 'It was deleted successfully';
-            response.redirect('/fault');
+            request.session.info = "It was deleted successfully";
+            response.redirect("/fault");
         })
         .catch((error) => {
             request.session.alert = error.message;
-            response.redirect('/fault');
+            response.redirect("/fault");
+        });
+};
+
+// controllers/faults.controller.js
+exports.UpdateFault = (req, res, next) => {
+    const faultID = req.params.faultID;
+    const reason = req.body.reason;
+    const doneDate = req.body.doneDate;
+
+    if (!reason || !doneDate) {
+        return res.redirect("/error");
+    }
+
+    // IMPORTANTE: retornamos la promesa para encadenar correctamente
+    return Fault.updateFault({ faultID, reason, doneDate })
+        .then((updatedID) => {
+            req.session.info = `Fault ${updatedID} updated correctly.`;
+
+            if (req.file) {
+                // limpiar medias anteriores y guardar la nueva
+                return FaultMedia.clear(faultID).then(() => {
+                    const media = new FaultMedia(req.file.filename, updatedID);
+                    return media.save();
+                });
+            }
+
+            // si no hay archivo, devolvemos una promesa ya resuelta
+            return Promise.resolve();
         })
+        .then(() => {
+            // este redirect ya espera a que termine clear() + save()
+            res.redirect("/fault");
+        })
+        .catch((err) => {
+            console.error(err);
+            req.session.warning = "Error al actualizar datos.";
+            res.status(500).redirect("/fault");
+        });
 };
