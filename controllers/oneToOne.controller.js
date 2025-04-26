@@ -1,4 +1,3 @@
-const { response } = require("express");
 const OneToOne = require("../models/oneToOne.model");
 const Question = require("../models/question.model");
 const Measurable = require("../models/measurable.model");
@@ -6,8 +5,6 @@ const Answer = require("../models/answer.model");
 const Measure = require("../models/measure.model");
 const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
-const { session } = require("passport");
-const { off } = require("process");
 
 exports.getOneToOne = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -73,8 +70,8 @@ exports.postOneToOneSchedule = (request, response, next) => {
                 oneOnOneUserIDFK
             );
 
-            request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
             return meeting.save().then(() => {
+                request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
                 response.redirect("/oneToOne");
             });
         })
