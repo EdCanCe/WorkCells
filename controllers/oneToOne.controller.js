@@ -17,6 +17,7 @@ exports.getOneToOne = (request, response, next) => {
                 response.render("oneToOneCheckAll", {
                     sessions: rows,
                     ...sessionVars(request),
+                    role: role,
                 });
             })
             .catch((err) => {
@@ -33,6 +34,7 @@ exports.getOneToOne = (request, response, next) => {
                 response.render("oneToOneCheckAll", {
                     sessions: rows,
                     ...sessionVars(request),
+                    role: role,
                 });
             })
             .catch((err) => {

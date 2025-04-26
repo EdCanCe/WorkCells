@@ -5,7 +5,8 @@ const oneToOneController = require("../controllers/oneToOne.controller.js");
 const isAuth = require("../util/is-auth");
 const OTO = require("../util/OneToOnePrivilege/OneToOnePrivilege.js");
 
-router.get("/check/search", isAuth, OTO, oneToOneController.getSearch);
+router.get("/check/all", isAuth, OTO, oneToOneController.getSearch);
+router.get("/check/own", isAuth, oneToOneController.getSearch);
 router.get("/", isAuth, oneToOneController.getOneToOne);
 
 router.get("/schedule", isAuth, OTO, oneToOneController.getOneToOneSchedule);
