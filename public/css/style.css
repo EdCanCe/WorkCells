@@ -1394,7 +1394,7 @@
   display: block !important;
   width: fit-content;
 }
-.centerItem {
+.centerItems {
   display: flex;
   align-items: center;
   justify-content: center;

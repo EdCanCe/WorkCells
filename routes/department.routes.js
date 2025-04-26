@@ -18,7 +18,6 @@ router.get("/add", isAuth, departmentPrivilege, departmentController.getAddDepar
 router.post("/add", isAuth, departmentPrivilege, departmentController.postAddDepartment);
 router.get("/search", isAuth, departmentController.getDepartmentsPaginated);
 router.get("/paginated", isAuth, departmentController.getEmployeesPaginated);
-router.get("/employee/:userID", isAuth, employeeControllers.getEmployee);
 router.get("/:departmentID", isAuth, departmentController.getEmployees);
 router.get(
     "/:departmentID/find",
