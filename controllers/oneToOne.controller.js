@@ -8,9 +8,40 @@ const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
 
 exports.getOneToOne = (request, response, next) => {
-    response.render("oneToOne", {
-        ...sessionVars(request),
-    });
+    const role = sessionVars(request).role;
+
+    if (role === "Colaborator" || role === "Department Leader") {
+        const userID = sessionVars(request).userID;
+        OneToOne.getOwnSessions(userID)
+            .then(([rows, fieldData]) => {
+                response.render("oneToOneCheckAll", {
+                    sessions: rows,
+                    ...sessionVars(request),
+                });
+            })
+            .catch((err) => {
+                console.error(
+                    "Error en la promesa de usuarios y sesiones ",
+                    err
+                );
+            });
+    }
+    // superadmin
+    else {
+        OneToOne.getAllSessions()
+            .then(([rows, fieldData]) => {
+                response.render("oneToOneCheckAll", {
+                    sessions: rows,
+                    ...sessionVars(request),
+                });
+            })
+            .catch((err) => {
+                console.error(
+                    "Error en la promesa de usuarios y sesiones ",
+                    err
+                );
+            });
+    }
 };
 
 exports.getOneToOneSchedule = (request, response, next) => {
@@ -200,20 +231,7 @@ exports.getFullName = (request, response, next) => {
         });
 };
 
-exports.getSessions = (request, response, next) => {
-    OneToOne.getAllSessions()
-        .then(([rows, fieldData]) => {
-            console.log(rows);
-
-            response.render("oneToOneCheckAll", {
-                sessions: rows,
-                ...sessionVars(request),
-            });
-        })
-        .catch((err) => {
-            console.error("Error en la promesa de usuarios y sesiones ", err);
-        });
-};
+exports.getSessions = (request, response, next) => {};
 
 exports.getSearch = (request, response, next) => {
     const page = parseInt(request.query.page) || 1;

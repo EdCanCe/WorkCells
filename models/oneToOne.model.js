@@ -126,6 +126,24 @@ module.exports = class OneToOne {
         );
     }
 
+    /*
+     * Funcion que obtiene informacion de los usuarios, su rol y tambien la fecha
+     * y hora de sus propias sesiones one on one
+     *
+     * @returns informacion sus propias sesiones
+     *
+     */
+    static getOwnSessions(userID) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
+            o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            WHERE u.userID = ?
+            ORDER BY o.meetingDate DESC`,
+            [userID]
+        );
+    }
+
     static getAllSessionsPaginated(limit, offset) {
         return db.execute(
             `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
