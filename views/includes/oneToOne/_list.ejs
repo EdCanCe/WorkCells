@@ -1,6 +1,7 @@
 <div class="fullContainer">
     <h2 class="text-2xl font-bold mb-4">One To One</h2>
 
+    <% if (role == "Human Resources") { %>
     <div class="flex justify-center w-full">
         <div
             class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
@@ -10,6 +11,7 @@
                 alt="search"
                 class="navIcon absolute w-6 h-6 text-white"
             />
+
             <input
                 id="search"
                 name="search"
@@ -18,7 +20,11 @@
                 class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
             />
         </div>
+        <div class="p-4 rounded-md">
+            <a href="oneToOne/Schedule" class="btnPrimary">Schedule</a>
+        </div>
     </div>
+    <% } else {} %>
 
     <div
         id="table"

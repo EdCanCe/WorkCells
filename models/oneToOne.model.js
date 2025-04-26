@@ -144,6 +144,18 @@ module.exports = class OneToOne {
         );
     }
 
+    static getOwnSessionsPaginated(userID, limit, offset) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
+            o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            WHERE u.userID = ?
+            ORDER BY o.meetingDate DESC
+            LIMIT ? OFFSET ?`,
+            [userID, limit, offset]
+        );
+    }
+
     static getAllSessionsPaginated(limit, offset) {
         return db.execute(
             `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
@@ -163,6 +175,19 @@ module.exports = class OneToOne {
             WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
             ORDER BY o.meetingDate DESC`,
             [`%${query}%`, `%${query}%`]
+        );
+    }
+
+    static searchByID(query, userID) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
+            o.oneOnOneID, o.expectedTime FROM user u 
+            JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
+            AND u.userID = ?
+            ORDER BY o.meetingDate DESC`,
+            [`%${query}%`, `%${query}%`, userID]
         );
     }
 };

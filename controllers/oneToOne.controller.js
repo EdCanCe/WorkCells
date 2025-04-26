@@ -6,6 +6,8 @@ const Answer = require("../models/answer.model");
 const Measure = require("../models/measure.model");
 const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
+const { session } = require("passport");
+const { off } = require("process");
 
 exports.getOneToOne = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -15,8 +17,8 @@ exports.getOneToOne = (request, response, next) => {
         OneToOne.getOwnSessions(userID)
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
-                    sessions: rows,
                     ...sessionVars(request),
+                    sessions: rows,
                     role: role,
                 });
             })
@@ -32,8 +34,8 @@ exports.getOneToOne = (request, response, next) => {
         OneToOne.getAllSessions()
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
-                    sessions: rows,
                     ...sessionVars(request),
+                    sessions: rows,
                     role: role,
                 });
             })
@@ -71,9 +73,9 @@ exports.postOneToOneSchedule = (request, response, next) => {
                 oneOnOneUserIDFK
             );
 
+            request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
             return meeting.save().then(() => {
-                request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
-                response.redirect("/oneToOne/schedule");
+                response.redirect("/oneToOne");
             });
         })
         .catch((err) => {
@@ -233,9 +235,7 @@ exports.getFullName = (request, response, next) => {
         });
 };
 
-exports.getSessions = (request, response, next) => {};
-
-exports.getSearch = (request, response, next) => {
+exports.getSearchAll = (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
     const query = request.query.query || "";
     const limit = 6;
@@ -244,6 +244,29 @@ exports.getSearch = (request, response, next) => {
     const searchPromise = query
         ? OneToOne.searchByName(query)
         : OneToOne.getAllSessionsPaginated(limit, offset);
+
+    searchPromise
+        .then(([rows]) => {
+            response.json({ rows, page, query });
+        })
+        .catch((error) => {
+            console.error("Error en la búsqueda/paginación:", error);
+            response
+                .status(500)
+                .json({ error: "Error en la búsqueda/paginación" });
+        });
+};
+
+exports.getSearchOwn = (request, response, next) => {
+    const userID = sessionVars(request).userID;
+    const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    const searchPromise = query
+        ? OneToOne.searchByID(query, userID)
+        : OneToOne.getOwnSessionsPaginated(userID, limit, offset);
 
     searchPromise
         .then(([rows]) => {
