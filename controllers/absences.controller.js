@@ -2,15 +2,16 @@ const Absence = require("../models/absence.model");
 const AbsenceMedia = require("../models/absenceMedia.model");
 const sessionVars = require("../util/sessionVars");
 const { sendTemplateMessage } = require('../util/whatsAppMessages');
+const title = 'Absences';
 
 exports.getCheck = (request, response, next) => {
     response.render("absence_check", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
 exports.getAdd = (request, response, next) => {
-    response.render("absencesAdd", { ...sessionVars(request) });
+    response.render("absencesAdd", { ...sessionVars(request, title) });
 };
 
 exports.postRequestApprove = async (request, response, next) => {
@@ -162,7 +163,7 @@ exports.getRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render('absenceRequests', {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 absences: rows,
                 role: userRole
             });
@@ -189,7 +190,7 @@ exports.getAllRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render('absenceAllRequests', {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 absences: rows,
                 role: userRole
             });
@@ -270,7 +271,7 @@ exports.getRoot = (request, response, next) => {
             // console.log(fieldData);
             // console.log(rows);
             response.render("absencesList", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 absences: rows,
             });
         })

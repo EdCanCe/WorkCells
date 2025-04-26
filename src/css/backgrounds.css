@@ -73,6 +73,10 @@
            dark:bg-(--darkBtnPrimaryLowOpacity);
 }
 
+.bgTitle {
+    @apply bg-(--darkColorNavBase) border-(--darkColorNavOne);
+}
+
 .invertText {
     @apply text-(--lightColorBase)
            dark:text-(--darkColorBase);

@@ -252,6 +252,9 @@
   .right-2 {
     right: calc(var(--spacing) * 2);
   }
+  .right-10 {
+    right: calc(var(--spacing) * 10);
+  }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
   }
@@ -397,6 +400,9 @@
   .h-7 {
     height: calc(var(--spacing) * 7);
   }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
@@ -436,8 +442,17 @@
   .max-h-\[500px\] {
     max-height: 500px;
   }
+  .max-h-\[calc\(100vh-60px\)\] {
+    max-height: calc(100vh - 60px);
+  }
   .max-h-screen {
     max-height: 100vh;
+  }
+  .min-h-\[60px\] {
+    min-height: 60px;
+  }
+  .min-h-full {
+    min-height: 100%;
   }
   .min-h-screen {
     min-height: 100vh;
@@ -465,6 +480,9 @@
   }
   .w-6 {
     width: calc(var(--spacing) * 6);
+  }
+  .w-8 {
+    width: calc(var(--spacing) * 8);
   }
   .w-12 {
     width: calc(var(--spacing) * 12);
@@ -687,6 +705,9 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
+  .\!rounded-full {
+    border-radius: calc(infinity * 1px) !important;
+  }
   .rounded {
     border-radius: 0.25rem;
   }
@@ -711,6 +732,10 @@
     border-bottom-right-radius: var(--radius-lg);
   }
   .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .border-1 {
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
@@ -751,6 +776,12 @@
   }
   .border-red-700 {
     border-color: var(--color-red-700);
+  }
+  .border-white\/30 {
+    border-color: color-mix(in oklab, var(--color-white) 30%, transparent);
+  }
+  .bg-\(--darkColorNavOne\) {
+    background-color: var(--darkColorNavOne);
   }
   .bg-\[\#003E6D\] {
     background-color: #003E6D;
@@ -799,6 +830,9 @@
   }
   .object-cover {
     object-fit: cover;
+  }
+  .\!p-0 {
+    padding: calc(var(--spacing) * 0) !important;
   }
   .\!p-3 {
     padding: calc(var(--spacing) * 3) !important;
@@ -1221,6 +1255,7 @@
 :root {
   --lightColorNavBase: #e5e5e5;
   --darkColorNavBase: #171717;
+  --darkColorNavBase: #101010;
   --lightColorNavOne: #a1a1a1;
   --darkColorNavOne: #404040;
   --lightColorNavTwo: #d4d4d4;
@@ -1367,6 +1402,10 @@
     background-color: var(--darkBtnPrimaryLowOpacity);
   }
 }
+.bgTitle {
+  border-color: var(--darkColorNavOne);
+  background-color: var(--darkColorNavBase);
+}
 .invertText {
   color: var(--lightColorBase);
   &:where(.dark, .dark *) {
@@ -1381,11 +1420,13 @@
   margin: auto;
   min-height: 100%;
   max-width: 960px;
+  min-width: 960px;
   padding: calc(var(--spacing) * 6);
 }
 .fullContainer {
   min-height: 100%;
   max-width: 100%;
+  min-width: 100%;
   padding: calc(var(--spacing) * 6);
 }
 .center {

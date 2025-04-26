@@ -1,10 +1,11 @@
 const Report = require("../models/report.model");
 const sessionVars = require("../util/sessionVars");
 const puppeteer = require("puppeteer");
+const title = 'Reports';
 
 exports.getRoot = (request, response, next) => {
     response.render("reportsMenu", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -51,7 +52,7 @@ exports.getEmployeeRotation = (request, response, next) => {
                 [inactivesPerMonth],
             ]) => {
                 response.render("reportRotation", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     activeUsers: activeUsers,
                     inactiveUsers: inactiveUsers,
                     departments: departments,
@@ -87,7 +88,7 @@ exports.getOneonOneDepartment = (request, response, next) => {
         .then(([departments]) => {
             if (!departmentID) {
                 return response.render("oneOnOne", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     departments,
                     workload: [],
                     physicalHealth: [],
@@ -148,7 +149,7 @@ exports.getOneonOneDepartment = (request, response, next) => {
 
                     // Render normal con todos los datos
                     response.render("oneOnOne", {
-                        ...sessionVars(request),
+                        ...sessionVars(request, title),
                         departments,
                         workload: workloadRows,
                         physicalHealth: physicalHealthRows,

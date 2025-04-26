@@ -1,10 +1,11 @@
 const Usuario = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
+const title = '';
 
 // Renderiza la vista de login
 exports.get_login = (request, response, next) => {
     response.render("login.ejs", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 

@@ -3,6 +3,7 @@ const Department = require("../models/department.model");
 const Enterprise = require("../models/enterprise.model");
 const Employee = require("../models/employee.model");
 const { create } = require("domain");
+const title = 'Departments';
 
 exports.getDepartments = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -25,7 +26,7 @@ exports.getDepartments = (request, response, next) => {
             .then(([rows, fieldData]) => {
                 //console.log(rows);
                 response.render("leaderDepartmentList", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     department: departmentData,
                     rows: rows,
                 });
@@ -40,7 +41,7 @@ exports.getDepartments = (request, response, next) => {
         Department.getAllDepartments()
             .then(([rows, fieldData]) => {
                 response.render("checkDepartment", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     rows: rows,
                 });
             })
@@ -154,7 +155,7 @@ exports.getAddDepartment = (request, response, next) => {
                     );
 
                     response.render("addDepartment", {
-                        ...sessionVars(request),
+                        ...sessionVars(request, title),
                         enterprises,
                         collaborators,
                         leaders,
@@ -194,7 +195,7 @@ exports.postAddDepartment = (request, response, next) => {
 
 exports.getCheckDepartment = (request, response, next) => {
     response.render("checkOneDpmt", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -237,7 +238,7 @@ exports.getModifyDepartment = async (request, response, next) => {
         );
 
         response.render("modifyDepartment", {
-            ...sessionVars(request),
+            ...sessionVars(request, title),
             departmentCollaborators,
             enterprises,
             collaborators,

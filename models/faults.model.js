@@ -44,24 +44,6 @@ class Fault {
   
 
     delete() {
-
-        console.log("User delete: ", this.userID);
-        console.log("Fault delete: ", this.faultID);
-
-        return db.execute(`SELECT faultID FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID])
-            .then(([rows]) => {
-                if (rows.length === 0) {
-                    throw new Error('There are no faults with this ID and user');
-                }
-                return db.execute(`DELETE FROM faultMedia WHERE faultIDFK = ?`, [this.faultID])
-                    .then(() => {
-                        return db.execute(`DELETE FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID]);
-                    });
-            });
-    }
-
-    delete() {
-
         console.log("User delete: ", this.userID);
         console.log("Fault delete: ", this.faultID);
 

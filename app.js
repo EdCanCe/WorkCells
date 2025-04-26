@@ -116,7 +116,7 @@ const sessionVars = require("./util/sessionVars");
 app.use((request, response, next) => {
     response.statusCode = 404;
     response.render("notFound", {
-        ...sessionVars(request),
+        ...sessionVars(request, 'ERROR 404'),
     });
 });
 

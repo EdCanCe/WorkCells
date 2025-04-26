@@ -15,7 +15,7 @@ module.exports = (request, response, userID, isOwn) => {
         .then(([rows]) => {
             // Manda a renderizar el perfil del usuario
             response.render("employeeProfile", {
-                ...sessionVars(request),
+                ...sessionVars(request, 'Profile'),
                 isOwn,
                 userData: rows[0],
                 API: process.env.GEOLOCATION_API_KEY,

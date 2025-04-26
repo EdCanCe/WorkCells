@@ -4,6 +4,7 @@ const sessionVars = require("../util/sessionVars");
 const WorkStatus = require("../models/workStatus.model");
 const bcrypt = require("bcryptjs");
 const openProfile = require('../util/openProfile');
+const title = 'Employees';
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -14,7 +15,7 @@ exports.getAdd = (request, response, next) => {
         .then(([[countries], [roles], [departments]]) => {
             // Limpiar el mensaje después de usarlo
             response.render("employeeAdd", {
-                ...sessionVars(request), // Variables de la sesión
+                ...sessionVars(request, title), // Variables de la sesión
                 employees: countries, // Lista de países
                 roles: roles, // Lista de roles
                 departments: departments, // Lista de departamentos
@@ -106,7 +107,7 @@ exports.getModify = (request, response, next) => {
                         const department = employeeDepartment[0] || null;
 
                         response.render("employeeCheckModify", {
-                            ...sessionVars(request),
+                            ...sessionVars(request, title),
                             employee: employee,
                             country: country, // País específico del empleado
                             role: role, // Rol específico del empleado
@@ -254,7 +255,7 @@ exports.getProfile = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -298,7 +299,7 @@ exports.getSearch = (request, response, next) => {
 
 exports.getChangePassword = (request, response, next) => {
     response.render("employeeChangePassword", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -427,12 +428,18 @@ exports.getEmployeeFaults = (request, response, next) => {
     // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
     const userID = request.params.userID === undefined ? request.session.userID : request.params.userID;
 
+    // Si no es el dueño de las faltas ni es SuperAdmin, no tiene permisos
+    if (userID !== request.session.userID && request.session.role !== 'Human Resources') {
+        request.session.alert = 'You have no permission to view this';
+        response.redirect('/error');
+    }
+
     // Renderiza las faltas del usuario
     Employee.getOwnFaults(userID)
         .then(([faults, fieldData]) => {
             console.log(faults);
             response.render("employeeFaults", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 faults: faults,
             });
         })

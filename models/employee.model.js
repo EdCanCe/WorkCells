@@ -366,10 +366,10 @@ module.exports = class Employee {
     static getOwnFaults(userID) {
         return db.execute(
             `SELECT f.*, fm.mediaLink, u.birthName, u.surname
-            FROM fault f, faultMedia fm, user u
-            WHERE f.faultUserIDFK = u.userID
-            AND f.faultID = fm.faultIDFK
-            AND u.userID = ?
+            FROM fault f
+            JOIN user u ON f.faultUserIDFK = u.userID
+            LEFT JOIN faultMedia fm ON f.faultID = fm.faultIDFK
+            WHERE u.userID = ?
             GROUP BY f.faultID
             ORDER BY f.doneDate DESC`,
             [userID]

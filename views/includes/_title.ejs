@@ -1,0 +1,14 @@
+<% if (title !== '') { %>
+    <div id="titleBar" class="w-full bgNavTwo border-b-1 min-h-[60px] relative centerItems">
+        <p class="text-xl font-semibold"><%= title %></p>
+        <% if (userManualAdress !== '') { %>
+            <a
+                class="!flex w-8 h-8 absolute right-10 !rounded-full !p-0 border-white/30 border-1 bg-(--darkColorNavOne) centerItems"
+                href="/uploads/manual/<% userManualAdress %>"
+                target="_blank"
+            >
+                <span>?</span>
+            </a>
+        <% } %>
+    </div>
+<% } %>

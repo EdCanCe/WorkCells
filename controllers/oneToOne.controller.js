@@ -6,16 +6,17 @@ const Answer = require("../models/answer.model");
 const Measure = require("../models/measure.model");
 const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
+const title = 'One To One';
 
 exports.getOneToOne = (request, response, next) => {
     response.render("oneToOne", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
 exports.getOneToOneSchedule = (request, response, next) => {
     response.render("oneToOneAdd", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -65,7 +66,7 @@ exports.getOneToOneFill = (request, response, next) => {
                 Measurable.fetchAll().then(([measurables]) => {
                     // Renderiza el formulario para llenar los datos
                     response.render("oneToOneFill", {
-                        ...sessionVars(request),
+                        ...sessionVars(request, title),
                         questions,
                         measurables,
                         name: `${rows[0].birthName} ${rows[0].surname}`,
@@ -114,7 +115,7 @@ exports.postOneToOneFill = (request, response, next) => {
 
 exports.getOneToOneGraphs = (request, response, next) => {
     response.render("oneToOneGraphs", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -143,7 +144,7 @@ exports.getOneToOneCheck = (request, response, next) => {
                     // En caso de que no haya respuestas, indica que no está llenado
                     if (answers.length === 0) {
                         response.render("oneToOneCheck", {
-                            ...sessionVars(request),
+                            ...sessionVars(request, title),
                             isFilled: "0",
                             sessionData: rows[0],
                             sessionID: request.params.sessionID,
@@ -157,7 +158,7 @@ exports.getOneToOneCheck = (request, response, next) => {
                             console.log(answers[0]);
                             console.log[measures[0]];
                             response.render("oneToOneCheck", {
-                                ...sessionVars(request),
+                                ...sessionVars(request, title),
                                 answers,
                                 measures,
                                 isFilled: "1",
@@ -207,7 +208,7 @@ exports.getSessions = (request, response, next) => {
 
             response.render("oneToOneCheckAll", {
                 sessions: rows,
-                ...sessionVars(request),
+                ...sessionVars(request, title),
             });
         })
         .catch((err) => {

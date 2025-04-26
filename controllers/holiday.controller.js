@@ -2,17 +2,18 @@ const { error } = require("console");
 const Holiday = require("../models/holiday.model");
 const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
+const title = 'Holidays';
 
 exports.getHolidays = (request, response, next) => {
     response.render("usedHoliday", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
 exports.getHolidaysAdd = (request, response, next) => {
     Holiday.fetchAll().then(([rows]) => {
         response.render("holidayAdd", {
-            ...sessionVars(request),
+            ...sessionVars(request, title),
             holidays: rows,
         });
     });
@@ -40,7 +41,7 @@ exports.postHolidaysAdd = (request, response, next) => {
 
 exports.getHoliday = (request, response, next) => {
     response.render("holidayCheck", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -48,7 +49,7 @@ exports.getUsedHoliday = (request, response, next) => {
     Holiday.fetchUsedHoliday()
         .then(([rows, fieldData]) => {
             response.render("usedHoliday", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 holidays: rows,
             });
         })
@@ -88,7 +89,7 @@ exports.getHolidayModify = (request, response, next) => {
             const holiday = rows[0];
             console.log(rows);
             response.render("holidayModify", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 holiday,
             });
         })
@@ -133,7 +134,7 @@ exports.getCheckHoliday = (request, response, next) => {
 
             const holiday = rows[0];
             response.render("checkUsedHoliday", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 holiday,
                 csrfToken: request.csrfToken(),
             });

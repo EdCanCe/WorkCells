@@ -35,8 +35,13 @@
         <div class="noMargin w-screen h-screen max-h-screen flex flex-row">
             <%- include('_navbar') %>
 
-            <div class="block w-full h-screen max-h-screen overflow-auto">
-                <%- include('_toggleDark.ejs') %>
+            <!-- Div donde estará el contenido principal -->
+            <div class="flex flex-col w-full h-screen max-h-screen overflow-auto noMargin">
+                <%- include('_title') %>
+                
+                <!-- Div donde va el contenido de la página en si -->
+                <div class="block min-w-full h-screen <%= title !== '' ? 'max-h-[calc(100vh-60px)]' : 'max-h-screen' %> overflow-auto noMargin">
+                    <%- include('_toggleDark.ejs') %>
+                    <%- include('_status.ejs') %>
 
-                <%- include('_status.ejs') %>
-                <!-- !CUIDADO AL USAR PRETTIER EN ESTE ARCHIVO -->
+                    <!-- !CUIDADO AL USAR PRETTIER EN ESTE ARCHIVO -->

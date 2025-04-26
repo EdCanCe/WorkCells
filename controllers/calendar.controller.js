@@ -4,6 +4,7 @@ const OneToOne = require('../models/oneToOne.model');
 const Holiday = require('../models/holiday.model');
 const formatDate = require('../util/formatDate');
 const sessionVars = require('../util/sessionVars');
+const title = 'Calendar';
 
 exports.getRoot = (request, response, next) => {
 
@@ -72,7 +73,7 @@ exports.getRoot = (request, response, next) => {
     console.log(sqlStartDate, sqlEndDate);
 
     response.render('calendar', {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
         isMonthView,
         today: formatDate.forSql(today),
         weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
