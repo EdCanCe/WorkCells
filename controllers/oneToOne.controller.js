@@ -11,7 +11,7 @@ exports.getOneToOne = (request, response, next) => {
     const role = request.session.role;
 
     if (role === "Colaborator" || role === "Department Leader") {
-        const userID = request.session.userID
+        const userID = request.session.userID;
         OneToOne.getOwnSessions(userID)
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
@@ -47,9 +47,17 @@ exports.getOneToOne = (request, response, next) => {
 };
 
 exports.getOneToOneSchedule = (request, response, next) => {
-    response.render("oneToOneAdd", {
-        ...sessionVars(request, title),
-    });
+    OneToOne.getAllWorkers()
+        .then(([rows, fieldData]) => {
+            //console.log(rows);
+            response.render("oneToOneAdd", {
+                ...sessionVars(request, title),
+                workers: rows,
+            });
+        })
+        .catch((err) => {
+            console.log("Error obtaining workerData", err);
+        });
 };
 
 exports.postOneToOneSchedule = (request, response, next) => {

@@ -1,6 +1,5 @@
 <div class="primaryContainer bgContainer1">
-    <div
-    >
+    <div>
         <!-- Formulario para agendar la sesión -->
         <div class="sm:col-span-2">
             <div>
@@ -15,14 +14,14 @@
                 <!-- Datos de la reunión -->
                 <div class="mb-6">
                     <h3 class="text-xl font-semibold mb-2 text-white">
-                        Datos de la reunión
+                        Session information:
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label
                                 for="sessionDate"
                                 class="block text-neutral-300 mb-1"
-                                >Fecha del One To One:</label
+                                >* One To One date:</label
                             >
                             <input
                                 id="sessionDate"
@@ -34,7 +33,7 @@
                         </div>
                         <div>
                             <label class="block text-neutral-300 mb-1"
-                                >Hora de la reunión:</label
+                                >* One To One time:</label
                             >
                             <input
                                 class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
@@ -47,7 +46,7 @@
                             <label
                                 for="durationInput"
                                 class="block text-neutral-300 mb-1"
-                                >Duración estimada (minutos):</label
+                                >* Estimated duration (minutes):</label
                             >
                             <input
                                 placeholder="15"
@@ -58,13 +57,14 @@
                                 required
                                 min="1"
                                 max="60"
+                                value="15"
                             />
                         </div>
                         <div>
                             <label
                                 for="meetingLink"
                                 class="block text-neutral-300 mb-1"
-                                >Enlace a reunión:</label
+                                >Meeting Link:</label
                             >
                             <input
                                 id="meetLink"
@@ -77,54 +77,35 @@
                         </div>
                     </div>
                 </div>
-
+                <!--Worker section-->
                 <div class="mb-6">
                     <h3 class="text-xl font-semibold mb-2 text-white">
-                        Worker data
+                        Worker:
                     </h3>
                     <div class="mb-4">
                         <label class="block text-neutral-300 mb-1"
-                            >Worker's email:</label
+                            >Select a worker:</label
                         >
-                        <input
-                            id="buscar"
-                            placeholder="ejemplo@nuclea.solutions"
-                            class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                            type="email"
+                        <select
+                            id="worker"
                             name="email"
+                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
                             required
-                        />
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-neutral-300 mb-1"
-                                >Worker's name:</label
-                            >
-                            <input
-                                id="workerName"
-                                class="bg-neutral-600/50 w-full p-2 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                type="text"
-                                name="name"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-neutral-300 mb-1"
-                                >Worker's surname:</label
-                            >
-                            <input
-                                id="workerSurname"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                                type="text"
-                                name="surname"
-                                required
-                            />
-                        </div>
+                        >
+                            <option value="" selected disabled>
+                                Select a Worker From the list
+                            </option>
+                            <% workers.forEach((w) => { %>
+                            <option value="<%= w.mail %>">
+                                <%= w.birthName %> <%= w.surname %> - <%=
+                                w.department %> - <%= w.company %>
+                            </option>
+                            <% }) %>
+                        </select>
                     </div>
                 </div>
                 <div class="text-center">
-                    <input class="btnPrimary" type="submit" value="Enviar" />
+                    <input class="btnPrimary" type="submit" value="Submit" />
                 </div>
             </form>
         </div>
@@ -157,39 +138,4 @@
     meetLinkInput.oninput = function (event) {
         event.target.setCustomValidity("");
     };
-
-    /*AJAX tqm :)*/
-    const buscador = document.getElementById("buscar");
-    const workerNameInput = document.getElementById("workerName");
-    const workerSurnameInput = document.getElementById("workerSurname");
-
-    // Cada vez que el usuario escriba en el input de email...
-    buscador.addEventListener("keyup", () => {
-        const email = buscador.value.trim();
-        if (email !== "") {
-            // Realiza una petición GET a la nueva ruta
-            fetch("/oneToOne/getFullName/" + encodeURIComponent(email), {
-                method: "GET",
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        // Actualiza los inputs con el nombre y apellido obtenidos
-                        workerNameInput.value = data.birthName;
-                        workerSurnameInput.value = data.surname;
-                    } else {
-                        // Si no se encontró el usuario, limpia los campos
-                        workerNameInput.value = "";
-                        workerSurnameInput.value = "";
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching full name:", error);
-                });
-        } else {
-            // Si el input está vacío, limpiar los campos
-            workerNameInput.value = "";
-            workerSurnameInput.value = "";
-        }
-    });
 </script>
