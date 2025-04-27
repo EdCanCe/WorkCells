@@ -6,7 +6,7 @@ async function loadHolidays(page) {
 
   let table = `
     <table class="min-w-full divide-y divide-gray-400">
-      <thead class="bg-neutral-800 text-white text-left text-lg">
+      <thead class="tHead">
         <tr>
           <th class="px-6 py-4">Holidays</th>
           <th class="px-6 py-4">Date</th>

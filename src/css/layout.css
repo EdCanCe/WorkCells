@@ -17,3 +17,32 @@
 .centerItems {
     @apply flex justify-center items-center;
 }
+
+/*Etiqueta: <table>*/
+.table{
+    @apply min-w-full divide-y divide-neutral-200 text-center
+}
+/*Etiqueta: <thead>*/
+.tHead{
+    @apply bg-neutral-800/50 uppercase
+}
+/*Etiqueta: <tbody>*/
+.tBody{
+    @apply bg-neutral-800 divide-y divide-neutral-200
+}
+/*Etiqueta: <th>*/
+.hRow{
+    @apply px-6 py-3 text-left font-medium tracking-wider
+}
+/*Alternativa de paginacion sin mas datos*/
+.dataless{
+    @apply px-6 py-4 text-white text-center
+}
+/*Etiqueta: <tr>*/
+.tRow{
+    @apply hover:bg-neutral-700 border-b border-neutral-600
+}
+/*Etiqueta: <td>*/
+.tContent{
+    @apply px-6 py-4 text-white
+}
