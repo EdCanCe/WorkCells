@@ -49,7 +49,7 @@ exports.getOneToOne = (request, response, next) => {
 exports.getOneToOneSchedule = (request, response, next) => {
     OneToOne.getAllWorkers()
         .then(([rows, fieldData]) => {
-            console.log(rows);
+            //console.log(rows);
             response.render("oneToOneAdd", {
                 ...sessionVars(request, title),
                 workers: rows,

@@ -80,7 +80,7 @@
                 <!--Worker section-->
                 <div class="mb-6">
                     <h3 class="text-xl font-semibold mb-2 text-white">
-                        Worker
+                        Worker:
                     </h3>
                     <div class="mb-4">
                         <label class="block text-neutral-300 mb-1"
@@ -95,7 +95,12 @@
                             <option value="" selected disabled>
                                 Select a Worker From the list
                             </option>
-                            <option value=""></option>
+                            <% workers.forEach((w) => { %>
+                            <option value="<%= w.mail %>">
+                                <%= w.birthName %> <%= w.surname %> - <%=
+                                w.department %> - <%= w.company %>
+                            </option>
+                            <% }) %>
                         </select>
                     </div>
                 </div>
