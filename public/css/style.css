@@ -265,8 +265,14 @@
   .z-10 {
     z-index: 10;
   }
+  .col-span-7 {
+    grid-column: span 7 / span 7;
+  }
   .col-span-full {
     grid-column: 1 / -1;
+  }
+  .row-span-1 {
+    grid-row: span 1 / span 1;
   }
   .container {
     width: 100%;
@@ -294,6 +300,9 @@
   }
   .m-4 {
     margin: calc(var(--spacing) * 4);
+  }
+  .m-\[2px\] {
+    margin: 2px;
   }
   .m-auto {
     margin: auto;
@@ -407,9 +416,6 @@
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
-  .h-24 {
-    height: calc(var(--spacing) * 24);
-  }
   .h-40 {
     height: calc(var(--spacing) * 40);
   }
@@ -418,9 +424,6 @@
   }
   .h-\[60px\] {
     height: 60px;
-  }
-  .h-\[500px\] {
-    height: 500px;
   }
   .h-fit {
     height: fit-content;
@@ -431,17 +434,11 @@
   .h-screen {
     height: 100vh;
   }
-  .max-h-24 {
-    max-height: calc(var(--spacing) * 24);
-  }
   .max-h-40 {
     max-height: calc(var(--spacing) * 40);
   }
   .max-h-\[300px\] {
     max-height: 300px;
-  }
-  .max-h-\[500px\] {
-    max-height: 500px;
   }
   .max-h-\[calc\(100vh-60px\)\] {
     max-height: calc(100vh - 60px);
@@ -560,11 +557,17 @@
   .cursor-pointer {
     cursor: pointer;
   }
+  .resize {
+    resize: both;
+  }
   .resize-none {
     resize: none;
   }
   .list-disc {
     list-style-type: disc;
+  }
+  .auto-rows-fr {
+    grid-auto-rows: minmax(0, 1fr);
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -691,6 +694,9 @@
     :where(& > :not(:last-child)) {
       border-color: var(--color-neutral-200);
     }
+  }
+  .\!overflow-hidden {
+    overflow: hidden !important;
   }
   .overflow-auto {
     overflow: auto;
@@ -1246,9 +1252,9 @@
   --darkColorNavTwo: #262626;
   --lightColorBase: #fafafa;
   --darkColorBase: #0a0a0a;
-  --lightBtnPrimary: #1dd2b4;
+  --lightBtnPrimary: #1072c2;
   --darkBtnPrimary: #1b3f43;
-  --lightBtnPrimaryLowOpacity: #1dd2b466;
+  --lightBtnPrimaryLowOpacity: #1072c266;
   --darkBtnPrimaryLowOpacity: #1b3f4366;
   --lightBtnSuccess: #30e16e;
   --darkBtnSuccess: #029033;
@@ -1681,6 +1687,20 @@
 }
 .statusBarAnimate {
   animation: statusBar 7s linear forwards;
+}
+@keyframes glow {
+  0% {
+    opacity: 100%;
+  }
+  50% {
+    opacity: 30%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+.glowing {
+  animation: glow 2s infinite;
 }
 @page {
   size: A4 landscape;

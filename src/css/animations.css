@@ -49,3 +49,21 @@
 .statusBarAnimate {
     animation: statusBar 7s linear forwards;
 }
+
+@keyframes glow {
+    0% {
+        opacity: 100%;
+    }
+
+    50% { 
+        opacity: 30%;
+    }
+
+    100% {
+        opacity: 100%;
+    }
+}
+
+.glowing {
+    animation: glow 2s infinite;
+}

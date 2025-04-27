@@ -327,7 +327,7 @@ module.exports = class Employee {
                                 (mail = ? AND mail IS NOT NULL));`;
 
         return db
-            .execute(checkUserQuery, [curp, rfc, mail, userID])
+            .execute(checkUserQuery, [userID, curp, rfc, mail])
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(

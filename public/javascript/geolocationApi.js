@@ -140,14 +140,14 @@ const addressLoader = (apiKey, adressHtml, mapContainerHtml, street, houseNum, c
     const initialAdress = adressHtml.innerHTML;
 
     // Muestra mensaje para que el usuario sepa que se está realizando la petición
-    adressHtml.innerHTML = `${initialAdress} | Waiting for adress...`;
+    adressHtml.innerHTML = `${initialAdress} | <span class="glowing">Waiting for adress...</span>`;
     getAdress(apiKey, street, houseNum, colony, zipCode, country)
         .then((fullAdress) => {
             // Renderiza la dirección
             adressHtml.innerHTML = fullAdress.display;
 
             // Muestra mensaje para que el usuario sepa que se está realizando la petición
-            mapContainerHtml.innerHTML = '<p class="font-bold text-2xl">Waiting for coordinates...</p>';
+            mapContainerHtml.innerHTML = '<p class="glowing font-bold text-2xl">Waiting for coordinates...</p>';
 
             // Obtiene el mapa de la dirección
             getCoords(street,houseNum,colony,zipCode,fullAdress.city,fullAdress.state,country)
