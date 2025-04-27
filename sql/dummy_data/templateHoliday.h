@@ -36,7 +36,7 @@ void createTemplateHoliday() {
     /*                                        fecha / nombre  */
     templateHolidays.push_back(TemplateHoliday("New Year", "2025-01-01"));
     templateHolidays.push_back(TemplateHoliday("Constitution Day", "2025-02-05"));
-    templateHolidays.push_back(TemplateHoliday("Benito Juárez's Birthday", "2025-03-21"));
+    templateHolidays.push_back(TemplateHoliday("Benito Juárez Birthday", "2025-03-21"));
     templateHolidays.push_back(TemplateHoliday("Labor Day", "2025-05-01"));
     templateHolidays.push_back(TemplateHoliday("Independence Day", "2025-09-16"));
     templateHolidays.push_back(TemplateHoliday("Revolution Day", "2025-10-20"));
