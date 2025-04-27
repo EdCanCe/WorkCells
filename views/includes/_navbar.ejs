@@ -46,7 +46,7 @@
             >
         </div>
     </a>
-    <% if ( role === 'Department Leader' ||role === 'Manager') { %>
+    <% if (role === 'Department Leader' || role === 'Manager') { %>
     <a href="/department" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/department.svg"
@@ -55,12 +55,14 @@
         <div
             class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Departments</span
-            >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap">
+                <% if (role === 'Department Leader') { %> My Department <% }
+                else { %> Departments <% } %>
+            </span>
         </div>
     </a>
     <% } %>
+
     <a href="/vacation" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/vacation.svg"
