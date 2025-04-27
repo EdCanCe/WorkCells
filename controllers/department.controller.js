@@ -36,7 +36,7 @@ exports.getDepartments = (request, response, next) => {
                 response.status(500).send("Error del servidor");
             });
     }
-    // vista del superadmin, modificar en un futuro
+    // vista del superadmin
     else {
         Department.getAllDepartments()
             .then(([rows, fieldData]) => {
@@ -139,20 +139,18 @@ exports.getDepartmentsPaginated = async (request, response, next) => {
 
 exports.getAddDepartment = (request, response, next) => {
     // Obtiene todas las empress
-    Enterprise.fetchAll()
-        .then(([enterprises]) => {
-            // Obtiene todos los datos de los empleados
-            Employee.fetchAllUserRoles()
-                .then(([employees]) => {
-                    // Filtra los empleados por colaboradores
-                    const collaborators = employees.filter((employee) =>
-                        employee.role === "Colaborator"
-                    );
+    Enterprise.fetchAll().then(([enterprises]) => {
+        // Obtiene todos los datos de los empleados
+        Employee.fetchAllUserRoles().then(([employees]) => {
+            // Filtra los empleados por colaboradores
+            const collaborators = employees.filter(
+                (employee) => employee.role === "Colaborator"
+            );
 
-                    // Filtra los empleados por líderes de departamento
-                    const leaders = employees.filter((employee) =>
-                        employee.role === "Department Leader"
-                    );
+            // Filtra los empleados por líderes de departamento
+            const leaders = employees.filter(
+                (employee) => employee.role === "Department Leader"
+            );
 
                     response.render("addDepartment", {
                         ...sessionVars(request, title),
@@ -162,35 +160,39 @@ exports.getAddDepartment = (request, response, next) => {
                     });
                 });
         });
+    });
 };
 
 exports.postAddDepartment = (request, response, next) => {
     // Crea el departamento
     const createDepartment = (enterpriseID) => {
         // Llena los datos del departamento
-        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray, null);
+        const department = new Department(
+            request.body.department,
+            request.body.leader,
+            enterpriseID,
+            request.body.collaboratorArray,
+            null
+        );
 
         // Guarda el departamento en la base de datos
-        department.save()
-            .then((departmentID) => {
-                response.redirect(`/department/${departmentID}`);
-            });
+        department.save().then((departmentID) => {
+            response.redirect(`/department/${departmentID}`);
+        });
     };
 
     // Obtiene el ID de la empresa generada
-    Enterprise.fetchByName(request.body.enterprise)
-        .then(([enterprise]) => {
-            // En caso de que no exista, se crea la empresa
-            if (enterprise.length == 0) {
-                const enterprise = new Enterprise(request.body.enterprise);
-                enterprise.save()
-                    .then((newEnterprise) => {
-                        createDepartment(newEnterprise);
-                    });
-            } else {
-                createDepartment(enterprise[0].enterpriseID);
-            }
-        })
+    Enterprise.fetchByName(request.body.enterprise).then(([enterprise]) => {
+        // En caso de que no exista, se crea la empresa
+        if (enterprise.length == 0) {
+            const enterprise = new Enterprise(request.body.enterprise);
+            enterprise.save().then((newEnterprise) => {
+                createDepartment(newEnterprise);
+            });
+        } else {
+            createDepartment(enterprise[0].enterpriseID);
+        }
+    });
 };
 
 exports.getCheckDepartment = (request, response, next) => {
@@ -204,21 +206,25 @@ exports.postDeleteDeparment = (request, response, next) => {
 };
 
 exports.getModifyDepartment = async (request, response, next) => {
-    try{
+    try {
         // Obtiene los datos del departamento
-        const [department] = await Department.fetchByID(request.params.departmentID);
+        const [department] = await Department.fetchByID(
+            request.params.departmentID
+        );
 
         // Obtiene los trabajadores del departamento
-        const [departmentEmployees] = await Employee.fetchAllUsersByDepartment(request.params.departmentID);
+        const [departmentEmployees] = await Employee.fetchAllUsersByDepartment(
+            request.params.departmentID
+        );
 
         // Filtra los empleados por colaboradores
-        const departmentCollaborators = departmentEmployees.filter((employee) =>
-            employee.role === "Colaborator"
+        const departmentCollaborators = departmentEmployees.filter(
+            (employee) => employee.role === "Colaborator"
         );
 
         // Filtra los empleados por líderes de departamento
-        const departmentLeader = departmentEmployees.filter((employee) =>
-            employee.role === "Department Leader"
+        const departmentLeader = departmentEmployees.filter(
+            (employee) => employee.role === "Department Leader"
         );
 
         // Obtiene todas las empresas
@@ -228,13 +234,13 @@ exports.getModifyDepartment = async (request, response, next) => {
         const [employees] = await Employee.fetchAllUserRoles();
 
         // Filtra los empleados por colaboradores
-        const collaborators = employees.filter((employee) =>
-            employee.role === "Colaborator"
+        const collaborators = employees.filter(
+            (employee) => employee.role === "Colaborator"
         );
 
         // Filtra los empleados por líderes de departamento
-        const leaders = employees.filter((employee) =>
-            employee.role === "Department Leader"
+        const leaders = employees.filter(
+            (employee) => employee.role === "Department Leader"
         );
 
         response.render("modifyDepartment", {
@@ -247,8 +253,7 @@ exports.getModifyDepartment = async (request, response, next) => {
             department: department[0],
             departmentLeader: departmentLeader[0],
         });
-    }
-    catch(error) {
+    } catch (error) {
         console.log(error);
     }
 };
@@ -257,27 +262,30 @@ exports.postModifyDepartment = (request, response, next) => {
     // Crea el departamento
     const updateDepartment = (enterpriseID) => {
         // Llena los datos del departamento
-        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray, request.params.departmentID);
+        const department = new Department(
+            request.body.department,
+            request.body.leader,
+            enterpriseID,
+            request.body.collaboratorArray,
+            request.params.departmentID
+        );
 
         // Guarda el departamento en la base de datos
-        department.update()
-            .then((departmentID) => {
-                response.redirect(`/department/${departmentID}`);
-            });
+        department.update().then((departmentID) => {
+            response.redirect(`/department/${departmentID}`);
+        });
     };
 
     // Obtiene el ID de la empresa generada
-    Enterprise.fetchByName(request.body.enterprise)
-        .then(([enterprise]) => {
-            // En caso de que no exista, se crea la empresa
-            if (enterprise.length == 0) {
-                const enterprise = new Enterprise(request.body.enterprise);
-                enterprise.save()
-                    .then((newEnterprise) => {
-                        updateDepartment(newEnterprise);
-                    });
-            } else {
-                updateDepartment(enterprise[0].enterpriseID);
-            }
-        })
+    Enterprise.fetchByName(request.body.enterprise).then(([enterprise]) => {
+        // En caso de que no exista, se crea la empresa
+        if (enterprise.length == 0) {
+            const enterprise = new Enterprise(request.body.enterprise);
+            enterprise.save().then((newEnterprise) => {
+                updateDepartment(newEnterprise);
+            });
+        } else {
+            updateDepartment(enterprise[0].enterpriseID);
+        }
+    });
 };
