@@ -76,14 +76,13 @@ exports.getEmployees = (req, res, next) => {
 
 exports.getPaginatedEmployeesRH = (request, response, next) => {
     const departmentID = request.params.departmentID;
-    const userID = request.session.userID;
     const page = parseInt(request.query.page) || 1;
     const query = request.query.query || "";
     const limit = 6;
     const offset = (page - 1) * limit;
 
     const searchPromise = query
-        ? Department.searchWorkersByName(departmentID, userID, query)
+        ? Department.searchWorkersByName(departmentID, query)
         : Department.getEmployeesInDepartmentInfoPaginated(
               departmentID,
               limit,
@@ -112,7 +111,7 @@ exports.getEmployeesPaginated = async (request, response, next) => {
     const leaderDepartmentID = department.prioritaryDepartmentIDFK;
 
     const searchPromise = query
-        ? Department.searchWorkersByName(leaderDepartmentID, userID, query)
+        ? Department.searchWorkersByName(leaderDepartmentID, query)
         : Department.getEmployeesInDepartmentPaginated(
               leaderDepartmentID,
               request.session.userID,
