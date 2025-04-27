@@ -46,14 +46,14 @@
                 <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent">
-                  <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.hrStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.hrStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">
-                  <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.leaderStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.leaderStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">—</td>
               </tr>
@@ -66,14 +66,14 @@
                 <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent">
-                  <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.hrStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.hrStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">
-                  <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.leaderStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.leaderStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">
                   <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">Check</a>
@@ -88,14 +88,14 @@
                 <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent">
-                  <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.hrStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.hrStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">
-                  <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.leaderStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.leaderStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">
                   <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">Check</a>
@@ -110,14 +110,14 @@
                 <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
                 <td class="tContent">
-                  <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.hrStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.hrStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="px-4 py-2">
-                  <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
-                  <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
-                  <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
+                  <% if (vacation.leaderStatus === 1) { %><span class="textSuccess">Approved</span>
+                  <% } else if (vacation.leaderStatus === 0) { %><span class="textDanger">Denied</span>
+                  <% } else { %><span class="textWarning">Pending...</span><% } %>
                 </td>
                 <td class="tContent">
                   <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">Check</a>

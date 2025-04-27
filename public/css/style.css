@@ -6,18 +6,17 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-200: oklch(0.885 0.062 18.334);
     --color-red-500: oklch(0.637 0.237 25.331);
-    --color-red-600: oklch(0.577 0.245 27.325);
     --color-red-700: oklch(0.505 0.213 27.518);
+    --color-red-950: oklch(0.258 0.092 26.042);
     --color-orange-600: oklch(0.646 0.222 41.116);
-    --color-amber-400: oklch(0.828 0.189 84.429);
-    --color-amber-600: oklch(0.666 0.179 58.318);
-    --color-amber-900: oklch(0.414 0.112 45.904);
-    --color-amber-950: oklch(0.279 0.077 45.635);
+    --color-yellow-400: oklch(0.852 0.199 91.936);
     --color-yellow-500: oklch(0.795 0.184 86.047);
     --color-yellow-600: oklch(0.681 0.162 75.834);
+    --color-yellow-900: oklch(0.421 0.095 57.708);
+    --color-yellow-950: oklch(0.286 0.066 53.813);
     --color-green-500: oklch(0.723 0.219 149.579);
-    --color-green-600: oklch(0.627 0.194 149.214);
     --color-sky-400: oklch(0.746 0.16 232.661);
     --color-sky-600: oklch(0.588 0.158 241.966);
     --color-sky-900: oklch(0.391 0.09 240.876);
@@ -45,6 +44,7 @@
     --color-neutral-600: oklch(0.439 0 0);
     --color-neutral-700: oklch(0.371 0 0);
     --color-neutral-800: oklch(0.269 0 0);
+    --color-neutral-950: oklch(0.145 0 0);
     --color-white: #fff;
     --spacing: 0.25rem;
     --breakpoint-xl: 80rem;
@@ -250,9 +250,6 @@
   .right-2 {
     right: calc(var(--spacing) * 2);
   }
-  .right-10 {
-    right: calc(var(--spacing) * 10);
-  }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
   }
@@ -324,6 +321,9 @@
   }
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
+  }
+  .mt-\[-3px\] {
+    margin-top: -3px;
   }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
@@ -410,9 +410,6 @@
   .h-7 {
     height: calc(var(--spacing) * 7);
   }
-  .h-8 {
-    height: calc(var(--spacing) * 8);
-  }
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
@@ -478,9 +475,6 @@
   }
   .w-6 {
     width: calc(var(--spacing) * 6);
-  }
-  .w-8 {
-    width: calc(var(--spacing) * 8);
   }
   .w-12 {
     width: calc(var(--spacing) * 12);
@@ -707,9 +701,6 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
-  .\!rounded-full {
-    border-radius: calc(infinity * 1px) !important;
-  }
   .rounded {
     border-radius: 0.25rem;
   }
@@ -734,10 +725,6 @@
     border-bottom-right-radius: var(--radius-lg);
   }
   .border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-  }
-  .border-1 {
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
@@ -772,6 +759,9 @@
   }
   .border-neutral-700 {
     border-color: var(--color-neutral-700);
+  }
+  .border-neutral-950\/40 {
+    border-color: color-mix(in oklab, var(--color-neutral-950) 40%, transparent);
   }
   .border-red-700 {
     border-color: var(--color-red-700);
@@ -815,6 +805,9 @@
   .bg-neutral-800\/50 {
     background-color: color-mix(in oklab, var(--color-neutral-800) 50%, transparent);
   }
+  .bg-neutral-950\/20 {
+    background-color: color-mix(in oklab, var(--color-neutral-950) 20%, transparent);
+  }
   .bg-purple-500 {
     background-color: var(--color-purple-500);
   }
@@ -823,9 +816,6 @@
   }
   .object-cover {
     object-fit: cover;
-  }
-  .\!p-0 {
-    padding: calc(var(--spacing) * 0) !important;
   }
   .\!p-3 {
     padding: calc(var(--spacing) * 3) !important;
@@ -992,12 +982,6 @@
   .text-gray-800 {
     color: var(--color-gray-800);
   }
-  .text-green-500 {
-    color: var(--color-green-500);
-  }
-  .text-green-600 {
-    color: var(--color-green-600);
-  }
   .text-neutral-100 {
     color: var(--color-neutral-100);
   }
@@ -1013,20 +997,8 @@
   .text-purple-500 {
     color: var(--color-purple-500);
   }
-  .text-red-500 {
-    color: var(--color-red-500);
-  }
-  .text-red-600 {
-    color: var(--color-red-600);
-  }
   .text-white {
     color: var(--color-white);
-  }
-  .text-yellow-500 {
-    color: var(--color-yellow-500);
-  }
-  .text-yellow-600 {
-    color: var(--color-yellow-600);
   }
   .uppercase {
     text-transform: uppercase;
@@ -1086,6 +1058,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-neutral-800);
+      }
+    }
+  }
+  .hover\:bg-neutral-950\/40 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in oklab, var(--color-neutral-950) 40%, transparent);
       }
     }
   }
@@ -1261,6 +1240,85 @@
   --lightBtnDanger: #ef325e;
   --darkBtnDanger: #9a0000;
 }
+* {
+  transition: background-color 0.3s, width 0.3s, opacity 0.3s, filter 0.3s;
+}
+@keyframes statusContainer {
+  0% {
+    height: 0px;
+    margin: 0px 30px;
+    padding-top: 0;
+  }
+  5% {
+    height: 53px;
+    margin: 30px 30px;
+    padding-top: 13px;
+  }
+  95% {
+    height: 53px;
+    margin: 30px 30px;
+    padding-top: 13px;
+  }
+  100% {
+    height: 0px;
+    margin: 0px 30px;
+    padding-top: 0;
+  }
+}
+.statusContainerAnimate {
+  animation: statusContainer 7s linear forwards;
+}
+@keyframes statusContainerAnimateHide {
+  0% {
+    height: 53px;
+    margin: 30px 30px;
+    padding-top: 13px;
+  }
+  100% {
+    height: 0px;
+    margin: 0px 30px;
+    padding-top: 0;
+  }
+}
+.statusContainerAnimateHide {
+  animation: statusContainerAnimateHide 0.35s linear forwards;
+}
+@keyframes statusBar {
+  0% {
+    width: 100%;
+  }
+  5% {
+    width: 100%;
+  }
+  95% {
+    width: 0;
+  }
+}
+.statusBarAnimate {
+  animation: statusBar 7s linear forwards;
+}
+@keyframes glow {
+  0% {
+    opacity: 100%;
+  }
+  50% {
+    opacity: 30%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
+.glowing {
+  animation: glow 2s infinite;
+}
+@keyframes showOpacity {
+  0% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
 .navIcon {
   &:where(.dark, .dark *) {
     --tw-invert: invert(100%);
@@ -1334,19 +1392,19 @@
   }
 }
 .bgStatusWarning {
-  background-color: var(--color-amber-400);
-  color: var(--color-amber-900);
+  background-color: var(--color-yellow-400);
+  color: var(--color-yellow-900);
   &:where(.dark, .dark *) {
-    background-color: var(--color-amber-900);
+    background-color: var(--color-yellow-900);
   }
   &:where(.dark, .dark *) {
-    color: var(--color-amber-400);
+    color: var(--color-yellow-400);
   }
 }
 .bgStatusBarWarning {
-  background-color: var(--color-amber-600);
+  background-color: var(--color-yellow-600);
   &:where(.dark, .dark *) {
-    background-color: var(--color-amber-950);
+    background-color: var(--color-yellow-950);
   }
 }
 .bgStatusAlert {
@@ -1401,6 +1459,15 @@
   &:where(.dark, .dark *) {
     color: var(--darkColorBase);
   }
+}
+.textSuccess {
+  color: var(--color-green-500);
+}
+.textWarning {
+  color: var(--color-yellow-500);
+}
+.textDanger {
+  color: var(--color-red-500);
 }
 .noMargin {
   margin: calc(var(--spacing) * 0);
@@ -1586,6 +1653,18 @@
     border-color: var(--darkBtnPrimary);
   }
 }
+.btnHeader {
+  position: absolute;
+  right: calc(var(--spacing) * 10);
+  display: flex !important;
+  height: calc(var(--spacing) * 8);
+  width: calc(var(--spacing) * 8);
+  cursor: pointer;
+  border-radius: calc(infinity * 1px) !important;
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  padding: calc(var(--spacing) * 0) !important;
+}
 .status {
   position: fixed;
   top: calc(var(--spacing) * 0);
@@ -1612,6 +1691,68 @@
   display: block;
   height: calc(var(--spacing) * 1);
   width: 100%;
+}
+.sweetAlerts {
+  border-radius: var(--radius-md);
+  border-style: var(--tw-border-style);
+  border-width: 1px;
+  font-family: Gotham;
+  --tw-font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
+}
+.swal2-container {
+  background-color: color-mix(in oklab, var(--color-neutral-950) 90%, transparent) !important;
+}
+.sweetAlerts.normal {
+  border-color: var(--darkColorNavOne);
+  background-color: var(--darkColorNavBase);
+  color: var(--lightColorBase);
+}
+.sweetAlerts.alert {
+  border-color: var(--color-red-700);
+  background-color: var(--color-red-950);
+  color: var(--color-red-200);
+}
+.sweetAlerts .swal2-confirm {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  padding-inline: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 2);
+  --tw-font-weight: var(--font-weight-normal) !important;
+  font-weight: var(--font-weight-normal) !important;
+}
+.sweetAlerts.normal .swal2-confirm {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  background-color: var(--darkBtnPrimary);
+  padding-inline: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 2);
+  --tw-font-weight: var(--font-weight-normal) !important;
+  font-weight: var(--font-weight-normal) !important;
+  color: var(--lightColorBase);
+  &:hover {
+    @media (hover: hover) {
+      background-color: color-mix(in oklab, var(--darkBtnPrimary) 50%, transparent);
+    }
+  }
+}
+.sweetAlerts .swal2-cancel, .sweetAlerts.alert .swal2-confirm {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  background-color: var(--darkBtnDanger);
+  padding-inline: calc(var(--spacing) * 6);
+  padding-block: calc(var(--spacing) * 2);
+  --tw-font-weight: var(--font-weight-normal) !important;
+  font-weight: var(--font-weight-normal) !important;
+  color: var(--lightColorBase);
+  &:hover {
+    @media (hover: hover) {
+      background-color: color-mix(in oklab, var(--darkBtnDanger) 50%, transparent);
+    }
+  }
 }
 ::-webkit-scrollbar {
   width: 3px;
@@ -1645,62 +1786,6 @@
   justify-content: center;
   overflow: hidden;
   text-wrap: nowrap;
-}
-* {
-  transition: background-color 0.3s, width 0.3s, opacity 0.3s, filter 0.3s;
-}
-@keyframes statusContainer {
-  0% {
-    height: 0px;
-    margin: 0px 30px;
-    padding-top: 0;
-  }
-  5% {
-    height: 53px;
-    margin: 30px 30px;
-    padding-top: 13px;
-  }
-  95% {
-    height: 53px;
-    margin: 30px 30px;
-    padding-top: 13px;
-  }
-  100% {
-    height: 0px;
-    margin: 0px 30px;
-    padding-top: 0;
-  }
-}
-.statusContainerAnimate {
-  animation: statusContainer 7s linear forwards;
-}
-@keyframes statusBar {
-  0% {
-    width: 100%;
-  }
-  5% {
-    width: 100%;
-  }
-  95% {
-    width: 0;
-  }
-}
-.statusBarAnimate {
-  animation: statusBar 7s linear forwards;
-}
-@keyframes glow {
-  0% {
-    opacity: 100%;
-  }
-  50% {
-    opacity: 30%;
-  }
-  100% {
-    opacity: 100%;
-  }
-}
-.glowing {
-  animation: glow 2s infinite;
 }
 @page {
   size: A4 landscape;

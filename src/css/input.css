@@ -4,6 +4,8 @@
 
 @import "./colors.css";
 
+@import "./animations.css";
+
 @import "./backgrounds.css";
 
 @import "./layout.css";
@@ -17,7 +19,5 @@
 @import "./inputForms.css";
 
 @import "./navbar.css";
-
-@import "./animations.css";
 
 @import "./print.css";

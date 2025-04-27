@@ -37,7 +37,6 @@
 </div>
 
 <meta name="csrf-token" content="<%= csrfToken %>" />
-<script src="/javascript/sweetalert2.all.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const btnEliminar = document.getElementById("btnEliminar");
@@ -48,14 +47,16 @@
             const usedHolidayID = btnEliminar.dataset.id;
 
             const result = await Swal.fire({
-                title: "¿Estás seguro?",
-                text: "¡Esta acción no se puede deshacer!",
-                icon: "warning",
+                title: "Are you sure you want to delete it?",
+                text: "This action cannot be undone!",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: 'sweetAlerts normal'
+                },
                 showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar",
+                confirmButtonText: "Yes, delete it",
+                cancelButtonText: "Cancel",
             });
 
             if (result.isConfirmed) {
@@ -76,21 +77,25 @@
                         }
                     );
 
-                    if (!res.ok) throw new Error("Error al eliminar");
+                    if (!res.ok) throw new Error("There was an error");
 
-                    await Swal.fire(
-                        "Eliminado",
-                        "El día feriado ha sido eliminado.",
-                        "success"
-                    );
+                    await Swal.fire({
+                        title: "Deleted",
+                        text: "The holiday was deleted correctly.",
+                        customClass: {
+                            popup: 'sweetAlerts normal'
+                        },
+                    });
                     // Puedes redirigir de vuelta al listado:
                     window.location.href = "/holiday/used";
                 } catch (err) {
-                    Swal.fire(
-                        "Error",
-                        "No se pudo eliminar el día feriado",
-                        "error"
-                    );
+                    await Swal.fire({
+                        title: "Error",
+                        text: "The holiday couldn't be erased.",
+                        customClass: {
+                            popup: 'sweetAlerts normal'
+                        },
+                    });
                 }
             }
         });

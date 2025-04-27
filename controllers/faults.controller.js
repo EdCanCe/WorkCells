@@ -101,15 +101,12 @@ exports.postDelete = (request, response, next) => {
         userID: request.body.userID,
     });
 
-    fault
-        .delete()
+    fault.delete()
         .then(() => {
-            request.session.info = "It was deleted successfully";
-            response.redirect("/fault");
+            response.status(200).json({ success: true });
         })
         .catch((error) => {
-            request.session.alert = error.message;
-            response.redirect("/fault");
+            response.status(200).json({ success: false });
         });
 };
 

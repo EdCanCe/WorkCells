@@ -68,20 +68,20 @@
                         }" data-end-date="${ab.endDate}">${totalDays}</td>`;
 
                 if (ab.leaderStatus === 0) {
-                    table += `<td class="tContent text-red-500">Denied</td>`;
+                    table += `<td class="tContent textDanger">Denied</td>`;
                 } else if (ab.leaderStatus === 1) {
-                    table += `<td class="tContent text-green-500">Approved</td>`;
+                    table += `<td class="tContent textSuccess">Approved</td>`;
                 } else if (ab.leaderStatus === 2) {
-                    table += `<td class="tContent text-yellow-500">Pending...</td>`;
+                    table += `<td class="tContent textWarning">Pending...</td>`;
                 }
 
 
                 if (ab.hrStatus === 0) {
-                    table += `<td class="tContent text-red-500">Denied</td>`;
+                    table += `<td class="tContent textDanger">Denied</td>`;
                 } else if (ab.hrStatus === 1) {
-                    table += `<td class="tContent text-green-500">Approved</td>`;
+                    table += `<td class="tContent textSuccess">Approved</td>`;
                 } else if (ab.hrStatus === 2) {
-                    table += `<td class="tContent text-yellow-500">Pending...</td>`;
+                    table += `<td class="tContent textWarning">Pending...</td>`;
                 }
 
                 table += `</td>

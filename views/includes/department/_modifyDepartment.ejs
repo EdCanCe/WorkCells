@@ -50,6 +50,21 @@
             />
         </div>
 
+        <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
+        <div class='mb-4'>
+            <label class='block text-lg font-medium mb-2'
+                >Status:</label
+            >
+            <select
+                class='w-full input'
+                name='flag'
+                required
+            >
+                <option value='1' <%= department.flag == 1 ? 'selected' : ''%>>Active</option>
+                <option value='0' <%= department.flag == 0 ? 'selected' : ''%>>Inactive</option>
+            </select>
+        </div>
+
         <!-- Selecciona el líder del departamento -->
         <div class='mb-4'>
             <label class='block text-lg font-medium mb-2'
@@ -105,8 +120,9 @@
             </ul>
         </div>
 
-        <button id='sendForm' class='btnPrimary' type='submit'>Modify Department</button>
-        <a class='btnDanger' href='/department/<%= departmentID %>/delete/' type='submit'>Erase Department</a>
+        <div class="flex centerItems gap-1">
+            <button id='sendForm' class='btnPrimary' type='submit'>Update Department</button>
+        </div>
     </form>
 </div>
 

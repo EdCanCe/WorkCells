@@ -67,9 +67,9 @@
                             <td class="tContent">
                                 <% if (role === "Human Resources") { %>
                                     <% if (ab.hrStatus === 1) { %>
-                                        <div class="text-green-500 text-center font-semibold">Approved</div>
+                                        <div class="textSuccess text-center font-semibold">Approved</div>
                                     <% } else if (ab.hrStatus === 0) { %>
-                                        <div class="text-red-500 text-center font-semibold">Denied</div>
+                                        <div class="textDanger text-center font-semibold">Denied</div>
                                     <% } else { %>
                                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                                             <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/<%= ab.absenceID %>" data-csrf="<%= csrfToken %>">Approve</button>
@@ -78,9 +78,9 @@
                                     <% } %>
                                 <% } else if (role === "Department Leader") { %>
                                     <% if (ab.leaderStatus === 1) { %>
-                                        <div class="text-green-500 text-center font-semibold">Approved</div>
+                                        <div class="textSuccess text-center font-semibold">Approved</div>
                                     <% } else if (ab.leaderStatus === 0) { %>
-                                        <div class="text-red-500 text-center font-semibold">Denied</div>
+                                        <div class="textDanger text-center font-semibold">Denied</div>
                                     <% } else if (ab.leaderStatus === 2) { %>
                                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
                                             <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/<%= ab.absenceID %>" data-csrf="<%= csrfToken %>">Approve</button>
@@ -230,9 +230,9 @@
             
             if (role === "Human Resources") {
                 if (absence.hrStatus === 1) {
-                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                    actionCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (absence.hrStatus === 0) {
-                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                    actionCell = `<div class="textDanger text-center font-semibold">Denied</div>`;
                 } else {
                     actionCell = `
                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
@@ -242,9 +242,9 @@
                 }
             } else if (role === "Department Leader") {
                 if (absence.leaderStatus === 1) {
-                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                    actionCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (absence.leaderStatus === 0) {
-                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                    actionCell = `<div class="textDanger text-center font-semibold">Denied</div>`;
                 } else if (absence.leaderStatus === 2) {
                     actionCell = `
                         <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">

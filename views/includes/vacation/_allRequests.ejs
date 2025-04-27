@@ -34,17 +34,17 @@
                             <% if (role === "Department Leader") { %>
                             <td class="tContent">
                                 <% if (vacation.leaderStatus === 1) { %>
-                                    <div class="text-green-500 text-center font-semibold">Approved</div>
+                                    <div class="textSuccess text-center font-semibold">Approved</div>
                                 <% } else if (vacation.leaderStatus === 0) { %>
-                                    <div class="text-red-500 text-center font-semibold">Denied</div>
+                                    <div class="textDanger text-center font-semibold">Denied</div>
                                 <% } %>
                             </td>
                             <% } else if (role === "Human Resources") { %>
                             <td class="tContent">
                                 <% if (vacation.hrStatus === 1) { %>
-                                    <div class="text-green-500 text-center font-semibold">Approved</div>
+                                    <div class="textSuccess text-center font-semibold">Approved</div>
                                 <% } else if (vacation.hrStatus === 0) { %>
-                                    <div class="text-red-500 text-center font-semibold">Denied</div>
+                                    <div class="textDanger text-center font-semibold">Denied</div>
                                 <% } %>
                             </td>
                             <% } %>
@@ -123,19 +123,19 @@
             let statusCell = "";
             if (role === "Department Leader") {
                 if (vac.leaderStatus === 1) {
-                    statusCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                    statusCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (vac.leaderStatus === 0) {
-                    statusCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                    statusCell = `<div class="textDanger text-center font-semibold">Denied</div>`;
                 } else {
-                    statusCell = `<div class="text-yellow-500 text-center font-semibold">Pendiente</div>`;
+                    statusCell = `<div class="textWarning text-center font-semibold">Pendiente</div>`;
                 }
             } else if (role === "Human Resources") {
                 if (vac.hrStatus === 1) {
-                    statusCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                    statusCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (vac.hrStatus === 0) {
-                    statusCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                    statusCell = `<div class="textDanger text-center font-semibold">Denied</div>`;
                 } else {
-                    statusCell = `<div class="text-yellow-500 text-center font-semibold">Pendiente</div>`;
+                    statusCell = `<div class="textWarning text-center font-semibold">Pendiente</div>`;
                 }
             }
 

@@ -12,12 +12,13 @@ module.exports = class Department {
      * @param string collaborators      Los ID's de los colaboradores que pertenecen al departamento
      * @param string departmentID       El ID del departamento
      */
-    constructor(title, leader, enterprise, collaborators, departmentID) {
+    constructor(title, leader, enterprise, collaborators, departmentID, flag) {
         this.id = departmentID || uuidv4();
         this.title = title;
         this.leader = leader;
         this.enterprise = enterprise;
         this.collaborators = collaborators;
+        this.flag = flag;
     }
 
     /**
@@ -32,7 +33,7 @@ module.exports = class Department {
     }
 
     update() {
-        return db.execute('CALL UpdateDepartment(?, ?, ?, ?, ?)', [this.id, this.title, this.leader, this.enterprise, this.collaborators])
+        return db.execute('CALL UpdateDepartment(?, ?, ?, ?, ?, ?)', [this.id, this.title, this.leader, this.enterprise, this.collaborators, this.flag])
             .then(() => {
                 return this.id;
             });
@@ -136,7 +137,7 @@ module.exports = class Department {
     }
 
     static fetchByID(departmentID) {
-        return db.execute(`SELECT d.title as department, e.title as enterprise
+        return db.execute(`SELECT d.flag, d.title as department, e.title as enterprise
         FROM department d, enterprise e
         WHERE e.enterpriseID = d.enterpriseIDFK
         AND d.departmentID = ?`, [departmentID]);

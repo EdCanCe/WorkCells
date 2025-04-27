@@ -31,7 +31,7 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE UpdateDepartment(IN departmentID VARCHAR(40), IN title VARCHAR(60), IN leaderIDFK VARCHAR(40), IN enterpriseIDFK VARCHAR(40), IN collaboratorsArray TEXT)
+CREATE PROCEDURE UpdateDepartment(IN departmentID VARCHAR(40), IN title VARCHAR(60), IN leaderIDFK VARCHAR(40), IN enterpriseIDFK VARCHAR(40), IN collaboratorsArray TEXT, IN flag TINYINT)
 BEGIN
     -- Variables auxiliares
     DECLARE remaining TEXT;
@@ -42,7 +42,7 @@ BEGIN
     UPDATE user SET prioritaryDepartmentIDFK = NULL WHERE prioritaryDepartmentIDFK = departmentID;
 
     -- Modifica el departamento
-    UPDATE department SET department.title = title, department.enterpriseIDFK = enterpriseIDFK, department.departmentLeaderIDFK = leaderIDFK WHERE department.departmentID = departmentID;
+    UPDATE department SET department.title = title, department.enterpriseIDFK = enterpriseIDFK, department.departmentLeaderIDFK = leaderIDFK, department.flag = flag WHERE department.departmentID = departmentID;
 
     -- Le añade al líder el departamento
     UPDATE user SET prioritaryDepartmentIDFK = departmentID WHERE userID = leaderIDFK;

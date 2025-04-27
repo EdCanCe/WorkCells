@@ -1,24 +1,28 @@
 <div class="status bgStatusInfo">
-    <p class="statusText"></p>
-    <div class="noMargin statusBarContainer">
+    <div class="flex flex-row">
+        <p class="statusText"></p>
+        <button class="closingStatus mt-[-3px] btnHeader bg-neutral-950/20 hover:bg-neutral-950/40 border-neutral-950/40 centerItems">
+            <span>X</span>
+        </button>
+    </div>
+    <div class="noMargin statusBarContainer flex">
         <div class="noMargin statusBar bgStatusBarInfo"></div>
     </div>
 </div>
 
 <div class="status bgStatusWarning">
-    <p class="statusText"></p>
-    <div class="noMargin statusBarContainer">
+    <div class="flex flex-row">
+        <p class="statusText"></p>
+        <button class="closingStatus mt-[-3px] btnHeader bg-neutral-950/20 hover:bg-neutral-950/40 border-neutral-950/40 centerItems">
+            <span>X</span>
+        </button>
+    </div>
+    <div class="noMargin statusBarContainer flex">
         <div class="noMargin statusBar bgStatusBarWarning"></div>
     </div>
 </div>
 
-<div class="status bgStatusAlert">
-    <p class="statusText"></p>
-    <div class="noMargin statusBarContainer">
-        <div class="noMargin statusBar bgStatusBarAlert"></div>
-    </div>
-</div>
-
+<script src="/javascript/sweetalert2.all.min.js"></script>
 <script src="/javascript/showStatus.js"></script>
 <script>
     <% if(info && info !== '') { %>

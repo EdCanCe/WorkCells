@@ -64,7 +64,7 @@ exports.getEmployees = (req, res, next) => {
             }
 
             res.render("RHDepartmentList", {
-                ...sessionVars(req),
+                ...sessionVars(req, title),
                 department: deptRows[0], // un objeto { departmentID, title }
                 employees: empRows, // array de empleados
             });
@@ -266,7 +266,8 @@ exports.postModifyDepartment = (request, response, next) => {
             request.body.leader,
             enterpriseID,
             request.body.collaboratorArray,
-            request.params.departmentID
+            request.params.departmentID,
+            request.body.flag
         );
 
         // Guarda el departamento en la base de datos

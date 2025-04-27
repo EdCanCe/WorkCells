@@ -21,27 +21,27 @@ function validatePasswordStrength() {
 
     // Verificar mayúscula
     if (upperCharacters.test(value)) {
-        message += '<p class="text-green-600"> ✅ One capital letter</p>';
+        message += '<p class="textSuccess"> ✅ One capital letter</p>';
     } else {
-        message += '<p class="text-red-600"> ❌ One capital letter</p>';
+        message += '<p class="textDanger"> ❌ One capital letter</p>';
     }
     // Verificar carácter especial
     if (specialCharacters.test(value)) {
-        message += '<p class="text-green-600"> ✅ One special character</p>';
+        message += '<p class="textSuccess"> ✅ One special character</p>';
     } else {
-        message += '<p class="text-red-600"> ❌ One special character</p>';
+        message += '<p class="textDanger"> ❌ One special character</p>';
     }
     // Verificar número
     if (numericCharacters.test(value)) {
-        message += '<p class="text-green-600"> ✅ One number</p>';
+        message += '<p class="textSuccess"> ✅ One number</p>';
     } else {
-        message += '<p class="text-red-600"> ❌ One number</p>';
+        message += '<p class="textDanger"> ❌ One number</p>';
     }
     // Verificar longitud mayor a 8
     if (value.length > 8) {
-        message += '<p class="text-green-600">✅ More than 8 characters </p>';
+        message += '<p class="textSuccess">✅ More than 8 characters </p>';
     } else {
-        message += '<p class="text-red-600"> ❌ More than 8 characters </p>';
+        message += '<p class="textDanger"> ❌ More than 8 characters </p>';
     }
 
     newPasswordError.innerHTML = message;
@@ -55,12 +55,12 @@ function validatePasswordMatch() {
 
     if (newPassword.length || confirmPassword.length) {
         if (newPassword === confirmPassword) {
-            confirmPasswordError.innerHTML = '<p class="text-green-600">✅ Password match</p>';
+            confirmPasswordError.innerHTML = '<p class="textSuccess">✅ Password match</p>';
             if (currentPasswordField && currentPassword && newPassword === currentPassword) {
-                confirmPasswordError.innerHTML += '<p class="text-red-600">❌ New password must be different from current password</p>';
+                confirmPasswordError.innerHTML += '<p class="textDanger">❌ New password must be different from current password</p>';
             }
         } else {
-            confirmPasswordError.innerHTML = '<p class="text-red-600">❌ Passwords do not match</p>';
+            confirmPasswordError.innerHTML = '<p class="textDanger">❌ Passwords do not match</p>';
         }
     } else {
         confirmPasswordError.innerHTML = '';

@@ -13,3 +13,33 @@
 .statusBar {
     @apply block h-1 w-full;
 }
+
+.sweetAlerts {
+    @apply font-normal font-[Gotham] border-1 rounded-md;
+}
+
+.swal2-container {
+    @apply !bg-neutral-950/90;
+}
+
+.sweetAlerts.normal {
+    @apply text-(--lightColorBase) bg-(--darkColorNavBase) border-(--darkColorNavOne);
+}
+
+.sweetAlerts.alert {
+    @apply text-red-200 bg-red-950 border-red-700;
+}
+
+.sweetAlerts .swal2-confirm {
+    @apply !font-normal px-6 py-2 rounded-md cursor-pointer inline-block;
+}
+
+.sweetAlerts.normal .swal2-confirm {
+    @apply !font-normal px-6 py-2 rounded-md cursor-pointer inline-block
+           bg-(--darkBtnPrimary) hover:bg-(--darkBtnPrimary)/50 text-(--lightColorBase);
+}
+
+.sweetAlerts .swal2-cancel, .sweetAlerts.alert .swal2-confirm {
+    @apply !font-normal px-6 py-2 rounded-md cursor-pointer inline-block
+           bg-(--darkBtnDanger) hover:bg-(--darkBtnDanger)/50 text-(--lightColorBase);
+}
