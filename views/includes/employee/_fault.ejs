@@ -30,17 +30,15 @@
                                 <th class="hRow">Reason</th>
                                 <th class="hRow">Done date</th>
                                 <th class="hRow">Evidence</th>
-                                <% if (role == 'Human Resources') { %>
-                                    <th class="hRow">Modify</th>
-                                    <th class="hRow">Delete</th>
+                                <% if (role == 'Manager') { %>
+                                <th class="hRow">Modify</th>
+                                <th class="hRow">Delete</th>
                                 <% } %>
                             </tr>
                         </thead>
-                        <% if(faults.length > 0) { 
-                        let i = 0;%>
+                        <% if(faults.length > 0) { let i = 0;%>
                         <tbody class="tBody">
-                            <% faults.forEach(f => {
-                            i++; %>
+                            <% faults.forEach(f => { i++; %>
                             <tr class="tRow">
                                 <td class="tContent">
                                     <%= f.birthName %> <%= f.surname %>
@@ -53,46 +51,59 @@
                                 </td>
                                 <td class="tContent">
                                     <% if (f.mediaLink) { %>
-                                        <a
-                                          target="_blank"
-                                          href="/uploads/fault/<%= encodeURIComponent(f.mediaLink) %>"
-                                          class="text-blue-500"
-                                        >
-                                          View Evidence
-                                        </a>
-                                      <% } else { %>
-                                        No evidence
-                                      <% } %>                                      
+                                    <a
+                                        target="_blank"
+                                        href="/uploads/fault/<%= encodeURIComponent(f.mediaLink) %>"
+                                        class="text-blue-500"
+                                    >
+                                        View Evidence
+                                    </a>
+                                    <% } else { %> No evidence <% } %>
                                 </td>
-                                <% if (role === 'Human Resources') { %>
-                                    <td class="tContent">
-                                        <a class= "btnPrimary" href="/fault/modify/<%= f.faultID %>">Update</a>
-                                    </td>
-                                    <td class="tContent">
-                                        <button id="deleteIt<%= i %>" class="deleteFunc btnDanger">Delete</button>
-                                        <form id="form<%= i %>" class="hidden" id="form" action="/fault/delete" method="POST">
-                                            <input
-                                                type="hidden"
-                                                name="_csrf"
-                                                value="<%= csrfToken %>"
-                                            />
+                                <% if (role === 'Manager') { %>
+                                <td class="tContent">
+                                    <a
+                                        class="btnPrimary"
+                                        href="/fault/modify/<%= f.faultID %>"
+                                        >Update</a
+                                    >
+                                </td>
+                                <td class="tContent">
+                                    <button
+                                        id="deleteIt<%= i %>"
+                                        class="deleteFunc btnDanger"
+                                    >
+                                        Delete
+                                    </button>
+                                    <form
+                                        id="form<%= i %>"
+                                        class="hidden"
+                                        id="form"
+                                        action="/fault/delete"
+                                        method="POST"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="_csrf"
+                                            value="<%= csrfToken %>"
+                                        />
 
-                                            <input
-                                                type="hidden"
-                                                name="faultID"
-                                                value="<%= f.faultID %>"
-                                            />
+                                        <input
+                                            type="hidden"
+                                            name="faultID"
+                                            value="<%= f.faultID %>"
+                                        />
 
-                                            <input
-                                                type="hidden"
-                                                name="userID"
-                                                value="<%= f.faultUserIDFK %>"
-                                            />
-                                        </form>
-                                    </td>
+                                        <input
+                                            type="hidden"
+                                            name="userID"
+                                            value="<%= f.faultUserIDFK %>"
+                                        />
+                                    </form>
+                                </td>
                                 <% } %>
                             </tr>
-                            <% }) %> 
+                            <% }) %>
                         </tbody>
                         <% } else { %>
                         <tr>
@@ -116,7 +127,7 @@
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 customClass: {
-                    popup: 'sweetAlerts normal'
+                    popup: "sweetAlerts normal",
                 },
                 showCancelButton: true,
                 confirmButtonText: "Yes, delete it",
@@ -125,20 +136,27 @@
 
             if (result.isConfirmed) {
                 try {
-                    const faultNumber = element.id.split('deleteIt')[1];
-                    const faultBody = document.getElementById(`form${faultNumber}`);
-                    const faultID = faultBody.querySelector('input[name="faultID"]').value;
-                    const userID = faultBody.querySelector('input[name="userID"]').value;
-                    const _csrf = faultBody.querySelector('input[name="_csrf"]').value;
-                    
-                    const res = await fetch('/fault/delete', {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({faultID, userID, _csrf}),
-                        }
+                    const faultNumber = element.id.split("deleteIt")[1];
+                    const faultBody = document.getElementById(
+                        `form${faultNumber}`
                     );
+                    const faultID = faultBody.querySelector(
+                        'input[name="faultID"]'
+                    ).value;
+                    const userID = faultBody.querySelector(
+                        'input[name="userID"]'
+                    ).value;
+                    const _csrf = faultBody.querySelector(
+                        'input[name="_csrf"]'
+                    ).value;
+
+                    const res = await fetch("/fault/delete", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ faultID, userID, _csrf }),
+                    });
 
                     if (!res.ok) throw new Error("There was an error");
 
@@ -146,22 +164,21 @@
                         title: "Deleted",
                         text: "The fault was deleted correctly.",
                         customClass: {
-                            popup: 'sweetAlerts normal'
+                            popup: "sweetAlerts normal",
                         },
                     });
 
                     location.reload();
-
                 } catch {
                     await Swal.fire({
                         title: "Error",
                         text: "The fault couldn't be deleted.",
                         customClass: {
-                            popup: 'sweetAlerts normal'
+                            popup: "sweetAlerts normal",
                         },
                     });
                 }
             }
         });
-    })
+    });
 </script>

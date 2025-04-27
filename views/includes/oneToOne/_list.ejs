@@ -1,5 +1,5 @@
 <div class="fullContainer bgContainer1">
-    <% if (role == "Human Resources") { %>
+    <% if (role == "Manager") { %>
     <div class="flex justify-center w-full">
         <div
             class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
@@ -24,9 +24,7 @@
     </div>
     <% } else {} %>
 
-    <div
-        id="table"
-    ></div>
+    <div id="table"></div>
     <div class="flex justify-center gap-3 mt-6">
         <button id="prevPage" class="btnPrimary">Previous</button>
         <button id="nextPage" class="btnPrimary">Next</button>
@@ -162,7 +160,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        if(role === "Human Resources"){
+        if(role === "Manager"){
             loadAllSessions(currentPage, currentQuery);
         } else {
             loadOwnSessions(currentPage, currentQuery);
@@ -172,7 +170,7 @@
     document.getElementById("prevPage").addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;
-            if(role === "Human Resources"){
+            if(role === "Manager"){
                 loadAllSessions(currentPage, currentQuery);
             } else {
                 loadOwnSessions(currentPage, currentQuery)
@@ -182,7 +180,7 @@
 
     document.getElementById("nextPage").addEventListener("click", () => {
         currentPage++;
-        if(role === "Human Resources"){
+        if(role === "Manager"){
             loadAllSessions(currentPage, currentQuery);
         } else {
             loadOwnSessions(currentPage, currentQuery)
@@ -194,7 +192,7 @@
         .addEventListener("input", async (event) => {
             currentQuery = event.target.value;
             currentPage = 1;
-            if(role === "Human Resources"){
+            if(role === "Manager"){
                 loadAllSessions(currentPage, currentQuery);
             } else {
                 loadOwnSessions(currentPage, currentQuery);
@@ -202,7 +200,7 @@
         });
 
     document.addEventListener("DOMContentLoaded", () => {
-        if(role === "Human Resources"){
+        if(role === "Manager"){
             loadAllSessions(currentPage);
         } else {
             loadOwnSessions(currentPage)

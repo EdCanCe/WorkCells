@@ -58,7 +58,7 @@ INSERT INTO privilege(privilegeID, title, summary) values('76c602f9-8153-4d00-b6
 
 INSERT INTO role(roleID, title) values('b63fe756-4574-4eed-8d35-53a617347fe7', 'Colaborator'); 
 INSERT INTO role(roleID, title) values('451dade0-12cc-4c63-9bbd-25f5dfc41d25', 'Department Leader'); 
-INSERT INTO role(roleID, title) values('43fe7d1c-5907-4076-a16d-8d50106596a2', 'Human Resources'); 
+INSERT INTO role(roleID, title) values('43fe7d1c-5907-4076-a16d-8d50106596a2', 'Manager'); 
 
 INSERT INTO rolePrivilege(roleIDFK, privilegeIDFK) values('b63fe756-4574-4eed-8d35-53a617347fe7', 'f767ac50-7874-4894-9819-9debe3008d6b'); 
 INSERT INTO rolePrivilege(roleIDFK, privilegeIDFK) values('b63fe756-4574-4eed-8d35-53a617347fe7', 'aefcbfa4-d93f-4d75-92cd-5b25da30b9ae'); 

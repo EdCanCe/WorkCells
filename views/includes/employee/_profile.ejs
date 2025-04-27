@@ -1,49 +1,70 @@
 <div class="primaryContainer bgContainer1">
-    <h1 class="text-3xl font-semibold mb-4 text-center"><%= userData.birthName %> <%= userData.surname %></h1>
+    <h1 class="text-3xl font-semibold mb-4 text-center">
+        <%= userData.birthName %> <%= userData.surname %>
+    </h1>
 
     <div class="space-y-2 mb-6">
         <p><span class="font-bold">E-Mail: </span><%= userData.mail %></p>
         <% if( userData.phoneNumber ) { %>
-            <p><span class="font-bold">Phone number: </span><%= userData.phoneNumber %></p>
-        <% } %>
-        <% if( userData.curp ) { %>
-            <p><span class="font-bold">CURP: </span><%= userData.curp %></p>
-        <% } %>
-        <% if( userData.rfc ) { %>
-            <p><span class="font-bold">RFC: </span><%= userData.rfc %></p>
+        <p>
+            <span class="font-bold">Phone number: </span><%=
+            userData.phoneNumber %>
+        </p>
+        <% } %> <% if( userData.curp ) { %>
+        <p><span class="font-bold">CURP: </span><%= userData.curp %></p>
+        <% } %> <% if( userData.rfc ) { %>
+        <p><span class="font-bold">RFC: </span><%= userData.rfc %></p>
         <% } %>
         <p><span class="font-bold">Role: </span><%= userData.role %></p>
-        <p><span class="font-bold">Department: </span><%= userData.department %></p>
-        <p><span class="font-bold">Company: </span><%= userData.enterprise %></p>
-        <p><span class="font-bold">Adress: </span><span id="address"><%= userData.streetName %> <%= userData.houseNumber %>, <%= userData.colony %>, <%= userData.zipCode %>, <%= userData.country %></span></p>
+        <p>
+            <span class="font-bold">Department: </span><%= userData.department
+            %>
+        </p>
+        <p>
+            <span class="font-bold">Company: </span><%= userData.enterprise %>
+        </p>
+        <p>
+            <span class="font-bold">Adress: </span
+            ><span id="address"
+                ><%= userData.streetName %> <%= userData.houseNumber %>, <%=
+                userData.colony %>, <%= userData.zipCode %>, <%=
+                userData.country %></span
+            >
+        </p>
     </div>
 
     <!-- Lista de botones -->
     <div class="flex centerItems">
         <!-- Solo el líder de departamento no puede verlas por defecto -->
-        <% if (role === 'Human Resources' || isOwn) { %>
-            <a href="/employee/<%= userData.userID %>/faults" class="btnPrimary m-2"
-                >View Faults</a
-            >
+        <% if (role === 'Manager' || isOwn) { %>
+        <a href="/employee/<%= userData.userID %>/faults" class="btnPrimary m-2"
+            >View Faults</a
+        >
         <% } %>
-        
+
         <!-- Si eres dueño, puedes modificar la contraseña -->
         <% if (isOwn) { %>
-            <a href="/employee/me/changePassword" class="btnPrimary m-2">
-                Update Password
-            </a>
+        <a href="/employee/me/changePassword" class="btnPrimary m-2">
+            Update Password
+        </a>
         <% } %>
 
         <!-- Si eres SuperAdmin puedes modificar el usuario -->
-        <% if (role === 'Human Resources') { %>
-            <a href="/employee/<%= userData.userID %>/modify" class="btnPrimary m-2">
-                Update employee
-            </a>
+        <% if (role === 'Manager') { %>
+        <a
+            href="/employee/<%= userData.userID %>/modify"
+            class="btnPrimary m-2"
+        >
+            Update employee
+        </a>
         <% } %>
     </div>
 
     <!-- Contenedor para el mapa -->
-    <div id="map" class="flex justify-center align-middle items-center mt-2 ml-auto mr-auto bg-neutral-500/20 h-64 max-w-[50%] rounded-lg overflow-hidden">
+    <div
+        id="map"
+        class="flex justify-center align-middle items-center mt-2 ml-auto mr-auto bg-neutral-500/20 h-64 max-w-[50%] rounded-lg overflow-hidden"
+    >
         <p class="font-bold text-2xl glowing">Waiting to obtain adress...</p>
     </div>
 </div>

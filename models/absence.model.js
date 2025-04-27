@@ -117,7 +117,7 @@ ORDER BY startDate DESC`);
     }
 
     static fetchPaginated(limit, offset, userRole, userId) {
-        if (userRole === "Human Resources") {
+        if (userRole === "Manager") {
             // RRHH: Ver todas las solicitudes pendientes para RRHH (justified = 2)
             return db.execute(
                 `SELECT a.*, u.birthName, u.surname, r.title, am.mediaLink
@@ -152,7 +152,7 @@ ORDER BY startDate DESC`);
     }
 
     static fetchAllPaginated(limit, offset, userRole, userId) {
-        if (userRole === "Human Resources") {
+        if (userRole === "Manager") {
             // RRHH: Ver todas las solicitudes aprobadas o rechazadas (justified = 0 o 1)
             return db.execute(
                 `SELECT a.*, u.birthName, u.surname, r.title, am.mediaLink

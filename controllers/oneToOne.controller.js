@@ -165,7 +165,7 @@ exports.getOneToOneCheck = (request, response, next) => {
 
             // Si no es RH y tampoco es a quien entrevistaron, no lo deja entrar
             if (
-                request.session.role != "Human Resources" &&
+                request.session.role != "Manager" &&
                 rows[0].oneOnOneUserIDFK != request.session.userID
             ) {
                 request.session.alert =

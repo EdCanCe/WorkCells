@@ -1,29 +1,15 @@
 <div class="fullContainer bgContainer1">
-    <div class="center !w-full">        
-        <% if (role === 'Human Resources') { %>
+    <div class="center !w-full">
+        <% if (role === 'Manager') { %>
         <div class="flex justify-end mb-4">
-            <a href="/holiday/add" class="btnPrimary">
-              Add
-            </a>
-          </div>
-          <% } %>
-        <div
-            id="holidaysTable"
-        ></div>
+            <a href="/holiday/add" class="btnPrimary"> Add </a>
+        </div>
+        <% } %>
+        <div id="holidaysTable"></div>
 
         <div class="mt-6 flex justify-center gap-3">
-            <button
-                id="prevBtn"
-                class="btnPrimary"
-            >
-                Previous
-            </button>
-            <button
-                id="nextBtn"
-                class="btnPrimary ml-2"
-            >
-                Next
-            </button>
+            <button id="prevBtn" class="btnPrimary">Previous</button>
+            <button id="nextBtn" class="btnPrimary ml-2">Next</button>
         </div>
     </div>
 </div>

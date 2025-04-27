@@ -7,9 +7,7 @@
                 </a>
             </div>
             <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    Absences requests
-                </h2>
+                <h2 class="text-2xl font-semibold mb-4">Absences requests</h2>
             </div>
             <div
                 class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
@@ -41,8 +39,7 @@
                             </td>
                             <td class="tContent">
                                 <%= new
-                                Date(ab.endDate).toLocaleDateString('es-MX')
-                                %>
+                                Date(ab.endDate).toLocaleDateString('es-MX') %>
                             </td>
                             <td
                                 class="tContent total-days"
@@ -52,10 +49,11 @@
                             <td class="tContent"><%= ab.reason %></td>
                             <td class="tContent">
                                 <% if (ab.mediaLink) { %>
-                                    <a
-                                        target="_blank"
-                                        href="/uploads/absence/<%= encodeURIComponent(
+                                <a
+                                    target="_blank"
+                                    href="/uploads/absence/<%= encodeURIComponent(
                                             ab.mediaLink) %>"
+<<<<<<< HEAD
                                         class="text-blue-500"
                                     >
                                         View Evidence
@@ -63,31 +61,80 @@
                                     <% } else { %>
                                         No evidence
                                     <% } %>   
+=======
+                                    class="text-blue-500"
+                                >
+                                    Check Evidence
+                                </a>
+                                <% } else { %> No evidence <% } %>
+>>>>>>> slumbery/programacion
                             </td>
                             <td class="tContent">
-                                <% if (role === "Human Resources") { %>
-                                    <% if (ab.hrStatus === 1) { %>
-                                        <div class="textSuccess text-center font-semibold">Approved</div>
-                                    <% } else if (ab.hrStatus === 0) { %>
-                                        <div class="textDanger text-center font-semibold">Denied</div>
-                                    <% } else { %>
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                            <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/<%= ab.absenceID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                            <button class="btnDanger deny-btn" data-url="/absence/requests/deny/<%= ab.absenceID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                        </div>
-                                    <% } %>
-                                <% } else if (role === "Department Leader") { %>
-                                    <% if (ab.leaderStatus === 1) { %>
-                                        <div class="textSuccess text-center font-semibold">Approved</div>
-                                    <% } else if (ab.leaderStatus === 0) { %>
-                                        <div class="textDanger text-center font-semibold">Denied</div>
-                                    <% } else if (ab.leaderStatus === 2) { %>
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                            <button class="btnSuccess approve-btn" data-url="/absence/requests/approve/<%= ab.absenceID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                            <button class="btnDanger deny-btn" data-url="/absence/requests/deny/<%= ab.absenceID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                        </div>
-                                    <% } %>
-                                <% } %>
+                                <% if (role === "Manager") { %> <% if
+                                (ab.hrStatus === 1) { %>
+                                <div
+                                    class="textSuccess text-center font-semibold"
+                                >
+                                    Approved
+                                </div>
+                                <% } else if (ab.hrStatus === 0) { %>
+                                <div
+                                    class="textDanger text-center font-semibold"
+                                >
+                                    Denied
+                                </div>
+                                <% } else { %>
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                                >
+                                    <button
+                                        class="btnSuccess approve-btn"
+                                        data-url="/absence/requests/approve/<%= ab.absenceID %>"
+                                        data-csrf="<%= csrfToken %>"
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                        class="btnDanger deny-btn"
+                                        data-url="/absence/requests/deny/<%= ab.absenceID %>"
+                                        data-csrf="<%= csrfToken %>"
+                                    >
+                                        Deny
+                                    </button>
+                                </div>
+                                <% } %> <% } else if (role === "Department
+                                Leader") { %> <% if (ab.leaderStatus === 1) { %>
+                                <div
+                                    class="textSuccess text-center font-semibold"
+                                >
+                                    Approved
+                                </div>
+                                <% } else if (ab.leaderStatus === 0) { %>
+                                <div
+                                    class="textDanger text-center font-semibold"
+                                >
+                                    Denied
+                                </div>
+                                <% } else if (ab.leaderStatus === 2) { %>
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                                >
+                                    <button
+                                        class="btnSuccess approve-btn"
+                                        data-url="/absence/requests/approve/<%= ab.absenceID %>"
+                                        data-csrf="<%= csrfToken %>"
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                        class="btnDanger deny-btn"
+                                        data-url="/absence/requests/deny/<%= ab.absenceID %>"
+                                        data-csrf="<%= csrfToken %>"
+                                    >
+                                        Deny
+                                    </button>
+                                </div>
+                                <% } %> <% } %>
                             </td>
                         </tr>
                         <% } %>
@@ -97,25 +144,11 @@
         </div>
     </div>
     <div class="pagination-controls mt-4 mb-4 gap-3 flex justify-center">
-        <button
-            id="prev-button"
-            class="btnPrimary"
-        >
-            Prevoius
-        </button>
-        <button
-            id="next-button"
-            class="btnPrimary"
-        >
-            Next
-        </button>
+        <button id="prev-button" class="btnPrimary">Prevoius</button>
+        <button id="next-button" class="btnPrimary">Next</button>
     </div>
     <div class="flex justify-center">
-        <a
-            href="/absence"
-            class="btnPrimary inline-block"
-            >Back</a
-        >
+        <a href="/absence" class="btnPrimary inline-block">Back</a>
     </div>
 </div>
 
@@ -132,60 +165,71 @@
     }
 
     function assignActionListeners() {
-    document.querySelectorAll(".approve-btn, .deny-btn").forEach((button) => {
-        button.onclick = async function() {
-            if (this.disabled) return;
-            
-            const url = this.dataset.url;
-            const csrf = this.dataset.csrf;
-            const isApprove = this.classList.contains("approve-btn");
-            const row = this.closest("tr");
-            console.log("url", url);
-            
-            // Guardar texto original para restaurarlo en caso de error
-            const originalText = this.textContent;
-            
-            // Mostrar "Procesando..." mientras se ejecuta
-            this.textContent = "Processing...";
-            this.disabled = true;
-            const buttons = row.querySelectorAll("button");
-            buttons.forEach(btn => btn.disabled = true);
-            
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json", 
-                        "csrf-token": csrf 
-                    },
-                    body: JSON.stringify({})
-                });
-                
-                if (!response.ok) {
-                    const err = await response.json();
-                    throw new Error(err.message || "Error en la operación");
-                }
-                
-                // Reemplazar los botones con mensaje de Approved/Denied
-                const actionCell = row.querySelector("td:last-child");
-                actionCell.innerHTML = `<div class="text-${isApprove ? 'green' : 'red'}-500 text-center font-semibold">${isApprove ? 'Approved' : 'Denied'}</div>`;
-                
-                // No recargamos la página para mantener la solicitud visible
-            } catch (err) {
-                console.error("Error al procesar la solicitud:", err);
-                alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
-                
-                // Restaurar el texto original y habilitar botones
-                this.textContent = originalText;
-                buttons.forEach(btn => btn.disabled = false);
-            }
-        };
-    });
+        document
+            .querySelectorAll(".approve-btn, .deny-btn")
+            .forEach((button) => {
+                button.onclick = async function () {
+                    if (this.disabled) return;
+
+                    const url = this.dataset.url;
+                    const csrf = this.dataset.csrf;
+                    const isApprove = this.classList.contains("approve-btn");
+                    const row = this.closest("tr");
+                    console.log("url", url);
+
+                    // Guardar texto original para restaurarlo en caso de error
+                    const originalText = this.textContent;
+
+                    // Mostrar "Procesando..." mientras se ejecuta
+                    this.textContent = "Processing...";
+                    this.disabled = true;
+                    const buttons = row.querySelectorAll("button");
+                    buttons.forEach((btn) => (btn.disabled = true));
+
+                    try {
+                        const response = await fetch(url, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "csrf-token": csrf,
+                            },
+                            body: JSON.stringify({}),
+                        });
+
+                        if (!response.ok) {
+                            const err = await response.json();
+                            throw new Error(
+                                err.message || "Error en la operación"
+                            );
+                        }
+
+                        // Reemplazar los botones con mensaje de Approved/Denied
+                        const actionCell = row.querySelector("td:last-child");
+                        actionCell.innerHTML = `<div class="text-${
+                            isApprove ? "green" : "red"
+                        }-500 text-center font-semibold">${
+                            isApprove ? "Approved" : "Denied"
+                        }</div>`;
+
+                        // No recargamos la página para mantener la solicitud visible
+                    } catch (err) {
+                        console.error("Error al procesar la solicitud:", err);
+                        alert(
+                            err.message ||
+                                "Error al procesar la solicitud. Intente nuevamente."
+                        );
+
+                        // Restaurar el texto original y habilitar botones
+                        this.textContent = originalText;
+                        buttons.forEach((btn) => (btn.disabled = false));
+                    }
+                };
+            });
     }
 
     function updateTable(data) {
         const tableContainer = document.querySelector(".overflow-x-auto");
-    
+
         // Check if data is empty first
         if (!data || data.length === 0) {
             // Replace table with "no requests" message
@@ -193,13 +237,13 @@
                 <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
                     <p class="text-center text-gray-400 text-xl">No absence requests available.</p>
                 </div>`;
-            
+
             // Disable pagination buttons
             document.getElementById("prev-button").disabled = currentPage === 0;
             document.getElementById("next-button").disabled = true;
             return;
         }
-        
+
         // If we have data, make sure we have a table
         if (!document.getElementById("absences-table")) {
             tableContainer.innerHTML = `
@@ -219,16 +263,19 @@
                     <tbody class="tBody"></tbody>
                 </table>`;
         }
-        
+
         const table = document.getElementById("absences-table");
         const tbody = table.querySelector("tbody");
         tbody.innerHTML = "";
 
         data.forEach((absence) => {
-            const totalDays = calculateTotalDays(absence.startDate, absence.endDate);
+            const totalDays = calculateTotalDays(
+                absence.startDate,
+                absence.endDate
+            );
             let actionCell = "";
-            
-            if (role === "Human Resources") {
+
+            if (role === "Manager") {
                 if (absence.hrStatus === 1) {
                     actionCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (absence.hrStatus === 0) {
@@ -256,29 +303,45 @@
 
             const row = document.createElement("tr");
             row.className = "border-b hover:bg-neutral-800";
-            
+
             row.innerHTML = `
             <tr class="tRow">
-                <td class="tContent">${absence.birthName} ${absence.surname}</td>
+                <td class="tContent">${absence.birthName} ${
+                absence.surname
+            }</td>
                 <td class="tContent">${absence.title}</td>
-                <td class="tContent">${new Date(absence.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="tContent">${new Date(absence.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(
+                    absence.startDate
+                ).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(
+                    absence.endDate
+                ).toLocaleDateString("es-MX")}</td>
                 <td class="tContent">${totalDays}</td>
                 <td class="tContent">${absence.reason}</td>
                 <td class="tContent">
+<<<<<<< HEAD
                     ${ absence.mediaLink ? `<a target="blank" href="/uploads/absence/${ encodeURIComponent(absence.mediaLink) }" class="text-blue-500">View evidence</a>` : 'No evidence' }
+=======
+                    ${
+                        absence.mediaLink
+                            ? `<a target="blank" href="/uploads/absence/${encodeURIComponent(
+                                  absence.mediaLink
+                              )}" class="text-blue-500">Check evidence</a>`
+                            : "No evidence"
+                    }
+>>>>>>> slumbery/programacion
                 </td>
                 <td class="tContent">${actionCell}</td>
             </tr>
             `;
-            
+
             tbody.appendChild(row);
         });
-        
+
         // Actualizar estado de botones de paginación
         document.getElementById("prev-button").disabled = currentPage === 0;
         document.getElementById("next-button").disabled = data.length < limit;
-        
+
         assignActionListeners(); // Reasigna los listeners
     }
 
@@ -286,44 +349,57 @@
     async function loadPage(page) {
         if (isLoading) return;
         isLoading = true;
-        
+
         try {
-            const response = await fetch(`/absence/requests/paginated?page=${page}`);
+            const response = await fetch(
+                `/absence/requests/paginated?page=${page}`
+            );
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Error en la respuesta del servidor");
+                throw new Error(
+                    errorData.message || "Error en la respuesta del servidor"
+                );
             }
-            // console.log("response", response);            
+            // console.log("response", response);
             const data = await response.json();
             currentPage = page;
             updateTable(data);
         } catch (error) {
             console.error("Error en loadPage:", error);
-            alert("Error al cargar las solicitudes. Por favor, intente nuevamente.");
+            alert(
+                "Error al cargar las solicitudes. Por favor, intente nuevamente."
+            );
         } finally {
             isLoading = false;
         }
     }
 
     // Manejadores para los botones de paginación
-    document.getElementById("next-button").addEventListener("click", async () => {
-        if (!document.getElementById("next-button").disabled) {
-            await loadPage(currentPage + 1);
-        }
-    });
-    
-    document.getElementById("prev-button").addEventListener("click", async () => {
-        if (currentPage > 0 && !document.getElementById("prev-button").disabled) {
-            await loadPage(currentPage - 1);
-        }
-    });
+    document
+        .getElementById("next-button")
+        .addEventListener("click", async () => {
+            if (!document.getElementById("next-button").disabled) {
+                await loadPage(currentPage + 1);
+            }
+        });
+
+    document
+        .getElementById("prev-button")
+        .addEventListener("click", async () => {
+            if (
+                currentPage > 0 &&
+                !document.getElementById("prev-button").disabled
+            ) {
+                await loadPage(currentPage - 1);
+            }
+        });
 
     // Inicialización al cargar la página
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         loadPage(0);
-        
+
         // Inicializar los totales de días para los elementos que ya están en el DOM
-        document.querySelectorAll(".total-days").forEach(cell => {
+        document.querySelectorAll(".total-days").forEach((cell) => {
             const startDate = cell.dataset.startDate;
             const endDate = cell.dataset.endDate;
             cell.textContent = calculateTotalDays(startDate, endDate);

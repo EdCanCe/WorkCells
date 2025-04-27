@@ -1,29 +1,241 @@
 <div class="fullContainer bgContainer1">
     <aside class="w-64"></aside>
     <div class="p-6">
-      <!-- Header -->
-      <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6 p-6 flex justify-between items-center">
-        <h2 class="text-2xl font-semibold">Vacation Requests</h2>
-        <div class="flex space-x-4">
-          <a href="/vacation/add" class="btnPrimary">New request</a>
-          <% if (role === 'Department Leader' || role === 'Human Resources') { %>
-            <a href="/vacation/requests" class="btnPrimary">Employees requests</a>
-          <% } %>
+        <!-- Header -->
+        <div
+            class="bg-neutral-700/25 shadow-lg rounded-lg mb-6 p-6 flex justify-between items-center"
+        >
+            <h2 class="text-2xl font-semibold">Vacation Requests</h2>
+            <div class="flex space-x-4">
+                <a href="/vacation/add" class="btnPrimary">New request</a>
+                <% if (role === 'Department Leader' || role === 'Manager') { %>
+                <a href="/vacation/requests" class="btnPrimary"
+                    >Employees requests</a
+                >
+                <% } %>
+            </div>
         </div>
-      </div>
-  
-      <!-- Table with Inline Filter -->
-      <div class="bg-neutral-700/25 shadow-lg rounded-lg p-6 mb-6">
-        <!-- Inline Filters -->
-        <div class="flex items-center mb-4">
-          <label for="statusFilter" class="font-medium mr-2">Filter by status:</label>
-          <select id="statusFilter" class="px-3 py-2 rounded border bg-neutral-800 text-white">
-            <option value="all">All</option>
-            <option value="history">History</option>
-            <option value="approved">Approved</option>
-            <option value="pending">Pending</option>
-            <option value="denied">Denied</option>
-          </select>
+
+        <!-- Table with Inline Filter -->
+        <div class="bg-neutral-700/25 shadow-lg rounded-lg p-6 mb-6">
+            <!-- Inline Filters -->
+            <div class="flex items-center mb-4">
+                <label for="statusFilter" class="font-medium mr-2"
+                    >Filter by status:</label
+                >
+                <select
+                    id="statusFilter"
+                    class="px-3 py-2 rounded border bg-neutral-800 text-white"
+                >
+                    <option value="all">All</option>
+                    <option value="history">History</option>
+                    <option value="approved">Approved</option>
+                    <option value="pending">Pending</option>
+                    <option value="denied">Denied</option>
+                </select>
+            </div>
+
+            <div class="content has-text-centered box">
+                <table class="tContainer">
+                    <thead class="tHead">
+                        <tr>
+                            <th class="hRow">REASON</th>
+                            <th class="hRow">START DATE</th>
+                            <th class="hRow">END DATE</th>
+                            <th class="hRow">HR STATUS</th>
+                            <th class="hRow">LEADER STATUS</th>
+                            <th class="hRow">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tBody" id="vacationTableBody">
+                        <!-- History -->
+                        <% usedVacations.forEach(vacation => { %>
+                        <tr class="tRow" data-status="history">
+                            <td class="tContent"><%= vacation.reason %></td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.startDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.endDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.hrStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.hrStatus === 0) { %><span
+                                    class="textDanger"
+                                    >Denied</span
+                                >
+                                <% } else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.leaderStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.leaderStatus === 0) {
+                                %><span class="textDanger">Denied</span> <% }
+                                else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">—</td>
+                        </tr>
+                        <% }) %>
+
+                        <!-- Approved -->
+                        <% approvedRequests.forEach(vacation => { %>
+                        <tr class="tRow" data-status="approved">
+                            <td class="tContent"><%= vacation.reason %></td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.startDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.endDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.hrStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.hrStatus === 0) { %><span
+                                    class="textDanger"
+                                    >Denied</span
+                                >
+                                <% } else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.leaderStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.leaderStatus === 0) {
+                                %><span class="textDanger">Denied</span> <% }
+                                else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">
+                                <a
+                                    href="/vacation/check/<%= vacation.vacationID %>"
+                                    class="btnPrimary"
+                                    >Check</a
+                                >
+                            </td>
+                        </tr>
+                        <% }) %>
+
+                        <!-- Pending -->
+                        <% pendingRequests.forEach(vacation => { %>
+                        <tr class="tRow" data-status="pending">
+                            <td class="tContent"><%= vacation.reason %></td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.startDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.endDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.hrStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.hrStatus === 0) { %><span
+                                    class="textDanger"
+                                    >Denied</span
+                                >
+                                <% } else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.leaderStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.leaderStatus === 0) {
+                                %><span class="textDanger">Denied</span> <% }
+                                else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">
+                                <a
+                                    href="/vacation/check/<%= vacation.vacationID %>"
+                                    class="btnPrimary"
+                                    >Check</a
+                                >
+                            </td>
+                        </tr>
+                        <% }) %>
+
+                        <!-- Denied -->
+                        <% deniedRequests.forEach(vacation => { %>
+                        <tr class="tRow" data-status="denied">
+                            <td class="tContent"><%= vacation.reason %></td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.startDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <%= new
+                                Date(vacation.endDate).toLocaleDateString('es-MX')
+                                %>
+                            </td>
+                            <td class="tContent">
+                                <% if (vacation.hrStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.hrStatus === 0) { %><span
+                                    class="textDanger"
+                                    >Denied</span
+                                >
+                                <% } else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="px-4 py-2">
+                                <% if (vacation.leaderStatus === 1) { %><span
+                                    class="textSuccess"
+                                    >Approved</span
+                                >
+                                <% } else if (vacation.leaderStatus === 0) {
+                                %><span class="textDanger">Denied</span> <% }
+                                else { %><span class="textWarning"
+                                    >Pending...</span
+                                ><% } %>
+                            </td>
+                            <td class="tContent">
+                                <a
+                                    href="/vacation/check/<%= vacation.vacationID %>"
+                                    class="btnPrimary"
+                                    >Check</a
+                                >
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
         </div>
   
         <div class="content has-text-centered box">
@@ -129,16 +341,20 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Filter Script -->
     <script>
-      document.getElementById('statusFilter').addEventListener('change', function() {
-        const filter = this.value;
-        document.querySelectorAll('#vacationTableBody tr').forEach(row => {
-          const status = row.getAttribute('data-status');
-          row.style.display = (filter === 'all' || status === filter) ? '' : 'none';
-        });
-      });
+        document
+            .getElementById("statusFilter")
+            .addEventListener("change", function () {
+                const filter = this.value;
+                document
+                    .querySelectorAll("#vacationTableBody tr")
+                    .forEach((row) => {
+                        const status = row.getAttribute("data-status");
+                        row.style.display =
+                            filter === "all" || status === filter ? "" : "none";
+                    });
+            });
     </script>
-  </div>
-  
+</div>
