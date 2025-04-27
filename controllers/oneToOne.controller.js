@@ -15,7 +15,7 @@ exports.getOneToOne = (request, response, next) => {
         OneToOne.getOwnSessions(userID)
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     sessions: rows,
                     role: role,
                 });
@@ -32,7 +32,7 @@ exports.getOneToOne = (request, response, next) => {
         OneToOne.getAllSessions()
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     sessions: rows,
                     role: role,
                 });
