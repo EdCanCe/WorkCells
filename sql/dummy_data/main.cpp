@@ -32,11 +32,9 @@ int main() {
 
     freopen("addData.sql", "w", stdout);  // Pasa el output a un archivo
     
-    createTemplateHolidays(20);
-    templateHolidays.print();
+    createTemplateHoliday();
 
-    createUsedHolidays(50);
-    usedHolidays.print();
+    createUsedHolidays();
 
     createPrivileges();
     for(auto i:privileges) i.print();
