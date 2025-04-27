@@ -5,14 +5,12 @@ const oneToOneController = require("../controllers/oneToOne.controller.js");
 const isAuth = require("../util/is-auth");
 const OTO = require("../util/OneToOnePrivilege/OneToOnePrivilege.js");
 
-router.get("/check/search", isAuth, OTO, oneToOneController.getSearch);
+router.get("/check/all", isAuth, OTO, oneToOneController.getSearchAll);
+router.get("/check/own", isAuth, oneToOneController.getSearchOwn);
 router.get("/", isAuth, oneToOneController.getOneToOne);
 
 router.get("/schedule", isAuth, OTO, oneToOneController.getOneToOneSchedule);
 router.post("/schedule", isAuth, OTO, oneToOneController.postOneToOneSchedule);
-
-// Muestra los datos de todas las sesiones
-router.get("/check", isAuth, OTO, oneToOneController.getSessions);
 
 // Muestra los datos de una sesión
 router.get("/:sessionID", isAuth, oneToOneController.getOneToOneCheck);
