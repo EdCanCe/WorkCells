@@ -171,4 +171,21 @@ module.exports = class Department {
             [`%${query}%`]
         );
     }
+
+    static searchWorkersByName(departmentID, userID, query) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
+                u.phoneNumber, d.title, r.title as 'role'
+            FROM user u 
+            JOIN department d 
+                ON d.departmentID = u.prioritaryDepartmentIDFK
+            JOIN role r
+                ON  u.userRoleIDFK = r.roleID
+            WHERE u.prioritaryDepartmentIDFK = ?
+                AND u.userID NOT IN (?)
+                AND (u.birthName LIKE ? OR u.surname LIKE ?)
+            ORDER BY u.birthName ASC`,
+            [departmentID, userID, `%${query}%`, `%${query}%`]
+        );
+    }
 };

@@ -74,48 +74,62 @@ exports.getEmployees = (req, res, next) => {
         });
 };
 
-exports.getPaginatedEmployeesRH = (req, res, next) => {
-    const departmentID = req.params.departmentID;
-    console.log(departmentID);
-    const page = parseInt(req.query.page) || 1;
+exports.getPaginatedEmployeesRH = (request, response, next) => {
+    const departmentID = request.params.departmentID;
+    const userID = request.session.userID;
+    const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
     const limit = 6;
     const offset = (page - 1) * limit;
 
-    Department.getEmployeesInDepartmentInfoPaginated(
-        departmentID,
-        limit,
-        offset
-    )
+    const searchPromise = query
+        ? Department.searchWorkersByName(departmentID, userID, query)
+        : Department.getEmployeesInDepartmentInfoPaginated(
+              departmentID,
+              limit,
+              offset
+          );
+
+    searchPromise
         .then(([rows]) => {
-            res.json(rows);
+            response.json({ rows, page, query });
         })
-        .catch(next);
+        .catch((err) => {
+            console.log(err);
+            response
+                .status(500)
+                .json({ err: "Error al obtener los colaboradores" });
+        });
 };
 
 exports.getEmployeesPaginated = async (request, response, next) => {
+    const userID = request.session.userID;
     const page = parseInt(request.query.page) || 1;
+    const query = request.query.query;
     const limit = 6;
     const offset = (page - 1) * limit;
+    const [[department]] = await Department.getLeaderDepartment(userID);
+    const leaderDepartmentID = department.prioritaryDepartmentIDFK;
 
-    try {
-        const [[department]] = await Department.getLeaderDepartment(
-            request.session.userID
-        );
-        const leaderDepartmentID = department.prioritaryDepartmentIDFK;
+    const searchPromise = query
+        ? Department.searchWorkersByName(leaderDepartmentID, userID, query)
+        : Department.getEmployeesInDepartmentPaginated(
+              leaderDepartmentID,
+              request.session.userID,
+              limit,
+              offset
+          );
 
-        const [rows] = await Department.getEmployeesInDepartmentPaginated(
-            leaderDepartmentID,
-            request.session.userID,
-            limit,
-            offset
-        );
-        response.json(rows);
-    } catch {
-        console.log(error);
-        response
-            .status(500)
-            .json({ error: "Error al obtener los colaboradores" });
-    }
+    searchPromise
+        .then(([rows]) => {
+            response.json({ rows, page, query });
+        })
+        .catch((err) => {
+            console.log(err);
+            response
+                .status(500)
+                .json({ err: "Error al obtener los colaboradores" });
+        });
 };
 
 exports.getDepartmentsPaginated = async (request, response, next) => {

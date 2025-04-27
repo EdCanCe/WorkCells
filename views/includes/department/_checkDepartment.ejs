@@ -48,7 +48,7 @@
             `/department/search?page=${page}&query=${encodeURIComponent(query)}`
         );
         const payload = await response.json();
-        const data = payload.rows;
+        const data = payload.rows || [];
 
         let container = "";
 

@@ -1,16 +1,34 @@
 <div class="fullContainer">
     <!-- Título del departamento -->
     <h2 class="text-4xl font-bold mb-8 text-center">
-        Department: <%= department[0].title %>
+        <%= department[0].title %>
     </h2>
+    <% if (role == "Department Leader") { %>
+    <div class="flex justify-center w-full">
+        <div
+            class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
+        >
+            <img
+                src="/icons/search.svg"
+                alt="search"
+                class="navIcon absolute w-6 h-6 text-white"
+            />
 
-    <!-- Grid centrado de 3 tarjetas por fila -->
+            <input
+                id="search"
+                name="search"
+                type="text"
+                placeholder="Search by name..."
+                class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+            />
+        </div>
+    </div>
+    <% } else {} %>
+
     <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8 items-center"
         id="employeesContainer"
-    >
-        <!-- inicialmente vacío; lo llenamos con JS -->
-    </div>
+    ></div>
 
     <div class="flex justify-center gap-3 mt-6 mb-4">
         <button id="prevPage" class="btnPrimary">Previous</button>
@@ -19,10 +37,16 @@
 </div>
 <script>
     let currentPage = 1;
+    let currentQuery = "";
 
-    async function loadEmployees(page) {
-        const response = await fetch(`/department/paginated?page=${page}`);
-        const data = await response.json();
+    async function loadEmployees(page, query = "") {
+        const response = await fetch(
+            `/department/paginated?page=${page}&query=${encodeURIComponent(
+                query
+            )}`
+        );
+        const payload = await response.json();
+        const data = payload.rows;
 
         let container = "";
 
@@ -71,6 +95,14 @@
         currentPage++;
         loadEmployees(currentPage);
     });
+
+    document
+        .getElementById("search")
+        .addEventListener("input", async (event) => {
+            currentQuery = event.target.value;
+            currentPage = 1;
+            loadEmployees(currentPage, currentQuery);
+        });
 
     // Cargar la primera página al iniciar
     loadEmployees(currentPage);
