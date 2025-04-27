@@ -318,6 +318,10 @@ module.exports = class Employee {
         prioritaryDepartmentIDFK,
         workStatus
     ) {
+        //Verifica que los campos de curp y rfc no esten nulos
+        curp = curp && curp.trim() !== "" ? curp.toUpperCase() : null;
+        rfc = rfc && rfc.trim() !== "" ? rfc.toUpperCase() : null;
+
         const checkUserQuery = `SELECT userID 
                                 FROM user 
                                 WHERE userID != ? 
@@ -378,7 +382,7 @@ module.exports = class Employee {
 
     /**
      * Obtiene todos los usuarios junto con su rol y departamento
-     * 
+     *
      * @returns Los datos de los usuarios
      */
     static fetchAllUserRoles() {
@@ -391,17 +395,19 @@ module.exports = class Employee {
 
     /**
      * Obtiene los datos de los empleados en un departamento
-     * 
+     *
      * @param string departmentID      El ID del departamento.
      * @returns Los datos de los empleados.
      */
     static fetchAllUsersByDepartment(departmentID) {
-        return db.execute(`SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
         FROM user u
         JOIN role r ON u.userRoleIDFK = r.roleID
         JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
         JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID
         AND d.departmentID = ?`,
-        [departmentID]);
+            [departmentID]
+        );
     }
 };
