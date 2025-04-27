@@ -2,10 +2,9 @@ const db = require("../util/database");
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = class Department {
-
     /**
      * Crea un objeto de departamento
-     * 
+     *
      * @param string title      El nombre del nuevo departamento
      * @param string leader     El ID del líder de departamento
      * @param string enterprise     El ID de la empresa a la que pertenece el departamento
@@ -26,14 +25,29 @@ module.exports = class Department {
      * @returns El ID del nuevo departamento.
      */
     save() {
-        return db.execute('CALL CreateDepartment(?, ?, ?, ?, ?)', [this.id, this.title, this.leader, this.enterprise, this.collaborators])
+        return db
+            .execute("CALL CreateDepartment(?, ?, ?, ?, ?)", [
+                this.id,
+                this.title,
+                this.leader,
+                this.enterprise,
+                this.collaborators,
+            ])
             .then(() => {
                 return this.id;
             });
     }
 
     update() {
-        return db.execute('CALL UpdateDepartment(?, ?, ?, ?, ?, ?)', [this.id, this.title, this.leader, this.enterprise, this.collaborators, this.flag])
+        return db
+            .execute("CALL UpdateDepartment(?, ?, ?, ?, ?, ?)", [
+                this.id,
+                this.title,
+                this.leader,
+                this.enterprise,
+                this.collaborators,
+                this.flag,
+            ])
             .then(() => {
                 return this.id;
             });
@@ -137,9 +151,24 @@ module.exports = class Department {
     }
 
     static fetchByID(departmentID) {
-        return db.execute(`SELECT d.flag, d.title as department, e.title as enterprise
+        return db.execute(
+            `SELECT d.flag, d.title as department, e.title as enterprise
         FROM department d, enterprise e
         WHERE e.enterpriseID = d.enterpriseIDFK
-        AND d.departmentID = ?`, [departmentID]);
+        AND d.departmentID = ?`,
+            [departmentID]
+        );
+    }
+
+    static searchByName(query) {
+        return db.execute(
+            `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
+            FROM department d 
+            JOIN enterprise e 
+                ON e.enterpriseID = d.enterpriseIDFK
+            WHERE (d.title LIKE ?)
+            ORDER BY d.title ASC`,
+            [`%${query}%`]
+        );
     }
 };

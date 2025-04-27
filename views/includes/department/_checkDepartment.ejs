@@ -2,7 +2,30 @@
     <h2 class="text-3xl font-semibold">All Departments</h2>
 
     <% if (role == 'Human Resources') { %>
-        <a class="btnPrimary center m-4" href="/department/add">Add department</a>
+    <div class="flex justify-center w-full">
+        <div
+            class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
+        >
+            <img
+                src="/icons/search.svg"
+                alt="search"
+                class="navIcon absolute w-6 h-6 text-white"
+            />
+
+            <input
+                id="search"
+                name="search"
+                type="text"
+                placeholder="Search by name..."
+                class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+            />
+        </div>
+        <div class="p-2 rounded-md text-center">
+            <a class="btnPrimary center m-2" href="/department/add"
+                >Add department</a
+            >
+        </div>
+    </div>
     <% } %>
 
     <div
@@ -18,10 +41,14 @@
 
 <script>
     let currentPage = 1;
+    let currentQuery = "";
 
-    async function LoadDepartments(page) {
-        const response = await fetch(`/department/search?page=${page}`);
-        const data = await response.json();
+    async function LoadDepartments(page, query = "") {
+        const response = await fetch(
+            `/department/search?page=${page}&query=${encodeURIComponent(query)}`
+        );
+        const payload = await response.json();
+        const data = payload.rows;
 
         let container = "";
 
@@ -69,6 +96,14 @@
         currentPage++;
         LoadDepartments(currentPage);
     });
+
+    document
+        .getElementById("search")
+        .addEventListener("input", async (event) => {
+            currentQuery = event.target.value;
+            currentPage = 1;
+            LoadDepartments(currentPage, currentQuery);
+        });
 
     // Cargar la primera página al iniciar
     LoadDepartments(currentPage);
