@@ -5,29 +5,29 @@ async function loadHolidays(page) {
   const data = await res.json();
 
   let table = `
-    <table class="min-w-full divide-y divide-gray-400">
-      <thead class="bg-neutral-800 text-white text-left text-lg">
+    <table class="tContainer">
+      <thead class="tHead">
         <tr>
-          <th class="px-6 py-4">Holidays</th>
-          <th class="px-6 py-4">Date</th>
-          <th class = "px-6 py-4"> Check One </th>
+          <th class="hRow">Holidays</th>
+          <th class="hRow">Date</th>
+          <th class="hRow">View One</th>
         </tr>
       </thead>
-      <tbody class="text-gray-200 bg-neutral-800">
+      <tbody class="tBody">
   `;
 
   if (data.length === 0) {
-    table += `<tr><td colspan="2" class="text-center py-6">There´s no more holidays</td></tr>`;
+    table += `<tr><td colspan="3" class="dataless">There´s no more holidays</td></tr>`;
   } else {
     data.forEach((holiday) => {
       table += `
-        <tr class="hover:bg-neutral-700 border-b border-gray-600">
-          <td class="px-6 py-4">${holiday.nombre}</td>
-          <td class="px-6 py-4">${new Date(holiday.fecha).toLocaleDateString(
+        <tr class="tRow">
+          <td class="tContent">${holiday.nombre}</td>
+          <td class="tContent">${new Date(holiday.fecha).toLocaleDateString(
             "es-MX",
             { weekday: "long", year: "numeric", month: "long", day: "numeric" }
           )}</td>
-          <td class="px-4 py-2">
+          <td class="tContent">
             <a href="/holiday/check/${holiday.usedHolidayID}" class="btnPrimary">Check</a>
           </td>
         </tr>

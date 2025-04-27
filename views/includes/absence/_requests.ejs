@@ -1,4 +1,4 @@
-<div class="primaryContainer bgContainer1">
+<div class="fullContainer bgContainer1">
     <div>
         <div>
             <div class="flex justify-end mb-4">
@@ -14,47 +14,48 @@
             <div
                 class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
             >
-                <table class="min-w-full table-auto" id="absences-table">
-                    <thead class="bg-neutral-800">
+                <table class="tableContainer" id="absences-table">
+                    <thead class="tHead">
                         <tr>
-                            <th class="px-4 py-2 text-left">Full name</th>
-                            <th class="px-4 py-2 text-left">Role</th>
-                            <th class="px-4 py-2 text-left">Start date</th>
-                            <th class="px-4 py-2 text-left">End date</th>
-                            <th class="px-4 py-2 text-left">Duration</th>
-                            <th class="px-4 py-2 text-left">Reason</th>
-                            <th class="px-4 py-2 text-left">Evidence</th>
-                            <th class="px-4 py-2 text-center">Status</th>
+                            <th class="hRow">Full name</th>
+                            <th class="hRow">Role</th>
+                            <th class="hRow">Start date</th>
+                            <th class="hRow">End date</th>
+                            <th class="hRow">Duration</th>
+                            <th class="hRow">Reason</th>
+                            <th class="hRow">Evidence</th>
+                            <th class="hRow">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="tbody">
                         <% for (let ab of absences) { %>
-                        <tr class="border-b hover:bg-neutral-800">
-                            <td class="px-4 py-2">
+                        <tr class="tRow">
+                            <td class="tContent">
                                 <%= ab.birthName + ' ' + ab.surname %>
                             </td>
-                            <td class="px-4 py-2"><%= ab.title %></td>
-                            <td class="px-4 py-2">
+                            <td class="tContent"><%= ab.title %></td>
+                            <td class="tContent">
                                 <%= new
                                 Date(ab.startDate).toLocaleDateString('es-MX')
                                 %>
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="tContent">
                                 <%= new
                                 Date(ab.endDate).toLocaleDateString('es-MX')
                                 %>
                             </td>
                             <td
-                                class="px-4 py-2 total-days"
+                                class="tContent total-days"
                                 data-start-date="<%= ab.startDate %>"
                                 data-end-date="<%= ab.endDate %>"
                             ></td>
-                            <td class="px-4 py-2"><%= ab.reason %></td>
-                            <td class="px-4 py-2">
+                            <td class="tContent"><%= ab.reason %></td>
+                            <td class="tContent">
                                 <% if (ab.mediaLink) { %>
                                     <a
                                         target="_blank"
-                                        href="/uploads/fault/<%= encodeURIComponent(ab.mediaLink) %>"
+                                        href="/uploads/absence/<%= encodeURIComponent(
+                                            ab.mediaLink) %>"
                                         class="text-blue-500"
                                     >
                                         Check Evidence
@@ -63,7 +64,7 @@
                                         No evidence
                                     <% } %>   
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="tContent">
                                 <% if (role === "Human Resources") { %>
                                     <% if (ab.hrStatus === 1) { %>
                                         <div class="text-green-500 text-center font-semibold">Approved</div>
@@ -95,7 +96,7 @@
             </div>
         </div>
     </div>
-    <div class="pagination-controls mt-4 mb-4 flex justify-between">
+    <div class="pagination-controls mt-4 mb-4 gap-3 flex justify-center">
         <button
             id="prev-button"
             class="btnPrimary"
@@ -109,11 +110,13 @@
             Next
         </button>
     </div>
-    <a
-        href="/absence"
-        class="btnPrimary inline-block"
-        >Back</a
-    >
+    <div class="flex justify-center">
+        <a
+            href="/absence"
+            class="btnPrimary inline-block"
+            >Back</a
+        >
+    </div>
 </div>
 
 <script>
@@ -200,20 +203,20 @@
         // If we have data, make sure we have a table
         if (!document.getElementById("absences-table")) {
             tableContainer.innerHTML = `
-                <table id="absences-table" class="min-w-full table-auto">
-                    <thead class="bg-neutral-800">
+                <table id="absences-table" class="tContainer">
+                    <thead class="tHead">
                         <tr>
-                            <th class="px-4 py-2 text-left">Full name</th>
-                            <th class="px-4 py-2 text-left">Role</th>
-                            <th class="px-4 py-2 text-left">Start date</th>
-                            <th class="px-4 py-2 text-left">End date</th>
-                            <th class="px-4 py-2 text-left">Duration</th>
-                            <th class="px-4 py-2 text-left">Reason</th>
-                            <th class="px-4 py-2 text-left">Evidence</th>
-                            <th class="px-4 py-2 text-center">Status</th>
+                            <th class="hRow">Full name</th>
+                            <th class="hRow">Role</th>
+                            <th class="hRow">Start date</th>
+                            <th class="hRow">End date</th>
+                            <th class="hRow">Duration</th>
+                            <th class="hRow">Reason</th>
+                            <th class="hRow">Evidence</th>
+                            <th class="hRow">Status</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="tBody"></tbody>
                 </table>`;
         }
         
@@ -255,16 +258,18 @@
             row.className = "border-b hover:bg-neutral-800";
             
             row.innerHTML = `
-                <td class="px-4 py-2">${absence.birthName} ${absence.surname}</td>
-                <td class="px-4 py-2">${absence.title}</td>
-                <td class="px-4 py-2">${new Date(absence.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(absence.endDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${totalDays}</td>
-                <td class="px-4 py-2">${absence.reason}</td>
-                <td class="px-4 py-2">
+            <tr class="tRow">
+                <td class="tContent">${absence.birthName} ${absence.surname}</td>
+                <td class="tContent">${absence.title}</td>
+                <td class="tContent">${new Date(absence.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(absence.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${totalDays}</td>
+                <td class="tContent">${absence.reason}</td>
+                <td class="tContent">
                     ${ absence.mediaLink ? `<a target="blank" href="/uploads/absence/${ encodeURIComponent(absence.mediaLink) }" class="text-blue-500">Check evidence</a>` : 'No evidence' }
                 </td>
-                <td class="px-4 py-2">${actionCell}</td>
+                <td class="tContent">${actionCell}</td>
+            </tr>
             `;
             
             tbody.appendChild(row);

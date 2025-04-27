@@ -14,36 +14,36 @@ let currentPage = 1;
   
       // Construimos la tabla con el mismo estilo que "List of all Employees"
       let table = `
-        <table class="w-full divide-y divide-neutral-200 text-center">
-          <thead class="bg-neutral-800/50">
+        <table class="tContainer">
+          <thead class="tHead">
             <tr>
-              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Name</th>
-              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">E-mail</th>
-              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Date of the Fault</th>
-              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Numbers of Faults</th>
-              <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Access the fault</th>
+              <th class="hRow">Name</th>
+              <th class="hRow">E-mail</th>
+              <th class="hRow">Date of the Fault</th>
+              <th class="hRow">Numbers of Faults</th>
+              <th class="hRow">View the fault</th>
             </tr>
           </thead>
-          <tbody class="bg-neutral-800 divide-y divide-neutral-200">
+          <tbody class="tBody">
       `;
   
       if (!data || data.faults.length === 0) {
         table += `
           <tr>
-            <td colspan="4" class="px-6 py-4 text-white text-center">There´s no more faults.</td>
+            <td colspan="5" class="dataless">There´s no more faults.</td>
           </tr>
         `;
       } else {
         data.faults.forEach((falta) => {
           table += `
-            <tr>
-              <td class="px-6 py-4 text-white">${falta.nombre}</td>
-              <td class="px-6 py-4 text-white">${falta.correo}</td>
-              <td class="px-6 py-4 text-white">
+            <tr class="tRow">
+              <td class="tContent">${falta.nombre}</td>
+              <td class="tContent">${falta.correo}</td>
+              <td class="tContent">
                 ${new Date(falta.fecha_falta).toLocaleDateString("es-MX")}
               </td>
-              <td class="px-6 py-4 text-white font-semibold">${falta.num_faltas}</td>
-              <td class="px-6 py-4 text-white"><a href="/employee/${falta.faultUserIDFK}/faults" class="btnPrimary">Check</a></td>
+              <td class="tContent">${falta.num_faltas}</td>
+              <td class="tContent"><a href="/employee/${falta.faultUserIDFK}/faults" class="btnPrimary">View</a></td>
             </tr>
           `;
         });

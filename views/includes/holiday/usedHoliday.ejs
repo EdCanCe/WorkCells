@@ -1,7 +1,5 @@
-<div class="primaryContainer bgContainer1">
-    <div class="center !w-full">
-        <h1 class="text-3xl font-bold mb-6">Holidays</h1>
-        
+<div class="fullContainer bgContainer1">
+    <div class="center !w-full">        
         <% if (role === 'Human Resources') { %>
         <div class="flex justify-end mb-4">
             <a href="/holiday/add" class="btnPrimary">
@@ -11,10 +9,9 @@
           <% } %>
         <div
             id="holidaysTable"
-            class="overflow-x-auto bg-white rounded-lg shadow"
         ></div>
 
-        <div class="mt-6 flex justify-between">
+        <div class="mt-6 flex justify-center gap-3">
             <button
                 id="prevBtn"
                 class="btnPrimary"

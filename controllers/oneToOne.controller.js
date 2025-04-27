@@ -8,10 +8,10 @@ const sessionVars = require("../util/sessionVars");
 const title = "One To One";
 
 exports.getOneToOne = (request, response, next) => {
-    const role = sessionVars(request).role;
+    const role = request.session.role;
 
     if (role === "Colaborator" || role === "Department Leader") {
-        const userID = sessionVars(request).userID;
+        const userID = request.session.userID
         OneToOne.getOwnSessions(userID)
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
@@ -56,7 +56,7 @@ exports.postOneToOneSchedule = (request, response, next) => {
     OneToOne.getID(request.body.email)
         .then(([rows]) => {
             if (rows.length === 0) {
-                request.session.error =
+                request.session.alert =
                     "El correo ingresado no se encuentra registrado.";
                 return response.redirect("/oneToOne/schedule");
             }

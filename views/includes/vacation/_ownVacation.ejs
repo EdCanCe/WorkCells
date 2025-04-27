@@ -1,4 +1,4 @@
-<div class="primaryContainer bgContainer1">
+<div class="fullContainer bgContainer1">
     <aside class="w-64"></aside>
     <div class="p-6">
       <!-- Header -->
@@ -27,55 +27,55 @@
         </div>
   
         <div class="content has-text-centered box">
-          <table class="table w-full text-sm text-left">
-            <thead class="bg-neutral-700/50">
+          <table class="tContainer">
+            <thead class="tHead">
               <tr>
-                <th class="px-4 py-2">REASON</th>
-                <th class="px-4 py-2">START DATE</th>
-                <th class="px-4 py-2">END DATE</th>
-                <th class="px-4 py-2">HR STATUS</th>
-                <th class="px-4 py-2">LEADER STATUS</th>
-                <th class="px-4 py-2">ACTION</th>
+                <th class="hRow">REASON</th>
+                <th class="hRow">START DATE</th>
+                <th class="hRow">END DATE</th>
+                <th class="hRow">HR STATUS</th>
+                <th class="hRow">LEADER STATUS</th>
+                <th class="hRow">ACTION</th>
               </tr>
             </thead>
-            <tbody id="vacationTableBody">
+            <tbody class="tBody" id="vacationTableBody">
               <!-- History -->
               <% usedVacations.forEach(vacation => { %>
-              <tr class="border-b" data-status="history">
-                <td class="px-4 py-2"><%= vacation.reason %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2">
+              <tr class="tRow" data-status="history">
+                <td class="tContent"><%= vacation.reason %></td>
+                <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent">
                   <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">
+                <td class="tContent">
                   <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">—</td>
+                <td class="tContent">—</td>
               </tr>
               <% }) %>
   
               <!-- Approved -->
               <% approvedRequests.forEach(vacation => { %>
-              <tr class="border-b" data-status="approved">
-                <td class="px-4 py-2"><%= vacation.reason %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2">
+              <tr class="tRow" data-status="approved">
+                <td class="tContent"><%= vacation.reason %></td>
+                <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent">
                   <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">
+                <td class="tContent">
                   <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">
+                <td class="tContent">
                   <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">Check</a>
                 </td>
               </tr>
@@ -83,21 +83,21 @@
   
               <!-- Pending -->
               <% pendingRequests.forEach(vacation => { %>
-              <tr class="border-b" data-status="pending">
-                <td class="px-4 py-2"><%= vacation.reason %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2">
+              <tr class="tRow" data-status="pending">
+                <td class="tContent"><%= vacation.reason %></td>
+                <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent">
                   <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">
+                <td class="tContent">
                   <% if (vacation.leaderStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">
+                <td class="tContent">
                   <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">Check</a>
                 </td>
               </tr>
@@ -105,11 +105,11 @@
   
               <!-- Denied -->
               <% deniedRequests.forEach(vacation => { %>
-              <tr class="border-b" data-status="denied">
-                <td class="px-4 py-2"><%= vacation.reason %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                <td class="px-4 py-2">
+              <tr class="tRow" data-status="denied">
+                <td class="tContent"><%= vacation.reason %></td>
+                <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                <td class="tContent">
                   <% if (vacation.hrStatus === 1) { %><span class="text-green-500">Approved</span>
                   <% } else if (vacation.hrStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
@@ -119,7 +119,7 @@
                   <% } else if (vacation.leaderStatus === 0) { %><span class="text-red-500">Denied</span>
                   <% } else { %><span class="text-yellow-500">Pending...</span><% } %>
                 </td>
-                <td class="px-4 py-2">
+                <td class="tContent">
                   <a href="/vacation/check/<%= vacation.vacationID %>" class="btnPrimary">Check</a>
                 </td>
               </tr>

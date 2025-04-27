@@ -1,4 +1,4 @@
-<div class="fullContainer">
+<div class="fullContainer bgContainer1">
     <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
         List of all Employees
     </h1>
@@ -24,7 +24,7 @@
             <select id="filterSelect" class="btnPrimary">
                 <option value="all">All</option>
                 <option value="active">Active</option>
-                <option value="inactive">Idle</option>
+                <option value="inactive">Terminated</option>
             </select>
             <span id="employeeCount" class="btnPrimary" disabled>
             </span>
@@ -37,7 +37,6 @@
     </div>
     <div
         id="employeeTable"
-        class="flex content justify-center p-4 rounded-md list space-y-4"
     ></div>
     <div class="flex justify-center gap-3 mt-6">
         <button id="prevPage" class="btnPrimary" disabled>
