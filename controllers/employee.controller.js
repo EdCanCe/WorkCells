@@ -3,8 +3,8 @@ const Department = require("../models/department.model");
 const sessionVars = require("../util/sessionVars");
 const WorkStatus = require("../models/workStatus.model");
 const bcrypt = require("bcryptjs");
-const openProfile = require('../util/openProfile');
-const title = 'Employees';
+const openProfile = require("../util/openProfile");
+const title = "Employees";
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -218,12 +218,15 @@ exports.postModify = (request, response, next) => {
 
 exports.getProfile = (request, response, next) => {
     // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
-    const userID = request.params.userID === undefined ? request.session.userID : request.params.userID;
+    const userID =
+        request.params.userID === undefined
+            ? request.session.userID
+            : request.params.userID;
 
     // En caso de haber no usuario en params, marca que el perfil es propio
     const isOwn = userID === request.session.userID;
 
-    console.log(isOwn ? 'Soy dueño' : 'No soy dueño');
+    console.log(isOwn ? "Soy dueño" : "No soy dueño");
 
     // Si es dueño de su propio perfil, mandar a renderizar
     if (isOwn) {
@@ -231,7 +234,7 @@ exports.getProfile = (request, response, next) => {
     }
 
     // Si es SuperAdmin, mandar a renderizar
-    if (request.session.role === 'Human Resources') {
+    if (request.session.role === "Manager") {
         return openProfile(request, response, userID, isOwn);
     }
 
@@ -239,17 +242,18 @@ exports.getProfile = (request, response, next) => {
     Department.getLeaderDepartment(userID)
         .then(([rows]) => {
             // En caso que el líder del colaborador sea el usuario, renderiza el perfil
-            if (rows[0].userID === request.session.userID ) {
+            if (rows[0].userID === request.session.userID) {
                 return openProfile(request, response, userID, isOwn);
             }
 
             // Como es return arriba, si no es líder manda el error:
-            request.session.info = 'You have no permission to view this profile';
-            response.redirect('/error');
+            request.session.info =
+                "You have no permission to view this profile";
+            response.redirect("/error");
         })
         .catch(() => {
-            request.session.info = 'The user has no leader department';
-            response.redirect('/error');
+            request.session.info = "The user has no leader department";
+            response.redirect("/error");
         });
 };
 
@@ -426,12 +430,18 @@ exports.postChangePassword = (request, response, next) => {
 
 exports.getEmployeeFaults = (request, response, next) => {
     // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
-    const userID = request.params.userID === undefined ? request.session.userID : request.params.userID;
+    const userID =
+        request.params.userID === undefined
+            ? request.session.userID
+            : request.params.userID;
 
     // Si no es el dueño de las faltas ni es SuperAdmin, no tiene permisos
-    if (userID !== request.session.userID && request.session.role !== 'Human Resources') {
-        request.session.alert = 'You have no permission to view this';
-        response.redirect('/error');
+    if (
+        userID !== request.session.userID &&
+        request.session.role !== "Manager"
+    ) {
+        request.session.alert = "You have no permission to view this";
+        response.redirect("/error");
     }
 
     // Renderiza las faltas del usuario

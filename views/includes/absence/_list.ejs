@@ -1,8 +1,7 @@
 <div class="fullContainer bgContainer1">
     <div class="">
         <div class="px-6 py-4 flex justify-end">
-            <% if (role === 'Department Leader' || role === 'Human Resources')
-            {%>
+            <% if (role === 'Department Leader' || role === 'Manager') {%>
             <a href="/absence/requests" class="btnPrimary mr-4"
                 >Employees requests</a
             >
@@ -54,9 +53,7 @@
                 const totalDays = 1 + timeDifference / (1000 * 3600 * 24);
 
                 table += `<tr class="tRow">
-                        <td class="tContent">${
-                            ab.reason
-                        }</td>
+                        <td class="tContent">${ab.reason}</td>
                         <td class="tContent">${startDate.toLocaleDateString(
                             "es-MX"
                         )}</td>
@@ -74,7 +71,6 @@
                 } else if (ab.leaderStatus === 2) {
                     table += `<td class="tContent textWarning">Pending...</td>`;
                 }
-
 
                 if (ab.hrStatus === 0) {
                     table += `<td class="tContent textDanger">Denied</td>`;

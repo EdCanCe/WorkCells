@@ -37,7 +37,7 @@
                             <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
                             <td class="tContent total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                             <td class="tContent">
-                                <% if (role === "Human Resources") { %>
+                                <% if (role === "Manager") { %>
                                     <% if (vacation.hrStatus === 1) { %>
                                         <div class="textSuccess text-center font-semibold">Approved</div>
                                     <% } else if (vacation.hrStatus === 0) { %>
@@ -184,7 +184,7 @@
             let actionCell = "";
             
             // Dentro de la función updateTable, en la parte donde se crea actionCell:
-            if (role === "Human Resources") {
+            if (role === "Manager") {
                 // Verificar si la solicitud ya fue procesada por RRHH
                 if (vacation.hrStatus === 1) {
                     actionCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;

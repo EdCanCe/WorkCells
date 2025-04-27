@@ -16,7 +16,7 @@
     <% } %>
 
     <!-- Si es HR muestra botón para llenar datos -->
-    <% if(role == 'Human Resources') { %>
+    <% if(role == 'Manager') { %>
     <a
         href="/oneToOne/<%= sessionID %>/fill"
         class="btnPrimary !block w-fit m-auto mt-5"
@@ -98,7 +98,7 @@
                         beginAtZero: true,
                         max: 5,
                         min: 0,
-                        grid: { 
+                        grid: {
                             color: `${baseTextColor}40`, // borde 1
 
                         },

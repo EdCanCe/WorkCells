@@ -51,7 +51,7 @@
         const order = {
             "Department Leader": 1,
             Collaborator: 2,
-            "Human Resources": 3,
+            Manager: 3,
         };
         data.sort((a, b) => (order[a.role] || 99) - (order[b.role] || 99));
 

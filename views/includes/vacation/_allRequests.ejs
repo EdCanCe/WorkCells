@@ -39,7 +39,7 @@
                                     <div class="textDanger text-center font-semibold">Denied</div>
                                 <% } %>
                             </td>
-                            <% } else if (role === "Human Resources") { %>
+                            <% } else if (role === "Manager") { %>
                             <td class="tContent">
                                 <% if (vacation.hrStatus === 1) { %>
                                     <div class="textSuccess text-center font-semibold">Approved</div>
@@ -129,7 +129,7 @@
                 } else {
                     statusCell = `<div class="textWarning text-center font-semibold">Pendiente</div>`;
                 }
-            } else if (role === "Human Resources") {
+            } else if (role === "Manager") {
                 if (vac.hrStatus === 1) {
                     statusCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (vac.hrStatus === 0) {
@@ -151,7 +151,7 @@
                 <td class="tContent">${totalDays}</td>
                 </tr>`;
 
-            if (role === "Department Leader" || role === "Human Resources") {
+            if (role === "Department Leader" || role === "Manager") {
                 rowHTML += `<td class="tContent">${statusCell}</td>`;
             }
             
