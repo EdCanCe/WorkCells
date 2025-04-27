@@ -66,11 +66,14 @@ module.exports = class Department {
 
     static getEmployeesInDepartment(leaderDepartmentID, userID) {
         return db.execute(
-            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, u.phoneNumber
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
+                u.phoneNumber, r.title as 'role'
             FROM user u 
+            JOIN role r
+                ON u.userRoleIDFK = r.roleID
             WHERE u.prioritaryDepartmentIDFK = ?
             AND u.userID NOT IN (?) 
-            ORDER BY u.birthName ASC`,
+            ORDER BY r.title DESC`,
             [leaderDepartmentID, userID]
         );
     }
@@ -82,11 +85,14 @@ module.exports = class Department {
         offset
     ) {
         return db.execute(
-            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, u.phoneNumber
+            `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
+                u.phoneNumber, r.title as "role"
             FROM user u 
+            JOIN role r
+                ON u.userRoleIDFK = r.roleID
             WHERE u.prioritaryDepartmentIDFK = ?
             AND u.userID NOT IN (?) 
-            ORDER BY u.birthName ASC
+            ORDER BY r.title DESC
             LIMIT ? OFFSET ?`,
             [leaderDepartmentID, userID, limit, offset]
         );
@@ -95,12 +101,14 @@ module.exports = class Department {
     static getEmployeesInDepartmentInfo(departmenID) {
         return db.execute(
             `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
-                u.phoneNumber, d.title
+                u.phoneNumber, d.title, r.title as 'role'
             FROM user u 
             JOIN department d 
                 ON d.departmentID = u.prioritaryDepartmentIDFK
+            JOIN role r
+                ON u.userRoleIDFK = r.roleID
             WHERE u.prioritaryDepartmentIDFK = ?
-            ORDER BY u.birthName ASC`,
+            ORDER BY r.title DESC`,
             [departmenID]
         );
     }
@@ -108,12 +116,14 @@ module.exports = class Department {
     static getEmployeesInDepartmentInfoPaginated(departmentID, limit, offset) {
         return db.execute(
             `SELECT u.userID, u.birthName, u.surname, u.workModality, u.mail, 
-                u.phoneNumber, d.title
+                u.phoneNumber, d.title, r.title as 'role'
             FROM user u 
             JOIN department d 
                 ON d.departmentID = u.prioritaryDepartmentIDFK
+            JOIN role r
+                ON u.userRoleIDFK = r.roleID
             WHERE u.prioritaryDepartmentIDFK = ?
-            ORDER BY u.birthName ASC
+            ORDER BY r.title DESC
             LIMIT ? OFFSET ?`,
             [departmentID, limit, offset]
         );

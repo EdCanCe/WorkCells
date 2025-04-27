@@ -48,6 +48,13 @@
         const payload = await response.json();
         const data = payload.rows;
 
+        const order = {
+            "Department Leader": 1,
+            Collaborator: 2,
+            "Human Resources": 3,
+        };
+        data.sort((a, b) => (order[a.role] || 99) - (order[b.role] || 99));
+
         let container = "";
 
         if (data.length === 0) {
@@ -57,8 +64,15 @@
             data.forEach((user) => {
                 container += `<div class="w-full bg-neutral-800/50 rounded-2xl shadow-lg p-6 flex flex-col">
                     <h2 class="text-2xl font-semibold mb-4"> ${user.birthName} ${user.surname} </h2>`;
+                if (user.role === "Department Leader") {
+                    container += `<p class="mb-2 text-blue-500"><span class="font-medium">Role:</span>
+                        ${user.role} </p>`;
+                } else {
+                    container += `<p class="mb-2"><span class="font-medium">Role:</span>
+                        ${user.role} </p>`;
+                }
 
-                container += `<p class="mb-2"><span class="font-medium">WorkModality:</span>`;
+                container += `<p class="mb-2"><span class="font-medium">Work Modality:</span>`;
                 if (user.workModality === 0) {
                     container += `On Site`;
                 } else if (user.workModality === 1) {
