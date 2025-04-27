@@ -58,7 +58,7 @@
                                             ab.mediaLink) %>"
                                         class="text-blue-500"
                                     >
-                                        Check Evidence
+                                        View Evidence
                                     </a>
                                     <% } else { %>
                                         No evidence
@@ -266,7 +266,7 @@
                 <td class="tContent">${totalDays}</td>
                 <td class="tContent">${absence.reason}</td>
                 <td class="tContent">
-                    ${ absence.mediaLink ? `<a target="blank" href="/uploads/absence/${ encodeURIComponent(absence.mediaLink) }" class="text-blue-500">Check evidence</a>` : 'No evidence' }
+                    ${ absence.mediaLink ? `<a target="blank" href="/uploads/absence/${ encodeURIComponent(absence.mediaLink) }" class="text-blue-500">View evidence</a>` : 'No evidence' }
                 </td>
                 <td class="tContent">${actionCell}</td>
             </tr>

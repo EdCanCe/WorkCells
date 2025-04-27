@@ -14,7 +14,7 @@
         <% } %>
         <p><span class="font-bold">Role: </span><%= userData.role %></p>
         <p><span class="font-bold">Department: </span><%= userData.department %></p>
-        <p><span class="font-bold">Enterprise: </span><%= userData.enterprise %></p>
+        <p><span class="font-bold">Company: </span><%= userData.enterprise %></p>
         <p><span class="font-bold">Adress: </span><span id="address"><%= userData.streetName %> <%= userData.houseNumber %>, <%= userData.colony %>, <%= userData.zipCode %>, <%= userData.country %></span></p>
     </div>
 
@@ -23,14 +23,14 @@
         <!-- Solo el líder de departamento no puede verlas por defecto -->
         <% if (role === 'Human Resources' || isOwn) { %>
             <a href="/employee/<%= userData.userID %>/faults" class="btnPrimary m-2"
-                >Check Faults</a
+                >View Faults</a
             >
         <% } %>
         
         <!-- Si eres dueño, puedes modificar la contraseña -->
         <% if (isOwn) { %>
             <a href="/employee/me/changePassword" class="btnPrimary m-2">
-                Change Password
+                Update Password
             </a>
         <% } %>
 

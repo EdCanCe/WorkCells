@@ -21,7 +21,7 @@
             href="/holiday/check/modify/<%= holiday.usedHolidayID %>"
             class="btnPrimary"
         >
-            Modify Holiday
+            Update Holiday
         </a>
 
         <!-- Eliminar feriado -->
@@ -91,7 +91,7 @@
                 } catch (err) {
                     await Swal.fire({
                         title: "Error",
-                        text: "The holiday couldn't be erased.",
+                        text: "The holiday couldn't be deleted.",
                         customClass: {
                             popup: 'sweetAlerts normal'
                         },

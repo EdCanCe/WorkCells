@@ -28,7 +28,7 @@ async function loadHolidays(page) {
             { weekday: "long", year: "numeric", month: "long", day: "numeric" }
           )}</td>
           <td class="tContent">
-            <a href="/holiday/check/${holiday.usedHolidayID}" class="btnPrimary">Check</a>
+            <a href="/holiday/check/${holiday.usedHolidayID}" class="btnPrimary">View</a>
           </td>
         </tr>
       `;
