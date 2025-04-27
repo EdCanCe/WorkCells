@@ -3,7 +3,7 @@ const Department = require("../models/department.model");
 const Enterprise = require("../models/enterprise.model");
 const Employee = require("../models/employee.model");
 const { create } = require("domain");
-const title = 'Departments';
+const title = "Departments";
 
 exports.getDepartments = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -152,13 +152,12 @@ exports.getAddDepartment = (request, response, next) => {
                 (employee) => employee.role === "Department Leader"
             );
 
-                    response.render("addDepartment", {
-                        ...sessionVars(request, title),
-                        enterprises,
-                        collaborators,
-                        leaders,
-                    });
-                });
+            response.render("addDepartment", {
+                ...sessionVars(request, title),
+                enterprises,
+                collaborators,
+                leaders,
+            });
         });
     });
 };
