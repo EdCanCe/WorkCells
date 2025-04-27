@@ -80,7 +80,7 @@ module.exports = class OneToOne {
      */
     static fetchByDateTypeHR(startDate, endDate) {
         return db.execute(
-            "SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ?",
+            "SELECT * FROM oneOnOne, user WHERE meetingDate BETWEEN ? AND ? AND oneOnOneUserIDFK = userID ORDER BY meetingDate ASC",
             [startDate, endDate]
         );
     }

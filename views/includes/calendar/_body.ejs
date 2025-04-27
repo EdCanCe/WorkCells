@@ -1,4 +1,4 @@
-<div class="fullContainer">
+<div id="realArea" class="fullContainer flex flex-col max-h-[calc(100vh-60px)] !overflow-hidden">
 
     <meta name="current-date" content="<%= today %>" />
     <meta name="typeOfRender" content="<%= isMonthView %>" />
@@ -146,18 +146,17 @@
         </div>
     </div>
 
-    <!-- Rest of your calendar code remains exactly the same -->
     <!-- Encabezados de días -->
-    <div class="grid grid-cols-7 gap-1 mb-2">
+    <div class="grid grid-cols-7 mb-2">
         <% weekDays.forEach(day => { %>
-            <div class="text-center font-bold py-2 bg-neutral-700/50 rounded">
+            <div class="text-center font-bold m-[2px] py-2 bg-neutral-700/50 rounded">
                 <%= day %>
             </div>
             <% }); %>
     </div>
     
     <!-- Días del calendario -->
-    <div id="calendarContainer" class="grid grid-cols-7 gap-1"></div>
+    <div id="calendarContainer" class="flex-1 mb-6 grid grid-cols-7 auto-rows-fr"></div>
 </div>
 
 <script>
@@ -165,6 +164,30 @@
     const typeOfRender = document.querySelector('[name="typeOfRender"]');
     const calendarContainer = document.getElementById("calendarContainer");
     const dateTitle = document.getElementById("dateTitle");
+    const realAreaContainer = document.getElementById("realArea");
+    const element = getComputedStyle(realAreaContainer);
+    let paddings;
+    let maxHeight;
+
+    const resetHeights = () => {
+        paddings = parseFloat(element.paddingBottom) + parseFloat(element.paddingTop);
+        maxHeight = realAreaContainer.clientHeight - paddings - 15;
+    } 
+
+    const setCalendarArea = () => {
+        const isMonthView = typeOfRender.content !== "true";
+
+        const childs = Array.from(calendarContainer.children);
+        const extraPx = parseFloat(getComputedStyle(childs[0]).marginBottom) + parseFloat(getComputedStyle(childs[0]).marginTop) + parseFloat(getComputedStyle(childs[0]).paddingBottom) + parseFloat(getComputedStyle(childs[0]).paddingTop);
+        const usedHeight = (maxHeight - paddings) / (isMonthView ? 1 : 5) - extraPx - (isMonthView ? 30 : 0);
+
+        console.log(usedHeight);
+
+        childs.forEach((child) => {
+            child.style.height = `${usedHeight}px`;
+            child.style.maxHeight = `${usedHeight}px`;
+        });
+    }
 
     const loadFilters = () => {
         const checkboxes = document.querySelectorAll(
@@ -185,81 +208,66 @@
         });
     };
     
+    const formatTime = (date) => {
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+
     const formatDateForSQL = (date) => {
         return date.toISOString().split("T")[0];
     };
     
-    const fetchByDate = (usedDate) => {
+    const fetchByDate = (usedDate, role) => {
+        const todayDate = formatDateForSQL(new Date);
         const isMonthView = typeOfRender.content === "true";
 
         const createDay = (day) => {
             return `
-            <div class="${
-                isMonthView ? "h-24 max-h-24" : "h-[500px] max-h-[500px]"
-            } p-1 overflow-auto rounded bg-neutral-800 border border-neutral-600/50 ${
-                day.isOutside ? "opacity-30" : ""
-            }">
-                <div class="text-right font-medium mb-1">${day.dayNumber}</div>
+            <div class="
+                ${formatDateForSQL(new Date(day.date)) === todayDate ? "bgStatusBarAlert" : "bg-neutral-800"}
+                ${day.isOutside ? "opacity-30" : ""}
+                m-[2px] p-1 overflow-auto rounded border border-neutral-600/50
+            ">
+            
+            <div class="text-right font-medium mb-1">${day.dayNumber}</div>
 
-                ${day.events.vacations
-                    .map(
-                        (vacation) => `
-                <a href="/vacation/check/${
-                    vacation.vacationID
-                }" class="vacation-event block w-full text-xs mb-1 p-1 rounded text-white bg-blue-500 ${
-                            vacation.isStart
-                                ? "rounded-l-lg border-l-4 border-blue-700"
-                                : ""
-                        } ${
-                            vacation.isEnd
-                                ? "rounded-r-lg border-r-4 border-blue-700"
-                                : ""
-                        }">
-                    Vacation
-                </a>
-                `
-                    )
-                    .join("")}
+                ${day.events.vacations.map((vacation) => 
+                    `<a
+                        href="/vacation/check/${vacation.vacationID}"
+                        class="
+                            ${vacation.isStart ? "rounded-l-lg border-l-4 border-blue-700" : ""}
+                            ${vacation.isEnd ? "rounded-r-lg border-r-4 border-blue-700" : ""}
+                            vacation-event block w-full text-xs mb-1 p-1 rounded text-white bg-blue-500
+                    ">
+                        Vacation
+                    </a>`).join("")}
 
-                ${day.events.absences
-                    .map(
-                        (absence) => `
-                <a href="/absence/${
-                    absence.absenceID
-                }" class="absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500 ${
-                            absence.isStart
-                                ? "rounded-l-lg border-l-4 border-red-700"
-                                : ""
-                        } ${
-                            absence.isEnd
-                                ? "rounded-r-lg border-r-4 border-red-700"
-                                : ""
-                        }">
-                    Absence
-                </a>
-                `
-                    )
-                    .join("")}
+                ${day.events.absences.map((absence) => 
+                    `<a
+                        href="/absence/${absence.absenceID}"
+                        class="
+                            absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500
+                            ${absence.isStart ? "rounded-l-lg border-l-4 border-red-700" : ""}
+                            ${absence.isEnd ? "rounded-r-lg border-r-4 border-red-700" : ""}
+                    ">
+                        Absence
+                    </a>`).join("")}
 
-                ${day.events.holidays
-                    .map(
-                        (holiday) => `
-                <p class="holiday-event block w-full text-xs mb-1 p-1 rounded text-white bg-green-500">
-                    ${holiday.title || "Feriado"}
-                </p>
-                `
-                    )
-                    .join("")}
+                ${day.events.holidays.map((holiday) =>
+                    `<p
+                        class="holiday-event block w-full text-xs mb-1 p-1 rounded text-white bg-green-500"
+                    >
+                        ${holiday.title || "Feriado"}
+                    </p>`).join("")}
 
-                ${day.events.oneToOnes
-                    .map(
-                        (oneToOne) => `
-                <a href="/oneToOne/${oneToOne.oneOnOneID}" class="oneToOne-event block w-full text-xs mb-1 p-1 rounded text-white bg-purple-500">
-                    One To One
-                </a>
-                `
-                    )
-                    .join("")}
+                ${day.events.oneToOnes.map((oneToOne) =>
+                    `<a
+                        href="/oneToOne/${oneToOne.oneOnOneID}"
+                        class="oneToOne-event block w-full text-xs mb-1 p-1 rounded text-white bg-purple-500"
+                    >
+                        One To One ${role === 'Human Resources' ? ` ${formatTime(new Date(oneToOne.meetingDate))} | ${oneToOne.birthName}` : ''}
+                    </a>`).join("")}
             </div>
             `;
         };
@@ -283,6 +291,9 @@
                     calendarContainer.innerHTML =
                         calendarContainer.innerHTML + createDay(day);
                 });
+
+                // Le asigna el tamaño a los elementos
+                setCalendarArea();
 
                 // Cambia el título correspondiente a las fechas
                 dateTitle.innerHTML = isMonthView
@@ -308,10 +319,10 @@
         const thisDate = new Date(currentDate.content);
         if (isMonthView) {
             typeOfRender.setAttribute("content", "true");
-            fetchByDate(new Date(thisDate.getFullYear(), thisDate.getMonth()));
+            fetchByDate(new Date(thisDate.getFullYear(), thisDate.getMonth()), '<%= role %>');
         } else {
             typeOfRender.setAttribute("content", "false");
-            fetchByDate(thisDate);
+            fetchByDate(thisDate, '<%= role %>');
         }
     }
 
@@ -341,7 +352,7 @@
             }
         }
 
-        fetchByDate(thisDate);
+        fetchByDate(thisDate, '<%= role %>');
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -361,5 +372,11 @@
         });
     });
 
-    fetchByDate(currentDate.content);
+    window.addEventListener("resize", () => {
+        resetHeights();
+        setCalendarArea();
+    })
+
+    resetHeights();
+    fetchByDate(formatDateForSQL(new Date), '<%= role %>');
 </script>
