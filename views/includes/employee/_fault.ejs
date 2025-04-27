@@ -1,4 +1,4 @@
-<div class="flex-1 p-6">
+<div class="fullContainer">
     <div class="p-6">
         <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
             <div class="p-6 flex justify-between items-center">
@@ -23,33 +23,33 @@
             </div>
             <div class="p-6">
                 <div class="content has-text-centered box">
-                    <table class="table w-full text-sm text-left">
-                        <thead class="bg-neutral-700/50">
+                    <table class="tContainer">
+                        <thead class="tHead">
                             <tr>
-                                <th class="px-4 py-2">Full name</th>
-                                <th class="px-4 py-2">Reason</th>
-                                <th class="px-4 py-2">Done date</th>
-                                <th class="px-4 py-2">Evidence</th>
-                                <th class = "px-4 py-2">Modify</th>
-                                <th class="px-4 py-2">Delete</th>
+                                <th class="hRow">Full name</th>
+                                <th class="hRow">Reason</th>
+                                <th class="hRow">Done date</th>
+                                <th class="hRow">Evidence</th>
+                                <th class="hRow">Modify</th>
+                                <th class="hRow">Delete</th>
                             </tr>
                         </thead>
                         <% if(faults.length > 0) { 
                         let i = 0;%>
-                        <tbody>
+                        <tbody class="tBody">
                             <% faults.forEach(f => {
                             i++; %>
-                            <tr class="border-b">
-                                <td class="px-4 py-2">
+                            <tr class="tRow">
+                                <td class="tContent">
                                     <%= f.birthName %> <%= f.surname %>
                                 </td>
-                                <td class="px-4 py-2"><%= f.summary %></td>
-                                <td class="px-4 py-2">
+                                <td class="tContent"><%= f.summary %></td>
+                                <td class="tContent">
                                     <%= new
                                     Date(f.doneDate).toLocaleDateString('es-MX')
                                     %>
                                 </td>
-                                <td class="px-4 py-2">
+                                <td class="tContent">
                                     <% if (f.mediaLink) { %>
                                         <a
                                           target="_blank"
@@ -62,10 +62,10 @@
                                         No evidence
                                       <% } %>                                      
                                 </td>
-                                <td>
+                                <td class="tContent">
                                     <a class= "btnPrimary" href="/fault/modify/<%= f.faultID %>">Modify</a>
                                 </td>
-                                <td>
+                                <td class="tContent">
                                     <button id="deleteIt<%= i %>" class="deleteFunc btnDanger">Delete</button>
                                     <form id="form<%= i %>" class="hidden" id="form" action="/fault/delete" method="POST">
                                         <input
@@ -92,7 +92,7 @@
                         </tbody>
                         <% } else { %>
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="dataless">
                                 There are no faults
                             </td>
                         </tr>
