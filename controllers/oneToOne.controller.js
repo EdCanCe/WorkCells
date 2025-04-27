@@ -47,7 +47,7 @@ exports.getOneToOne = (request, response, next) => {
 };
 
 exports.getOneToOneSchedule = (request, response, next) => {
-    OneToOne.getAllWorkers()
+    OneToOne.getAllWorkers(request.session.userID)
         .then(([rows, fieldData]) => {
             //console.log(rows);
             response.render("oneToOneAdd", {

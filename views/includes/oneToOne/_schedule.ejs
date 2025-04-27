@@ -96,12 +96,22 @@
                                 Select a Worker From the list
                             </option>
                             <% workers.forEach((w) => { %>
-                            <option value="<%= w.mail %>">
+                            <option
+                                value="<%= w.mail %>"
+                                data-name="<%= w.birthName %> <%= w.surname %>"
+                            >
                                 <%= w.birthName %> <%= w.surname %> - <%=
                                 w.department %> - <%= w.company %>
                             </option>
+
                             <% }) %>
                         </select>
+                        <input
+                            type="hidden"
+                            name="name"
+                            id="workerName"
+                            value=""
+                        />
                     </div>
                 </div>
                 <div class="text-center">
@@ -138,4 +148,13 @@
     meetLinkInput.oninput = function (event) {
         event.target.setCustomValidity("");
     };
+
+    const select = document.getElementById("worker");
+    const hidden = document.getElementById("workerName");
+
+    select.addEventListener("change", () => {
+        // toma el data-name de la opción seleccionada
+        const selected = select.selectedOptions[0];
+        hidden.value = selected.dataset.name || "";
+    });
 </script>

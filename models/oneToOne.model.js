@@ -191,7 +191,7 @@ module.exports = class OneToOne {
         );
     }
 
-    static getAllWorkers() {
+    static getAllWorkers(userID) {
         return db.execute(
             `SELECT u.birthName, u.surname, u.mail, d.title as 'department', 
                 e.title as 'company'
@@ -200,7 +200,9 @@ module.exports = class OneToOne {
                 ON u.prioritaryDepartmentIDFK = d.departmentID
             JOIN enterprise e
                 ON d.enterpriseIDFK = e.enterpriseID
-            ORDER BY u.birthName ASC`
+            WHERE u.userID NOT IN (?)
+            ORDER BY u.birthName ASC`,
+            [userID]
         );
     }
 };
