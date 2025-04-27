@@ -36,6 +36,7 @@
     </div>
 </div>
 <script>
+    const limit = 6;
     let currentPage = 1;
     let currentQuery = "";
 
@@ -96,6 +97,11 @@
             });
         }
         document.getElementById("employeesContainer").innerHTML = container;
+        const prevBtn = document.getElementById("prevPage");
+        const nextBtn = document.getElementById("nextPage");
+
+        prevBtn.style.display = page > 1 ? "inline-block" : "none";
+        nextBtn.style.display = data.length === limit ? "inline-block" : "none";
     }
 
     document.getElementById("prevPage").addEventListener("click", () => {
@@ -118,6 +124,5 @@
             loadEmployees(currentPage, currentQuery);
         });
 
-    // Cargar la primera página al iniciar
     loadEmployees(currentPage);
 </script>
