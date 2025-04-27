@@ -43,7 +43,7 @@
             href="/vacation/check/modify/<%= vacation.vacationID %>"
             class="btnPrimary"
         >
-            Modify Request
+            Update Request
         </a>
         <a
             href="/vacation/check/<%= vacation.vacationID %>"
@@ -118,7 +118,7 @@
                 } catch (err) {
                     Swal.fire({
                         title: "Error",
-                        text: "The vacation couldn't be erased.",
+                        text: "The vacation couldn't be deleted.",
                         customClass: {
                             popup: "sweetAlerts normal",
                         },

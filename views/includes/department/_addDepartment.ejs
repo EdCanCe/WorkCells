@@ -23,7 +23,7 @@
         <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
         <div class='mb-4'>
             <label class='block text-lg font-medium mb-2'
-                >Enterprise of origin:</label
+                >Company of origin:</label
             >
             <select
                 class='w-full input'
@@ -31,7 +31,7 @@
                 required
             >
                 <option value='none' selected disabled>Select here</option>
-                <option value='newOne'>New Enterprise</option>
+                <option value='newOne'>New Company</option>
                 <% enterprises.forEach((enterprise) => { %>
                     <option value='<%= enterprise.title %>'><%= enterprise.title %></option>
                 <% }) %>
@@ -42,7 +42,7 @@
             <input
                 type='text'
                 class='w-full input hidden'
-                placeholder='Write the enterprise name'
+                placeholder='Write the Company name'
                 id='enterpriseInput'
                 name='enterprise'
                 value='
@@ -113,7 +113,7 @@
             // En caso de que sea nueva empresa habilita el input text
             enterpriseInput.value = '';
             enterpriseInput.classList.remove('hidden');
-            showStatus('Info', 'Please fill the enterprise name');
+            showStatus('Info', 'Please fill the Company name');
         } else {
             // En caso de que ya exista, deshabilita el input text
 
@@ -196,7 +196,7 @@
     submitButton.addEventListener('click', (event) => {
         // En caso de que no haya seleccionado la empresa
         if (enterpriseInput.value === '' ) {
-            showStatus('Alert', 'You need to select an enterprise');
+            showStatus('Alert', 'You need to select a Company');
             event.preventDefault();
             return;
         }

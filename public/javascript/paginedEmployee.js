@@ -45,7 +45,7 @@ async function loadEmployees(page, query = "", selectedFilter = filter) {
                 <td class="tContent">
                     <a href="/employee/${
                         emp.userID
-                    }" class="btnPrimary ml-2">Check</a>
+                    }" class="btnPrimary ml-2">View</a>
                 </td>
             </tr>`;
         });
