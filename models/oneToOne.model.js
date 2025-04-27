@@ -190,4 +190,17 @@ module.exports = class OneToOne {
             [`%${query}%`, `%${query}%`, userID]
         );
     }
+
+    static getAllWorkers() {
+        return db.execute(
+            `SELECT u.birthName, u.surname, u.mail, d.title as 'department', 
+                e.title as 'company'
+            FROM user u
+            JOIN department d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+            JOIN enterprise e
+                ON d.enterpriseIDFK = e.enterpriseID
+            ORDER BY u.birthName ASC`
+        );
+    }
 };
