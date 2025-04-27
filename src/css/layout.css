@@ -3,7 +3,7 @@
 }
 
 .primaryContainer {
-    @apply min-w-[960px] max-w-[960px] min-h-full m-auto p-6;
+    @apply min-w-[840px] max-w-[840px] min-h-full m-auto p-6;
 }
 
 .fullContainer {

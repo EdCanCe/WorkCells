@@ -45,9 +45,6 @@ exports.postAdd = (request, response, next) => {
 };
 
 exports.getCheck = (request, response, next) => {
-    // TODO: Checar que si pueda acceder a verlo
-    console.log(request.params);
-
     Fault.fetchByID(request.params.faultID).then(([rows]) => {
         response.render("checkFault", {
             ...sessionVars(request, title),

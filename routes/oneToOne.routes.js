@@ -24,8 +24,6 @@ router.post(
     oneToOneController.postOneToOneFill
 );
 
-router.get("/graphs", isAuth, oneToOneController.getOneToOneGraphs);
-
 router.get("/getFullName/:email", isAuth, oneToOneController.getFullName);
 
 module.exports = router;

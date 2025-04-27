@@ -145,12 +145,6 @@ exports.postOneToOneFill = (request, response, next) => {
     response.redirect(`/oneToOne/${request.params.sessionID}`);
 };
 
-exports.getOneToOneGraphs = (request, response, next) => {
-    response.render("oneToOneGraphs", {
-        ...sessionVars(request, title),
-    });
-};
-
 exports.getOneToOneCheck = (request, response, next) => {
     // Obtiene los valores de la sesión
     OneToOne.fetchBySession(request.params.sessionID)

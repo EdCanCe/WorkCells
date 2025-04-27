@@ -114,10 +114,10 @@ class Fault {
   
   static fetchByID(faultID) {
     return db.execute(
-    `SELECT f.*, m.mediaLink 
-    FROM fault f, faultMedia m 
-    WHERE faultID = faultIDFK
-    AND faultID = ?`, [faultID]);
+    `SELECT f.*, m.mediaLink
+    FROM fault f
+    LEFT JOIN faultMedia m ON f.faultID = m.faultIDFK
+    WHERE f.faultID = ?`, [faultID]);
   }
 
   static updateFault({ faultID, reason, doneDate }) {
