@@ -71,100 +71,104 @@ exports.getEmployeeRotation = (request, response, next) => {
         });
 };
 
+
+
 exports.getOneonOneDepartment = (request, response, next) => {
-    const now = new Date();
+    const now   = new Date();
     const start = new Date(now.getFullYear(), now.getMonth(), 1)
-        .toISOString()
-        .split("T")[0];
-    // fecha del ultimo día del mes actual
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-        .toISOString()
-        .split("T")[0];
-
+                      .toISOString().split('T')[0];
+    const end   = new Date(now.getFullYear(), now.getMonth()+1, 0)
+                      .toISOString().split('T')[0];
     const departmentID = request.params.departmentID;
-    console.log("ID del departamento:", departmentID);
-
+  
     Report.fetchDepartment()
-        .then(([departments]) => {
-            if (!departmentID) {
-                return response.render("oneOnOne", {
-                    ...sessionVars(request, title),
-                    departments,
-                    workload: [],
-                    physicalHealth: [],
-                    acknowledgement: [],
-                    workLifeBalance: [],
-                    emotionalHealth: [],
-                    currentMonthStart: start,
-                    currentMonthEnd: end,
-                });
+      .then(([departments]) => {
+        // Si NO hay departmentID (undefined o cadena vacía) → ALL
+        if (!departmentID) {
+          return Promise.all([
+            Report.AllAnswerWorkload(),
+            Report.AllAnswerPhysicalHealth(),
+            Report.AllAnswerAcknowledgement(),
+            Report.AllAnswerWorkLifeBalance(),
+            Report.AllAnswerEmotionalHealth(),
+          ]).then(([
+            [workloadRows],
+            [physicalHealthRows],
+            [acknowledgementRows],
+            [workLifeBalanceRows],
+            [emotionalHealthRows],
+          ]) => {
+            // Responder JSON en petición AJAX
+            if (request.xhr || request.headers.accept.includes('application/json')) {
+              return response.json({
+                workload: workloadRows,
+                physicalHealth: physicalHealthRows,
+                acknowledgement: acknowledgementRows,
+                workLifeBalance: workLifeBalanceRows,
+                emotionalHealth: emotionalHealthRows,
+                currentMonthStart: start,
+                currentMonthEnd: end,
+              });
             }
-
-            return Promise.all([
-                Report.getAnswerWorkload(departmentID),
-                Report.getAnswerPhysicalHealth(departmentID),
-                Report.getAnswerAcknowledgement(departmentID),
-                Report.getAnswerWorkLifeBalance(departmentID),
-                Report.getAnswerEmotionalHealth(departmentID),
-            ]).then(
-                ([
-                    [workloadRows],
-                    [physicalHealthRows],
-                    [acknowledgementRows],
-                    [workLifeBalanceRows],
-                    [emotionalHealthRows],
-                ]) => {
-                    console.log("Respuestas Workload:", workloadRows);
-                    console.log(
-                        "Respuestas Physical Health:",
-                        physicalHealthRows
-                    );
-                    console.log(
-                        "Respuestas Acknowledgement:",
-                        acknowledgementRows
-                    );
-                    console.log(
-                        "Respuestas Work-Life Balance:",
-                        workLifeBalanceRows
-                    );
-                    console.log(
-                        "Respuestas Emotional Health Balance:",
-                        emotionalHealthRows
-                    );
-                    // Si es AJAX (JSON), sólo devolvemos los arreglos
-                    if (
-                        request.xhr ||
-                        request.headers.accept.includes("application/json")
-                    ) {
-                        return response.json({
-                            workload: workloadRows,
-                            physicalHealth: physicalHealthRows,
-                            acknowledgement: acknowledgementRows,
-                            workLifeBalance: workLifeBalanceRows,
-                            emotionalHealth: emotionalHealthRows,
-                            currentMonthStart: start,
-                            currentMonthEnd: end,
-                        });
-                    }
-
-                    // Render normal con todos los datos
-                    response.render("oneOnOne", {
-                        ...sessionVars(request, title),
-                        departments,
-                        workload: workloadRows,
-                        physicalHealth: physicalHealthRows,
-                        acknowledgement: acknowledgementRows,
-                        workLifeBalance: workLifeBalanceRows,
-                        emotionalHealth: emotionalHealthRows,
-                        selectedDepartmentID: departmentID,
-                        currentMonthStart: start,
-                        currentMonthEnd: end,
-                    });
-                }
-            );
-        })
-        .catch((error) => next(error));
-};
+            // Render normal
+            return response.render('oneOnOne', {
+              ...sessionVars(request, title),
+              departments,
+              selectedDepartmentID: '',
+              workload: workloadRows,
+              physicalHealth: physicalHealthRows,
+              acknowledgement: acknowledgementRows,
+              workLifeBalance: workLifeBalanceRows,
+              emotionalHealth: emotionalHealthRows,
+              currentMonthStart: start,
+              currentMonthEnd: end,
+            });
+          });
+        }
+  
+        // Si hay un departmentID válido → UNO SOLO
+        return Promise.all([
+          Report.getAnswerWorkload(departmentID),
+          Report.getAnswerPhysicalHealth(departmentID),
+          Report.getAnswerAcknowledgement(departmentID),
+          Report.getAnswerWorkLifeBalance(departmentID),
+          Report.getAnswerEmotionalHealth(departmentID),
+        ]).then(([
+          [workloadRows],
+          [physicalHealthRows],
+          [acknowledgementRows],
+          [workLifeBalanceRows],
+          [emotionalHealthRows],
+        ]) => {
+          if (request.xhr || request.headers.accept.includes('application/json')) {
+            return response.json({
+              workload: workloadRows,
+              physicalHealth: physicalHealthRows,
+              acknowledgement: acknowledgementRows,
+              workLifeBalance: workLifeBalanceRows,
+              emotionalHealth: emotionalHealthRows,
+              currentMonthStart: start,
+              currentMonthEnd: end,
+            });
+          }
+          return response.render('oneOnOne', {
+            ...sessionVars(request, title),
+            departments,
+            selectedDepartmentID: departmentID,
+            workload: workloadRows,
+            physicalHealth: physicalHealthRows,
+            acknowledgement: acknowledgementRows,
+            workLifeBalance: workLifeBalanceRows,
+            emotionalHealth: emotionalHealthRows,
+            currentMonthStart: start,
+            currentMonthEnd: end,
+          });
+        });
+      })
+      .catch(error => next(error));
+  };
+  
+  
 
 exports.getRotationPDF = async (request, response, next) => {
     const urlLocal = "http://localhost:3000/reports/staffRotation";

@@ -10,7 +10,8 @@
             id="department"
             class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
         >
-            <option selected disabled>Select department</option>
+            <option selected>Select department</option>
+            <option value = "">All department</option>
             <% departments.forEach(dept => { %>
             <option value="<%= dept.departmentID %>">
                 <%= dept.departmentTitle %> – <%= dept.enterpriseTitle %>
@@ -122,25 +123,27 @@
     });
 
     // Actualización AJAX al cambiar departamento
-    document
-        .getElementById("department")
-        .addEventListener("change", async (e) => {
-            const deptID = e.target.value;
-            if (!deptID) return;
-            try {
-                const res = await fetch(`/reports/oneOnOne/${deptID}`, {
-                    headers: { Accept: "application/json" },
-                });
-                const data = await res.json();
-                console.log(data);
-                Object.entries(data).forEach(([key, arr]) => {
-                    charts[key].data.datasets[0].data =
-                        countFrequenciesFromObjects(arr);
-                    charts[key].update();
-                });
-                Object.values(charts).forEach((c) => c.update());
-            } catch (err) {
-                console.error("Error AJAX:", err);
-            }
-        });
+// Actualización AJAX al cambiar departamento
+document.getElementById('department').addEventListener('change', async (e) => {
+  const deptID = e.target.value;
+  const url = deptID ? `/reports/oneOnOne/${deptID}` : `/reports/oneOnOne`;
+
+  try {
+    const res = await fetch(url, { headers: { Accept: 'application/json' } });
+    // Desestructuramos sólo las métricas
+    const { workload, physicalHealth, acknowledgement, workLifeBalance, emotionalHealth } = await res.json();
+
+    // Actualizamos cada gráfica
+    charts.workload.data.datasets[0].data        = countFrequenciesFromObjects(workload);
+    charts.physicalHealth.data.datasets[0].data  = countFrequenciesFromObjects(physicalHealth);
+    charts.acknowledgement.data.datasets[0].data = countFrequenciesFromObjects(acknowledgement);
+    charts.workLifeBalance.data.datasets[0].data = countFrequenciesFromObjects(workLifeBalance);
+    charts.emotionalHealth.data.datasets[0].data = countFrequenciesFromObjects(emotionalHealth);
+
+    Object.values(charts).forEach(c => c.update());
+  } catch (err) {
+    console.error('Error AJAX:', err);
+  }
+});
+
 </script>
