@@ -160,7 +160,7 @@ module.exports = class Department {
         );
     }
 
-    static searchByName(query) {
+    static searchDepartmentByName(query) {
         return db.execute(
             `SELECT d.departmentID, d.title, d.flag AS 'status', e.title AS 'enterprise'
             FROM department d 

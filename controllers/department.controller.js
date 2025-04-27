@@ -125,7 +125,7 @@ exports.getDepartmentsPaginated = async (request, response, next) => {
     const offset = (page - 1) * limit;
 
     const searchPromise = query
-        ? Department.searchByName(query)
+        ? Department.searchDepartmentByName(query)
         : Department.getAllDepartmentsPaginated(limit, offset);
 
     searchPromise
