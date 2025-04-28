@@ -14,4 +14,25 @@ module.exports = class AbsenceMedia {
             [absenceMediaID, this.mediaLink, this.absenceIDFK]
         );
     }
+
+    static getOwner(mediaLink) {
+        return db.execute(`
+            SELECT userID
+            FROM absence a, absenceMedia am, user u
+            WHERE am.absenceIDFK = a.absenceID
+            AND a.absenceUserIDFK = u.userID
+            AND am.mediaLink = ?`, [mediaLink]);
+    }
+
+    static getOwnersLeader(mediaLink) {
+        // TODO: Corroborar que al hacer insert de usuario que sea leader, se haga update en departmentLeader
+        return db.execute(`
+            SELECT d.departmentLeaderIDFK as userID
+            FROM absence a, absenceMedia am, user u, department d 
+            WHERE am.absenceIDFK = a.absenceID
+            AND a.absenceUserIDFK = u.userID
+            AND am.mediaLink = ?
+            AND u.prioritaryDepartmentIDFK = d.departmentID`
+            , [mediaLink]);
+    }
 };

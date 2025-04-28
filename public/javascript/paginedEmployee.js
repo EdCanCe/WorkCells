@@ -19,33 +19,33 @@ async function loadEmployees(page, query = "", selectedFilter = filter) {
 
     updateEmployeeCount(employees.length, totalCount);
 
-    let table = `<table class="w-full divide-y divide-neutral-200 text-center">
-        <thead class="bg-neutral-800/50">
+    let table = `<table class="tContainer">
+        <thead class="tHead">
             <tr>
-                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Full Name</th>
-                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Department</th>
-                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">Role</th>
-                <th class="px-6 py-3 text-xs font-medium uppercase tracking-wider">View</th>
+                <th class="hRow">Full Name</th>
+                <th class="hRow">Department</th>
+                <th class="hRow">Role</th>
+                <th class="hRow">View</th>
             </tr>
         </thead>
-        <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
+        <tbody class="tBody">`;
 
     if (employees.length === 0) {
-        table += `<tr><td colspan="4" class="px-6 py-4 text-white text-center">No employees found</td></tr>`;
+        table += `<tr><td colspan="4" class="dataless">No employees found</td></tr>`;
     } else {
         employees.forEach((emp) => {
-            table += `<tr>
-                <td class="px-6 py-4 text-white">${emp.birthName} ${
+            table += `<tr class="tRow">
+                <td class="tContent">${emp.birthName} ${
                 emp.surname
             }</td>
-                <td class="px-6 py-4 text-white">${
+                <td class="tContent">${
                     emp.departmentName || "N/A"
                 } - ${emp.enterpriseName}</td>
-                <td class="px-6 py-4 text-white">${emp.roleName || "N/A"}</td>
-                <td class="px-6 py-4 text-white">
+                <td class="tContent">${emp.roleName || "N/A"}</td>
+                <td class="tContent">
                     <a href="/employee/${
                         emp.userID
-                    }" class="btnPrimary ml-2">Check</a>
+                    }" class="btnPrimary ml-2">View</a>
                 </td>
             </tr>`;
         });

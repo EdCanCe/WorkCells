@@ -1,290 +1,248 @@
+<script>addBackButton('/employee');</script>
 <script src="/javascript/employeeValidator.js"></script>
-<div class="flex content justify-center">
-    <div class="content p-4 mx-auto w-full md:w-5/6 lg:w-3/4 xl:w-2/3">
-        <div class="card bg-neutral-700/25 shadow-md rounded-lg p-4">
-            <div class="card-content">
-                <h1 class="text-3xl font-semibold mb-4">Create New Employee</h1>
+<div class="primaryContainer bgContainer1">
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Add employee</h2>
+    </div>
 
-                <form id="form" action="/employee" method="POST">
-                    <input
-                        type="hidden"
-                        name="_csrf"
-                        value="<%= csrfToken %>"
-                    />
+    <form id="form" action="/employee" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                        <div class="field">
-                            <label for="curp" class="block text-lg font-medium"
-                                >CURP</label
-                            >
-                            <input
-                                type="text"
-                                id="curp"
-                                name="curp"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
-                                placeholder="GOGE0927MNTPCE10"
-                                maxlength="18"
-                            />
-                            <div
-                                id="curpFormatError"
-                                class="text-red-600 text-sm mt-2"
-                            ></div>
-                        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2">
 
-                        <div class="field">
-                            <label for="rfc" class="block text-lg font-medium"
-                                >RFC</label
-                            >
-                            <input
-                                type="text"
-                                id="rfc"
-                                name="rfc"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
-                                placeholder="GOGE0927MNQ9"
-                                maxlength="13"
-                            />
-                            <div
-                                id="rfcFormatError"
-                                class="text-red-600 text-sm mt-2"
-                            ></div>
-                        </div>
+            <div>
+                <label for="birthName" class="label"
+                    >Name:</label
+                >
+                <input
+                    type="text"
+                    id="birthName"
+                    name="birthName"
+                    class="input !w-[98%]"
+                    placeholder="Elena"
+                    required
+                />
+            </div>
 
-                        <div class="field">
-                            <label
-                                for="birthName"
-                                class="block text-lg font-medium"
-                                >Name</label
-                            >
-                            <input
-                                type="text"
-                                id="birthName"
-                                name="birthName"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="Elena"
-                                required
-                            />
-                        </div>
+            <div>
+                <label for="surname" class="label"
+                    >Surname:</label
+                >
+                <input
+                    type="text"
+                    id="surname"
+                    name="surname"
+                    class="input !w-[98%]"
+                    placeholder="González González"
+                    required
+                />
+            </div>
 
-                        <div class="field">
-                            <label
-                                for="surname"
-                                class="block text-lg font-medium"
-                                >Surname</label
-                            >
-                            <input
-                                type="text"
-                                id="surname"
-                                name="surname"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="González González"
-                                required
-                            />
-                        </div>
-
-                        <div class="field">
-                            <label for="mail" class="block text-lg font-medium"
-                                >Email</label
-                            >
-                            <input
-                                type="email"
-                                id="mail"
-                                name="mail"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="eiujmidiam@nuclea.solutions"
-                                required
-                            />
-                            <div
-                                id="mailFormatError"
-                                class="text-red-600 text-sm mt-2"
-                            ></div>
-                        </div>
-                        <div class="field">
-                            <label
-                                for="phoneNumber"
-                                class="block text-lg font-medium"
-                                >Phone Number</label
-                            >
-                            <input
-                                type="tel"
-                                name="phoneNumber"
-                                id="phoneNumber"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="55 1234 5678"
-                                maxlength="15"
-                                pattern="[0-9]+"
-                                required
-                            />
-                            <div
-                                id="phoneNumberError"
-                                class="text-red-600 text-sm mt-2"
-                            ></div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                        <div class="field">
-                            <label
-                                for="zipCode"
-                                class="block text-lg font-medium"
-                                >Zip Code</label
-                            >
-                            <input
-                                type="text"
-                                id="zipCode"
-                                name="zipCode"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="61683"
-                                required
-                                maxlength="10"
-                            />
-                        </div>
-
-                        <div class="field">
-                            <label
-                                for="houseNumber"
-                                class="block text-lg font-medium"
-                                >House Number</label
-                            >
-                            <input
-                                type="text"
-                                id="houseNumber"
-                                name="houseNumber"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="869C"
-                                required
-                            />
-                        </div>
-
-                        <div class="field">
-                            <label
-                                for="streetName"
-                                class="block text-lg font-medium"
-                                >Street Name</label
-                            >
-                            <input
-                                type="text"
-                                id="streetName"
-                                name="streetName"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="Avenida Madero"
-                                required
-                            />
-                        </div>
-
-                        <div class="field">
-                            <label
-                                for="colony"
-                                class="block text-lg font-medium"
-                                >Colony</label
-                            >
-                            <input
-                                type="text"
-                                id="colony"
-                                name="colony"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                placeholder="Colonia La Pradera"
-                                required
-                            />
-                        </div>
-
-                        <div class="field">
-                            <label
-                                for="countryUserIDFK"
-                                class="block text-lg font-medium"
-                                >Country</label
-                            >
-                            <select
-                                id="countryUserIDFK"
-                                name="countryUserIDFK"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                required
-                            >
-                                <option value="" selected disabled>
-                                    Select Country
-                                </option>
-                                <%employees.forEach(employee => { %>
-                                <option value="<%=employee.countryID %>">
-                                    <%=employee.title %>
-                                </option>
-                                <% }) %>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                        <div class="field">
-                            <label
-                                for="workModality"
-                                class="block text-lg font-medium"
-                                >Work Modality</label
-                            >
-                            <select
-                                id="workModality"
-                                name="workModality"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                required
-                            >
-                                <option value="">Select Modality</option>
-                                <option value="0">Presencial</option>
-                                <option value="1">Remote</option>
-                                <option value="2">Hybrid</option>
-                            </select>
-                        </div>
-
-                        <div class="field">
-                            <label
-                                for="userRoleIDFK"
-                                class="block text-lg font-medium"
-                            >
-                                User Role
-                            </label>
-                            <select
-                                id="userRoleIDFK"
-                                name="userRoleIDFK"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                required
-                            >
-                                <option value="" selected disabled>
-                                    Select Role
-                                </option>
-                                <% roles.forEach(role => { %>
-                                <option value="<%= role.roleID %>">
-                                    <%= role.title %>
-                                </option>
-                                <% }) %>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label
-                                for="prioritaryDepartmentIDFK"
-                                class="block text-lg font-medium"
-                            >
-                                Prioritary Department
-                            </label>
-                            <select
-                                id="prioritaryDepartmentIDFK"
-                                name="prioritaryDepartmentIDFK"
-                                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                                required
-                            >
-                                <option value="" selected disabled>
-                                    Select Prioritary Department
-                                </option>
-                                <% departments.forEach(department => { %>
-                                <option value="<%= department.departmentID %>">
-                                    <%= department.departmentTitle %> - <%=
-                                    department.enterpriseTitle %>
-                                </option>
-                                <% }) %>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end mt-4">
-                        <button type="submit" class="btnPrimary">Submit</button>
-                    </div>
-                </form>
+            <div>
+                <label for="mail" class="label"
+                    >Email:</label
+                >
+                <input
+                    type="email"
+                    id="mail"
+                    name="mail"
+                    class="input !w-[98%]"
+                    placeholder="eiujmidiam@nuclea.solutions"
+                    required
+                />
+                <div id="mailFormatError" class="hidden textDanger text-sm mb-2"></div>
+            </div>
+            <div>
+                <label for="phoneNumber" class="label"
+                    >Phone Number:</label
+                >
+                <input
+                    type="tel"
+                    name="phoneNumber"
+                    id="phoneNumber"
+                    class="input !w-[98%]"
+                    placeholder="55 1234 5678"
+                    maxlength="15"
+                    pattern="[0-9]+"
+                    required
+                />
+                <div
+                    id="phoneNumberError"
+                    class="hidden textDanger text-sm mb-2"
+                ></div>
             </div>
         </div>
-    </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="zipCode" class="label"
+                    >Zip Code:</label
+                >
+                <input
+                    type="text"
+                    id="zipCode"
+                    name="zipCode"
+                    class="input !w-[98%]"
+                    placeholder="61683"
+                    required
+                    maxlength="10"
+                />
+            </div>
+
+            <div>
+                <label for="houseNumber" class="label"
+                    >House Number:</label
+                >
+                <input
+                    type="text"
+                    id="houseNumber"
+                    name="houseNumber"
+                    class="input !w-[98%]"
+                    placeholder="869C"
+                    required
+                />
+            </div>
+
+            <div>
+                <label for="streetName" class="label"
+                    >Street Name:</label
+                >
+                <input
+                    type="text"
+                    id="streetName"
+                    name="streetName"
+                    class="input !w-[98%]"
+                    placeholder="Avenida Madero"
+                    required
+                />
+            </div>
+
+            <div>
+                <label for="colony" class="label"
+                    >Colony:</label
+                >
+                <input
+                    type="text"
+                    id="colony"
+                    name="colony"
+                    class="input !w-[98%]"
+                    placeholder="Colonia La Pradera"
+                    required
+                />
+            </div>
+
+            <div>
+                <label for="countryUserIDFK" class="label"
+                    >Country:</label
+                >
+                <select
+                    id="countryUserIDFK"
+                    name="countryUserIDFK"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="" selected disabled>Select Country</option>
+                    <%employees.forEach(employee => { %>
+                    <option value="<%=employee.countryID %>">
+                        <%=employee.title %>
+                    </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div>
+                <label
+                    for="prioritaryDepartmentIDFK"
+                    class="label"
+                >
+                    Prioritary Department:</label>
+                <select
+                    id="prioritaryDepartmentIDFK"
+                    name="prioritaryDepartmentIDFK"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="" selected disabled>
+                        Select Prioritary Department
+                    </option>
+                    <% departments.forEach(department => { %>
+                    <option value="<%= department.departmentID %>">
+                        <%= department.departmentTitle %> - <%=
+                        department.enterpriseTitle %>
+                    </option>
+                    <% }) %>
+                </select>
+            </div>
+            
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="workModality" class="label"
+                    >Work Modality:</label
+                >
+                <select
+                    id="workModality"
+                    name="workModality"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="" selected disabled>Select Modality</option>
+                    <option value="0">On Site</option>
+                    <option value="1">Remote</option>
+                    <option value="2">Hybrid</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="userRoleIDFK" class="label">
+                    User Role:</label>
+                <select
+                    id="userRoleIDFK"
+                    name="userRoleIDFK"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="" selected disabled>Select Role</option>
+                    <% roles.forEach(role => { %>
+                    <option value="<%= role.roleID %>">
+                        <%= role.title %>
+                    </option>
+                    <% }) %>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="curp" class="label">CURP:</label>
+                <input
+                    type="text"
+                    id="curp"
+                    name="curp"
+                    class="input !w-[98%]"
+                    placeholder="GOGE0927MNTPCE10"
+                    maxlength="18"
+                />
+                <div id="curpFormatError" class="hidden textDanger text-sm mb-2"></div>
+            </div>
+
+            <div>
+                <label for="rfc" class="label">RFC:</label>
+                <input
+                    type="text"
+                    id="rfc"
+                    name="rfc"
+                    class="input !w-[98%] uppercase"
+                    placeholder="GOGE0927MNQ9"
+                    maxlength="13"
+                />
+                <div id="rfcFormatError" class="hidden textDanger text-sm mb-2"></div>
+            </div>
+        </div>
+
+        <div class="endButtonsContainer">
+            <button type="submit" class="btnPrimary">Add employee</button>
+        </div>
+    </form>
 </div>

@@ -127,10 +127,13 @@ module.exports = class Employee {
 
     static fetchAllDataUser(userID) {
         return db.execute(
-            `SELECT *
-        FROM user u, country c
-        WHERE u.userID = ?
-        AND u.countryUserIDFK = c.countryID`,
+            `SELECT *, c.title as country, r.title as role, d.title as department, e.title as enterprise
+            FROM user u, country c, role r, department d, enterprise e
+            WHERE u.countryUserIDFK = c.countryID
+            AND u.userRoleIDFK = r.roleID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userID = ?`,
             [userID]
         );
     }
@@ -315,6 +318,10 @@ module.exports = class Employee {
         prioritaryDepartmentIDFK,
         workStatus
     ) {
+        //Verifica que los campos de curp y rfc no esten nulos
+        curp = curp && curp.trim() !== "" ? curp.toUpperCase() : null;
+        rfc = rfc && rfc.trim() !== "" ? rfc.toUpperCase() : null;
+
         const checkUserQuery = `SELECT userID 
                                 FROM user 
                                 WHERE userID != ? 
@@ -324,7 +331,7 @@ module.exports = class Employee {
                                 (mail = ? AND mail IS NOT NULL));`;
 
         return db
-            .execute(checkUserQuery, [curp, rfc, mail, userID])
+            .execute(checkUserQuery, [userID, curp, rfc, mail])
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(
@@ -363,12 +370,11 @@ module.exports = class Employee {
     static getOwnFaults(userID) {
         return db.execute(
             `SELECT f.*, fm.mediaLink, u.birthName, u.surname
-            FROM fault f 
-            LEFT JOIN faultMedia fm 
-                ON f.faultID = fm.faultIDFK
-            JOIN user u 
-                ON u.userID = f.faultUserIDFK
-            WHERE f.faultUserIDFK = ?
+            FROM fault f
+            JOIN user u ON f.faultUserIDFK = u.userID
+            LEFT JOIN faultMedia fm ON f.faultID = fm.faultIDFK
+            WHERE u.userID = ?
+            GROUP BY f.faultID
             ORDER BY f.doneDate DESC`,
             [userID]
         );
@@ -376,7 +382,7 @@ module.exports = class Employee {
 
     /**
      * Obtiene todos los usuarios junto con su rol y departamento
-     * 
+     *
      * @returns Los datos de los usuarios
      */
     static fetchAllUserRoles() {
@@ -389,17 +395,19 @@ module.exports = class Employee {
 
     /**
      * Obtiene los datos de los empleados en un departamento
-     * 
+     *
      * @param string departmentID      El ID del departamento.
      * @returns Los datos de los empleados.
      */
     static fetchAllUsersByDepartment(departmentID) {
-        return db.execute(`SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
         FROM user u
         JOIN role r ON u.userRoleIDFK = r.roleID
         JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
         JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID
         AND d.departmentID = ?`,
-        [departmentID]);
+            [departmentID]
+        );
     }
 };

@@ -1,117 +1,130 @@
-<div class="flex">
-    <aside class="w-64"></aside>
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <form id="departmentMethod" method="post" action="/department/<%= departmentID %>/modify" class="p-6">
+<script>addBackButton('/department');</script>
+<div class='primaryContainer bgContainer1'>
 
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-
-                <h2 class="text-2xl font-semibold mb-6">
-                    Fill the data in order to modify an existing department
-                </h2>
-
-                <div class="mb-4">
-                    <label class="block text-lg font-medium mb-2"
-                        >Department Name:</label
-                    >
-                    <input
-                        type="text"
-                        class="w-full input"
-                        placeholder="Human Resources"
-                        name="department"
-                        value="<%= department.department %>"
-                        required
-                    />
-                </div>
-
-                <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
-                <div class="mb-4">
-                    <label class="block text-lg font-medium mb-2"
-                        >Enterprise of origin:</label
-                    >
-                    <select
-                        class="w-full input"
-                        id="enterpriseSelect"
-                        required
-                    >
-                        <option value="newOne">New Enterprise</option>
-                        <% enterprises.forEach((enterprise) => { %>
-                            <option value="<%= enterprise.title %>" <%= enterprise.title == department.enterprise ? 'selected' : '' %>><%= enterprise.title %></option>
-                        <% }) %>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <input
-                        type="text"
-                        class="w-full input hidden"
-                        placeholder="Write the enterprise name"
-                        id="enterpriseInput"
-                        name="enterprise"
-                        value="<%= department.enterprise %>"
-                    />
-                </div>
-
-                <!-- Selecciona el líder del departamento -->
-                <div class="mb-4">
-                    <label class="block text-lg font-medium mb-2"
-                        >Select the leader:</label
-                    >
-                    <select
-                        id="leaderInput"
-                        class="w-full input"
-                        name="leader"
-                        required
-                    >
-                        <% leaders.forEach((employee) => { %>
-                            <option value="<%= employee.userID %>" <%= employee.userID == departmentLeader.userID ? 'selected' : '' %>><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
-                        <% }) %>
-                    </select>
-                </div>
-
-                <!-- Selecciona los colaboradores que serán parte del departamento -->
-                <input id="collaboratorQuantity" name="collaboratorQuantity" type="hidden">
-                <input id="collaboratorArray" name="collaboratorArray" type="hidden">
-
-                <div class="mb-4">
-                    <label class="block text-lg font-medium mb-2"
-                        >Select the collaborators:</label
-                    >
-                    <div class="flex flex-column gap-3">
-                        <select
-                            class="w-full input block"
-                            id="collaboratorsSelect"
-                        >
-                            <option value="none" selected disabled>Select here</option>
-                            <% collaborators.forEach((employee) => { %>
-                                <option value="<%= `${employee.birthName} ${employee.surname}|${employee.userID}` %>"><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
-                            <% }) %>
-                        </select>
-                        <button id="collaboratorAdd" class="btnPrimary !block">+</button>
-                    </div>
-                </div>
-                
-                <div 
-                    id="collaboratorsContainer"
-                >
-                    <h2 class="font-bold">Collaborators:</h2>
-                    <ul id="collaboratorsList" class="list-disc pl-10">
-                        <!-- Añado los colaboradores actuales a la tabla -->
-                        <% departmentCollaborators.forEach((employee) => { %>
-                            <li class='m-2 flex flex-column'>
-                                <span class='height-full'><%= `${employee.birthName} ${employee.surname}` %></span>
-                                <div class='border-b-1 border-neutral-700 flex-1'></div>
-                                <button class='eraseCollaborator btnPrimary !pt-0 !pb-0 !pl-4 !pr-4' value='<%= employee.userID %>'>-</button>
-                            </li>
-                        <% }) %>
-                    </ul>
-                </div>
-
-                <button id="sendForm" class="btnPrimary" type="submit">Modify Department</button>
-                <a class="btnDanger" href="/department/<%= departmentID %>/delete/" type="submit">Erase Department</a>
-            </form>
-        </div>
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Update Department</h2>
     </div>
+
+    <form id='departmentMethod' method='post' action='/department/<%= departmentID %>/modify'>
+
+        <input type='hidden' name='_csrf' value='<%= csrfToken %>' />
+
+        <div>
+            <label class='label'
+                >Department Name:</label
+            >
+            <input
+                type='text'
+                class='w-full input'
+                placeholder='Manager'
+                name='department'
+                value='<%= department.department %>'
+                required
+            />
+        </div>
+
+        <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
+        <div>
+            <label class='label'
+                >Company of origin:</label
+            >
+            <select
+                class='w-full input'
+                id='enterpriseSelect'
+                required
+            >
+                <option value='newOne'>New Company</option>
+                <% enterprises.forEach((enterprise) => { %>
+                    <option value='<%= enterprise.title %>' <%= enterprise.title == department.enterprise ? 'selected' : '' %>><%= enterprise.title %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <div>
+            <input
+                type='text'
+                class='w-full input hidden'
+                placeholder='Write the company name'
+                id='enterpriseInput'
+                name='enterprise'
+                value='<%= department.enterprise %>'
+            />
+        </div>
+
+        <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
+        <div>
+            <label class='label'
+                >Status:</label
+            >
+            <select
+                class='w-full input'
+                name='flag'
+                required
+            >
+                <option value='1' <%= department.flag == 1 ? 'selected' : ''%>>Active</option>
+                <option value='0' <%= department.flag == 0 ? 'selected' : ''%>>Inactive</option>
+            </select>
+        </div>
+
+        <!-- Selecciona el líder del departamento -->
+        <div>
+            <label class='label'
+                >Select the leader:</label
+            >
+            <select
+                id='leaderInput'
+                class='w-full input'
+                name='leader'
+                required
+            >
+                <% leaders.forEach((employee) => { %>
+                    <option value='<%= employee.userID %>' <%= employee.userID == departmentLeader.userID ? 'selected' : '' %>><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <!-- Selecciona los colaboradores que serán parte del departamento -->
+        <input id='collaboratorQuantity' name='collaboratorQuantity' type='hidden'>
+        <input id='collaboratorArray' name='collaboratorArray' type='hidden'>
+
+        <div>
+            <label class='label'
+                >Select the collaborators:</label
+            >
+            <div class='flex flex-column gap-3'>
+                <select
+                    class='w-full input block'
+                    id='collaboratorsSelect'
+                >
+                    <option value='none' selected disabled>Select here</option>
+                    <% collaborators.forEach((employee) => { %>
+                        <option value='<%= `${employee.birthName} ${employee.surname}|${employee.userID}` %>'><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
+                    <% }) %>
+                </select>
+                <button id='collaboratorAdd' class='btnPrimary text-center !px-0 h-[38px] w-[38px] !block'>+</button>
+            </div>
+        </div>
+        
+        <div 
+            id='collaboratorsContainer'
+        >
+            <h2 class='font-bold'>Collaborators:</h2>
+            <ul id='collaboratorsList' class='list-disc pl-10'>
+                <!-- Añado los colaboradores actuales a la tabla -->
+                <% departmentCollaborators.forEach((employee) => { %>
+                    <li class='m-2 flex flex-column'>
+                        <span class='height-full'><%= `${employee.birthName} ${employee.surname}` %></span>
+                        <div class='border-b-1 border-neutral-700 flex-1'></div>
+                        <button class='eraseCollaborator btnPrimary !pt-0 !pb-0 !pl-4 !pr-4' value='<%= employee.userID %>'>-</button>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+
+        <div class="endButtonsContainer">
+            <button id='sendForm' class='btnPrimary' type='submit'>Update Department</button>
+        </div>
+    </form>
 </div>
 
 <script>
@@ -120,11 +133,11 @@
     
     // Verifica si se quiere añadir una nueva empresa y añade un input text
     enterpriseSelect.addEventListener('change', () => {
-        if(enterpriseSelect.value == "newOne") {
+        if(enterpriseSelect.value == 'newOne') {
             // En caso de que sea nueva empresa habilita el input text
-            enterpriseInput.value = "";
+            enterpriseInput.value = '';
             enterpriseInput.classList.remove('hidden');
-            showStatus('Info', 'Please fill the enterprise name');
+            showStatus('Info', 'Please fill the company name');
         } else {
             // En caso de que ya exista, deshabilita el input text
 
@@ -178,7 +191,7 @@
         // Obtiene el valor del colaborador
         const collaborator = collaboratorsSelect.value;
 
-        if (collaborator === "none") {
+        if (collaborator === 'none') {
             // En caso de ser nulo, no ha seleccionado usuario
             showStatus('Alert', 'Please select a user');
             return;
@@ -234,14 +247,14 @@
     const submitButton = document.getElementById('sendForm');
     submitButton.addEventListener('click', (event) => {
         // En caso de que no haya seleccionado la empresa
-        if (enterpriseInput.value === "" ) {
-            showStatus('Alert', 'You need to select an enterprise');
+        if (enterpriseInput.value === '' ) {
+            showStatus('Alert', 'You need to select an company');
             event.preventDefault();
             return;
         }
 
         // En caso de que no haya seleccionado un líder
-        if (leaderInput.value === "none" ) {
+        if (leaderInput.value === 'none' ) {
             showStatus('Alert', 'You need to select a department leader');
             event.preventDefault();
             return;

@@ -1,7 +1,10 @@
 const Employee = require("../models/employee.model");
+const Department = require("../models/department.model");
 const sessionVars = require("../util/sessionVars");
 const WorkStatus = require("../models/workStatus.model");
 const bcrypt = require("bcryptjs");
+const openProfile = require("../util/openProfile");
+const title = "Employees";
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -12,7 +15,7 @@ exports.getAdd = (request, response, next) => {
         .then(([[countries], [roles], [departments]]) => {
             // Limpiar el mensaje después de usarlo
             response.render("employeeAdd", {
-                ...sessionVars(request), // Variables de la sesión
+                ...sessionVars(request, title), // Variables de la sesión
                 employees: countries, // Lista de países
                 roles: roles, // Lista de roles
                 departments: departments, // Lista de departamentos
@@ -104,10 +107,10 @@ exports.getModify = (request, response, next) => {
                         const department = employeeDepartment[0] || null;
 
                         response.render("employeeCheckModify", {
-                            ...sessionVars(request),
+                            ...sessionVars(request, title),
                             employee: employee,
                             country: country, // País específico del empleado
-                            role: role, // Rol específico del empleado
+                            roleUser: role, // Rol específico del empleado
                             department: department, // Departamento específico del empleado
                             countries: countries[0], // Lista completa de países
                             roles: roles[0], // Lista completa de roles
@@ -193,6 +196,8 @@ exports.postModify = (request, response, next) => {
             let dateOfDeactivation = null;
             if (workStatus === "0") {
                 dateOfDeactivation = new Date();
+                console.log(dateOfDeactivation);
+                return WorkStatus.updateEndDate(userID, dateOfDeactivation);
             }
 
             if (dateOfDeactivation) {
@@ -213,96 +218,50 @@ exports.postModify = (request, response, next) => {
         });
 };
 
-exports.getCheck = (request, response, next) => {
-    const userID = request.params.id;
+exports.getProfile = (request, response, next) => {
+    // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
+    const userID =
+        request.params.userID === undefined
+            ? request.session.userID
+            : request.params.userID;
 
-    Employee.fetchUser(userID)
-        .then(([userData]) => {
-            if (!userData || userData.length === 0) {
-                request.session.info = "Empleado no encontrado.";
-                return response.redirect("/employee");
+    // En caso de haber no usuario en params, marca que el perfil es propio
+    const isOwn = userID === request.session.userID;
+
+    console.log(isOwn ? "Soy dueño" : "No soy dueño");
+
+    // Si es dueño de su propio perfil, mandar a renderizar
+    if (isOwn) {
+        return openProfile(request, response, userID, isOwn);
+    }
+
+    // Si es SuperAdmin, mandar a renderizar
+    if (request.session.role === "Manager") {
+        return openProfile(request, response, userID, isOwn);
+    }
+
+    // Significa que es un líder de departamento
+    Department.getLeaderDepartment(userID)
+        .then(([rows]) => {
+            // En caso que el líder del colaborador sea el usuario, renderiza el perfil
+            if (rows[0].userID === request.session.userID) {
+                return openProfile(request, response, userID, isOwn);
             }
 
-            const employee = userData[0];
-            // Obtener datos adicionales (país, rol y departamento)
-            Promise.all([
-                Employee.fetchCountryByID(employee.countryUserIDFK),
-                Employee.fetchRoleByID(employee.userRoleIDFK),
-                Employee.fetchDepartmentByID(employee.prioritaryDepartmentIDFK),
-            ])
-                .then(([countries, roles, departments]) => {
-                    const country = countries[0] ? countries[0][0] : null; // Accede al primer objeto dentro del primer array
-                    const role = roles[0] ? roles[0][0] : null;
-                    const department = departments[0]
-                        ? departments[0][0]
-                        : null;
-
-                    // Renderizar la vista con todos los datos
-                    response.render("employeeCheck", {
-                        ...sessionVars(request),
-                        employee: employee,
-                        country: country,
-                        role: role,
-                        department: department,
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error al obtener catálogos:", error);
-                    request.session.info =
-                        "Error al cargar información del empleado.";
-                    response.redirect("/employee");
-                });
-        })
-        .catch((error) => {
-            console.error("Error al obtener los datos del empleado:", error);
-            request.session.info = "Error al obtener datos del empleado.";
-            response.redirect("/employee");
-        });
-};
-
-exports.getMe = (request, response, next) => {
-    // TODO: hacer verificaciones de superAdmin, lider y colaborador
-    const userid = request.session.userID;
-    console.log("ID =", userid);
-
-    Employee.fetchAllDataUser(userid)
-        .then(([rows]) => {
-            response.render("employeeMe", {
-                ...sessionVars(request),
-                userData: rows[0],
-                API: process.env.GEOLOCATION_API_KEY,
-            });
-        })
-        .catch((error) => {
-            console.error("this is your error: ", error);
-            request.session.alert = "can not find user";
+            // Como es return arriba, si no es líder manda el error:
+            request.session.info =
+                "You have no permission to view this profile";
             response.redirect("/error");
-        });
-};
-
-exports.getEmployee = (request, response, next) => {
-    const userid = request.params.userID;
-    //console.log("ID =", userid);
-
-    Employee.fetchAllDataUser(userid)
-        .then(([rows]) => {
-            console.log(rows);
-            response.render("employeeProfile", {
-                ...sessionVars(request),
-                userData: rows[0],
-                API: process.env.GEOLOCATION_API_KEY,
-            });
         })
-        .catch((error) => {
-            console.error("this is your error: ", error);
-            request.session.alert = "can not find user";
+        .catch(() => {
+            request.session.info = "The user has no leader department";
             response.redirect("/error");
         });
 };
 
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -346,7 +305,7 @@ exports.getSearch = (request, response, next) => {
 
 exports.getChangePassword = (request, response, next) => {
     response.render("employeeChangePassword", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -471,28 +430,30 @@ exports.postChangePassword = (request, response, next) => {
     });
 };
 
-exports.getOwnFaults = (request, response, next) => {
-    Employee.getOwnFaults(request.session.userID)
-        .then(([faults, fieldData]) => {
-            console.log(faults);
-            response.render("employeeFaults", {
-                ...sessionVars(request),
-                faults: faults,
-            });
-        })
-        .catch((err) => {
-            console.error("Error obtaining the faults:", err);
-        });
-};
-
 exports.getEmployeeFaults = (request, response, next) => {
-    const userID = request.params.userID;
+    // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
+    const userID =
+        request.params.userID === undefined
+            ? request.session.userID
+            : request.params.userID;
+
+    // Si no es el dueño de las faltas ni es SuperAdmin, no tiene permisos
+    if (
+        userID !== request.session.userID &&
+        request.session.role !== "Manager"
+    ) {
+        request.session.alert = "You have no permission to view this";
+        response.redirect("/error");
+    }
+
+    // Renderiza las faltas del usuario
     Employee.getOwnFaults(userID)
         .then(([faults, fieldData]) => {
             console.log(faults);
             response.render("employeeFaults", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 faults: faults,
+                employeeID: userID,
             });
         })
         .catch((err) => {

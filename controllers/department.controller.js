@@ -3,6 +3,7 @@ const Department = require("../models/department.model");
 const Enterprise = require("../models/enterprise.model");
 const Employee = require("../models/employee.model");
 const { create } = require("domain");
+const title = "Departments";
 
 exports.getDepartments = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -25,7 +26,7 @@ exports.getDepartments = (request, response, next) => {
             .then(([rows, fieldData]) => {
                 //console.log(rows);
                 response.render("leaderDepartmentList", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     department: departmentData,
                     rows: rows,
                 });
@@ -35,12 +36,12 @@ exports.getDepartments = (request, response, next) => {
                 response.status(500).send("Error del servidor");
             });
     }
-    // vista del superadmin, modificar en un futuro
+    // vista del superadmin
     else {
         Department.getAllDepartments()
             .then(([rows, fieldData]) => {
                 response.render("checkDepartment", {
-                    ...sessionVars(request),
+                    ...sessionVars(request, title),
                     rows: rows,
                 });
             })
@@ -63,7 +64,7 @@ exports.getEmployees = (req, res, next) => {
             }
 
             res.render("RHDepartmentList", {
-                ...sessionVars(req),
+                ...sessionVars(req, title),
                 department: deptRows[0], // un objeto { departmentID, title }
                 employees: empRows, // array de empleados
             });
@@ -73,128 +74,145 @@ exports.getEmployees = (req, res, next) => {
         });
 };
 
-exports.getPaginatedEmployeesRH = (req, res, next) => {
-    const departmentID = req.params.departmentID;
-    console.log(departmentID);
-    const page = parseInt(req.query.page) || 1;
+exports.getPaginatedEmployeesRH = (request, response, next) => {
+    const departmentID = request.params.departmentID;
+    const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
     const limit = 6;
     const offset = (page - 1) * limit;
 
-    Department.getEmployeesInDepartmentInfoPaginated(
-        departmentID,
-        limit,
-        offset
-    )
+    const searchPromise = query
+        ? Department.searchWorkersByName(departmentID, query)
+        : Department.getEmployeesInDepartmentInfoPaginated(
+              departmentID,
+              limit,
+              offset
+          );
+
+    searchPromise
         .then(([rows]) => {
-            res.json(rows);
+            response.json({ rows, page, query });
         })
-        .catch(next);
+        .catch((err) => {
+            console.log(err);
+            response
+                .status(500)
+                .json({ err: "Error al obtener los colaboradores" });
+        });
 };
 
 exports.getEmployeesPaginated = async (request, response, next) => {
+    const userID = request.session.userID;
     const page = parseInt(request.query.page) || 1;
+    const query = request.query.query;
     const limit = 6;
     const offset = (page - 1) * limit;
+    const [[department]] = await Department.getLeaderDepartment(userID);
+    const leaderDepartmentID = department.prioritaryDepartmentIDFK;
 
-    try {
-        const [[department]] = await Department.getLeaderDepartment(
-            request.session.userID
-        );
-        const leaderDepartmentID = department.prioritaryDepartmentIDFK;
+    const searchPromise = query
+        ? Department.searchWorkersByName(leaderDepartmentID, query)
+        : Department.getEmployeesInDepartmentPaginated(
+              leaderDepartmentID,
+              request.session.userID,
+              limit,
+              offset
+          );
 
-        const [rows] = await Department.getEmployeesInDepartmentPaginated(
-            leaderDepartmentID,
-            request.session.userID,
-            limit,
-            offset
-        );
-        response.json(rows);
-    } catch {
-        console.log(error);
-        response
-            .status(500)
-            .json({ error: "Error al obtener los colaboradores" });
-    }
+    searchPromise
+        .then(([rows]) => {
+            response.json({ rows, page, query });
+        })
+        .catch((err) => {
+            console.log(err);
+            response
+                .status(500)
+                .json({ err: "Error al obtener los colaboradores" });
+        });
 };
 
 exports.getDepartmentsPaginated = async (request, response, next) => {
     const page = parseInt(request.query.page) || 1;
+    const query = request.query.query || "";
     const limit = 4;
     const offset = (page - 1) * limit;
 
-    try {
-        const [rows] = await Department.getAllDepartmentsPaginated(
-            limit,
-            offset
-        );
-        response.json(rows);
-    } catch (error) {
-        console.log(error);
-        response
-            .status(500)
-            .json({ error: "Error al obtener los departamentos" });
-    }
+    const searchPromise = query
+        ? Department.searchDepartmentByName(query)
+        : Department.getAllDepartmentsPaginated(limit, offset);
+
+    searchPromise
+        .then(([rows]) => {
+            response.json({ rows, page, query });
+        })
+        .catch((err) => {
+            console.log(err);
+            response
+                .status(500)
+                .json({ err: "Error al obtener los departamentos" });
+        });
 };
 
 exports.getAddDepartment = (request, response, next) => {
     // Obtiene todas las empress
-    Enterprise.fetchAll()
-        .then(([enterprises]) => {
-            // Obtiene todos los datos de los empleados
-            Employee.fetchAllUserRoles()
-                .then(([employees]) => {
-                    // Filtra los empleados por colaboradores
-                    const collaborators = employees.filter((employee) =>
-                        employee.role === "Colaborator"
-                    );
+    Enterprise.fetchAll().then(([enterprises]) => {
+        // Obtiene todos los datos de los empleados
+        Employee.fetchAllUserRoles().then(([employees]) => {
+            // Filtra los empleados por colaboradores
+            const collaborators = employees.filter(
+                (employee) => employee.role === "Colaborator"
+            );
 
-                    // Filtra los empleados por líderes de departamento
-                    const leaders = employees.filter((employee) =>
-                        employee.role === "Department Leader"
-                    );
+            // Filtra los empleados por líderes de departamento
+            const leaders = employees.filter(
+                (employee) => employee.role === "Department Leader"
+            );
 
-                    response.render("addDepartment", {
-                        ...sessionVars(request),
-                        enterprises,
-                        collaborators,
-                        leaders,
-                    });
-                });
+            response.render("addDepartment", {
+                ...sessionVars(request, title),
+                enterprises,
+                collaborators,
+                leaders,
+            });
         });
+    });
 };
 
 exports.postAddDepartment = (request, response, next) => {
     // Crea el departamento
     const createDepartment = (enterpriseID) => {
         // Llena los datos del departamento
-        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray, null);
+        const department = new Department(
+            request.body.department,
+            request.body.leader,
+            enterpriseID,
+            request.body.collaboratorArray,
+            null
+        );
 
         // Guarda el departamento en la base de datos
-        department.save()
-            .then((departmentID) => {
-                response.redirect(`/department/${departmentID}`);
-            });
+        department.save().then((departmentID) => {
+            response.redirect(`/department/${departmentID}`);
+        });
     };
 
     // Obtiene el ID de la empresa generada
-    Enterprise.fetchByName(request.body.enterprise)
-        .then(([enterprise]) => {
-            // En caso de que no exista, se crea la empresa
-            if (enterprise.length == 0) {
-                const enterprise = new Enterprise(request.body.enterprise);
-                enterprise.save()
-                    .then((newEnterprise) => {
-                        createDepartment(newEnterprise);
-                    });
-            } else {
-                createDepartment(enterprise[0].enterpriseID);
-            }
-        })
+    Enterprise.fetchByName(request.body.enterprise).then(([enterprise]) => {
+        // En caso de que no exista, se crea la empresa
+        if (enterprise.length == 0) {
+            const enterprise = new Enterprise(request.body.enterprise);
+            enterprise.save().then((newEnterprise) => {
+                createDepartment(newEnterprise);
+            });
+        } else {
+            createDepartment(enterprise[0].enterpriseID);
+        }
+    });
 };
 
 exports.getCheckDepartment = (request, response, next) => {
     response.render("checkOneDpmt", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -203,21 +221,25 @@ exports.postDeleteDeparment = (request, response, next) => {
 };
 
 exports.getModifyDepartment = async (request, response, next) => {
-    try{
+    try {
         // Obtiene los datos del departamento
-        const [department] = await Department.fetchByID(request.params.departmentID);
+        const [department] = await Department.fetchByID(
+            request.params.departmentID
+        );
 
         // Obtiene los trabajadores del departamento
-        const [departmentEmployees] = await Employee.fetchAllUsersByDepartment(request.params.departmentID);
+        const [departmentEmployees] = await Employee.fetchAllUsersByDepartment(
+            request.params.departmentID
+        );
 
         // Filtra los empleados por colaboradores
-        const departmentCollaborators = departmentEmployees.filter((employee) =>
-            employee.role === "Colaborator"
+        const departmentCollaborators = departmentEmployees.filter(
+            (employee) => employee.role === "Colaborator"
         );
 
         // Filtra los empleados por líderes de departamento
-        const departmentLeader = departmentEmployees.filter((employee) =>
-            employee.role === "Department Leader"
+        const departmentLeader = departmentEmployees.filter(
+            (employee) => employee.role === "Department Leader"
         );
 
         // Obtiene todas las empresas
@@ -227,17 +249,17 @@ exports.getModifyDepartment = async (request, response, next) => {
         const [employees] = await Employee.fetchAllUserRoles();
 
         // Filtra los empleados por colaboradores
-        const collaborators = employees.filter((employee) =>
-            employee.role === "Colaborator"
+        const collaborators = employees.filter(
+            (employee) => employee.role === "Colaborator"
         );
 
         // Filtra los empleados por líderes de departamento
-        const leaders = employees.filter((employee) =>
-            employee.role === "Department Leader"
+        const leaders = employees.filter(
+            (employee) => employee.role === "Department Leader"
         );
 
         response.render("modifyDepartment", {
-            ...sessionVars(request),
+            ...sessionVars(request, title),
             departmentCollaborators,
             enterprises,
             collaborators,
@@ -246,8 +268,7 @@ exports.getModifyDepartment = async (request, response, next) => {
             department: department[0],
             departmentLeader: departmentLeader[0],
         });
-    }
-    catch(error) {
+    } catch (error) {
         console.log(error);
     }
 };
@@ -256,27 +277,31 @@ exports.postModifyDepartment = (request, response, next) => {
     // Crea el departamento
     const updateDepartment = (enterpriseID) => {
         // Llena los datos del departamento
-        const department = new Department(request.body.department, request.body.leader, enterpriseID, request.body.collaboratorArray, request.params.departmentID);
+        const department = new Department(
+            request.body.department,
+            request.body.leader,
+            enterpriseID,
+            request.body.collaboratorArray,
+            request.params.departmentID,
+            request.body.flag
+        );
 
         // Guarda el departamento en la base de datos
-        department.update()
-            .then((departmentID) => {
-                response.redirect(`/department/${departmentID}`);
-            });
+        department.update().then((departmentID) => {
+            response.redirect(`/department/${departmentID}`);
+        });
     };
 
     // Obtiene el ID de la empresa generada
-    Enterprise.fetchByName(request.body.enterprise)
-        .then(([enterprise]) => {
-            // En caso de que no exista, se crea la empresa
-            if (enterprise.length == 0) {
-                const enterprise = new Enterprise(request.body.enterprise);
-                enterprise.save()
-                    .then((newEnterprise) => {
-                        updateDepartment(newEnterprise);
-                    });
-            } else {
-                updateDepartment(enterprise[0].enterpriseID);
-            }
-        })
+    Enterprise.fetchByName(request.body.enterprise).then(([enterprise]) => {
+        // En caso de que no exista, se crea la empresa
+        if (enterprise.length == 0) {
+            const enterprise = new Enterprise(request.body.enterprise);
+            enterprise.save().then((newEnterprise) => {
+                updateDepartment(newEnterprise);
+            });
+        } else {
+            updateDepartment(enterprise[0].enterpriseID);
+        }
+    });
 };

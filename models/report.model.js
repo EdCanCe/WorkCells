@@ -70,4 +70,264 @@ module.exports = class Report {
             [start, end]
         );
     }
+
+    static fetchDepartment() {
+        return db.execute(`SELECT d.departmentID, d.title AS departmentTitle, e.title AS enterpriseTitle 
+                            FROM department d, enterprise e 
+                            WHERE d.enterpriseIDFK = e.enterpriseID;`);
+    }
+
+    static getAnswerWorkload(department) {
+        return db.execute(
+            `SELECT m.evaluation, o.summary, d.title AS 'Departamento', e.title AS 'Empresa', l.birthName
+            FROM oneOnOneMeasure m, oneOnOneMeasurable o, oneOnOne n, user u, department d, enterprise e, user l
+            WHERE m.measurableIDFK = o.measurableID 
+            AND m.measureOneOnOneIDFK = n.oneOnOneID
+            AND n.oneOnOneUserIDFK = u.userID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND d.departmentLeaderIDFK = l.userID
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = '308c7eb9-2f2e-435f-ba7f-35e2f5891ba5'
+            AND d.departmentID = ?
+            ORDER BY e.title;`,
+            [department]
+        );
+    }
+
+    static getAnswerPhysicalHealth(department) {
+        return db.execute(
+            `SELECT m.evaluation, o.summary, d.title AS 'Departamento', e.title AS 'Empresa', l.birthName
+            FROM oneOnOneMeasure m, oneOnOneMeasurable o, oneOnOne n, user u, department d, enterprise e, user l
+            WHERE m.measurableIDFK = o.measurableID 
+            AND m.measureOneOnOneIDFK = n.oneOnOneID
+            AND n.oneOnOneUserIDFK = u.userID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND d.departmentLeaderIDFK = l.userID
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = '39af57d5-3d6a-4bc8-b907-aa3a8ba01c6b'
+            AND d.departmentID = ?
+            ORDER BY e.title;`,
+            [department]
+        );
+    }
+
+    static getAnswerAcknowledgement(department) {
+        return db.execute(
+            `SELECT m.evaluation, o.summary, d.title AS 'Departamento', e.title AS 'Empresa', l.birthName
+            FROM oneOnOneMeasure m, oneOnOneMeasurable o, oneOnOne n, user u, department d, enterprise e, user l
+            WHERE m.measurableIDFK = o.measurableID 
+            AND m.measureOneOnOneIDFK = n.oneOnOneID
+            AND n.oneOnOneUserIDFK = u.userID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND d.departmentLeaderIDFK = l.userID
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = 'c345cbc6-a445-45da-a73b-6343e04334c2'
+            AND d.departmentID = ?
+            ORDER BY e.title;`,
+            [department]
+        );
+    }
+
+    static getAnswerEmotionalHealth(department) {
+        return db.execute(
+            `SELECT m.evaluation, o.summary, d.title AS 'Departamento', e.title AS 'Empresa', l.birthName
+            FROM oneOnOneMeasure m, oneOnOneMeasurable o, oneOnOne n, user u, department d, enterprise e, user l
+            WHERE m.measurableIDFK = o.measurableID 
+            AND m.measureOneOnOneIDFK = n.oneOnOneID
+            AND n.oneOnOneUserIDFK = u.userID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND d.departmentLeaderIDFK = l.userID
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = 'e2df8a14-2154-49a3-b049-2f4c7cd66776'
+            AND d.departmentID = ?
+            ORDER BY e.title;`,
+            [department]
+        );
+    }
+
+    static getAnswerWorkLifeBalance(department) {
+        return db.execute(
+            `SELECT m.evaluation, o.summary, d.title AS 'Departamento', e.title AS 'Empresa', l.birthName
+            FROM oneOnOneMeasure m, oneOnOneMeasurable o, oneOnOne n, user u, department d, enterprise e, user l
+            WHERE m.measurableIDFK = o.measurableID 
+            AND m.measureOneOnOneIDFK = n.oneOnOneID
+            AND n.oneOnOneUserIDFK = u.userID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND d.departmentLeaderIDFK = l.userID
+            AND MONTH(DATE_ADD(NOW(), INTERVAL -6 HOUR)) = MONTH(n.meetingDate)
+            AND m.measurableIDFK = 'f1e24a8c-aa83-4354-bd1e-f4d9891e0916'
+            AND d.departmentID = ?
+            ORDER BY e.title;`,
+            [department]
+        );
+    }
+
+    static AllAnswerWorkload() {
+        return db.execute(
+            `SELECT
+                m.evaluation,
+                o.summary,
+                d.title AS Departamento,
+                e.title AS Empresa,
+                l.birthName AS LeaderName
+                FROM oneOnOneMeasure AS m
+                JOIN oneOnOneMeasurable AS o
+                ON m.measurableIDFK = o.measurableID
+                JOIN oneOnOne AS n
+                ON m.measureOneOnOneIDFK = n.oneOnOneID
+                JOIN user AS u
+                ON n.oneOnOneUserIDFK = u.userID
+                JOIN department AS d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+                JOIN enterprise AS e
+                ON d.enterpriseIDFK = e.enterpriseID
+                JOIN user AS l
+                ON d.departmentLeaderIDFK = l.userID
+                WHERE
+                -- Ajustar por zona horaria y asegurarnos de mes y año correctos
+                MONTH(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = MONTH(CURRENT_DATE())
+                AND YEAR(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = YEAR(CURRENT_DATE())
+                AND m.measurableIDFK = '308c7eb9-2f2e-435f-ba7f-35e2f5891ba5'
+                ORDER BY
+                e.title;`
+        );
+    }
+
+    static AllAnswerPhysicalHealth() {
+        return db.execute(
+            `SELECT
+                m.evaluation,
+                o.summary,
+                d.title AS Departamento,
+                e.title AS Empresa,
+                l.birthName AS LeaderName
+                FROM oneOnOneMeasure AS m
+                JOIN oneOnOneMeasurable AS o
+                ON m.measurableIDFK = o.measurableID
+                JOIN oneOnOne AS n
+                ON m.measureOneOnOneIDFK = n.oneOnOneID
+                JOIN user AS u
+                ON n.oneOnOneUserIDFK = u.userID
+                JOIN department AS d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+                JOIN enterprise AS e
+                ON d.enterpriseIDFK = e.enterpriseID
+                JOIN user AS l
+                ON d.departmentLeaderIDFK = l.userID
+                WHERE
+                -- Ajustar por zona horaria y asegurarnos de mes y año correctos
+                MONTH(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = MONTH(CURRENT_DATE())
+                AND YEAR(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = YEAR(CURRENT_DATE())
+                AND m.measurableIDFK = '39af57d5-3d6a-4bc8-b907-aa3a8ba01c6b'
+                ORDER BY
+                e.title;`
+        );
+    }
+
+    static AllAnswerAcknowledgement() {
+        return db.execute(
+            `SELECT
+                m.evaluation,
+                o.summary,
+                d.title AS Departamento,
+                e.title AS Empresa,
+                l.birthName AS LeaderName
+                FROM oneOnOneMeasure AS m
+                JOIN oneOnOneMeasurable AS o
+                ON m.measurableIDFK = o.measurableID
+                JOIN oneOnOne AS n
+                ON m.measureOneOnOneIDFK = n.oneOnOneID
+                JOIN user AS u
+                ON n.oneOnOneUserIDFK = u.userID
+                JOIN department AS d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+                JOIN enterprise AS e
+                ON d.enterpriseIDFK = e.enterpriseID
+                JOIN user AS l
+                ON d.departmentLeaderIDFK = l.userID
+                WHERE
+                -- Ajustar por zona horaria y asegurarnos de mes y año correctos
+                MONTH(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = MONTH(CURRENT_DATE())
+                AND YEAR(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = YEAR(CURRENT_DATE())
+                AND m.measurableIDFK = 'c345cbc6-a445-45da-a73b-6343e04334c2'
+                ORDER BY e.title;`
+        );
+    }
+
+    static AllAnswerEmotionalHealth() {
+        return db.execute(
+            `SELECT
+                m.evaluation,
+                o.summary,
+                d.title AS Departamento,
+                e.title AS Empresa,
+                l.birthName AS LeaderName
+                FROM oneOnOneMeasure AS m
+                JOIN oneOnOneMeasurable AS o
+                ON m.measurableIDFK = o.measurableID
+                JOIN oneOnOne AS n
+                ON m.measureOneOnOneIDFK = n.oneOnOneID
+                JOIN user AS u
+                ON n.oneOnOneUserIDFK = u.userID
+                JOIN department AS d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+                JOIN enterprise AS e
+                ON d.enterpriseIDFK = e.enterpriseID
+                JOIN user AS l
+                ON d.departmentLeaderIDFK = l.userID
+                WHERE
+                -- Ajustar por zona horaria y asegurarnos de mes y año correctos
+                MONTH(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = MONTH(CURRENT_DATE())
+                AND YEAR(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = YEAR(CURRENT_DATE())
+                AND m.measurableIDFK = 'e2df8a14-2154-49a3-b049-2f4c7cd66776'
+                ORDER BY e.title;`
+        );
+    }
+
+    static AllAnswerWorkLifeBalance() {
+        return db.execute(
+            `SELECT
+                m.evaluation,
+                o.summary,
+                d.title AS Departamento,
+                e.title AS Empresa,
+                l.birthName AS LeaderName
+                FROM oneOnOneMeasure AS m
+                JOIN oneOnOneMeasurable AS o
+                ON m.measurableIDFK = o.measurableID
+                JOIN oneOnOne AS n
+                ON m.measureOneOnOneIDFK = n.oneOnOneID
+                JOIN user AS u
+                ON n.oneOnOneUserIDFK = u.userID
+                JOIN department AS d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+                JOIN enterprise AS e
+                ON d.enterpriseIDFK = e.enterpriseID
+                JOIN user AS l
+                ON d.departmentLeaderIDFK = l.userID
+                WHERE
+                -- Ajustar por zona horaria y asegurarnos de mes y año correctos
+                MONTH(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = MONTH(CURRENT_DATE())
+                AND YEAR(DATE_ADD(n.meetingDate, INTERVAL 6 HOUR)) = YEAR(CURRENT_DATE())
+                AND m.measurableIDFK = 'f1e24a8c-aa83-4354-bd1e-f4d9891e0916'
+                ORDER BY e.title;`
+        );
+    }
+
+    static getNumerOfEmployees(keyDate) {
+        return db.execute(
+            `SELECT COUNT(DISTINCT u.userID) AS total 
+            FROM user u 
+            JOIN workStatus w 
+                ON u.userID = w.userStatusIDFK 
+            WHERE u.workStatus = 1 
+                AND w.startDate < ?`,
+            [keyDate]
+        );
+    }
 };

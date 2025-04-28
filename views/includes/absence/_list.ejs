@@ -1,17 +1,21 @@
-<div class="container mx-auto p-4">
-    <div class="bg-neutral-700/25 shadow rounded-lg overflow-hidden">
-        <div class="px-6 py-4 flex justify-end">
-            <% if (role === 'Department Leader' || role === 'Human Resources') {%>
-                <a href="/absence/requests" class="btnPrimary mr-4">Employees requests</a>
-            <% } %>
-            <a href="/absence/add" class="btnPrimary mr-4">Add</a>
+<script>addBackButton('/');</script>
+<div class="fullContainer bgContainer1">
+    <div>
+
+        <div class="titleContainer">
+            <h2 class="title">My absences</h2>
+            <div class="flex gap-3 centerItems">
+                <a href="/absence/add" class="btnPrimary">Add absence</a>
+                <% if (role === 'Department Leader' || role === 'Manager') { %>
+                    <a href="/absence/requests" class="btnPrimary">Pending requests</a>
+                <% } %>
+            </div>
         </div>
 
-        <div class="p-6">
-            <h2 class="text-2xl font-bold mb-4">My Absences</h2>
+        <div>            
             <div id="tablaAbsences"></div>
 
-            <div class="flex justify-center gap-3 mt-6">
+            <div class="endButtonsContainer">
                 <button id="prevPage" class="btnPrimary">Previous</button>
                 <button id="nextPage" class="btnPrimary">Next</button>
             </div>
@@ -26,22 +30,22 @@
         const res = await fetch(`/absence/search?page=${page}`);
         const data = await res.json();
 
-        let table = `<table class="min-w-full divide-y divide-neutral-200" id="absences-table">
-                <thead class="bg-neutral-800/50">
+        let table = `<table class="tContainer" id="absences-table">
+                <thead class="tHead">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Reason</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Start Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">End Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Duration</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Leader Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">HR Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Evidence</th>
+                        <th class="hRow">Reason</th>
+                        <th class="hRow">Start Date</th>
+                        <th class="hRow">End Date</th>
+                        <th class="hRow">Duration</th>
+                        <th class="hRow">Leader Status</th>
+                        <th class="hRow">HR Status</th>
+                        <th class="hRow">Evidence</th>
                     </tr>
                 </thead>
-                <tbody class="bg-neutral-800 divide-y divide-neutral-200">`;
+                <tbody class="tBody">`;
 
         if (data.length === 0) {
-            table += `<tr><td colspan="7" class="text-center">There´s no absences</td></tr>`;
+            table += `<tr><td colspan="7" class="dataless">There´s no absences</td></tr>`;
         } else {
             data.forEach((ab) => {
                 // Calcular el total de días entre las fechas
@@ -50,45 +54,41 @@
                 const timeDifference = endDate - startDate;
                 const totalDays = 1 + timeDifference / (1000 * 3600 * 24);
 
-                table += `<tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">${
-                            ab.reason
-                        }</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">${startDate.toLocaleDateString(
+                table += `<tr class="tRow">
+                        <td class="tContent">${ab.reason}</td>
+                        <td class="tContent">${startDate.toLocaleDateString(
                             "es-MX"
                         )}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">${endDate.toLocaleDateString(
+                        <td class="tContent">${endDate.toLocaleDateString(
                             "es-MX"
                         )}</td>
-                        <td class=" text-center px-6 py-4 whitespace-nowrap text-sm total-days" data-start-date="${
+                        <td class="tContent total-days" data-start-date="${
                             ab.startDate
-                        }" data-end-date="${ab.endDate}">${totalDays}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">`;
+                        }" data-end-date="${ab.endDate}">${totalDays}</td>`;
 
                 if (ab.leaderStatus === 0) {
-                    table += `Denyed `;
+                    table += `<td class="tContent textDanger">Denied</td>`;
                 } else if (ab.leaderStatus === 1) {
-                    table += `Approved `;
+                    table += `<td class="tContent textSuccess">Approved</td>`;
                 } else if (ab.leaderStatus === 2) {
-                    table += `Pending... `;
+                    table += `<td class="tContent textWarning">Pending...</td>`;
                 }
-
-                table += `<td class="px-6 py-4 whitespace-nowrap text-sm">`;
 
                 if (ab.hrStatus === 0) {
-                    table += `Denyed `;
+                    table += `<td class="tContent textDanger">Denied</td>`;
                 } else if (ab.hrStatus === 1) {
-                    table += `Approved `;
+                    table += `<td class="tContent textSuccess">Approved</td>`;
                 } else if (ab.hrStatus === 2) {
-                    table += `Pending...`;
+                    table += `<td class="tContent textWarning">Pending...</td>`;
                 }
 
-                table += `</td>`;
                 table += `</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">`;
+                        <td class="tContent">`;
 
                 if (ab.mediaLink) {
-                    table += `<a href="/uploads/${ab.mediaLink}" target="_blank" class="text-blue-600 hover:underline">Check Evidence</a>`;
+                    table += `<a href="/uploads/absence/${encodeURIComponent(
+                        ab.mediaLink
+                    )}" target="_blank" class="text-blue-600 hover:underline">View Evidence</a>`;
                 } else {
                     table += `No Evidence`;
                 }

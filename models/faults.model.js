@@ -44,24 +44,6 @@ class Fault {
   
 
     delete() {
-
-        console.log("User delete: ", this.userID);
-        console.log("Fault delete: ", this.faultID);
-
-        return db.execute(`SELECT faultID FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID])
-            .then(([rows]) => {
-                if (rows.length === 0) {
-                    throw new Error('There are no faults with this ID and user');
-                }
-                return db.execute(`DELETE FROM faultMedia WHERE faultIDFK = ?`, [this.faultID])
-                    .then(() => {
-                        return db.execute(`DELETE FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID]);
-                    });
-            });
-    }
-
-    delete() {
-
         console.log("User delete: ", this.userID);
         console.log("Fault delete: ", this.faultID);
 
@@ -81,8 +63,8 @@ class Fault {
         return db.execute(
             `SELECT u.birthName AS nombre, u.mail AS correo, 
       f.doneDate AS fecha_falta, COUNT(f.faultUserIDFK) 
-      AS num_faltas 
-      FROM  user u, fault f 
+      AS num_faltas, faultUserIDFK 
+      FROM  user u, fault f
       WHERE u.userId = f.faultUserIDFK 
       GROUP BY  u.userId 
       ORDER BY num_faltas desc 
@@ -98,7 +80,8 @@ class Fault {
           u.birthName AS nombre, 
           u.mail AS correo, 
           MAX(f.doneDate) AS fecha_falta, 
-          COUNT(f.faultUserIDFK) AS num_faltas
+          COUNT(f.faultUserIDFK) AS num_faltas,
+          faultUserIDFK 
        FROM user u
        JOIN fault f ON u.userId = f.faultUserIDFK
        WHERE u.mail IS NOT NULL
@@ -117,7 +100,8 @@ class Fault {
           u.birthName AS nombre, 
           u.mail AS correo, 
           MAX(f.doneDate) AS fecha_falta, 
-          COUNT(f.faultUserIDFK) AS num_faltas
+          COUNT(f.faultUserIDFK) AS num_faltas,
+          faultUserIDFK 
        FROM user u
        JOIN fault f ON u.userId = f.faultUserIDFK
        WHERE (u.birthName LIKE ? OR u.mail LIKE ?)
@@ -129,8 +113,25 @@ class Fault {
   }
   
   static fetchByID(faultID) {
-    return db.execute('SELECT * FROM fault WHERE faultID = ?', [faultID]);
+    return db.execute(
+    `SELECT f.*, m.mediaLink
+    FROM fault f
+    LEFT JOIN faultMedia m ON f.faultID = m.faultIDFK
+    WHERE f.faultID = ?`, [faultID]);
   }
-  
+
+  static updateFault({ faultID, reason, doneDate }) {
+    // 2) si existe, actualiza el fault existente
+    const updateSql = `
+      UPDATE fault
+         SET summary = ?,
+             doneDate = ?
+       WHERE faultID = ?
+    `;
+      return db.execute(updateSql, [reason, doneDate, faultID]);
+    
+
+  }
+
 }
 module.exports = Fault;

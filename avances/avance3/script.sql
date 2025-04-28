@@ -208,7 +208,7 @@ INSERT INTO privilege(title, summary) values('Superadmin registra respuesta haci
 
 INSERT INTO role(title) values('Colaborator'); 
 INSERT INTO role(title) values('Department Leader'); 
-INSERT INTO role(title) values('Human Resources'); 
+INSERT INTO role(title) values('Manager'); 
 
 INSERT INTO rolePrivilege(roleIDFK, privilegeIDFK) values(1, 1); 
 INSERT INTO rolePrivilege(roleIDFK, privilegeIDFK) values(1, 2); 

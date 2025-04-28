@@ -1,10 +1,11 @@
 const Usuario = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
+const title = '';
 
 // Renderiza la vista de login
 exports.get_login = (request, response, next) => {
     response.render("login.ejs", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -16,7 +17,7 @@ exports.post_login = (request, response, next) => {
     Usuario.fetchOne(email)
         .then(([rows]) => {
             if (rows.length === 0) {
-                request.session.warning = "Usuario y/o contraseña incorrectos";
+                request.session.warning = "User and/or password incorrect";
                 return response.redirect("/login");
             }
 
@@ -55,18 +56,18 @@ exports.post_login = (request, response, next) => {
                         .catch((error) => {
                             console.error("Error al obtener privilegios:", error);
                             request.session.warning =
-                                "Hubo un problema con el servidor";
+                                "There was a problem with the database";
                             response.redirect("/login");
                         });
                 } else {
-                    request.session.warning = "Usuario y/o contraseña incorrectos";
+                    request.session.warning = "User and/or password incorrect";
                     return response.redirect("/login");
                 }
             })
         })
         .catch((error) => {
             console.error("Error al buscar el usuario:", error);
-            request.session.warning = "Hubo un problema con el servidor";
+            request.session.warning = "There was a problem with the database";
             response.redirect("/login");
         });
 };

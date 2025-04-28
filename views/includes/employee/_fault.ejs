@@ -1,73 +1,174 @@
-<div class="flex-1 p-6">
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
-            <div class="p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-semibold">Faults</h2>
-                <% if (faults.length === 0) { %>
-                <p class="block text-green-600">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } else if(faults.length === 1) { %>
-                <p class="block text-yellow-600">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } else if(faults.length === 2) { %>
-                <p class="block text-orange-600">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } else { %>
-                <p class="block text-red-600">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } %>
-            </div>
-            <div class="p-6">
-                <div class="content has-text-centered box">
-                    <table class="table w-full text-sm text-left">
-                        <thead class="bg-neutral-700/50">
-                            <tr>
-                                <th class="px-4 py-2">Full name</th>
-                                <th class="px-4 py-2">Reason</th>
-                                <th class="px-4 py-2">Done date</th>
-                                <th class="px-4 py-2">Evidence</th>
-                            </tr>
-                        </thead>
-                        <% if(faults.length > 0) { %>
-                        <tbody>
-                            <% faults.forEach(f => { %>
-                            <tr class="border-b">
-                                <td class="px-4 py-2">
-                                    <%= f.birthName %> <%= f.surname %>
-                                </td>
-                                <td class="px-4 py-2"><%= f.summary %></td>
-                                <td class="px-4 py-2">
-                                    <%= new
-                                    Date(f.doneDate).toLocaleDateString('es-MX')
-                                    %>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <% if (f.mediaLink) { %>
-                                    <a
-                                        target="_blank"
-                                        href="<%= f.mediaLink %>"
-                                        class="text-blue-500"
-                                        >Check Evidence</a
-                                    >
-                                    <% } else { %> No evidence <% } %>
-                                </td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                        <% } else { %>
-                        <tr>
-                            <td colspan="4" class="text-center">
-                                There´s no faults
-                            </td>
-                        </tr>
+<script>addBackButton('/employee/<%= employeeID %>');</script>
+<div class="fullContainer">
+
+    <div class="titleContainer">
+        <h2 class="title">Employee's faults</h2>
+        <div class="flex gap-1 centerItems">
+            <% if (faults.length === 0) { %>
+                <p class="block textSuccess">Number of faults: <%= faults.length %></p>
+            <% } else if(faults.length === 1) { %>
+                <p class="block textWarning">Number of faults: <%= faults.length %></p>
+            <% } else if(faults.length === 2) { %>
+                <p class="block text-orange-600">Number of faults: <%= faults.length %></p>
+            <% } else { %>
+                <p class="block textDanger">Number of faults: <%= faults.length %></p>
+            <% } %>
+        </div>
+    </div>
+
+    <div>
+        <div class="content has-text-centered box">
+            <table class="tContainer">
+                <thead class="tHead">
+                    <tr>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Reason</th>
+                        <th class="hRow">Done date</th>
+                        <th class="hRow">Evidence</th>
+                        <% if (role == 'Manager') { %>
+                        <th class="hRow">Modify</th>
+                        <th class="hRow">Delete</th>
                         <% } %>
-                    </table>
-                </div>
-            </div>
+                    </tr>
+                </thead>
+                <% if(faults.length > 0) { let i = 0;%>
+                <tbody class="tBody">
+                    <% faults.forEach(f => { i++; %>
+                    <tr class="tRow">
+                        <td class="tContent">
+                            <%= f.birthName %> <%= f.surname %>
+                        </td>
+                        <td class="tContent"><%= f.summary %></td>
+                        <td class="tContent">
+                            <%= new Date(f.doneDate).toLocaleDateString('es-MX')
+                            %>
+                        </td>
+                        <td class="tContent">
+                            <% if (f.mediaLink) { %>
+                            <a
+                                target="_blank"
+                                href="/uploads/fault/<%= encodeURIComponent(f.mediaLink) %>"
+                                class="text-blue-500"
+                            >
+                                View Evidence
+                            </a>
+                            <% } else { %> No evidence <% } %>
+                        </td>
+                        <% if (role === 'Manager') { %>
+                        <td class="tContent">
+                            <a
+                                class="btnPrimary"
+                                href="/fault/modify/<%= f.faultID %>"
+                                >Update</a
+                            >
+                        </td>
+                        <td class="tContent">
+                            <button
+                                id="deleteIt<%= i %>"
+                                class="deleteFunc btnDanger"
+                            >
+                                Delete
+                            </button>
+                            <form
+                                id="form<%= i %>"
+                                class="hidden"
+                                id="form"
+                                action="/fault/delete"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="_csrf"
+                                    value="<%= csrfToken %>"
+                                />
+
+                                <input
+                                    type="hidden"
+                                    name="faultID"
+                                    value="<%= f.faultID %>"
+                                />
+
+                                <input
+                                    type="hidden"
+                                    name="userID"
+                                    value="<%= f.faultUserIDFK %>"
+                                />
+                            </form>
+                        </td>
+                        <% } %>
+                    </tr>
+                    <% }) %>
+                </tbody>
+                <% } else { %>
+                <tr>
+                    <td colspan="6" class="dataless">There are no faults</td>
+                </tr>
+                <% } %>
+            </table>
         </div>
     </div>
 </div>
+<script>
+    document.querySelectorAll(".deleteFunc").forEach((element) => {
+        element.addEventListener("click", async (e) => {
+            const result = await Swal.fire({
+                title: "Are you sure you want to delete it?",
+                text: "This action cannot be undone!",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: "sweetAlerts normal",
+                },
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it",
+                cancelButtonText: "Cancel",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const faultNumber = element.id.split("deleteIt")[1];
+                    const faultBody = document.getElementById(
+                        `form${faultNumber}`
+                    );
+                    const faultID = faultBody.querySelector(
+                        'input[name="faultID"]'
+                    ).value;
+                    const userID = faultBody.querySelector(
+                        'input[name="userID"]'
+                    ).value;
+                    const _csrf = faultBody.querySelector(
+                        'input[name="_csrf"]'
+                    ).value;
+
+                    const res = await fetch("/fault/delete", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ faultID, userID, _csrf }),
+                    });
+
+                    if (!res.ok) throw new Error("There was an error");
+
+                    await Swal.fire({
+                        title: "Deleted",
+                        text: "The fault was deleted correctly.",
+                        customClass: {
+                            popup: "sweetAlerts normal",
+                        },
+                    });
+
+                    location.reload();
+                } catch {
+                    await Swal.fire({
+                        title: "Error",
+                        text: "The fault couldn't be deleted.",
+                        customClass: {
+                            popup: "sweetAlerts normal",
+                        },
+                    });
+                }
+            }
+        });
+    });
+</script>

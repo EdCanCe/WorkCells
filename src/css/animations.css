@@ -1,0 +1,97 @@
+* {
+    transition: background-color 0.3s, width 0.3s, opacity 0.3s, filter 0.3s;
+}
+
+@keyframes statusContainer {
+    0% {
+        height: 0px;
+        margin: 0px 30px;
+        padding-top: 0;
+    }
+
+    5% {
+        height: 53px;
+        margin: 30px 30px;
+        padding-top: 13px;
+    }
+
+    95% {
+        height: 53px;
+        margin: 30px 30px;
+        padding-top: 13px;
+    }
+
+    100% {
+        height: 0px;
+        margin: 0px 30px;
+        padding-top: 0;
+    }
+}
+
+.statusContainerAnimate {
+    animation: statusContainer 7s linear forwards;
+}
+
+@keyframes statusContainerAnimateHide {
+    0% {
+        height: 53px;
+        margin: 30px 30px;
+        padding-top: 13px;
+    }
+
+    100% {
+        height: 0px;
+        margin: 0px 30px;
+        padding-top: 0;
+    }
+}
+
+.statusContainerAnimateHide {
+    animation: statusContainerAnimateHide 0.35s linear forwards;
+}
+
+@keyframes statusBar {
+    0% {
+        width: 100%;
+    }
+
+    5% {
+        width: 100%;
+    }
+
+    95% {
+        width: 0;
+    }
+}
+
+.statusBarAnimate {
+    animation: statusBar 7s linear forwards;
+}
+
+@keyframes glow {
+    0% {
+        opacity: 100%;
+    }
+
+    50% { 
+        opacity: 30%;
+    }
+
+    100% {
+        opacity: 100%;
+    }
+}
+
+.glowing {
+    animation: glow 2s infinite;
+}
+
+@keyframes showOpacity {
+    0% {
+        opacity: 100%;
+    }
+
+    100% {
+        opacity: 100%;
+    }
+}

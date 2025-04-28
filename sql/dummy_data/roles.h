@@ -38,7 +38,7 @@ void Role::print() {
 void createRoles(){
     roles.push_back(Role("Colaborator"));
     roles.push_back(Role("Department Leader"));
-    roles.push_back(Role("Human Resources"));
+    roles.push_back(Role("Manager"));
 }
 
 #endif

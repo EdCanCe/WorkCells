@@ -1,44 +1,40 @@
-<div class="container mx-auto p-4">
-    <div
-        class="bg-neutral-700/25 shadow rounded-lg overflow-hidden grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6"
-    >
+<script>addBackButton('/oneToOne');</script>
+<div class="primaryContainer bgContainer1">
+
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Schedule future One To One session</h2>
+    </div>
+
+    <div>
         <!-- Formulario para agendar la sesión -->
-        <div class="p-6 border-b sm:col-span-2">
-            <div class="bg-neutral-700/25 p-6 rounded-lg shadow mb-6">
-                <h2 class="text-2xl font-semibold mb-4 text-white">
-                    Agendado de sesión One to One
-                </h2>
-            </div>
+        <div class="sm:col-span-2">
 
             <form action="/oneToOne/schedule" method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
                 <!-- Datos de la reunión -->
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold mb-2 text-white">
-                        Datos de la reunión
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2">
                         <div>
                             <label
                                 for="sessionDate"
-                                class="block text-neutral-300 mb-1"
-                                >Fecha del One To One:</label
+                                class="label"
+                                >One To One date:</label
                             >
                             <input
                                 id="sessionDate"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="date"
                                 name="date"
                                 required
                             />
                         </div>
                         <div>
-                            <label class="block text-neutral-300 mb-1"
-                                >Hora de la reunión:</label
+                            <label class="label"
+                                >One To One time:</label
                             >
                             <input
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="time"
                                 name="time"
                                 required
@@ -47,30 +43,31 @@
                         <div>
                             <label
                                 for="durationInput"
-                                class="block text-neutral-300 mb-1"
-                                >Duración estimada (minutos):</label
+                                class="label"
+                                >Estimated duration (minutes):</label
                             >
                             <input
                                 placeholder="15"
                                 id="durationInput"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="number"
                                 name="expectedTime"
                                 required
                                 min="1"
                                 max="60"
+                                value="15"
                             />
                         </div>
                         <div>
                             <label
                                 for="meetingLink"
-                                class="block text-neutral-300 mb-1"
-                                >Enlace a reunión:</label
+                                class="label"
+                                >Meeting Link:</label
                             >
                             <input
                                 id="meetLink"
                                 pattern="https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="text"
                                 name="meetingLink"
                                 placeholder="https://meet.google.com/abc-defg-hij"
@@ -78,54 +75,42 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold mb-2 text-white">
-                        Worker data
-                    </h3>
-                    <div class="mb-4">
-                        <label class="block text-neutral-300 mb-1"
-                            >Worker's email:</label
+                <!--Worker section-->
+                <div>
+                    <div>
+                        <label class="label"
+                            >Select who will the session be with:</label
                         >
-                        <input
-                            id="buscar"
-                            placeholder="ejemplo@nuclea.solutions"
-                            class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                            type="email"
+                        <select
+                            id="worker"
                             name="email"
+                            class="input"
                             required
+                        >
+                            <option value="" selected disabled>
+                                Select a Worker From the list
+                            </option>
+                            <% workers.forEach((w) => { %>
+                            <option
+                                value="<%= w.mail %>"
+                                data-name="<%= w.birthName %> <%= w.surname %>"
+                            >
+                                <%= w.birthName %> <%= w.surname %> - <%=
+                                w.department %> - <%= w.company %>
+                            </option>
+
+                            <% }) %>
+                        </select>
+                        <input
+                            type="hidden"
+                            name="name"
+                            id="workerName"
+                            value=""
                         />
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-neutral-700 mb-1"
-                                >Worker's name:</label
-                            >
-                            <input
-                                id="workerName"
-                                class="bg-neutral-700 w-full p-2 border border-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                type="text"
-                                name="name"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-neutral-300 mb-1"
-                                >Worker's surname:</label
-                            >
-                            <input
-                                id="workerSurname"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                                type="text"
-                                name="surname"
-                                required
-                            />
-                        </div>
-                    </div>
                 </div>
-                <div class="text-center">
-                    <input class="btnPrimary" type="submit" value="Enviar" />
+                <div class="endButtonsContainer">
+                    <button class="btnPrimary">Schedule session</button>
                 </div>
             </form>
         </div>
@@ -159,38 +144,12 @@
         event.target.setCustomValidity("");
     };
 
-    /*AJAX tqm :)*/
-    const buscador = document.getElementById("buscar");
-    const workerNameInput = document.getElementById("workerName");
-    const workerSurnameInput = document.getElementById("workerSurname");
+    const select = document.getElementById("worker");
+    const hidden = document.getElementById("workerName");
 
-    // Cada vez que el usuario escriba en el input de email...
-    buscador.addEventListener("keyup", () => {
-        const email = buscador.value.trim();
-        if (email !== "") {
-            // Realiza una petición GET a la nueva ruta
-            fetch("/oneToOne/getFullName/" + encodeURIComponent(email), {
-                method: "GET",
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        // Actualiza los inputs con el nombre y apellido obtenidos
-                        workerNameInput.value = data.birthName;
-                        workerSurnameInput.value = data.surname;
-                    } else {
-                        // Si no se encontró el usuario, limpia los campos
-                        workerNameInput.value = "";
-                        workerSurnameInput.value = "";
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching full name:", error);
-                });
-        } else {
-            // Si el input está vacío, limpiar los campos
-            workerNameInput.value = "";
-            workerSurnameInput.value = "";
-        }
+    select.addEventListener("change", () => {
+        // toma el data-name de la opción seleccionada
+        const selected = select.selectedOptions[0];
+        hidden.value = selected.dataset.name || "";
     });
 </script>

@@ -1,0 +1,64 @@
+.noMargin {
+    @apply m-0 p-0;
+}
+
+.primaryContainer {
+    @apply w-full max-w-[840px] min-h-full m-auto p-6;
+}
+
+.fullContainer {
+    @apply min-w-full max-w-full min-h-full p-6;
+}
+
+.center {
+    @apply !block w-fit mr-auto ml-auto;
+}
+
+.centerItems {
+    @apply flex justify-center items-center;
+}
+
+/*Etiqueta: <table>*/
+.tContainer{
+    @apply min-w-full divide-y divide-neutral-200 text-center
+}
+/*Etiqueta: <thead>*/
+.tHead{
+    @apply bg-neutral-800/50 uppercase text-center
+}
+/*Etiqueta: <tbody>*/
+.tBody{
+    @apply bg-neutral-800 divide-y divide-neutral-200
+}
+/*Etiqueta: <th>*/
+.hRow{
+    @apply px-6 py-3 font-medium tracking-wider text-center
+}
+/*Alternativa de paginacion sin mas datos*/
+.dataless{
+    @apply px-6 py-4 text-white text-center
+}
+/*Etiqueta: <tr> y solamente donde adentro haya <td>*/
+.tRow{
+    @apply hover:bg-neutral-700 border-b border-neutral-600
+}
+/*Etiqueta: <td>*/
+.tContent{
+    @apply px-6 py-4 text-center
+}
+
+.titleContainer {
+    @apply flex flex-row justify-between items-center align-middle mb-6 h-10;
+}
+
+.btnSize {
+    @apply max-w-0 opacity-0;
+}
+
+.endButtonsContainer {
+    @apply mt-5 mb-0 flex justify-center gap-3;
+}
+
+.posSearch {
+    @apply absolute top-[27px] left-[-18px] w-6 h-6 text-white;
+}

@@ -43,12 +43,18 @@ app.use(cookieParser());
 const fileStorage = multer.diskStorage({
     destination: (request, file, callback) => {
         //'uploads': Es el directorio del servidor donde se subirán los archivos
-        callback(null, "public/uploads");
+        callback(null, "uploads");
     },
     filename: (request, file, callback) => {
         //aquí configuramos el nombre que queremos que tenga el archivo en el servidor,
         //para que no haya problema si se suben 2 archivos con el mismo nombre concatenamos el timestamp
-        callback(null, new Date().getTime() + file.originalname);
+        const original = file.originalname;
+        const safe = original
+            .toLowerCase()
+            .replace(/\s+/g, "_")
+            .replace(/[^a-z0-9._-]/g, "");
+
+        callback(null, new Date().getTime() + safe);
     },
 });
 
@@ -57,6 +63,11 @@ const fileStorage = multer.diskStorage({
 //pero hay diferentes opciones si se quieren subir varios archivos.
 //'archivo' es el nombre del input tipo file de la forma
 app.use(multer({ storage: fileStorage }).single("evidence"));
+
+app.use(
+    "/uploads",
+    express.static(path.join(__dirname, "uploads"))
+  );
 
 app.use(csrfProtection);
 
@@ -98,11 +109,14 @@ const homeRouter = require("./routes/home.routes");
 app.use("/home", homeRouter);
 app.use("/", homeRouter);
 
+const uploadRouter = require("./routes/uploads.routes.js");
+app.use("/uploads", uploadRouter);
+
 const sessionVars = require("./util/sessionVars");
 app.use((request, response, next) => {
     response.statusCode = 404;
     response.render("notFound", {
-        ...sessionVars(request),
+        ...sessionVars(request, 'ERROR 404'),
     });
 });
 

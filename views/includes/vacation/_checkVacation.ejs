@@ -1,100 +1,133 @@
-<div class="flex">
-    <aside class="w-64"></aside>
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-lg rounded-lg">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    Details of Vacation Request
-                </h2>
-                <div class="mt-4 space-y-2">
-                    <p><strong class="text-neutral-300">Reason:</strong> <%= vacation.reason %></p>
-                    <p><strong class="text-neutral-300">Start Date:</strong> <%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></p>
-                    <p><strong class="text-neutral-300">End Date:</strong> <%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></p>
-                    <p><strong class="text-neutral-300">Number of Requested Days:</strong> <%= requestedDays %> días</p>
-                    <p><strong class="text-neutral-300">HR Status:</strong> 
-                        <% if (vacation.hrStatus === 1) { %>
-                            <span class="text-green-500">Approved</span>
-                        <% } else if (vacation.hrStatus === 0) { %>
-                            <span class="text-red-500">Denied</span>
-                        <% } else { %>
-                            <span class="text-yellow-500">Pending...</span>
-                        <% } %>
-                    </p>
-                    <p><strong class="text-neutral-300">Leader Status:</strong> 
-                        <% if (vacation.leaderStatus === 1) { %>
-                            <span class="text-green-500">Approved</span>
-                        <% } else if (vacation.leaderStatus === 0) { %>
-                            <span class="text-red-500">Denied</span>
-                        <% } else { %>
-                            <span class="text-yellow-500">Pending...</span>
-                        <% } %>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="flex space-x-4 justify-center mt-6">
-            <a href="/vacation/check/modify/<%= vacation.vacationID %>" class="btnPrimary">
-                Modify Request
-            </a>
-            <a href="/vacation/check/<%= vacation.vacationID %>" 
-                class="btnPrimary" 
-                id="btnEliminar" 
-                data-id="<%= vacation.vacationID %>">
-                Delete Request
-             </a>
-        </div>
+<script>addBackButton('/vacation');</script>
+<div class="primaryContainer bgContainer1">
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Vacation request</h2>
+    </div>
+    <div class="mt-4 space-y-2">
+        <p>
+            <strong class="bold">Reason:</strong> <%=
+            vacation.reason %>
+        </p>
+        <p>
+            <strong class="bold">Start Date:</strong>
+            <%= new Date(vacation.startDate).toLocaleDateString('es-MX') %>
+        </p>
+        <p>
+            <strong class="bold">End Date:</strong> <%= new
+            Date(vacation.endDate).toLocaleDateString('es-MX') %>
+        </p>
+        <p>
+            <strong class="bold">Number of Requested Days:</strong>
+            <%= requestedDays %> días
+        </p>
+        <p>
+            <strong class="bold">HR Status:</strong>
+            <% if (vacation.hrStatus === 1) { %>
+            <span class="textSuccess">Approved</span>
+            <% } else if (vacation.hrStatus === 0) { %>
+            <span class="textDanger">Denied</span>
+            <% } else { %>
+            <span class="textWarning">Pending...</span>
+            <% } %>
+        </p>
+        <p>
+            <strong class="bold">Leader Status:</strong>
+            <% if (vacation.leaderStatus === 1) { %>
+            <span class="textSuccess">Approved</span>
+            <% } else if (vacation.leaderStatus === 0) { %>
+            <span class="textDanger">Denied</span>
+            <% } else { %>
+            <span class="textWarning">Pending...</span>
+            <% } %>
+        </p>
+    </div>
+    <div class="endButtonsContainer">
+        <a
+            href="/vacation/check/modify/<%= vacation.vacationID %>"
+            class="btnPrimary"
+        >
+            Update Request
+        </a>
+        <a
+            href="/vacation/check/<%= vacation.vacationID %>"
+            class="btnDanger"
+            id="btnEliminar"
+            data-id="<%= vacation.vacationID %>"
+        >
+            Delete Request
+        </a>
     </div>
 </div>
-<meta name="csrf-token" content="<%= csrfToken %>">
+<meta name="csrf-token" content="<%= csrfToken %>" />
 <script src="/javascript/sweetalert2.all.min.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const btnEliminar = document.getElementById("btnEliminar");
+    document.addEventListener("DOMContentLoaded", function () {
+        const btnEliminar = document.getElementById("btnEliminar");
 
-    if (!btnEliminar) return;
+        if (!btnEliminar) return;
 
-    btnEliminar.addEventListener("click", async function (event) {
-      event.preventDefault();
+        btnEliminar.addEventListener("click", async function (event) {
+            event.preventDefault();
 
-      const vacationID = btnEliminar.getAttribute("data-id");
+            const vacationID = btnEliminar.getAttribute("data-id");
 
-      const result = await Swal.fire({
-        title: '¿Are you sure?',
-        text: "¡You can´t undone this action!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete',
-        cancelButtonText: 'Cancel'
-      });
-
-      if (result.isConfirmed) {
-        try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            const response = await fetch(`/vacation/check/delete/${vacationID}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'CSRF-Token': csrfToken // Header que espera `csurf`
-            },
-            body: JSON.stringify({ id: vacationID })
+            const result = await Swal.fire({
+                title: "Are you sure you want to delete it?",
+                text: "This action cannot be undone!",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: "sweetAlerts normal",
+                },
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it",
+                cancelButtonText: "Cancel",
             });
 
-          if (response.ok) {
-            Swal.fire('Deleted', 'The request has been deleted', 'success')
-              .then(() => {
-                // Redirige a la lista u otra página
-                window.location.href = '/vacation';
-              });
-          } else {
-            throw new Error('Error en la eliminación');
-          }
-        } catch (err) {
-          Swal.fire('Error', 'Couldn´t delete the request', 'error');
-        }
-      }
+            if (result.isConfirmed) {
+                try {
+                    const csrfToken = document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content");
+
+                    const response = await fetch(
+                        `/vacation/check/delete/${vacationID}`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "CSRF-Token": csrfToken, // Header que espera `csurf`
+                            },
+                            body: JSON.stringify({ id: vacationID }),
+                        }
+                    );
+
+                    if (response.ok) {
+                        Swal.fire({
+                            title: "Deleted",
+                            text: "The vacation was deleted correctly.",
+                            customClass: {
+                                popup: "sweetAlerts normal",
+                            },
+                        }).then(() => {
+                            // Redirige a la lista u otra página
+                            window.location.href = "/vacation";
+                        });
+                    } else {
+                        throw new Error(
+                            "There was an error while deleting it."
+                        );
+                    }
+                } catch (err) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "The vacation couldn't be deleted.",
+                        customClass: {
+                            popup: "sweetAlerts normal",
+                        },
+                    });
+                }
+            }
+        });
     });
-  });
 </script>

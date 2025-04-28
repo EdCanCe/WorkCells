@@ -1,27 +1,81 @@
-<button id="deleteIt" class="bgPrimary">Delete</button>
-<form id="form" class="hidden" id="form" action="/fault/delete" method="POST">
-    <input
-        type="hidden"
-        name="_csrf"
-        value="<%= csrfToken %>"
-    />
+<script>addBackButton(document.referrer);</script>
+<div class="primaryContainer bgContainer1">
 
-    <input
-        type="hidden"
-        name="faultID"
-        value="<%= fault.faultID %>"
-    />
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Update fault</h2>
+    </div>
 
-    <input
-        type="hidden"
-        name="userID"
-        value="<%= fault.faultUserIDFK %>"
-    />
+    <form action="/fault/update/<%= fault.faultID %>" method="POST">
+        <input type="hidden" name="_method" value="PUT" />
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div>
+            <label
+                for="reason"
+                class="label"
+            >
+                Reason:
+            </label>
+            <input
+                type="text"
+                id="reason"
+                name="reason"
+                class="input"
+                value="<%= fault.summary %>"
+                required
+            />
+        </div>
 
-</form>
+        <div>
+            <label
+                for="Date"
+                class="label"
+            >
+                Date:
+            </label>
+            <input
+                type="date"
+                id="Date"
+                name="doneDate"
+                class="input"
+                value="<%= fault.Date%>"
+                required
+            />
+        </div>
 
-<script>
-    document.getElementById("deleteIt").addEventListener("click", () => {
-        document.getElementById("form").submit();
-    })
-</script>
+        <!-- Campo para subir archivos -->
+        <div>
+            <label class="label">
+                Evidence (optional):
+            </label>
+            <input
+                id="faultEvidenceInput"
+                class="input"
+                type="file"
+                name="evidence"
+                accept=".jpg, .png, .docx, .jpeg, .pdf"
+            />
+        </div>
+
+        <div class="endButtonsContainer">
+            <button type="submit" class="btnPrimary">Update fault</button>
+        </div>
+    </form>
+
+    <script>
+        const evidenceInput = document.getElementById("faultEvidenceInput");
+
+        evidenceInput.addEventListener("change", function () {
+            const file = this.files[0]; // Obtiene el archivo seleccionado
+            const maxSize = 10 * 1024 * 1024; // 10MB en bytes
+
+            if (file) {
+                if (file.size > maxSize) {
+                    alert(
+                        `The file is too heavy, the maximun allowed is 10mb.`
+                    );
+                    this.value = ""; // Borra el archivo seleccionado
+                }
+            }
+        });
+    </script>
+</div>

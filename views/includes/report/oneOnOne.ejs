@@ -1,0 +1,150 @@
+<script>addBackButton('/reports');</script>
+<div class="primaryContainer bgContainer1">
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">One To One answers</h2>
+    </div>
+    <div>
+        <label for="department" class="label">
+            Department
+        </label>
+        <select
+            id="department"
+            class="input"
+        >
+            <option selected>Select department</option>
+            <option value = "">All department</option>
+            <% departments.forEach(dept => { %>
+            <option value="<%= dept.departmentID %>">
+                <%= dept.departmentTitle %> – <%= dept.enterpriseTitle %>
+            </option>
+            <% }) %>
+        </select>
+    </div>
+    <div>
+        <h2 class="subtitle text-center">
+            From <%= currentMonthStart %> To <%= currentMonthEnd %>
+        </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 mt-6">
+        <div>
+            <h3 class="text-center flex flex-col items-center">Workload</h3>
+            <canvas id="workloadChart" height="200"></canvas>
+        </div>
+        <div>
+            <h3 class="text-center flex flex-col items-center">
+                Physical Health
+            </h3>
+            <canvas id="physicalHealthChart" height="200"></canvas>
+        </div>
+        <div>
+            <h3 class="text-center flex flex-col items-center">
+                Acknowledgement
+            </h3>
+            <canvas id="acknowledgementChart" height="200"></canvas>
+        </div>
+        <div>
+            <h3 class="text-center flex flex-col items-center">
+                Emotional Health
+            </h3>
+            <canvas id="chartEmotional" height="200"></canvas>
+        </div>
+        <div>
+            <h3 class="text-center flex flex-col items-center">
+                Work-Life Balance
+            </h3>
+            <canvas id="workLifeBalanceChart" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Inyecta los datos completos del servidor -->
+<script>
+    const initialData = {
+      workload:       <%- JSON.stringify(workload) %>,
+      physicalHealth: <%- JSON.stringify(physicalHealth) %>,
+      acknowledgement:<%- JSON.stringify(acknowledgement) %>,
+      workLifeBalance:<%- JSON.stringify(workLifeBalance) %>,
+      emotionalHealth:<%- JSON.stringify(emotionalHealth) %>
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Contar frecuencias de evaluation (0–5)
+    function countFrequenciesFromObjects(arr) {
+        const counts = [0, 0, 0, 0, 0, 0];
+        arr.forEach((item) => {
+            const v = Number(item.evaluation);
+            if (Number.isInteger(v) && v >= 0 && v <= 5) counts[v]++;
+        });
+        return counts;
+    }
+
+    // Inicializar gráfica de 6 barras
+    function initBarChart(canvasID, label) {
+        const ctx = document.getElementById(canvasID).getContext("2d");
+        return new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["0", "1", "2", "3", "4", "5"],
+                datasets: [
+                    {
+                        label,
+                        data: [0, 0, 0, 0, 0, 0],
+                        borderRadius: 10,
+                        barThickness: 30,
+                    },
+                ],
+            },
+            options: {
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+                plugins: { legend: { display: false } },
+                responsive: true,
+            },
+        });
+    }
+
+    const charts = {
+        workload: initBarChart("workloadChart", "Workload"),
+        physicalHealth: initBarChart("physicalHealthChart", "Physical Health"),
+        acknowledgement: initBarChart(
+            "acknowledgementChart",
+            "Acknowledgement"
+        ),
+        workLifeBalance: initBarChart(
+            "workLifeBalanceChart",
+            "Work-Life Balance"
+        ),
+        emotionalHealth: initBarChart("chartEmotional", "Emotional Health"),
+    };
+
+    // Pinta datos iniciales
+    Object.entries(initialData).forEach(([key, arr]) => {
+        charts[key].data.datasets[0].data = countFrequenciesFromObjects(arr);
+        charts[key].update();
+    });
+
+    // Actualización AJAX al cambiar departamento
+// Actualización AJAX al cambiar departamento
+document.getElementById('department').addEventListener('change', async (e) => {
+  const deptID = e.target.value;
+  const url = deptID ? `/reports/oneOnOne/${deptID}` : `/reports/oneOnOne`;
+
+  try {
+    const res = await fetch(url, { headers: { Accept: 'application/json' } });
+    // Desestructuramos sólo las métricas
+    const { workload, physicalHealth, acknowledgement, workLifeBalance, emotionalHealth } = await res.json();
+
+    // Actualizamos cada gráfica
+    charts.workload.data.datasets[0].data        = countFrequenciesFromObjects(workload);
+    charts.physicalHealth.data.datasets[0].data  = countFrequenciesFromObjects(physicalHealth);
+    charts.acknowledgement.data.datasets[0].data = countFrequenciesFromObjects(acknowledgement);
+    charts.workLifeBalance.data.datasets[0].data = countFrequenciesFromObjects(workLifeBalance);
+    charts.emotionalHealth.data.datasets[0].data = countFrequenciesFromObjects(emotionalHealth);
+
+    Object.values(charts).forEach(c => c.update());
+  } catch (err) {
+    console.error('Error AJAX:', err);
+  }
+});
+
+</script>

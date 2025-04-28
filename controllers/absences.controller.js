@@ -1,16 +1,17 @@
 const Absence = require("../models/absence.model");
 const AbsenceMedia = require("../models/absenceMedia.model");
 const sessionVars = require("../util/sessionVars");
-const { sendTemplateMessage } = require('../util/whatsAppMessages');
+const { sendTemplateMessage } = require("../util/whatsAppMessages");
+const title = "Absences";
 
 exports.getCheck = (request, response, next) => {
     response.render("absence_check", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
 exports.getAdd = (request, response, next) => {
-    response.render("absencesAdd", { ...sessionVars(request) });
+    response.render("absencesAdd", { ...sessionVars(request, title) });
 };
 
 exports.postRequestApprove = async (request, response, next) => {
@@ -21,58 +22,78 @@ exports.postRequestApprove = async (request, response, next) => {
         const [absenceRows] = await Absence.fetchOne(absenceId);
         if (absenceRows.length === 0) {
             return response.status(404).json({
-            success: false,
-            message: 'Solicitud no encontrada'
+                success: false,
+                message: "Solicitud no encontrada",
             });
         }
-        const [employeeRows] = await Absence.fetchOneEmployee(absenceRows[0]['absenceUserIDFK']);
+        const [employeeRows] = await Absence.fetchOneEmployee(
+            absenceRows[0]["absenceUserIDFK"]
+        );
         // TODO: CAMBIAR LA VARIABLE phoneNumber A ALGO PARECIDO A LA VARIABLE "employeeName" PUES POR AHORA
         // TODO: SÓLO UNA VARIABLE DE ENTORNO.
         const phoneNumber = process.env.NUMBER_TEST;
-        const requestName = 'ausencia';
-        const employeeName = employeeRows[0]['birthName'];
-        const statusName = 'aprobado';
+        const requestName = "ausencia";
+        const employeeName = employeeRows[0]["birthName"];
+        const statusName = "aprobado";
         let roleName;
-        if (userRole === 'Human Resources') {
-            roleName = 'Recursos humanos';
+        if (userRole === "Manager") {
+            roleName = "Recursos humanos";
             try {
-                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await sendTemplateMessage(
+                    phoneNumber,
+                    employeeName,
+                    requestName,
+                    statusName,
+                    roleName
+                );
                 await Absence.updateStatusHR(absenceId, 1);
             } catch (error) {
-                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);
+                console.error(
+                    "Error al enviar el template:",
+                    error.response ? error.response.data : error.message
+                );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || 'Error al procesar la solicitud'
+                    message: error.message || "Error al procesar la solicitud",
                 });
             }
-        } else if (userRole === 'Department Leader') {
-            roleName = 'Lider de departamento';
+        } else if (userRole === "Department Leader") {
+            roleName = "Lider de departamento";
             try {
-                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await sendTemplateMessage(
+                    phoneNumber,
+                    employeeName,
+                    requestName,
+                    statusName,
+                    roleName
+                );
                 await Absence.updateStatusLeader(absenceId, 1);
                 // await Absence.fetchDepartmentPaginated(userId, 1, 0);
             } catch (error) {
-                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);  
+                console.error(
+                    "Error al enviar el template:",
+                    error.response ? error.response.data : error.message
+                );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || 'Error al procesar la solicitud'
+                    message: error.message || "Error al procesar la solicitud",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: 'Rol no autorizado'
+                message: "Rol no autorizado",
             });
         }
         return response.status(200).json({
             success: true,
-            message: 'Solicitud aprobada exitosamente'
+            message: "Solicitud aprobada exitosamente",
         });
-        } catch (error) {
+    } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || 'Error al procesar la solicitud'
+            message: error.message || "Error al procesar la solicitud",
         });
     }
 };
@@ -85,63 +106,82 @@ exports.postRequestDeny = async (request, response, next) => {
         const [absenceRows] = await Absence.fetchOne(absenceId);
         if (absenceRows.length === 0) {
             return response.status(404).json({
-            success: false,
-            message: 'Solicitud no encontrada'
+                success: false,
+                message: "Solicitud no encontrada",
             });
         }
-        const [employeeRows] = await Absence.fetchOneEmployee(absenceRows[0]['absenceUserIDFK']);
+        const [employeeRows] = await Absence.fetchOneEmployee(
+            absenceRows[0]["absenceUserIDFK"]
+        );
         // TODO: CAMBIAR LA VARIABLE phoneNumber A ALGO PARECIDO A LA VARIABLE "employeeName" PUES POR AHORA
         // TODO: SÓLO UNA VARIABLE DE ENTORNO.
         const phoneNumber = process.env.NUMBER_TEST;
-        const requestName = 'ausencia';
-        const employeeName = employeeRows[0]['birthName'];
-        const statusName = 'denegado';
+        const requestName = "ausencia";
+        const employeeName = employeeRows[0]["birthName"];
+        const statusName = "denegado";
         let roleName;
         // En el controlador absences.controller.js
-        if (userRole === 'Human Resources') {
-            roleName = 'Recursos humanos';
+        if (userRole === "Manager") {
+            roleName = "Recursos humanos";
             try {
-                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await sendTemplateMessage(
+                    phoneNumber,
+                    employeeName,
+                    requestName,
+                    statusName,
+                    roleName
+                );
                 await Absence.updateStatusHR(absenceId, 0);
             } catch (error) {
-                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);
+                console.error(
+                    "Error al enviar el template:",
+                    error.response ? error.response.data : error.message
+                );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || 'Error al procesar la solicitud'
+                    message: error.message || "Error al procesar la solicitud",
                 });
             }
-        } else if (userRole === 'Department Leader') {
-            roleName = 'Lider de departamento';
+        } else if (userRole === "Department Leader") {
+            roleName = "Lider de departamento";
             try {
-                await sendTemplateMessage(phoneNumber, employeeName, requestName, statusName, roleName);
+                await sendTemplateMessage(
+                    phoneNumber,
+                    employeeName,
+                    requestName,
+                    statusName,
+                    roleName
+                );
                 await Absence.updateStatusLeader(absenceId, 0);
                 // await Absence.fetchDepartmentPaginated(userId, 1, 0);
             } catch (error) {
-                console.error("Error al enviar el template:", error.response ? error.response.data : error.message);  
+                console.error(
+                    "Error al enviar el template:",
+                    error.response ? error.response.data : error.message
+                );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || 'Error al procesar la solicitud'
+                    message: error.message || "Error al procesar la solicitud",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: 'Rol no autorizado'
+                message: "Rol no autorizado",
             });
         }
         return response.status(200).json({
             success: true,
-            message: 'Solicitud aprobada exitosamente'
+            message: "Solicitud aprobada exitosamente",
         });
-        } catch (error) {
+    } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || 'Error al procesar la solicitud'
+            message: error.message || "Error al procesar la solicitud",
         });
     }
 };
-
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -150,7 +190,7 @@ exports.getRequests = (request, response, next) => {
     const offset = 0;
     let fetchPromise;
     console.log(request.session);
-    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
+    if (userRole === "Manager" || userRole === "Department Leader") {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
         // SELECT * FROM user WHERE user.prioritaryDepartmentIDFK = 'cbf52319-0026-40ff-bf1e-2e48f1dc8b94';
         fetchPromise = Absence.fetchPaginated(limit, offset, userRole, userId);
@@ -161,15 +201,15 @@ exports.getRequests = (request, response, next) => {
 
     fetchPromise
         .then(([rows]) => {
-            response.render('absenceRequests', {
-                ...sessionVars(request),
+            response.render("absenceRequests", {
+                ...sessionVars(request, title),
                 absences: rows,
-                role: userRole
+                role: userRole,
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send('Error al obtener los datos.');
+            response.status(500).send("Error al obtener los datos.");
         });
 };
 
@@ -179,24 +219,29 @@ exports.getAllRequests = (request, response, next) => {
     const limit = 10;
     const offset = 0;
     let fetchPromise;
-    if (userRole === 'Human Resources' || userRole === 'Department Leader') {
+    if (userRole === "Manager" || userRole === "Department Leader") {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
-        fetchPromise = Absence.fetchAllPaginated(limit, offset, userRole, userId);
+        fetchPromise = Absence.fetchAllPaginated(
+            limit,
+            offset,
+            userRole,
+            userId
+        );
     } else {
         // Como fallback, se podrían cargar sólo las solicitudes del usuario o definir otra lógica
         fetchPromise = Absence.fetchAll(userId);
     }
     fetchPromise
         .then(([rows]) => {
-            response.render('absenceAllRequests', {
-                ...sessionVars(request),
+            response.render("absenceAllRequests", {
+                ...sessionVars(request, title),
                 absences: rows,
-                role: userRole
+                role: userRole,
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send('Error al obtener los datos.');
+            response.status(500).send("Error al obtener los datos.");
         });
 };
 
@@ -206,29 +251,37 @@ exports.getRequestsPaginated = (request, response, next) => {
     const offset = page * limit;
     const userId = request.session.userID;
     const userRole = request.session.role;
-    const showAll = request.query.all === 'true';
-    
+    const showAll = request.query.all === "true";
+
     let fetchPromise;
-    if (userRole === 'Human Resources' && showAll) {
-        fetchPromise = Absence.fetchAllPaginated(limit, offset, userRole, userId);
-    } 
-    else if (userRole === 'Department Leader' && showAll) {
-        fetchPromise = Absence.fetchAllPaginated(limit, offset, userRole, userId);
-    }
-    else {
+    if (userRole === "Manager" && showAll) {
+        fetchPromise = Absence.fetchAllPaginated(
+            limit,
+            offset,
+            userRole,
+            userId
+        );
+    } else if (userRole === "Department Leader" && showAll) {
+        fetchPromise = Absence.fetchAllPaginated(
+            limit,
+            offset,
+            userRole,
+            userId
+        );
+    } else {
         fetchPromise = Absence.fetchPaginated(limit, offset, userRole, userId);
     }
-    
+
     fetchPromise
         .then(([rows]) => {
             const absences = Array.isArray(rows) ? rows : [];
             response.status(200).json(absences);
         })
         .catch((error) => {
-            console.error('Error fetching paginated requests:', error);
-            response.status(500).json({ 
-                success: false, 
-                message: `Error al cargar las solicitudes: ${error.message}` 
+            console.error("Error fetching paginated requests:", error);
+            response.status(500).json({
+                success: false,
+                message: `Error al cargar las solicitudes: ${error.message}`,
             });
         });
 };
@@ -270,7 +323,7 @@ exports.getRoot = (request, response, next) => {
             // console.log(fieldData);
             // console.log(rows);
             response.render("absencesList", {
-                ...sessionVars(request),
+                ...sessionVars(request, title),
                 absences: rows,
             });
         })

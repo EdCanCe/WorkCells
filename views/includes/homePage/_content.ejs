@@ -1,10 +1,8 @@
-<div
-    class="mx-auto min-h-screen flex flex-col items-center justify-center"
->
+<div class="fullContainer flex flex-col centerItems !p-0">
     <!-- Sección azul con el mensaje de bienvenida -->
     <div class="w-full bg-[#003E6D] text-white text-center py-8">
-        <h1 class="text-3xl font-bold">Welcome!</h1>
-        <p class="text-xl">What’s our task today?</p>
+        <h1 class="!w-full text-center title">Welcome!</h1>
+        <p class="mt-1">What’s our task today?</p>
     </div>
 
     <!-- Contenedor de tarjetas -->
@@ -23,6 +21,7 @@
             Calendar
         </div>
         <!--Card-->
+        <% if (role === 'Manager' || role ==='Department Leader') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -33,8 +32,10 @@
                 alt="Icono"
                 class="navIcon w-12 h-12 mx-auto mb-2"
             />
-            Departments
+            <% if (role === 'Department Leader') { %> My Department <% } else {
+            %> Departments <% } %>
         </div>
+        <% } %>
         <!--Card-->
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
@@ -88,6 +89,7 @@
             OneToOne
         </div>
         <!--Card-->
+        <% if (role === 'Manager') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -101,7 +103,9 @@
 
             Faults
         </div>
+        <% } %>
         <!--Card-->
+        <% if (role === 'Manager') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -114,7 +118,9 @@
             />
             Employees
         </div>
+        <% } %>
         <!--Card-->
+        <% if (role === 'Manager') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -127,5 +133,6 @@
             />
             Reports
         </div>
+        <% } %>
     </div>
 </div>
