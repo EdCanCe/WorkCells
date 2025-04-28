@@ -195,6 +195,31 @@ exports.getTemplateHolidayModify = (request, response, next) => {
         });
 };
 
+exports.postTemplateHolidayModify = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+    const title = request.body.title;
+    const holidayDate = request.body.holidayDate;
+
+    console.log("Datos recibidos en POST:", {
+        templateHolidayID,
+        holidayDate,
+        title,
+    });
+
+    Template.updateDate(title, holidayDate, templateHolidayID)
+        .then(() => {
+            request.session.info = "Template holiday updated correctly.";
+            response.redirect(`/holiday/template/check/${templateHolidayID}`);
+        })
+        .catch((error) => {
+            console.error(error);
+            request.session.info = "Error when modifying the holiday.";
+            response.redirect(
+                `/holiday/template/check/modify/${templateHolidayID}`
+            );
+        });
+};
+
 exports.postHolidayModify = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
     const usedDate = request.body.usedDate;

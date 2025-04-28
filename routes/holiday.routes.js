@@ -37,6 +37,12 @@ router.post(
     holidayController.postHolidayModify
 );
 
+router.post(
+    "/template/check/:templateHolidayID",
+    isAuth,
+    holidayController.postTemplateHolidayModify
+);
+
 router.get("/", isAuth, holidayController.getHolidays);
 
 router.get("/template", isAuth, holidayController.getTemplateHoliday);
