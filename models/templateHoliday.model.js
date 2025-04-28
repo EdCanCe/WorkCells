@@ -80,7 +80,7 @@ module.exports = class Template {
             });
     }
 
-    static deletetemplateHoliday(templateHolidayID) {
+    static deleteTemplateHoliday(templateHolidayID) {
         const query = `DELETE FROM templateHoliday WHERE templateHolidayID = ?`;
         return db.execute(query, [templateHolidayID]);
     }
