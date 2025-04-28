@@ -79,4 +79,9 @@ module.exports = class Template {
                 throw error;
             });
     }
+
+    static deletetemplateHoliday(templateHolidayID) {
+        const query = `DELETE FROM templateHoliday WHERE templateHolidayID = ?`;
+        return db.execute(query, [templateHolidayID]);
+    }
 };
