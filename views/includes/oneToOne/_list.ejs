@@ -1,4 +1,16 @@
 <div class="fullContainer bgContainer1">
+
+    <div class="titleContainer">
+        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">List of upcoming One To One sessions</h2>
+        <% if (role === 'Manager') { %>
+            <div class="flex gap-1 centerItems">
+                <div class="flex justify-end mb-4">
+                    <a href="oneToOne/Schedule" class="btnPrimary">Schedule future session</a>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
     <% if (role == "Manager") { %>
     <div class="flex justify-center w-full">
         <div
@@ -17,9 +29,6 @@
                 placeholder="Search by name..."
                 class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
             />
-        </div>
-        <div class="p-4 rounded-md">
-            <a href="oneToOne/Schedule" class="btnPrimary">Schedule</a>
         </div>
     </div>
     <% } else {} %>
@@ -61,7 +70,7 @@
         <tbody class="tBody">`;
 
         if (sessions.length === 0) {
-            table += `<tr><td colspan="6" class="dataless">There´s no one to one sessions</td></tr>`;
+            table += `<tr><td colspan="6" class="dataless">There´s no One To One sessions</td></tr>`;
         } else {
             sessions.forEach((s) => {
                 const d = new Date(s.meetingDate);
@@ -122,7 +131,7 @@
         <tbody class="tBody">`;
 
         if (sessions.length === 0) {
-            table += `<tr><td colspan="6" class="dataless">There´s no one to one meetings</td></tr>`;
+            table += `<tr><td colspan="6" class="dataless">There´s no One To One meetings</td></tr>`;
         } else {
             sessions.forEach((s) => {
                 const d = new Date(s.meetingDate);

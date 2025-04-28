@@ -1,17 +1,12 @@
 <div class="fullContainer bgContainer1">
-    <aside class="w-64"></aside>
-    <div class="p-6">
-        <!-- Header -->
-        <div
-            class="bg-neutral-700/25 shadow-lg rounded-lg mb-6 p-6 flex justify-between items-center"
-        >
-            <h2 class="text-2xl font-semibold">Vacation Requests</h2>
-            <div class="flex space-x-4">
-                <a href="/vacation/add" class="btnPrimary">New request</a>
+    <div>
+
+        <div class="titleContainer">
+            <h2 class="title">My vacation requests</h2>
+            <div class="flex gap-3 centerItems">
+                <a href="/absence/add" class="btnPrimary">Add vacation request</a>
                 <% if (role === 'Department Leader' || role === 'Manager') { %>
-                <a href="/vacation/requests" class="btnPrimary"
-                    >Employees requests</a
-                >
+                    <a href="/vacation/requests" class="btnPrimary">Pending requests</a>
                 <% } %>
             </div>
         </div>

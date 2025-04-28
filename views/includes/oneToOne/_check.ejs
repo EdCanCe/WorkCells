@@ -1,10 +1,10 @@
 <div class="primaryContainer bgContainer1">
+
     <% if(isFilled == '0') { %>
     <!-- No hay datos aún -->
-    <h1 class="font-bold text-3xl text-center">
-        This session hasn't been filled
-    </h1>
-
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Empty One To One Session</h2>
+    </div>
     <!-- Botón para redirigir al meet -->
     <% if (sessionData.meetingLink) { %>
     <a
@@ -25,12 +25,10 @@
     <% } %> <% } else { %>
     <!-- Ya tiene los datos llenos -->
 
-    <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
-
     <!-- Muestra los datos de la sesión One On One -->
-    <h3 class="text-2xl font-semibold text-center">
-        <%= name %> | <%= meetingDate %>
-    </h3>
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1"><%= name %> | <%= meetingDate %></h2>
+    </div>
 
     <!-- Imprime las preguntas y sus respuestas -->
     <% answers.forEach((answer) => { %>

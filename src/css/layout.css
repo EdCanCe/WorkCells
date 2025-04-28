@@ -3,7 +3,7 @@
 }
 
 .primaryContainer {
-    @apply min-w-[840px] max-w-[840px] min-h-full m-auto p-6;
+    @apply w-full max-w-[840px] min-h-full m-auto p-6;
 }
 
 .fullContainer {
@@ -45,4 +45,12 @@
 /*Etiqueta: <td>*/
 .tContent{
     @apply px-6 py-4 text-center
+}
+
+.titleContainer {
+    @apply flex flex-row justify-between items-center align-middle mb-6 h-10;
+}
+
+.btnSize {
+    @apply max-w-0 opacity-0;
 }

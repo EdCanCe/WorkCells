@@ -1,3 +1,4 @@
+const { request } = require("http");
 const Usuario = require("../models/user.model");
 const passport = require("passport");
 require("../util/google-auth.js");
@@ -13,7 +14,7 @@ exports.getGoogleCallback = passport.authenticate("google",
 exports.getGoogleRedirect = (request, response, next) => {
     console.log(request.user);
     const email = request.user.emails[0].value;
-
+    
     Usuario.fetchOne(email)
         .then(([rows]) => {
             if (rows.length === 0) {

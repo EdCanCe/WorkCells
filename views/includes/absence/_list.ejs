@@ -1,16 +1,17 @@
 <div class="fullContainer bgContainer1">
-    <div class="">
-        <div class="px-6 py-4 flex justify-end">
-            <% if (role === 'Department Leader' || role === 'Manager') {%>
-            <a href="/absence/requests" class="btnPrimary mr-4"
-                >Employees requests</a
-            >
-            <% } %>
-            <a href="/absence/add" class="btnPrimary mr-4">Add</a>
+    <div>
+
+        <div class="titleContainer">
+            <h2 class="title">My Absences</h2>
+            <div class="flex gap-3 centerItems">
+                <a href="/absence/add" class="btnPrimary">Add absence</a>
+                <% if (role === 'Department Leader' || role === 'Manager') { %>
+                    <a href="/absence/requests" class="btnPrimary">Pending requests</a>
+                <% } %>
+            </div>
         </div>
 
-        <div>
-            <h2 class="text-2xl font-bold mb-4">My Absences</h2>
+        <div>            
             <div id="tablaAbsences"></div>
 
             <div class="flex justify-center gap-3 mt-6">

@@ -1,7 +1,12 @@
 <div class="fullContainer bgContainer1">
-    <h1 class="shadow-md rounded-lg p-3 text-3xl font-semibold mb-4">
-        List of all Employees
-    </h1>
+
+    <div class="titleContainer">
+        <h2 class="title">List of all employees</h2>
+        <div class="flex gap-1 centerItems">
+            <a href="/employee/add" class="btnPrimary">Add employee</a>
+        </div>
+    </div>
+
 
     <div class="flex justify-center w-full">
         <div
@@ -28,11 +33,6 @@
             </select>
             <span id="employeeCount" class="btnPrimary" disabled>
             </span>
-        </div>
-        <div class="p-4 rounded-md">
-            <a href="/employee/add" class="btnPrimary justeify-right"
-                >Add New Employee</a
-            >
         </div>
     </div>
     <div

@@ -1,8 +1,7 @@
 <div class="fullContainer">
-    <!-- Título del departamento -->
-    <h2 class="text-4xl font-bold mb-8 text-center">
-        Department: <%= department.title %>
-    </h2>
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1"><%= department.enterprise %>: <%= department.title %></h2>
+    </div>
 
     <% if (role == "Manager") { %>
     <div class="flex justify-center w-full">

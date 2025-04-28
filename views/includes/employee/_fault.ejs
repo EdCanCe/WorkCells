@@ -1,120 +1,109 @@
 <div class="fullContainer">
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-lg rounded-lg mb-6">
-            <div class="p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-semibold">Faults</h2>
-                <% if (faults.length === 0) { %>
-                <p class="block textSuccess">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } else if(faults.length === 1) { %>
-                <p class="block textWarning">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } else if(faults.length === 2) { %>
-                <p class="block text-orange-600">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } else { %>
-                <p class="block textDanger">
-                    Number of faults: <%= faults.length %>
-                </p>
-                <% } %>
-            </div>
-            <div class="p-6">
-                <div class="content has-text-centered box">
-                    <table class="tContainer">
-                        <thead class="tHead">
-                            <tr>
-                                <th class="hRow">Full name</th>
-                                <th class="hRow">Reason</th>
-                                <th class="hRow">Done date</th>
-                                <th class="hRow">Evidence</th>
-                                <% if (role == 'Manager') { %>
-                                <th class="hRow">Modify</th>
-                                <th class="hRow">Delete</th>
-                                <% } %>
-                            </tr>
-                        </thead>
-                        <% if(faults.length > 0) { let i = 0;%>
-                        <tbody class="tBody">
-                            <% faults.forEach(f => { i++; %>
-                            <tr class="tRow">
-                                <td class="tContent">
-                                    <%= f.birthName %> <%= f.surname %>
-                                </td>
-                                <td class="tContent"><%= f.summary %></td>
-                                <td class="tContent">
-                                    <%= new
-                                    Date(f.doneDate).toLocaleDateString('es-MX')
-                                    %>
-                                </td>
-                                <td class="tContent">
-                                    <% if (f.mediaLink) { %>
-                                    <a
-                                        target="_blank"
-                                        href="/uploads/fault/<%= encodeURIComponent(f.mediaLink) %>"
-                                        class="text-blue-500"
-                                    >
-                                        View Evidence
-                                    </a>
-                                    <% } else { %> No evidence <% } %>
-                                </td>
-                                <% if (role === 'Manager') { %>
-                                <td class="tContent">
-                                    <a
-                                        class="btnPrimary"
-                                        href="/fault/modify/<%= f.faultID %>"
-                                        >Update</a
-                                    >
-                                </td>
-                                <td class="tContent">
-                                    <button
-                                        id="deleteIt<%= i %>"
-                                        class="deleteFunc btnDanger"
-                                    >
-                                        Delete
-                                    </button>
-                                    <form
-                                        id="form<%= i %>"
-                                        class="hidden"
-                                        id="form"
-                                        action="/fault/delete"
-                                        method="POST"
-                                    >
-                                        <input
-                                            type="hidden"
-                                            name="_csrf"
-                                            value="<%= csrfToken %>"
-                                        />
 
-                                        <input
-                                            type="hidden"
-                                            name="faultID"
-                                            value="<%= f.faultID %>"
-                                        />
+    <div class="titleContainer">
+        <h2 class="title">Employee's faults</h2>
+        <div class="flex gap-1 centerItems">
+            <% if (faults.length === 0) { %>
+                <p class="block textSuccess">Number of faults: <%= faults.length %></p>
+            <% } else if(faults.length === 1) { %>
+                <p class="block textWarning">Number of faults: <%= faults.length %></p>
+            <% } else if(faults.length === 2) { %>
+                <p class="block text-orange-600">Number of faults: <%= faults.length %></p>
+            <% } else { %>
+                <p class="block textDanger">Number of faults: <%= faults.length %></p>
+            <% } %>
+        </div>
+    </div>
 
-                                        <input
-                                            type="hidden"
-                                            name="userID"
-                                            value="<%= f.faultUserIDFK %>"
-                                        />
-                                    </form>
-                                </td>
-                                <% } %>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                        <% } else { %>
-                        <tr>
-                            <td colspan="6" class="dataless">
-                                There are no faults
-                            </td>
-                        </tr>
+    <div>
+        <div class="content has-text-centered box">
+            <table class="tContainer">
+                <thead class="tHead">
+                    <tr>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Reason</th>
+                        <th class="hRow">Done date</th>
+                        <th class="hRow">Evidence</th>
+                        <% if (role == 'Manager') { %>
+                        <th class="hRow">Modify</th>
+                        <th class="hRow">Delete</th>
                         <% } %>
-                    </table>
-                </div>
-            </div>
+                    </tr>
+                </thead>
+                <% if(faults.length > 0) { let i = 0;%>
+                <tbody class="tBody">
+                    <% faults.forEach(f => { i++; %>
+                    <tr class="tRow">
+                        <td class="tContent">
+                            <%= f.birthName %> <%= f.surname %>
+                        </td>
+                        <td class="tContent"><%= f.summary %></td>
+                        <td class="tContent">
+                            <%= new Date(f.doneDate).toLocaleDateString('es-MX')
+                            %>
+                        </td>
+                        <td class="tContent">
+                            <% if (f.mediaLink) { %>
+                            <a
+                                target="_blank"
+                                href="/uploads/fault/<%= encodeURIComponent(f.mediaLink) %>"
+                                class="text-blue-500"
+                            >
+                                View Evidence
+                            </a>
+                            <% } else { %> No evidence <% } %>
+                        </td>
+                        <% if (role === 'Manager') { %>
+                        <td class="tContent">
+                            <a
+                                class="btnPrimary"
+                                href="/fault/modify/<%= f.faultID %>"
+                                >Update</a
+                            >
+                        </td>
+                        <td class="tContent">
+                            <button
+                                id="deleteIt<%= i %>"
+                                class="deleteFunc btnDanger"
+                            >
+                                Delete
+                            </button>
+                            <form
+                                id="form<%= i %>"
+                                class="hidden"
+                                id="form"
+                                action="/fault/delete"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="_csrf"
+                                    value="<%= csrfToken %>"
+                                />
+
+                                <input
+                                    type="hidden"
+                                    name="faultID"
+                                    value="<%= f.faultID %>"
+                                />
+
+                                <input
+                                    type="hidden"
+                                    name="userID"
+                                    value="<%= f.faultUserIDFK %>"
+                                />
+                            </form>
+                        </td>
+                        <% } %>
+                    </tr>
+                    <% }) %>
+                </tbody>
+                <% } else { %>
+                <tr>
+                    <td colspan="6" class="dataless">There are no faults</td>
+                </tr>
+                <% } %>
+            </table>
         </div>
     </div>
 </div>

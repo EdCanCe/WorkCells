@@ -1,5 +1,11 @@
 <div class="primaryContainer bgContainer1">
-    <h2 class="text-3xl font-semibold">All Departments</h2>
+
+    <div class="titleContainer">
+        <h2 class="title">All Departments</h2>
+        <div class="flex gap-1 centerItems">
+            <a class="btnPrimary center m-2" href="/department/add">Add department</a>
+        </div>
+    </div>
 
     <% if (role == 'Manager') { %>
     <div class="flex justify-center w-full">
@@ -19,11 +25,6 @@
                 placeholder="Search by name..."
                 class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
             />
-        </div>
-        <div class="p-2 rounded-md text-center">
-            <a class="btnPrimary center m-2" href="/department/add"
-                >Add department</a
-            >
         </div>
     </div>
     <% } %>

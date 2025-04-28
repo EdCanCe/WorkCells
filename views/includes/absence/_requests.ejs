@@ -1,14 +1,14 @@
 <div class="fullContainer bgContainer1">
     <div>
         <div>
-            <div class="flex justify-end mb-4">
-                <a href="/absence/requests/all" class="btnPrimary">
-                    All requests
-                </a>
+
+            <div class="titleContainer">
+                <h2 class="title">Absences requests</h2>
+                <div class="flex gap-1 centerItems">
+                    <a href="/absence/requests/all" class="btnPrimary">All requests</a>
+                </div>
             </div>
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">Absences requests</h2>
-            </div>
+
             <div
                 class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
             >
@@ -51,23 +51,12 @@
                                 <% if (ab.mediaLink) { %>
                                 <a
                                     target="_blank"
-                                    href="/uploads/absence/<%= encodeURIComponent(
-                                            ab.mediaLink) %>"
-<<<<<<< HEAD
-                                        class="text-blue-500"
-                                    >
-                                        View Evidence
-                                    </a>
-                                    <% } else { %>
-                                        No evidence
-                                    <% } %>   
-=======
+                                    href="/uploads/absence/<%= encodeURIComponent(ab.mediaLink) %>"
                                     class="text-blue-500"
                                 >
                                     Check Evidence
                                 </a>
                                 <% } else { %> No evidence <% } %>
->>>>>>> slumbery/programacion
                             </td>
                             <td class="tContent">
                                 <% if (role === "Manager") { %> <% if
@@ -102,8 +91,7 @@
                                         Deny
                                     </button>
                                 </div>
-                                <% } %> <% } else if (role === "Department
-                                Leader") { %> <% if (ab.leaderStatus === 1) { %>
+                                <% } %> <% } else if (role === "Department Leader") { %> <% if (ab.leaderStatus === 1) { %>
                                 <div
                                     class="textSuccess text-center font-semibold"
                                 >
@@ -319,9 +307,6 @@
                 <td class="tContent">${totalDays}</td>
                 <td class="tContent">${absence.reason}</td>
                 <td class="tContent">
-<<<<<<< HEAD
-                    ${ absence.mediaLink ? `<a target="blank" href="/uploads/absence/${ encodeURIComponent(absence.mediaLink) }" class="text-blue-500">View evidence</a>` : 'No evidence' }
-=======
                     ${
                         absence.mediaLink
                             ? `<a target="blank" href="/uploads/absence/${encodeURIComponent(
@@ -329,7 +314,6 @@
                               )}" class="text-blue-500">Check evidence</a>`
                             : "No evidence"
                     }
->>>>>>> slumbery/programacion
                 </td>
                 <td class="tContent">${actionCell}</td>
             </tr>

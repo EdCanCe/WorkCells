@@ -1,10 +1,17 @@
 <div class="fullContainer bgContainer1">
-    <div class="center !w-full">
+
+    <div class="titleContainer">
+        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">List of all holidays</h2>
         <% if (role === 'Manager') { %>
-        <div class="flex justify-end mb-4">
-            <a href="/holiday/add" class="btnPrimary"> Add </a>
-        </div>
+            <div class="flex gap-1 centerItems">
+                <div class="flex justify-end mb-4">
+                    <a href="/holiday/add" class="btnPrimary">Add used holiday</a>
+                </div>
+            </div>
         <% } %>
+    </div>
+
+    <div class="center !w-full">
         <div id="holidaysTable"></div>
 
         <div class="mt-6 flex justify-center gap-3">

@@ -1,19 +1,19 @@
 <div class="primaryContainer bgContainer1">
-    <div>
-        <h2 class="text-2xl font-semibold mb-4">Holiday Details</h2>
-        <div class="mt-4 space-y-2 text-gray-200">
-            <p>
-                <strong class="text-neutral-300">Title:</strong>
-                <%= holiday.title %>
-            </p>
-            <p>
-                <strong class="text-neutral-300">Date:</strong>
-                <%= new Date(holiday.usedDate)
-                .toLocaleDateString('es-MX', { weekday: 'long', year:
-                'numeric', month: 'long', day: 'numeric' }) %>
-            </p>
-        </div>
+
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Used holiday details</h2>
     </div>
+
+    <p>
+        <strong class="text-neutral-300">Title:</strong>
+        <%= holiday.title %>
+    </p>
+    <p>
+        <strong class="text-neutral-300">Date:</strong>
+        <%= new Date(holiday.usedDate)
+        .toLocaleDateString('es-MX', { weekday: 'long', year:
+        'numeric', month: 'long', day: 'numeric' }) %>
+    </p>
 
     <div class="flex space-x-4 justify-center mt-6">
         <!-- Modificar feriado -->
