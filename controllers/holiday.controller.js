@@ -52,7 +52,22 @@ exports.postHolidaysAdd = (request, response, next) => {
         });
 };
 
-exports.postTemplateHolidayAdd = (request, response, next) => {};
+exports.postTemplateHolidayAdd = (request, response, next) => {
+    const template = new Template(request.body.holidayDate, request.body.title);
+    console.log(request.body);
+    template
+        .save()
+        .then(() => {
+            request.session.info = "Holiday registered correctly.";
+            response.redirect("/holiday");
+        })
+        .catch((error) => {
+            console.error(error);
+            request.session.info =
+                error.message || "Error when registering a holiday.";
+            response.redirect("/holiday/add/template");
+        });
+};
 
 exports.getHoliday = (request, response, next) => {
     response.render("holidayCheck", {
