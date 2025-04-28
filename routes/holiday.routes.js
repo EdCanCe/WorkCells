@@ -33,6 +33,8 @@ router.post(
 
 router.get("/", isAuth, holidayController.getHolidays);
 
+router.get("/template", isAuth, holidayController.getTemplateHoliday);
+
 router.get("/search", isAuth, holidayController.listPaginated);
 
 router.get("/search/template", isAuth, holidayController.listTemplatePaginated);

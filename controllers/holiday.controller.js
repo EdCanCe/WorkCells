@@ -11,6 +11,12 @@ exports.getHolidays = (request, response, next) => {
     });
 };
 
+exports.getTemplateHoliday = (request, response, next) => {
+    response.render("templateHolidayList", {
+        ...sessionVars(request, title),
+    });
+};
+
 exports.getCheckTemplateHoliday = (request, response, next) => {
     response.render("templateHoliday", {
         ...sessionVars(request, title),
