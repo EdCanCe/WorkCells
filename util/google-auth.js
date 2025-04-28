@@ -8,7 +8,7 @@ passport.use(
             clientID: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             // Se agrega /auth/google antes de la ruta de inicio
-            callbackURL: "http://tec1.nuclea.solutions/google/callback",
+            callbackURL: "https://tec1.nuclea.solutions/google/callback",
             passReqToCallback: true,
         },
         async (request, accessToken, refreshToken, profile, cb) => {
