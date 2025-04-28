@@ -1,5 +1,6 @@
 const { error } = require("console");
 const Holiday = require("../models/holiday.model");
+const Template = require("../models/templateHoliday.model");
 const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
 const title = "Holidays";
@@ -25,6 +26,12 @@ exports.getHolidaysAdd = (request, response, next) => {
     });
 };
 
+exports.getTemplateHolidayAdd = (request, response, next) => {
+    response.render("templateHolidayAdd", {
+        ...sessionVars(request, title),
+    });
+};
+
 exports.postHolidaysAdd = (request, response, next) => {
     const holiday = new Holiday(
         request.body.usedDate,
@@ -44,6 +51,8 @@ exports.postHolidaysAdd = (request, response, next) => {
             response.redirect("/holiday/add");
         });
 };
+
+exports.postTemplateHolidayAdd = (request, response, next) => {};
 
 exports.getHoliday = (request, response, next) => {
     response.render("holidayCheck", {

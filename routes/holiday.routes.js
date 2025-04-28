@@ -37,7 +37,16 @@ router.get("/search", isAuth, holidayController.listPaginated);
 
 router.get("/add", isAuth, holidayPrivilege, holidayController.getHolidaysAdd);
 
+router.get(
+    "/add/template",
+    isAuth,
+    holidayController,
+    holidayController.getTemplateHolidayAdd
+);
+
 router.post("/add", isAuth, holidayController.postHolidaysAdd);
+
+router.post("/add/template", isAuth, holidayController.postTemplateHolidayAdd);
 
 router.get("/used", isAuth, holidayController.getUsedHoliday); // Ver feriados usados
 
