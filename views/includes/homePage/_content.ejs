@@ -1,6 +1,4 @@
-<div
-    class="fullContainer flex flex-col centerItems !p-0"
->
+<div class="fullContainer flex flex-col centerItems !p-0">
     <!-- Sección azul con el mensaje de bienvenida -->
     <div class="w-full bg-[#003E6D] text-white text-center py-8">
         <h1 class="!w-full text-center title">Welcome!</h1>
@@ -23,7 +21,7 @@
             Calendar
         </div>
         <!--Card-->
-        <% if (role === 'Manager') { %>
+        <% if (role === 'Manager' || role ==='Department Leader') { %>
         <div
             class="bg-neutral-700/25 p-4 rounded-lg shadow-md text-center w-40"
             role="button"
@@ -34,7 +32,8 @@
                 alt="Icono"
                 class="navIcon w-12 h-12 mx-auto mb-2"
             />
-            Departments
+            <% if (role === 'Department Leader') { %> My Department <% } else {
+            %> Departments <% } %>
         </div>
         <% } %>
         <!--Card-->

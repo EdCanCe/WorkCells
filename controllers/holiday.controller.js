@@ -1,11 +1,18 @@
 const { error } = require("console");
 const Holiday = require("../models/holiday.model");
+const Template = require("../models/templateHoliday.model");
 const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
-const title = 'Holidays';
+const title = "Holidays";
 
 exports.getHolidays = (request, response, next) => {
     response.render("usedHoliday", {
+        ...sessionVars(request, title),
+    });
+};
+
+exports.getCheckTemplateHoliday = (request, response, next) => {
+    response.render("templateHoliday", {
         ...sessionVars(request, title),
     });
 };
@@ -16,6 +23,12 @@ exports.getHolidaysAdd = (request, response, next) => {
             ...sessionVars(request, title),
             holidays: rows,
         });
+    });
+};
+
+exports.getTemplateHolidayAdd = (request, response, next) => {
+    response.render("templateHolidayAdd", {
+        ...sessionVars(request, title),
     });
 };
 
@@ -36,6 +49,23 @@ exports.postHolidaysAdd = (request, response, next) => {
             request.session.info =
                 error.message || "Error al registrar dia feriado.";
             response.redirect("/holiday/add");
+        });
+};
+
+exports.postTemplateHolidayAdd = (request, response, next) => {
+    const template = new Template(request.body.holidayDate, request.body.title);
+    console.log(request.body);
+    template
+        .save()
+        .then(() => {
+            request.session.info = "Holiday registered correctly.";
+            response.redirect("/holiday");
+        })
+        .catch((error) => {
+            console.error(error);
+            request.session.info =
+                error.message || "Error when registering a holiday.";
+            response.redirect("/holiday/add/template");
         });
 };
 
