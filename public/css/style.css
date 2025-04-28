@@ -520,9 +520,6 @@
   .flex-grow {
     flex-grow: 1;
   }
-  .table-auto {
-    table-layout: auto;
-  }
   .scale-75 {
     --tw-scale-x: 75%;
     --tw-scale-y: 75%;
@@ -715,10 +712,6 @@
   .border-r-4 {
     border-right-style: var(--tw-border-style);
     border-right-width: 4px;
-  }
-  .border-b {
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 1px;
   }
   .border-b-1 {
     border-bottom-style: var(--tw-border-style);
@@ -1023,13 +1016,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-neutral-700);
-      }
-    }
-  }
-  .hover\:bg-neutral-800 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-neutral-800);
       }
     }
   }

@@ -196,6 +196,8 @@ exports.postModify = (request, response, next) => {
             let dateOfDeactivation = null;
             if (workStatus === "0") {
                 dateOfDeactivation = new Date();
+                console.log(dateOfDeactivation);
+                return WorkStatus.updateEndDate(userID, dateOfDeactivation);
             }
 
             if (dateOfDeactivation) {
