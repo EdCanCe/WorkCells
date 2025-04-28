@@ -26,10 +26,10 @@ exports.getCheckTemplateHoliday = (request, response, next) => {
                 return response.status(404).send("Template Holiday not found.");
             }
 
-            const template = rows[0];
-            response.render("checkTemplateHoliday", {
+            const holiday = rows[0];
+            response.render("templateHolidayCheck", {
                 ...sessionVars(request, title),
-                template,
+                holiday,
                 csrfToken: request.csrfToken(),
             });
         })

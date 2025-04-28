@@ -1,0 +1,104 @@
+<script>
+    addBackButton("/holiday/template");
+</script>
+<div class="primaryContainer bgContainer1">
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Template Holiday details</h2>
+    </div>
+
+    <p>
+        <span class="bold">Title:</span>
+        <%= holiday.title %>
+    </p>
+    <p>
+        <span class="bold">Date:</span>
+        <%= new Date(holiday.holidayDate) .toLocaleDateString('es-MX', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+    </p>
+
+    <div class="endButtonsContainer">
+        <!-- Modificar feriado -->
+        <a
+            href="/holiday/template/check/modify/<%= holiday.templateHolidayID %>"
+            class="btnPrimary"
+        >
+            Update Holiday
+        </a>
+
+        <!-- Eliminar feriado -->
+        <a
+            href="/holiday/template/check/<%= holiday.templateHolidayID %>"
+            class="btnDanger"
+            id="btnEliminar"
+            data-id="<%= holiday.templateHolidayID %>"
+        >
+            Delete Holiday
+        </a>
+    </div>
+</div>
+
+<meta name="csrf-token" content="<%= csrfToken %>" />
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnEliminar = document.getElementById("btnEliminar");
+        if (!btnEliminar) return;
+
+        btnEliminar.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const usedHolidayID = btnEliminar.dataset.id;
+
+            const result = await Swal.fire({
+                title: "Are you sure you want to delete it?",
+                text: "This action cannot be undone!",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    popup: "sweetAlerts normal",
+                },
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it",
+                cancelButtonText: "Cancel",
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const csrfToken = document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content");
+
+                    const res = await fetch(
+                        `/holiday/check/delete/${usedHolidayID}`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "CSRF-Token": csrfToken,
+                            },
+                            body: JSON.stringify({ id: usedHolidayID }),
+                        }
+                    );
+
+                    if (!res.ok) throw new Error("There was an error");
+
+                    await Swal.fire({
+                        title: "Deleted",
+                        text: "The holiday was deleted correctly.",
+                        customClass: {
+                            popup: "sweetAlerts normal",
+                        },
+                    });
+                    // Puedes redirigir de vuelta al listado:
+                    window.location.href = "/holiday/used";
+                } catch (err) {
+                    await Swal.fire({
+                        title: "Error",
+                        text: "The holiday couldn't be deleted.",
+                        customClass: {
+                            popup: "sweetAlerts normal",
+                        },
+                    });
+                }
+            }
+        });
+    });
+</script>
