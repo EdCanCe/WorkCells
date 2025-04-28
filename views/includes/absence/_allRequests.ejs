@@ -15,7 +15,7 @@
                 </div>
                 <% } else { %>
                 <table id="absences-table" class="tContainer">
-                    <thead>
+                    <thead class="tHead">
                         <tr>
                             <th class="hRow">Full name</th>
                             <th class="hRow">Reason</th>
@@ -42,7 +42,7 @@
                                 <% } %>
                             </td>
                             <% } else if (role === "Manager") { %>
-                            <td class="tContent text-center">
+                            <td class="tContent">
                                 <% if (absence.hrStatus === 1) { %>
                                     <div class="textSuccess text-center font-semibold">Approved</div>
                                 <% } else if (absence.hrStatus === 0) { %>
