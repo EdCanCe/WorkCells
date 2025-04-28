@@ -68,8 +68,11 @@ Para poder obtener la llave que permita el funcionamiento de esta API se tienen 
 1. Una vez configurados, ahora tenemos que crear nuestra App desde Developer Meta.
 1. Seleccionamos la opción de WhatsApp.
 1. Configuramos un número de prueba.
+    ![Configuración de número de pruebas](WhatsApp-01.png)
 1. Ahora, en Business Meta, en el panel principal, configuramos una plantilla de mensaje para enviar por WhatsApp.
-1. En esta parte, también configuramos y guardamos nuestro token permanente. _(Guardar el token, ya que posteriormente se ingresará al archivo `.env`)_
+    ![Configuración de plantilla de mensaje](WhatsApp-02.png)
+1. En esta parte, también configuramos y guardamos nuestro token permanente. Para esto, nos debemos de ir a la configuración de la empresa > Usuarios del Sistema > Generar Token. _(Guardar el token, ya que posteriormente se ingresará al archivo `.env`)_
+    ![Configuración de plantilla de mensaje](WhatsApp-03.png)
 
 En la aplicación actualmente sólo funciona con un número de prueba, independientemente del empleado; siempre se manda al mismo número. Esto ya que para poder mandar a más números, se necesita agregar un método de pago dentro de Business Meta.
 
