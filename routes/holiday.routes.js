@@ -32,6 +32,12 @@ router.post(
 );
 
 router.post(
+    "/template/check/delete/:templateHolidayID",
+    isAuth,
+    holidayController.postTemplateHolidayDelete
+);
+
+router.post(
     "/check/:usedHolidayID",
     isAuth,
     holidayController.postHolidayModify
