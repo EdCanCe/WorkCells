@@ -10,127 +10,114 @@
                 </div>
             </div>
 
-            <div
-                class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow"
-            >
-                <table class="tableContainer" id="absences-table">
-                    <thead class="tHead">
-                        <tr>
-                            <th class="hRow">Full name</th>
-                            <th class="hRow">Role</th>
-                            <th class="hRow">Start date</th>
-                            <th class="hRow">End date</th>
-                            <th class="hRow">Duration</th>
-                            <th class="hRow">Reason</th>
-                            <th class="hRow">Evidence</th>
-                            <th class="hRow">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="tbody">
-                        <% for (let ab of absences) { %>
-                        <tr class="tRow">
-                            <td class="tContent">
-                                <%= ab.birthName + ' ' + ab.surname %>
-                            </td>
-                            <td class="tContent"><%= ab.title %></td>
-                            <td class="tContent">
-                                <%= new
-                                Date(ab.startDate).toLocaleDateString('es-MX')
-                                %>
-                            </td>
-                            <td class="tContent">
-                                <%= new
-                                Date(ab.endDate).toLocaleDateString('es-MX') %>
-                            </td>
-                            <td
-                                class="tContent total-days"
-                                data-start-date="<%= ab.startDate %>"
-                                data-end-date="<%= ab.endDate %>"
-                            ></td>
-                            <td class="tContent"><%= ab.reason %></td>
-                            <td class="tContent">
-                                <% if (ab.mediaLink) { %>
-                                <a
-                                    target="_blank"
-                                    href="/uploads/absence/<%= encodeURIComponent(ab.mediaLink) %>"
-                                    class="text-blue-500"
+            <table class="tableContainer" id="absences-table">
+                <thead class="tHead">
+                    <tr>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Role</th>
+                        <th class="hRow">Start date</th>
+                        <th class="hRow">End date</th>
+                        <th class="hRow">Duration</th>
+                        <th class="hRow">Reason</th>
+                        <th class="hRow">Evidence</th>
+                        <th class="hRow">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="tBody">
+                    <% for (let ab of absences) { %>
+                    <tr class="tRow">
+                        <td class="tContent">
+                            <%= ab.birthName + ' ' + ab.surname %>
+                        </td>
+                        <td class="tContent"><%= ab.title %></td>
+                        <td class="tContent">
+                            <%= new
+                            Date(ab.startDate).toLocaleDateString('es-MX') %>
+                        </td>
+                        <td class="tContent">
+                            <%= new Date(ab.endDate).toLocaleDateString('es-MX')
+                            %>
+                        </td>
+                        <td
+                            class="tContent total-days"
+                            data-start-date="<%= ab.startDate %>"
+                            data-end-date="<%= ab.endDate %>"
+                        ></td>
+                        <td class="tContent"><%= ab.reason %></td>
+                        <td class="tContent">
+                            <% if (ab.mediaLink) { %>
+                            <a
+                                target="_blank"
+                                href="/uploads/absence/<%= encodeURIComponent(ab.mediaLink) %>"
+                                class="text-blue-500"
+                            >
+                                Check Evidence
+                            </a>
+                            <% } else { %> No evidence <% } %>
+                        </td>
+                        <td class="tContent">
+                            <% if (role === "Manager") { %> <% if (ab.hrStatus
+                            === 1) { %>
+                            <div class="textSuccess text-center font-semibold">
+                                Approved
+                            </div>
+                            <% } else if (ab.hrStatus === 0) { %>
+                            <div class="textDanger text-center font-semibold">
+                                Denied
+                            </div>
+                            <% } else { %>
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                            >
+                                <button
+                                    class="btnSuccess approve-btn"
+                                    data-url="/absence/requests/approve/<%= ab.absenceID %>"
+                                    data-csrf="<%= csrfToken %>"
                                 >
-                                    View Evidence
-                                </a>
-                                <% } else { %> No evidence <% } %>
-                            </td>
-                            <td class="tContent">
-                                <% if (role === "Manager") { %> <% if
-                                (ab.hrStatus === 1) { %>
-                                <div
-                                    class="textSuccess text-center font-semibold"
+                                    Approve
+                                </button>
+                                <button
+                                    class="btnDanger deny-btn"
+                                    data-url="/absence/requests/deny/<%= ab.absenceID %>"
+                                    data-csrf="<%= csrfToken %>"
                                 >
-                                    Approved
-                                </div>
-                                <% } else if (ab.hrStatus === 0) { %>
-                                <div
-                                    class="textDanger text-center font-semibold"
+                                    Deny
+                                </button>
+                            </div>
+                            <% } %> <% } else if (role === "Department Leader")
+                            { %> <% if (ab.leaderStatus === 1) { %>
+                            <div class="textSuccess text-center font-semibold">
+                                Approved
+                            </div>
+                            <% } else if (ab.leaderStatus === 0) { %>
+                            <div class="textDanger text-center font-semibold">
+                                Denied
+                            </div>
+                            <% } else if (ab.leaderStatus === 2) { %>
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                            >
+                                <button
+                                    class="btnSuccess approve-btn"
+                                    data-url="/absence/requests/approve/<%= ab.absenceID %>"
+                                    data-csrf="<%= csrfToken %>"
                                 >
-                                    Denied
-                                </div>
-                                <% } else { %>
-                                <div
-                                    class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
+                                    Approve
+                                </button>
+                                <button
+                                    class="btnDanger deny-btn"
+                                    data-url="/absence/requests/deny/<%= ab.absenceID %>"
+                                    data-csrf="<%= csrfToken %>"
                                 >
-                                    <button
-                                        class="btnSuccess approve-btn"
-                                        data-url="/absence/requests/approve/<%= ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Approve
-                                    </button>
-                                    <button
-                                        class="btnDanger deny-btn"
-                                        data-url="/absence/requests/deny/<%= ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Deny
-                                    </button>
-                                </div>
-                                <% } %> <% } else if (role === "Department
-                                Leader") { %> <% if (ab.leaderStatus === 1) { %>
-                                <div
-                                    class="textSuccess text-center font-semibold"
-                                >
-                                    Approved
-                                </div>
-                                <% } else if (ab.leaderStatus === 0) { %>
-                                <div
-                                    class="textDanger text-center font-semibold"
-                                >
-                                    Denied
-                                </div>
-                                <% } else if (ab.leaderStatus === 2) { %>
-                                <div
-                                    class="flex flex-col sm:flex-row sm:items-center sm:gap-4"
-                                >
-                                    <button
-                                        class="btnSuccess approve-btn"
-                                        data-url="/absence/requests/approve/<%= ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Approve
-                                    </button>
-                                    <button
-                                        class="btnDanger deny-btn"
-                                        data-url="/absence/requests/deny/<%= ab.absenceID %>"
-                                        data-csrf="<%= csrfToken %>"
-                                    >
-                                        Deny
-                                    </button>
-                                </div>
-                                <% } %> <% } %>
-                            </td>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
+                                    Deny
+                                </button>
+                            </div>
+                            <% } %> <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="pagination-controls mt-4 mb-4 gap-3 flex justify-center">
@@ -292,7 +279,7 @@
             }
 
             const row = document.createElement("tr");
-            row.className = "border-b hover:bg-neutral-800";
+            row.className = "tRow";
 
             row.innerHTML = `
             <tr class="tRow">

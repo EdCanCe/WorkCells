@@ -1,70 +1,68 @@
 <div class="fullContainer bgContainer1">
     <div>
         <div class="titleContainer">
-            <h2 class="title">Absences requests</h2>
+            <h2 class="title">Vacations requests</h2>
             <div class="flex gap-1 centerItems">
                 <a href="/vacation/requests/all" class="btnPrimary">All requests</a>
             </div>
         </div>
         <div>
-            <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
-                <table id="vacations-table" class="tContainer">
-                    <thead class="tHead">
-                        <tr>
-                            <th class="hRow">Full name</th>
-                            <th class="hRow">Reason</th>
-                            <th class="hRow">Start Date</th>
-                            <th class="hRow">End Date</th>
-                            <th class="hRow">Duration</th>
-                            <th class="hRow">Actions</th>
-                        </tr>
-                    </thead>
-                    <% if (vacations.length === 0) { %>
-                        <tr>
-                            <td colspan="6" class="dataless">
-                                There are no faults
-                            </td>
-                        </tr>
-                    <% } else { %>
-                    <tbody>
-                        <% vacations.forEach(vacation => { %>
-                        <tr class="tRow">
-                            <td class="tContent"><%= vacation.birthName + " " + vacation.surname %></td>
-                            <td class="tContent"><%= vacation.reason %></td>
-                            <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                            <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                            <td class="tContent total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
-                            <td class="tContent">
-                                <% if (role === "Manager") { %>
-                                    <% if (vacation.hrStatus === 1) { %>
-                                        <div class="textSuccess text-center font-semibold">Approved</div>
-                                    <% } else if (vacation.hrStatus === 0) { %>
-                                        <div class="textDanger text-center font-semibold">Denied</div>
-                                    <% } else { %>
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                        </div>
-                                    <% } %>
-                                <% } else if (role === "Department Leader") { %>
-                                    <% if (vacation.leaderStatus === 1) { %>
-                                        <div class="textSuccess text-center font-semibold">Approved</div>
-                                    <% } else if (vacation.leaderStatus === 0) { %>
-                                        <div class="textDanger text-center font-semibold">Denied</div>
-                                    <% } else if (vacation.leaderStatus === 2) { %>
-                                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                            <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                            <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                        </div>
-                                    <% } %>
+            <table id="vacations-table" class="tContainer">
+                <thead class="tHead">
+                    <tr>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Reason</th>
+                        <th class="hRow">Start Date</th>
+                        <th class="hRow">End Date</th>
+                        <th class="hRow">Duration</th>
+                        <th class="hRow">Actions</th>
+                    </tr>
+                </thead>
+                <% if (vacations.length === 0) { %>
+                    <tr>
+                        <td colspan="6" class="dataless">
+                            There are no faults
+                        </td>
+                    </tr>
+                <% } else { %>
+                <tbody class="tBody">
+                    <% vacations.forEach(vacation => { %>
+                    <tr class="tRow">
+                        <td class="tContent"><%= vacation.birthName + " " + vacation.surname %></td>
+                        <td class="tContent"><%= vacation.reason %></td>
+                        <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                        <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                        <td class="tContent total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
+                        <td class="tContent">
+                            <% if (role === "Manager") { %>
+                                <% if (vacation.hrStatus === 1) { %>
+                                    <div class="textSuccess text-center font-semibold">Approved</div>
+                                <% } else if (vacation.hrStatus === 0) { %>
+                                    <div class="textDanger text-center font-semibold">Denied</div>
+                                <% } else { %>
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
+                                    </div>
                                 <% } %>
-                            </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-                <% } %>
-            </div>
+                            <% } else if (role === "Department Leader") { %>
+                                <% if (vacation.leaderStatus === 1) { %>
+                                    <div class="textSuccess text-center font-semibold">Approved</div>
+                                <% } else if (vacation.leaderStatus === 0) { %>
+                                    <div class="textDanger text-center font-semibold">Denied</div>
+                                <% } else if (vacation.leaderStatus === 2) { %>
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
+                                    </div>
+                                <% } %>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% } %>
         </div>
     </div>
     <div class="pagination-controls mt-4 mb-4 flex justify-center gap-3">
@@ -157,18 +155,18 @@
         // If we have data, make sure we have a table
         if (!document.getElementById("vacations-table")) {
             tableContainer.innerHTML = `
-                <table id="vacations-table" class="min-w-full table-auto">
-                    <thead class="bg-neutral-800">
+                <table id="vacations-table" class="tContainer">
+                    <thead class="tHead">
                         <tr>
-                            <th class="px-4 py-2 text-left">Full name</th>
-                            <th class="px-4 py-2 text-left">Reason</th>
-                            <th class="px-4 py-2 text-left">Start Date</th>
-                            <th class="px-4 py-2 text-left">End Date</th>
-                            <th class="px-4 py-2 text-left">Duration</th>
-                            <th class="px-4 py-2 text-center">Actions</th>
+                            <th class="hRow">Full name</th>
+                            <th class="hRow">Reason</th>
+                            <th class="hRow">Start Date</th>
+                            <th class="hRow">End Date</th>
+                            <th class="hRow">Duration</th>
+                            <th class="hRow">Actions</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="tBody"></tbody>
                 </table>`;
         }
         
@@ -213,15 +211,15 @@
             }
 
             const row = document.createElement("tr");
-            row.className = "border-b hover:bg-neutral-800";
+            row.className = "tRow";
             
             row.innerHTML = `
-                <td class="px-4 py-2">${vacation.birthName} ${vacation.surname}</td>
-                <td class="px-4 py-2">${vacation.reason}</td>
-                <td class="px-4 py-2">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${totalDays}</td>
-                <td class="px-4 py-2">${actionCell}</td>
+                <td class="tContent">${vacation.birthName} ${vacation.surname}</td>
+                <td class="tContent">${vacation.reason}</td>
+                <td class="tContent">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${totalDays}</td>
+                <td class="tContent">${actionCell}</td>
             `;
             
             tbody.appendChild(row);

@@ -318,4 +318,16 @@ module.exports = class Report {
                 ORDER BY e.title;`
         );
     }
+
+    static getNumerOfEmployees(keyDate) {
+        return db.execute(
+            `SELECT COUNT(DISTINCT u.userID) AS total 
+            FROM user u 
+            JOIN workStatus w 
+                ON u.userID = w.userStatusIDFK 
+            WHERE u.workStatus = 1 
+                AND w.startDate < ?`,
+            [keyDate]
+        );
+    }
 };

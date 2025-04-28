@@ -1,100 +1,94 @@
-<div class="primaryContainer bgContainer1">
-    <section class="avoidBreak">
-        <div class="p-6">
-            <h2 class="text-2xl font-bold mb-4">Employee Rotation</h2>
-        </div>
-    </section>
-    <div id="btnContainer" class="px-6 py-4 flex justify-end">
-        <a href="/reports/staffRotationReport" class="btnPrimary">Generate</a>
-        <a href="/reports" class="btnPrimary ml-4">Return</a>
-    </div>
-
-    <section class="avoidBreak">
-        <div class="mr-10">
-            <div class="flex justify-end">
-                <p class="text-2xl font-bold">New Workers: <%= activeSize %></p>
-            </div>
-            <br />
-            <div class="flex justify-end">
-                <p class="text-2xl font-bold">
-                    Idle Workers: <%= inactiveSize %>
-                </p>
-            </div>
-        </div>
-    </section>
-
+<div class="fullContainer bgContainer1">
     <section class="avoidBreak">
         <div class="p-6">
             <h2 class="text-2xl font-bold mb-4">
-                New Workers From <%= currentMonthStart %> To <%= currentMonthEnd
-                %>
+                Employee Rotation <%= currentStart.toLocaleDateString('en-MX', {
+                day: 'numeric', month: 'long', year: 'numeric' }) %> <-> <%=
+                currentEnd.toLocaleDateString('en-MX', { day: 'numeric', month:
+                'long', year: 'numeric' }) %>
             </h2>
         </div>
+    </section>
+
+    <section class="w-full flex space-x-4 mb-6">
+        <div class="flex-1 shadow rounded-lg p-4 flex border">
+            <div class="w-2/4 flex items-center justify-center">
+                <img
+                    src="/icons/actives.svg"
+                    class="max-w-full h-auto object-contain"
+                />
+            </div>
+            <div class="w-2/4 flex flex-col justify-center text-center">
+                <span class="text-base font-medium">New Workers</span>
+                <span class="text-4xl font-bold"
+                    ><%= activeUsers.length %></span
+                >
+            </div>
+        </div>
+
+        <div class="flex-1 shadow rounded-lg p-4 flex border">
+            <div class="w-2/4 flex items-center justify-center">
+                <img
+                    src="/icons/inactives.svg"
+                    class="max-w-full h-auto object-contain"
+                />
+            </div>
+            <div class="w-2/4 flex flex-col justify-center text-center">
+                <span class="text-base font-medium">Terminated Workers</span>
+                <span class="text-4xl font-bold"
+                    ><%= inactiveUsers.length %></span
+                >
+            </div>
+        </div>
+
+        <div class="flex-1 shadow rounded-lg p-4 flex border">
+            <div class="w-2/4 flex items-center justify-center">
+                <img
+                    src="/icons/rotation.svg"
+                    class="max-w-full h-auto object-contain"
+                />
+            </div>
+            <div class="w-2/4 flex flex-col justify-center text-center">
+                <span class="text-base font-medium">Rotation Rate</span>
+                <span class="text-4xl font-bold">
+                    <%= ((inactiveUsers.length) / ((startEmployees +
+                    endEmployees) / 2) * 100).toFixed(1) %>%
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <section class="avoidBreak">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-4">Active Workers</h2>
+        </div>
         <div class="flex justify-center">
-            <table class="w-4/5 divide-y divide-neutral-200">
-                <thead class="bg-neutral-800/50">
+            <table class="tContainer">
+                <thead class="tHead">
                     <tr>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            CURP
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Full name
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Role
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Country
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Work modality
-                        </th>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Role</th>
+                        <th class="hRow">Country</th>
+                        <th class="hRow">Work modality</th>
+                        <th class="hRow">Department</th>
                     </tr>
                 </thead>
-                <tbody class="bg-neutral-800 divide-y divide-neutral-200">
-                    <% for (let dp of departments) { %> <% let usersInDepartment
-                    = activeUsers.filter(a => a.title == dp.title); %> <% if
-                    (usersInDepartment.length > 0) { %>
-                    <tr>
-                        <td
-                            colspan="5"
-                            class="text-center text-xl font-semibold"
-                        >
-                            <%= dp.title %>
-                        </td>
-                    </tr>
-
-                    <% usersInDepartment.forEach(a => { %>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= a.curp || '---' %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <tbody class="tBody">
+                    <% for (let a of activeUsers) { %>
+                    <tr class="tRow">
+                        <td class="tContent">
                             <%= a.birthName %> <%= a.surname %>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= a.role %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= a.country %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="tContent"><%= a.role %></td>
+                        <td class="tContent"><%= a.country %></td>
+                        <td class="tContent">
                             <% if(a.workModality == 0) { %> In person <% } else
                             if(a.workModality == 1) { %> Remote <% } else { %>
                             Hybrid <% } %>
                         </td>
+                        <td class="tContent"><%= a.title %></td>
                     </tr>
-                    <% }) %> <% } %> <% } %>
+                    <% } %>
                 </tbody>
             </table>
         </div>
@@ -104,78 +98,36 @@
 
     <section class="avoidBreak">
         <div class="p-6">
-            <h2 class="text-2xl font-bold mb-4">
-                Idle Workers From <%= currentMonthStart %> To <%=
-                currentMonthEnd %>
-            </h2>
+            <h2 class="text-2xl font-bold mb-4">Terminated Workers</h2>
         </div>
 
         <div class="flex justify-center">
-            <table class="w-3/4 divide-y divide-neutral-200">
-                <thead class="bg-neutral-800/50">
+            <table class="tContainer">
+                <thead class="tHead">
                     <tr>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            CURP
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Full name
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Role
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Country
-                        </th>
-                        <th
-                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                        >
-                            Work modality
-                        </th>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Role</th>
+                        <th class="hRow">Country</th>
+                        <th class="hRow">Work modality</th>
+                        <th class="hRow">Department</th>
                     </tr>
                 </thead>
-                <tbody class="bg-neutral-800 divide-y divide-neutral-200">
-                    <% for (let dp of departments) { %> <% let usersInDepartment
-                    = inactiveUsers.filter(i => i.title == dp.title); %> <% if
-                    (usersInDepartment.length > 0) { %>
-
-                    <tr>
-                        <td
-                            colspan="5"
-                            class="text-center text-xl font-semibold text-neutral-100"
-                        >
-                            <%= dp.title %>
-                        </td>
-                    </tr>
-
-                    <% usersInDepartment.forEach(i => { %>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= i.curp %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <tbody class="tBody">
+                    <% for (let i of inactiveUsers) { %>
+                    <tr class="tRow">
+                        <td class="tContent">
                             <%= i.birthName %> <%= i.surname %>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= i.role %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                            <%= i.country %>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <td class="tContent"><%= i.role %></td>
+                        <td class="tContent"><%= i.country %></td>
+                        <td class="tContent">
                             <% if(i.workModality == 0) { %> In person <% } else
                             if(i.workModality == 1) { %> Remote <% } else { %>
                             Hybrid <% } %>
                         </td>
+                        <td class="tContent"><%= i.title %></td>
                     </tr>
-                    <% }) %> <% } %> <% } %>
+                    <% } %>
                 </tbody>
             </table>
         </div>
@@ -186,8 +138,7 @@
     <section class="avoidBreak">
         <div class="p-6">
             <h2 class="text-2xl font-bold mb-4">
-                Employee Rotation <%= new Date(currentMonthStart).getFullYear()
-                %>
+                Employee Rotation <%= new Date(currentStart).getFullYear() %>
             </h2>
             <canvas id="rotationChart" width="800" height="400"></canvas>
         </div>
@@ -234,7 +185,7 @@
                     backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     },
                     {
-                    label: 'Idle employees',
+                    label: 'Terminated employees',
                     data: inactiveTotals,
                     backgroundColor: 'rgba(255, 99, 132, 0.6)',
                     }

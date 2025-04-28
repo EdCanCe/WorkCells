@@ -4,7 +4,7 @@
         <div class="titleContainer">
             <h2 class="title">My vacation requests</h2>
             <div class="flex gap-3 centerItems">
-                <a href="/absence/add" class="btnPrimary">Add vacation request</a>
+                <a href="/vacation/add" class="btnPrimary">Add vacation request</a>
                 <% if (role === 'Department Leader' || role === 'Manager') { %>
                     <a href="/vacation/requests" class="btnPrimary">Pending requests</a>
                 <% } %>
@@ -29,6 +29,7 @@
                     <option value="denied">Denied</option>
                 </select>
             </div>
+        </div>
 
             <div class="content has-text-centered box">
                 <table class="tContainer">
@@ -231,7 +232,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
   
         <div class="content has-text-centered box">
           <table class="tContainer">
