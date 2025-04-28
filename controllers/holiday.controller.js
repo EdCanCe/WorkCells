@@ -18,9 +18,25 @@ exports.getTemplateHoliday = (request, response, next) => {
 };
 
 exports.getCheckTemplateHoliday = (request, response, next) => {
-    response.render("templateHoliday", {
-        ...sessionVars(request, title),
-    });
+    const templateHolidayID = request.params.templateHolidayID;
+
+    Template.fetchOneTemplateHoliday(templateHolidayID)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).send("Template Holiday not found.");
+            }
+
+            const template = rows[0];
+            response.render("checkTemplateHoliday", {
+                ...sessionVars(request, title),
+                template,
+                csrfToken: request.csrfToken(),
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send("Error in obtaining holiday data.");
+        });
 };
 
 exports.getHolidaysAdd = (request, response, next) => {

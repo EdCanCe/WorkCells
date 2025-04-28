@@ -46,4 +46,13 @@ module.exports = class Template {
             [limit, offset]
         );
     }
+
+    static fetchOneTemplateHoliday(templateHolidayID) {
+        return db.execute(
+            `SELECT holidayDate, title, templateHolidayID 
+                FROM templateHoliday 
+                WHERE templateHolidayID = ?`,
+            [templateHolidayID]
+        );
+    }
 };
