@@ -53,21 +53,11 @@
                                     target="_blank"
                                     href="/uploads/absence/<%= encodeURIComponent(
                                             ab.mediaLink) %>"
-<<<<<<< HEAD
-                                        class="text-blue-500"
-                                    >
-                                        View Evidence
-                                    </a>
-                                    <% } else { %>
-                                        No evidence
-                                    <% } %>   
-=======
                                     class="text-blue-500"
                                 >
-                                    Check Evidence
+                                    View Evidence
                                 </a>
                                 <% } else { %> No evidence <% } %>
->>>>>>> slumbery/programacion
                             </td>
                             <td class="tContent">
                                 <% if (role === "Manager") { %> <% if
@@ -319,17 +309,13 @@
                 <td class="tContent">${totalDays}</td>
                 <td class="tContent">${absence.reason}</td>
                 <td class="tContent">
-<<<<<<< HEAD
-                    ${ absence.mediaLink ? `<a target="blank" href="/uploads/absence/${ encodeURIComponent(absence.mediaLink) }" class="text-blue-500">View evidence</a>` : 'No evidence' }
-=======
                     ${
                         absence.mediaLink
                             ? `<a target="blank" href="/uploads/absence/${encodeURIComponent(
                                   absence.mediaLink
-                              )}" class="text-blue-500">Check evidence</a>`
+                              )}" class="text-blue-500">View evidence</a>`
                             : "No evidence"
                     }
->>>>>>> slumbery/programacion
                 </td>
                 <td class="tContent">${actionCell}</td>
             </tr>
