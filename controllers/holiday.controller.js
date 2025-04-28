@@ -106,6 +106,23 @@ exports.listPaginated = (request, response) => {
         });
 };
 
+exports.listTemplatePaginated = (request, response) => {
+    const page = parseInt(request.query.page, 10) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+
+    Template.getTemplateHolidayPaginated(limit, offset)
+        .then(([rows]) => {
+            response.json(rows);
+        })
+        .catch((err) => {
+            console.error(err);
+            response
+                .status(500)
+                .json({ error: "Error al obtener los días registrados." });
+        });
+};
+
 exports.getHolidayModify = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
 

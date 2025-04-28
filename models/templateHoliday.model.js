@@ -33,4 +33,17 @@ module.exports = class Template {
                 throw error;
             });
     }
+
+    static getTemplateHolidayPaginated(limit, offset) {
+        return db.execute(
+            `SELECT 
+                    title AS nombre, 
+                    holidayDate AS fecha,
+                    templateHolidayID
+                FROM templateHoliday
+                ORDER BY holidayDate DESC
+                LIMIT ? OFFSET ?;`,
+            [limit, offset]
+        );
+    }
 };
