@@ -278,3 +278,16 @@ exports.postHolidayDelete = (request, response, next) => {
             response.status(500).json({ success: false, error: error.message });
         });
 };
+
+exports.postTemplateHolidayDelete = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+
+    Template.deleteTemplateHoliday(templateHolidayID)
+        .then(() => {
+            response.status(200).json({ success: true });
+        })
+        .catch((error) => {
+            console.error("Error in eliminating the holiday:", error.message);
+            response.status(500).json({ success: false, error: error.message });
+        });
+};
