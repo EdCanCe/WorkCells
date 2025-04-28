@@ -40,8 +40,10 @@ exports.getEmployeeRotation = (request, response, next) => {
     const inactivesPerMonth = Report.getInactivesPerMonth(startYear, endYear);
 
     // cantidad de empleados al inicio
+    const startEmployees = Report.getNumerOfEmployees(startDate);
 
     //cantidad de empleados al final
+    const endEmployees = Report.getNumerOfEmployees(now);
 
     // recibir las promesas de todas las consultas
     Promise.all([
@@ -49,6 +51,8 @@ exports.getEmployeeRotation = (request, response, next) => {
         inactiveUsers,
         activesPerMonth,
         inactivesPerMonth,
+        startEmployees,
+        endEmployees,
     ])
         .then(
             ([
@@ -56,6 +60,8 @@ exports.getEmployeeRotation = (request, response, next) => {
                 [inactiveUsers],
                 [activesPerMonth],
                 [inactivesPerMonth],
+                [startEmployees],
+                [endEmployees],
             ]) => {
                 response.render("reportRotation", {
                     ...sessionVars(request, title),
@@ -67,6 +73,8 @@ exports.getEmployeeRotation = (request, response, next) => {
                     inactiveSize: inactiveUsers.length,
                     currentStart: startDate,
                     currentEnd: now,
+                    startEmployees: startEmployees[0].total,
+                    endEmployees: endEmployees[0].total,
                 });
             }
         )

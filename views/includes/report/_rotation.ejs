@@ -10,18 +10,50 @@
         </div>
     </section>
 
-    <section class="avoidBreak">
-        <div class="mr-10">
-            <div class="flex justify-end">
-                <p class="text-2xl font-bold">
-                    New Workers: <%= activeUsers.length %>
-                </p>
+    <section class="w-full flex space-x-4 mb-6">
+        <div class="flex-1 shadow rounded-lg p-4 flex border">
+            <div class="w-2/4 flex items-center justify-center">
+                <img
+                    src="/icons/actives.svg"
+                    class="max-w-full h-auto object-contain"
+                />
             </div>
-            <br />
-            <div class="flex justify-end">
-                <p class="text-2xl font-bold">
-                    Terminated Workers: <%= inactiveUsers.length %>
-                </p>
+            <div class="w-2/4 flex flex-col justify-center text-center">
+                <span class="text-base font-medium">New Workers</span>
+                <span class="text-4xl font-bold"
+                    ><%= activeUsers.length %></span
+                >
+            </div>
+        </div>
+
+        <div class="flex-1 shadow rounded-lg p-4 flex border">
+            <div class="w-2/4 flex items-center justify-center">
+                <img
+                    src="/icons/inactives.svg"
+                    class="max-w-full h-auto object-contain"
+                />
+            </div>
+            <div class="w-2/4 flex flex-col justify-center text-center">
+                <span class="text-base font-medium">Terminated Workers</span>
+                <span class="text-4xl font-bold"
+                    ><%= inactiveUsers.length %></span
+                >
+            </div>
+        </div>
+
+        <div class="flex-1 shadow rounded-lg p-4 flex border">
+            <div class="w-2/4 flex items-center justify-center">
+                <img
+                    src="/icons/rotation.svg"
+                    class="max-w-full h-auto object-contain"
+                />
+            </div>
+            <div class="w-2/4 flex flex-col justify-center text-center">
+                <span class="text-base font-medium">Rotation Rate</span>
+                <span class="text-4xl font-bold">
+                    <%= ((inactiveUsers.length) / ((startEmployees +
+                    endEmployees) / 2) * 100).toFixed(1) %>%
+                </span>
             </div>
         </div>
     </section>
