@@ -170,6 +170,31 @@ exports.getHolidayModify = (request, response, next) => {
         });
 };
 
+exports.getTemplateHolidayModify = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+
+    Template.fetchOneTemplateHoliday(templateHolidayID)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                request.session.info = "Holiday not found";
+                return response.redirect("/holiday/template");
+            }
+
+            const holiday = rows[0];
+            console.log(rows);
+            response.render("templateHolidayModify", {
+                ...sessionVars(request, title),
+                holiday,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response
+                .status(500)
+                .send("Error al cargar el formulario de modificación.");
+        });
+};
+
 exports.postHolidayModify = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
     const usedDate = request.body.usedDate;

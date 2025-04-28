@@ -19,6 +19,12 @@ router.get(
     holidayController.getHolidayModify
 );
 
+router.get(
+    "/template/check/modify/:templateHolidayID",
+    isAuth,
+    holidayController.getTemplateHolidayModify
+);
+
 router.post(
     "/check/delete/:usedHolidayID",
     isAuth,
