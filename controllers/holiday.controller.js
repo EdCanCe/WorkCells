@@ -97,7 +97,7 @@ exports.getUsedHoliday = (request, response, next) => {
 
 exports.listPaginated = (request, response) => {
     const page = parseInt(request.query.page, 10) || 1;
-    const limit = 10;
+    const limit = 6;
     const offset = (page - 1) * limit;
 
     Holiday.getHolidayPaginated(limit, offset)
@@ -114,7 +114,7 @@ exports.listPaginated = (request, response) => {
 
 exports.listTemplatePaginated = (request, response) => {
     const page = parseInt(request.query.page, 10) || 1;
-    const limit = 10;
+    const limit = 6;
     const offset = (page - 1) * limit;
 
     Template.getTemplateHolidayPaginated(limit, offset)
