@@ -1,4 +1,4 @@
-
+<script>addBackButton('/department');</script>
 <div class='primaryContainer bgContainer1'>
 
     <div class="titleContainer">
@@ -9,8 +9,8 @@
 
         <input type='hidden' name='_csrf' value='<%= csrfToken %>' />
 
-        <div class='mb-4'>
-            <label class='block text-lg font-medium mb-2'
+        <div>
+            <label class='label'
                 >Department Name:</label
             >
             <input
@@ -24,8 +24,8 @@
         </div>
 
         <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
-        <div class='mb-4'>
-            <label class='block text-lg font-medium mb-2'
+        <div>
+            <label class='label'
                 >Company of origin:</label
             >
             <select
@@ -40,7 +40,7 @@
             </select>
         </div>
 
-        <div class='mb-4'>
+        <div>
             <input
                 type='text'
                 class='w-full input hidden'
@@ -52,8 +52,8 @@
         </div>
 
         <!-- Maneja el añadir empresas en caso de que no esté en la lista -->
-        <div class='mb-4'>
-            <label class='block text-lg font-medium mb-2'
+        <div>
+            <label class='label'
                 >Status:</label
             >
             <select
@@ -67,8 +67,8 @@
         </div>
 
         <!-- Selecciona el líder del departamento -->
-        <div class='mb-4'>
-            <label class='block text-lg font-medium mb-2'
+        <div>
+            <label class='label'
                 >Select the leader:</label
             >
             <select
@@ -87,8 +87,8 @@
         <input id='collaboratorQuantity' name='collaboratorQuantity' type='hidden'>
         <input id='collaboratorArray' name='collaboratorArray' type='hidden'>
 
-        <div class='mb-4'>
-            <label class='block text-lg font-medium mb-2'
+        <div>
+            <label class='label'
                 >Select the collaborators:</label
             >
             <div class='flex flex-column gap-3'>
@@ -101,7 +101,7 @@
                         <option value='<%= `${employee.birthName} ${employee.surname}|${employee.userID}` %>'><%= `${employee.birthName} ${employee.surname} -> ${employee.department == null ? 'Not assigned' : `${employee.department} : ${employee.enterprise}`}` %></option>
                     <% }) %>
                 </select>
-                <button id='collaboratorAdd' class='btnPrimary !block'>+</button>
+                <button id='collaboratorAdd' class='btnPrimary text-center !px-0 h-[38px] w-[38px] !block'>+</button>
             </div>
         </div>
         
@@ -121,7 +121,7 @@
             </ul>
         </div>
 
-        <div class="flex centerItems gap-1">
+        <div class="endButtonsContainer">
             <button id='sendForm' class='btnPrimary' type='submit'>Update Department</button>
         </div>
     </form>

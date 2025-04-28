@@ -1,8 +1,9 @@
+<script>addBackButton('/');</script>
 <div class="fullContainer bgContainer1">
     <div>
 
         <div class="titleContainer">
-            <h2 class="title">My Absences</h2>
+            <h2 class="title">My absences</h2>
             <div class="flex gap-3 centerItems">
                 <a href="/absence/add" class="btnPrimary">Add absence</a>
                 <% if (role === 'Department Leader' || role === 'Manager') { %>
@@ -14,7 +15,7 @@
         <div>            
             <div id="tablaAbsences"></div>
 
-            <div class="flex justify-center gap-3 mt-6">
+            <div class="endButtonsContainer">
                 <button id="prevPage" class="btnPrimary">Previous</button>
                 <button id="nextPage" class="btnPrimary">Next</button>
             </div>

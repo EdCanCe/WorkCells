@@ -1,4 +1,8 @@
 .input {
-    @apply px-4 py-2 border rounded-md
+    @apply px-4 py-2 border rounded-md w-full mb-5
            dark:bg-neutral-700/50 dark:border-neutral-600/50;
+}
+
+.label {
+    @apply block font-semibold mb-0;
 }

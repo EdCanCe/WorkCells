@@ -1,3 +1,4 @@
+<script>addBackButton('/');</script>
 <div class="primaryContainer bgContainer1">
 
     <div class="titleContainer">
@@ -15,7 +16,7 @@
             <img
                 src="/icons/search.svg"
                 alt="search"
-                class="navIcon absolute w-6 h-6 text-white"
+                class="navIcon posSearch"
             />
 
             <input
@@ -23,18 +24,18 @@
                 name="search"
                 type="text"
                 placeholder="Search by name..."
-                class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+                class="input"
             />
         </div>
     </div>
     <% } %>
 
     <div
-        class="flex flex-col items-center justify-start py-5"
+        class="flex flex-col items-center justify-start"
         id="departmentContainer"
     ></div>
 
-    <div class="flex justify-center gap-3">
+    <div class="endButtonsContainer">
         <button id="prevPage" class="btnPrimary">Previous</button>
         <button id="nextPage" class="btnPrimary">Next</button>
     </div>

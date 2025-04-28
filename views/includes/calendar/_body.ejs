@@ -1,3 +1,4 @@
+<script>addBackButton('/');</script>
 <div
     id="realArea"
     class="fullContainer flex flex-col max-h-[calc(100vh-60px)] !overflow-hidden"
@@ -45,7 +46,7 @@
                 </svg>
             </button>
 
-            <span id="dateTitle" class="ml-2 subtitle"> </span>
+            <span id="dateTitle" class="ml-2 bold"> </span>
         </div>
 
         <!-- Selector de vista y filtros -->
@@ -137,7 +138,7 @@
     <div class="grid grid-cols-7 mb-2">
         <% weekDays.forEach(day => { %>
         <div
-            class="text-center font-bold m-[2px] py-2 bg-neutral-700/50 rounded"
+            class="text-center bold m-[2px] py-2 bg-neutral-700/50 rounded"
         >
             <%= day %>
         </div>

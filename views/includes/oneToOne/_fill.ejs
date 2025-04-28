@@ -1,3 +1,4 @@
+<script>addBackButton(document.referrer);</script>
 <div class="primaryContainer bgContainer1">
     
     <!-- Muestra los datos de la sesión One On One -->
@@ -6,7 +7,7 @@
     </div>
 
     <% if (meetingLink) { %>
-        <a target="_blank" href="<%= meetingLink %>" class="btnPrimary !block w-fit m-auto mt-5">Google Meet Link</a>
+        <a target="_blank" href="<%= meetingLink %>" class="btnPrimary !block w-fit m-auto mb-6">Google Meet Link</a>
     <% } %>
 
     <!-- Formulario -->
@@ -14,12 +15,12 @@
         id="fillForm"
         action="/oneToOne/<%= sessionID %>/fill"
         method="POST"
-        class="p-6 space-y-8"
+        class="p-6 pt-0 space-y-8"
     >
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
         <!-- Preguntas -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
 
             <!-- Obtiene la cantidad de preguntas -->
             <input type="hidden" name="numQuestions" value="<%= questions.length %>" />
@@ -27,7 +28,7 @@
             <!-- Ciclo para cada pregunta -->
             <% questions.forEach((question, index) => { %>
             <div class="space-y-2">
-                <label class="block text-lg font-medium text-neutral-100">
+                <label class="label block">
                     <%= question.question %>
                 </label>
 
@@ -41,7 +42,7 @@
                 <textarea
                     name="question<%= index + 1 %>"
                     rows="3"
-                    class="questionInput w-full h-40 max-h-40 resize-none p-3 bg-neutral-700/50 border border-neutral-600/50 rounded-lg"
+                    class="questionInput w-full h-40 max-h-40 resize-none mt-1 !mb-3 input"
                     placeholder="Please provide your answer..."
                     required
                 ></textarea>
@@ -50,15 +51,15 @@
         </div>
 
         <!-- Métricas -->
-        <div class="space-y-8">
+        <div class="space-y-5">
 
             <!-- Obtiene la cantidad de preguntas -->
             <input type="hidden" name="numMeasures" value="<%= measurables.length %>" />
 
             <!-- Ciclo para cada pregunta -->
             <% measurables.forEach((measurable, qIndex) => { %>
-            <div class="space-y-4">
-                <label class="block text-lg font-medium text-neutral-100">
+            <div>
+                <label class="label">
                     <%= measurable.summary %>
                 </label>
 
@@ -82,7 +83,7 @@
                 />
 
                 <!-- Generación de botones -->
-                <div id="measureContainer<%= qIndex + 1 %>" question="<%= qIndex %>" class="w-[90%] h-7 m-auto flex flex-row gap-5 place-content-between">
+                <div id="measureContainer<%= qIndex + 1 %>" question="<%= qIndex %>" class="w-[90%] h-7 m-auto mt-2 flex flex-row gap-5 place-content-between">
                     <% for(let i=0; i<5; i++) { %>
                         <!-- La clase value es necesaria para JS, no modificar -->
                         <p class="value<%= i+1 %> btnMeasure h-full flex-1"></p>
@@ -94,12 +95,12 @@
         </div>
 
         <!-- Botón para enviar -->
-        <div class="flex justify-end pt-6">
+        <div class="endButtonsContainer">
             <button
                 type="submit"
                 class="btnPrimary"
             >
-                Submit
+                Fill data
             </button>
         </div>
     </form>

@@ -1,26 +1,27 @@
+<script>addBackButton('/vacation');</script>
 <div class="primaryContainer bgContainer1">
     <div class="titleContainer">
         <h2 class="title text-center flex-1">Vacation request</h2>
     </div>
     <div class="mt-4 space-y-2">
         <p>
-            <strong class="text-neutral-300">Reason:</strong> <%=
+            <strong class="bold">Reason:</strong> <%=
             vacation.reason %>
         </p>
         <p>
-            <strong class="text-neutral-300">Start Date:</strong>
+            <strong class="bold">Start Date:</strong>
             <%= new Date(vacation.startDate).toLocaleDateString('es-MX') %>
         </p>
         <p>
-            <strong class="text-neutral-300">End Date:</strong> <%= new
+            <strong class="bold">End Date:</strong> <%= new
             Date(vacation.endDate).toLocaleDateString('es-MX') %>
         </p>
         <p>
-            <strong class="text-neutral-300">Number of Requested Days:</strong>
+            <strong class="bold">Number of Requested Days:</strong>
             <%= requestedDays %> días
         </p>
         <p>
-            <strong class="text-neutral-300">HR Status:</strong>
+            <strong class="bold">HR Status:</strong>
             <% if (vacation.hrStatus === 1) { %>
             <span class="textSuccess">Approved</span>
             <% } else if (vacation.hrStatus === 0) { %>
@@ -30,7 +31,7 @@
             <% } %>
         </p>
         <p>
-            <strong class="text-neutral-300">Leader Status:</strong>
+            <strong class="bold">Leader Status:</strong>
             <% if (vacation.leaderStatus === 1) { %>
             <span class="textSuccess">Approved</span>
             <% } else if (vacation.leaderStatus === 0) { %>
@@ -40,7 +41,7 @@
             <% } %>
         </p>
     </div>
-    <div class="flex space-x-4 justify-center mt-6">
+    <div class="endButtonsContainer">
         <a
             href="/vacation/check/modify/<%= vacation.vacationID %>"
             class="btnPrimary"

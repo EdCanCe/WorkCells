@@ -1,3 +1,4 @@
+<script>addBackButton('/holiday');</script>
 <div class="primaryContainer bgContainer1">
 
     <div class="titleContainer">
@@ -5,17 +6,17 @@
     </div>
 
     <p>
-        <strong class="text-neutral-300">Title:</strong>
+        <span class="bold">Title:</span>
         <%= holiday.title %>
     </p>
     <p>
-        <strong class="text-neutral-300">Date:</strong>
+        <span class="bold">Date:</span>
         <%= new Date(holiday.usedDate)
         .toLocaleDateString('es-MX', { weekday: 'long', year:
         'numeric', month: 'long', day: 'numeric' }) %>
     </p>
 
-    <div class="flex space-x-4 justify-center mt-6">
+    <div class="endButtonsContainer">
         <!-- Modificar feriado -->
         <a
             href="/holiday/check/modify/<%= holiday.usedHolidayID %>"

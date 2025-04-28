@@ -1,3 +1,4 @@
+<script>addBackButton('/oneToOne');</script>
 <div class="primaryContainer bgContainer1">
 
     <div class="titleContainer">
@@ -12,28 +13,28 @@
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
                 <!-- Datos de la reunión -->
-                <div class="mb-6">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2">
                         <div>
                             <label
                                 for="sessionDate"
-                                class="block text-neutral-300 mb-1"
+                                class="label"
                                 >One To One date:</label
                             >
                             <input
                                 id="sessionDate"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="date"
                                 name="date"
                                 required
                             />
                         </div>
                         <div>
-                            <label class="block text-neutral-300 mb-1"
+                            <label class="label"
                                 >One To One time:</label
                             >
                             <input
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="time"
                                 name="time"
                                 required
@@ -42,13 +43,13 @@
                         <div>
                             <label
                                 for="durationInput"
-                                class="block text-neutral-300 mb-1"
+                                class="label"
                                 >Estimated duration (minutes):</label
                             >
                             <input
                                 placeholder="15"
                                 id="durationInput"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="number"
                                 name="expectedTime"
                                 required
@@ -60,13 +61,13 @@
                         <div>
                             <label
                                 for="meetingLink"
-                                class="block text-neutral-300 mb-1"
+                                class="label"
                                 >Meeting Link:</label
                             >
                             <input
                                 id="meetLink"
                                 pattern="https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}"
-                                class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                                class="input !w-[98%]"
                                 type="text"
                                 name="meetingLink"
                                 placeholder="https://meet.google.com/abc-defg-hij"
@@ -75,15 +76,15 @@
                     </div>
                 </div>
                 <!--Worker section-->
-                <div class="mb-6">
-                    <div class="mb-4">
-                        <label class="block text-neutral-300 mb-1"
+                <div>
+                    <div>
+                        <label class="label"
                             >Select who will the session be with:</label
                         >
                         <select
                             id="worker"
                             name="email"
-                            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                            class="input"
                             required
                         >
                             <option value="" selected disabled>
@@ -108,8 +109,8 @@
                         />
                     </div>
                 </div>
-                <div class="text-center">
-                    <input class="btnPrimary" type="submit" value="Submit" />
+                <div class="endButtonsContainer">
+                    <button class="btnPrimary">Schedule session</button>
                 </div>
             </form>
         </div>

@@ -453,6 +453,7 @@ exports.getEmployeeFaults = (request, response, next) => {
             response.render("employeeFaults", {
                 ...sessionVars(request, title),
                 faults: faults,
+                employeeID: userID,
             });
         })
         .catch((err) => {

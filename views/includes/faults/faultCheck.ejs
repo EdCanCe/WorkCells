@@ -1,3 +1,4 @@
+<script>addBackButton('/');</script>
 <div class="fullContainer bgContainer1">
     <div class="titleContainer">
         <h2 class="title">List of all faults</h2>
@@ -14,14 +15,14 @@
             <img
                 src="/icons/search.svg"
                 alt="search"
-                class="navIcon absolute w-6 h-6 text-white"
+                class="navIcon posSearch"
             />
             <input
                 id="search"
                 name="search"
                 type="text"
                 placeholder="Search by name..."
-                class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+                class="input"
             />
         </div>
     </div>
@@ -30,7 +31,7 @@
     <div id="faltasTable"></div>
 
     <!-- Paginación -->
-    <div class="flex justify-center gap-3 mt-6">
+    <div class="endButtonsContainer">
         <button id="prevBtn" class="btnPrimary">Previous</button>
         <button id="nextBtn" class="btnPrimary">Next</button>
     </div>

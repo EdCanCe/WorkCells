@@ -1,3 +1,4 @@
+<script>addBackButton('/employee/<%= employee.userID %>');</script>
 <script src="/javascript/employeeValidator.js"></script>
 <div class="primaryContainer bgContainer1">
     
@@ -15,131 +16,134 @@
             name="_csrf"
             value="<%= csrfToken %>"
         />
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label for="birthName" class="block text-lg font-medium"
-                    >Name</label
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="birthName" class="label"
+                    >Name:</label
                 >
                 <input
                     type="text"
                     id="birthName"
                     name="birthName"
                     value="<%= employee.birthName %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="surname" class="block text-lg font-medium"
-                    >Surname</label
+            <div>
+                <label for="surname" class="label"
+                    >Surname:</label
                 >
                 <input
                     type="text"
                     id="surname"
                     name="surname"
                     value="<%= employee.surname %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="mail" class="block text-lg font-medium"
-                    >Email</label
+            <div>
+                <label for="mail" class="label"
+                    >Email:</label
                 >
                 <input
                     type="email"
                     id="mail"
                     name="mail"
                     value="<%= employee.mail %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
                 <div
                     id="mailFormatError"
-                    class="textDanger text-sm mt-2"
+                    class="hidden textDanger text-sm mb-2"
                 ></div>
             </div>
 
-            <div class="field">
-                <label for="phoneNumber" class="block text-lg font-medium">
-                    Phone Number
-                </label>
+            <div>
+                <label for="phoneNumber" class="label">
+                    Phone Number:</label>
                 <input
                     type="tel"
                     id="phoneNumber"
                     name="phoneNumber"
                     value="<%= employee.phoneNumber %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
+                <div
+                    id="phoneNumberError"
+                    class="hidden textDanger text-sm mb-2"
+                ></div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label class="block text-lg font-medium"
-                    >Zip Code</label
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label class="label"
+                    >Zip Code:</label
                 >
                 <input
                     type="text"
                     id="zipCode"
                     name="zipCode"
                     value="<%= employee.zipCode %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label class="block text-lg font-medium"
-                    >House Number</label
+            <div>
+                <label class="label"
+                    >House Number:</label
                 >
                 <input
                     type="text"
                     id="houseNumber"
                     name="houseNumber"
                     value="<%= employee.houseNumber %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label class="block text-lg font-medium"
-                    >Street Name</label
+            <div>
+                <label class="label"
+                    >Street Name:</label
                 >
                 <input
                     type="text"
                     id="streetName"
                     name="streetName"
                     value="<%= employee.streetName %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label class="block text-lg font-medium"
-                    >Colony</label
+            <div>
+                <label class="label"
+                    >Colony:</label
                 >
                 <input
                     type="text"
                     id="colony"
                     name="colony"
                     value="<%= employee.colony %>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label class="block text-lg font-medium">Country</label>
+            <div>
+                <label class="label">Country:</label>
                 <select 
                 name="countryUserIDFK" 
                 id="countryUserIDFK"
-                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                class="input !w-[98%]"
                 required
                 >
                     <% countries.forEach(c => { %>
@@ -151,47 +155,13 @@
                     <% }) %>
                     </select>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label class="block text-lg font-medium">Work Modality</label>
-                <select
-                    id="workModality"
-                    name="workModality"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                    required
-                >
-                    <option value="">Select Modality</option>
-                    <option value="0" <%= employee.workModality == 0 ? 'selected' : '' %>>On Site</option>
-                    <option value="1" <%= employee.workModality == 1 ? 'selected' : '' %>>Remote</option>
-                    <option value="2" <%= employee.workModality == 2 ? 'selected' : '' %>>Hybrid</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label class="block text-lg font-medium">User Role</label>
-                <select 
-                name="userRoleIDFK" 
-                id="userRoleIDFK"
-                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                required>
-                    <% roles.forEach(r => { %>
-                        <option 
-                        value="<%= r.roleID %>" 
-                        <%= r.roleID == employee.userRoleIDFK ? "selected" : "" %>>
-                        <%= r.title %>
-                        </option>
-                    <% }) %>
-                    </select>
-            </div>
-
-            <div class="field">
-                <label class="block text-lg font-medium">Prioritary Department</label>
+            <div>
+                <label class="label">Prioritary Department:</label>
                 <select 
                 name="prioritaryDepartmentIDFK" 
                 id="prioritaryDepartmentIDFK"
-                class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                class="input !w-[98%]"
                 required
                 >
                     <% departments.forEach(d => { %>
@@ -203,13 +173,83 @@
                     <% }) %>
                     </select>
             </div>
+        </div>
 
-            <div class="field">
-                <label class="block text-lg font-medium">Work Status</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label class="label">Work Modality:</label>
+                <select
+                    id="workModality"
+                    name="workModality"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="">Select Modality</option>
+                    <option value="0" <%= employee.workModality == 0 ? 'selected' : '' %>>On Site</option>
+                    <option value="1" <%= employee.workModality == 1 ? 'selected' : '' %>>Remote</option>
+                    <option value="2" <%= employee.workModality == 2 ? 'selected' : '' %>>Hybrid</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="label">User Role:</label>
+                <select 
+                name="userRoleIDFK" 
+                id="userRoleIDFK"
+                class="input !w-[98%]"
+                required>
+                    <% roles.forEach(r => { %>
+                        <option 
+                        value="<%= r.roleID %>" 
+                        <%= r.roleID == employee.userRoleIDFK ? "selected" : "" %>>
+                        <%= r.title %>
+                        </option>
+                    <% }) %>
+                    </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="curp" class="label"
+                    >CURP:</label
+                >
+                <input
+                    type="text"
+                    id="curp"
+                    name="curp"
+                    value="<%= employee.curp%>"
+                    class="input !w-[98%]"
+                    maxlength="18"
+                />
+                <div
+                    id="curpFormatError"
+                    class="hidden textDanger text-sm mb-2"
+                ></div>
+            </div>
+
+            <div>
+                <label for="rfc" class="label">RFC:</label>
+                <input
+                    type="text"
+                    id="rfc"
+                    name="rfc"
+                    value="<%= employee.rfc%>"
+                    class="input !w-[98%]"
+                    maxlength="13"
+                />
+                <div
+                    id="rfcFormatError"
+                    class="hidden textDanger text-sm mb-2"
+                ></div>
+            </div>
+
+            <div>
+                <label class="label">Work Status:</label>
                 <select
                     id="workStatus"
                     name="workStatus"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 >
                     <option value="">Select Work Status</option>
@@ -219,46 +259,9 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label for="curp" class="block text-lg font-medium"
-                    >CURP</label
-                >
-                <input
-                    type="text"
-                    id="curp"
-                    name="curp"
-                    value="<%= employee.curp%>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
-                    maxlength="18"
-                />
-                <div
-                    id="curpFormatError"
-                    class="textDanger text-sm mt-2"
-                ></div>
-            </div>
-
-            <div class="field">
-                <label for="rfc" class="block text-lg font-medium">RFC</label>
-                <input
-                    type="text"
-                    id="rfc"
-                    name="rfc"
-                    value="<%= employee.rfc%>"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
-                    maxlength="13"
-                />
-                <div
-                    id="rfcFormatError"
-                    class="textDanger text-sm mt-2"
-                ></div>
-            </div>
-
-        </div>
-
-        <div class="flex justify-end">
+        <div class="endButtonsContainer">
             <button type="submit" class="btnPrimary">
-                Update
+                Update employee
             </button>
         </div>
     </form>

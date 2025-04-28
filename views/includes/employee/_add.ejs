@@ -1,3 +1,4 @@
+<script>addBackButton('/employee');</script>
 <script src="/javascript/employeeValidator.js"></script>
 <div class="primaryContainer bgContainer1">
     <div class="titleContainer">
@@ -7,58 +8,59 @@
     <form id="form" action="/employee" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label for="birthName" class="block text-lg font-medium"
-                    >Name</label
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+
+            <div>
+                <label for="birthName" class="label"
+                    >Name:</label
                 >
                 <input
                     type="text"
                     id="birthName"
                     name="birthName"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="Elena"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="surname" class="block text-lg font-medium"
-                    >Surname</label
+            <div>
+                <label for="surname" class="label"
+                    >Surname:</label
                 >
                 <input
                     type="text"
                     id="surname"
                     name="surname"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="González González"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="mail" class="block text-lg font-medium"
-                    >Email</label
+            <div>
+                <label for="mail" class="label"
+                    >Email:</label
                 >
                 <input
                     type="email"
                     id="mail"
                     name="mail"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="eiujmidiam@nuclea.solutions"
                     required
                 />
-                <div id="mailFormatError" class="textDanger text-sm mt-2"></div>
+                <div id="mailFormatError" class="hidden textDanger text-sm mb-2"></div>
             </div>
-            <div class="field">
-                <label for="phoneNumber" class="block text-lg font-medium"
-                    >Phone Number</label
+            <div>
+                <label for="phoneNumber" class="label"
+                    >Phone Number:</label
                 >
                 <input
                     type="tel"
                     name="phoneNumber"
                     id="phoneNumber"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="55 1234 5678"
                     maxlength="15"
                     pattern="[0-9]+"
@@ -66,77 +68,77 @@
                 />
                 <div
                     id="phoneNumberError"
-                    class="textDanger text-sm mt-2"
+                    class="hidden textDanger text-sm mb-2"
                 ></div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label for="zipCode" class="block text-lg font-medium"
-                    >Zip Code</label
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="zipCode" class="label"
+                    >Zip Code:</label
                 >
                 <input
                     type="text"
                     id="zipCode"
                     name="zipCode"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="61683"
                     required
                     maxlength="10"
                 />
             </div>
 
-            <div class="field">
-                <label for="houseNumber" class="block text-lg font-medium"
-                    >House Number</label
+            <div>
+                <label for="houseNumber" class="label"
+                    >House Number:</label
                 >
                 <input
                     type="text"
                     id="houseNumber"
                     name="houseNumber"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="869C"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="streetName" class="block text-lg font-medium"
-                    >Street Name</label
+            <div>
+                <label for="streetName" class="label"
+                    >Street Name:</label
                 >
                 <input
                     type="text"
                     id="streetName"
                     name="streetName"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="Avenida Madero"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="colony" class="block text-lg font-medium"
-                    >Colony</label
+            <div>
+                <label for="colony" class="label"
+                    >Colony:</label
                 >
                 <input
                     type="text"
                     id="colony"
                     name="colony"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     placeholder="Colonia La Pradera"
                     required
                 />
             </div>
 
-            <div class="field">
-                <label for="countryUserIDFK" class="block text-lg font-medium"
-                    >Country</label
+            <div>
+                <label for="countryUserIDFK" class="label"
+                    >Country:</label
                 >
                 <select
                     id="countryUserIDFK"
                     name="countryUserIDFK"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 >
                     <option value="" selected disabled>Select Country</option>
@@ -147,55 +149,17 @@
                     <% }) %>
                 </select>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label for="workModality" class="block text-lg font-medium"
-                    >Work Modality</label
-                >
-                <select
-                    id="workModality"
-                    name="workModality"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                    required
-                >
-                    <option value="" selected disabled>Select Modality</option>
-                    <option value="0">On Site</option>
-                    <option value="1">Remote</option>
-                    <option value="2">Hybrid</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label for="userRoleIDFK" class="block text-lg font-medium">
-                    User Role
-                </label>
-                <select
-                    id="userRoleIDFK"
-                    name="userRoleIDFK"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
-                    required
-                >
-                    <option value="" selected disabled>Select Role</option>
-                    <% roles.forEach(role => { %>
-                    <option value="<%= role.roleID %>">
-                        <%= role.title %>
-                    </option>
-                    <% }) %>
-                </select>
-            </div>
-            <div class="field">
+            <div>
                 <label
                     for="prioritaryDepartmentIDFK"
-                    class="block text-lg font-medium"
+                    class="label"
                 >
-                    Prioritary Department
-                </label>
+                    Prioritary Department:</label>
                 <select
                     id="prioritaryDepartmentIDFK"
                     name="prioritaryDepartmentIDFK"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    class="input !w-[98%]"
                     required
                 >
                     <option value="" selected disabled>
@@ -209,38 +173,76 @@
                     <% }) %>
                 </select>
             </div>
+            
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div class="field">
-                <label for="curp" class="block text-lg font-medium">CURP</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="workModality" class="label"
+                    >Work Modality:</label
+                >
+                <select
+                    id="workModality"
+                    name="workModality"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="" selected disabled>Select Modality</option>
+                    <option value="0">On Site</option>
+                    <option value="1">Remote</option>
+                    <option value="2">Hybrid</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="userRoleIDFK" class="label">
+                    User Role:</label>
+                <select
+                    id="userRoleIDFK"
+                    name="userRoleIDFK"
+                    class="input !w-[98%]"
+                    required
+                >
+                    <option value="" selected disabled>Select Role</option>
+                    <% roles.forEach(role => { %>
+                    <option value="<%= role.roleID %>">
+                        <%= role.title %>
+                    </option>
+                    <% }) %>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2">
+            <div>
+                <label for="curp" class="label">CURP:</label>
                 <input
                     type="text"
                     id="curp"
                     name="curp"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
+                    class="input !w-[98%]"
                     placeholder="GOGE0927MNTPCE10"
                     maxlength="18"
                 />
-                <div id="curpFormatError" class="textDanger text-sm mt-2"></div>
+                <div id="curpFormatError" class="hidden textDanger text-sm mb-2"></div>
             </div>
 
-            <div class="field">
-                <label for="rfc" class="block text-lg font-medium">RFC</label>
+            <div>
+                <label for="rfc" class="label">RFC:</label>
                 <input
                     type="text"
                     id="rfc"
                     name="rfc"
-                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full uppercase"
+                    class="input !w-[98%] uppercase"
                     placeholder="GOGE0927MNQ9"
                     maxlength="13"
                 />
-                <div id="rfcFormatError" class="textDanger text-sm mt-2"></div>
+                <div id="rfcFormatError" class="hidden textDanger text-sm mb-2"></div>
             </div>
         </div>
 
-        <div class="flex justify-end mt-4">
-            <button type="submit" class="btnPrimary">Submit</button>
+        <div class="endButtonsContainer">
+            <button type="submit" class="btnPrimary">Add employee</button>
         </div>
     </form>
 </div>

@@ -1,3 +1,4 @@
+<script>addBackButton('/department');</script>
 <div class="fullContainer">
     <div class="titleContainer">
         <h2 class="title text-center flex-1"><%= department.enterprise %>: <%= department.title %></h2>
@@ -11,7 +12,7 @@
             <img
                 src="/icons/search.svg"
                 alt="search"
-                class="navIcon absolute w-6 h-6 text-white"
+                class="navIcon posSearch"
             />
 
             <input
@@ -19,18 +20,18 @@
                 name="search"
                 type="text"
                 placeholder="Search by name..."
-                class="w-full pl-9 p-2 bg-neutral-700/50 text-white rounded-md outline-none"
+                class="input"
             />
         </div>
     </div>
     <% } else {} %>
 
     <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8 items-center"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 items-center"
         id="employeesContainer"
     ></div>
 
-    <div class="flex justify-center gap-3 mt-6 mb-4">
+    <div class="endButtonsContainer">
         <button id="prevPage" class="btnPrimary">Previous</button>
         <button id="nextPage" class="btnPrimary">Next</button>
     </div>

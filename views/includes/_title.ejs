@@ -3,7 +3,7 @@
         <p class="text-xl font-semibold"><%= title %></p>
         <% if (userManualAdress !== '') { %>
             <a
-                class="btnHeader border-white/30 bg-(--darkColorNavOne) centerItems"
+                class="btnHeader right-10 border-white/30 bg-(--darkColorNavOne) hover:bg-(--darkColorNavOne)/50 centerItems"
                 href="/uploads/manual/<% userManualAdress %>"
                 target="_blank"
             >
@@ -12,3 +12,16 @@
         <% } %>
     </div>
 <% } %>
+<script>
+    const addBackButton = (address) => {
+        const bar = document.getElementById('titleBar');
+        bar.innerHTML += `
+            <a
+                class="btnHeader left-10 border-white/30 bg-(--darkColorNavOne) hover:bg-(--darkColorNavOne)/50 centerItems"
+                href="${address}"
+            >
+                <span>⇦</span>
+            </a>
+        `;
+    }
+</script>

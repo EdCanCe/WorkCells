@@ -1,14 +1,15 @@
+<script>addBackButton('/reports');</script>
 <div class="primaryContainer bgContainer1">
     <div class="titleContainer">
         <h2 class="title text-center flex-1">One To One answers</h2>
     </div>
-    <div class="mr-10 p-6">
-        <label for="department" class="block text-lg font-medium mb-2">
+    <div>
+        <label for="department" class="label">
             Department
         </label>
         <select
             id="department"
-            class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+            class="input"
         >
             <option selected>Select department</option>
             <option value = "">All department</option>
@@ -19,12 +20,12 @@
             <% }) %>
         </select>
     </div>
-    <div class="mr-10 p-6">
+    <div>
         <h2 class="subtitle text-center">
             From <%= currentMonthStart %> To <%= currentMonthEnd %>
         </h2>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 mt-6">
         <div>
             <h3 class="text-center flex flex-col items-center">Workload</h3>
             <canvas id="workloadChart" height="200"></canvas>

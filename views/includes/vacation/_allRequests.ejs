@@ -1,3 +1,4 @@
+<script>addBackButton('/vacation/requests');</script>
 <div class="fullContainer bgContainer1">
     <div>
         <div class="titleContainer">
@@ -54,11 +55,10 @@
             </div>
         </div>
     </div>
-    <div class="pagination-controls mt-4 mb-4 flex justify-center gap-3">
+    <div class="endButtonsContainer">
         <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
         <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
     </div>
-    <a href="/vacation/requests" class="btnPrimary">Back</a>
 </div>
 
 <script>

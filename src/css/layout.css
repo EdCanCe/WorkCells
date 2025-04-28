@@ -54,3 +54,11 @@
 .btnSize {
     @apply max-w-0 opacity-0;
 }
+
+.endButtonsContainer {
+    @apply mt-5 mb-0 flex justify-center gap-3;
+}
+
+.posSearch {
+    @apply absolute top-[27px] left-[-18px] w-6 h-6 text-white;
+}
