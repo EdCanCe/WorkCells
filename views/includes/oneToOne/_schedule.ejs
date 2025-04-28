@@ -1,27 +1,24 @@
 <div class="primaryContainer bgContainer1">
+
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Schedule future One To One session</h2>
+    </div>
+
     <div>
         <!-- Formulario para agendar la sesión -->
         <div class="sm:col-span-2">
-            <div>
-                <h2 class="text-2xl font-semibold mb-4 text-white">
-                    Schedule a One To One Session
-                </h2>
-            </div>
 
             <form action="/oneToOne/schedule" method="POST">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
                 <!-- Datos de la reunión -->
                 <div class="mb-6">
-                    <h3 class="text-xl font-semibold mb-2 text-white">
-                        Session information:
-                    </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label
                                 for="sessionDate"
                                 class="block text-neutral-300 mb-1"
-                                >* One To One date:</label
+                                >One To One date:</label
                             >
                             <input
                                 id="sessionDate"
@@ -33,7 +30,7 @@
                         </div>
                         <div>
                             <label class="block text-neutral-300 mb-1"
-                                >* One To One time:</label
+                                >One To One time:</label
                             >
                             <input
                                 class="w-full p-2 bg-neutral-600/50 border border-neutral-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
@@ -46,7 +43,7 @@
                             <label
                                 for="durationInput"
                                 class="block text-neutral-300 mb-1"
-                                >* Estimated duration (minutes):</label
+                                >Estimated duration (minutes):</label
                             >
                             <input
                                 placeholder="15"
@@ -79,12 +76,9 @@
                 </div>
                 <!--Worker section-->
                 <div class="mb-6">
-                    <h3 class="text-xl font-semibold mb-2 text-white">
-                        Worker:
-                    </h3>
                     <div class="mb-4">
                         <label class="block text-neutral-300 mb-1"
-                            >Select a worker:</label
+                            >Select who will the session be with:</label
                         >
                         <select
                             id="worker"

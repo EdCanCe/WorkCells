@@ -80,7 +80,7 @@ exports.postOneToOneSchedule = (request, response, next) => {
             );
 
             return meeting.save().then(() => {
-                request.session.info = `Sesión de one to one para el ${meetingDate} con ${request.body.name} creada`;
+                request.session.info = `Sesión de One To One para el ${meetingDate} con ${request.body.name} creada`;
                 response.redirect("/oneToOne");
             });
         })

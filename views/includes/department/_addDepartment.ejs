@@ -1,15 +1,15 @@
 <div class="primaryContainer bgContainer1">
+    
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Add a new Department</h2>
+    </div>
+
     <form
         id="departmentMethod"
         method="post"
         action="/department/add"
-        class="p-6"
     >
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-
-        <h2 class="text-2xl font-semibold mb-6">
-            Fill the data in order to create a new department
-        </h2>
 
         <div class="mb-4">
             <label class="block text-lg font-medium mb-2"
@@ -42,7 +42,7 @@
 
         <div class="mb-4">
             <input type='text' class='w-full input hidden' placeholder='Write
-            the Company name' id='enterpriseInput' name='enterprise' value=' />
+            the Company name' id='enterpriseInput' name='enterprise' value='' />
         </div>
 
         <!-- Selecciona el líder del departamento -->

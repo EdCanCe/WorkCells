@@ -1,12 +1,13 @@
 
 <div class='primaryContainer bgContainer1'>
-    <form id='departmentMethod' method='post' action='/department/<%= departmentID %>/modify' class='p-6'>
+
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Update Department</h2>
+    </div>
+
+    <form id='departmentMethod' method='post' action='/department/<%= departmentID %>/modify'>
 
         <input type='hidden' name='_csrf' value='<%= csrfToken %>' />
-
-        <h2 class='text-2xl font-semibold mb-6'>
-            Fill the data in order to update an existing department
-        </h2>
 
         <div class='mb-4'>
             <label class='block text-lg font-medium mb-2'

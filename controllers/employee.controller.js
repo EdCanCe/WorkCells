@@ -110,7 +110,7 @@ exports.getModify = (request, response, next) => {
                             ...sessionVars(request, title),
                             employee: employee,
                             country: country, // País específico del empleado
-                            role: role, // Rol específico del empleado
+                            roleUser: role, // Rol específico del empleado
                             department: department, // Departamento específico del empleado
                             countries: countries[0], // Lista completa de países
                             roles: roles[0], // Lista completa de roles

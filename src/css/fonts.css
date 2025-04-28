@@ -43,3 +43,15 @@
 * * {
     font-family: "Gotham";
 }
+
+.title {
+    @apply font-semibold text-3xl w-fit;
+}
+
+.subtitle {
+    @apply font-semibold text-2xl;
+}
+
+.bold {
+    @apply font-semibold;
+}

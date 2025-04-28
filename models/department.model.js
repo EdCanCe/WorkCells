@@ -153,9 +153,10 @@ module.exports = class Department {
 
     static getDepartmentById(departmentID) {
         return db.execute(
-            `SELECT departmentID, title
-           FROM department
-           WHERE departmentID = ?`,
+            `SELECT departmentID, d.title, e.title enterprise
+           FROM department d, enterprise e
+           WHERE departmentID = ?
+           AND e.enterpriseID = d.enterpriseIDFK`,
             [departmentID]
         );
     }

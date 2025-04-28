@@ -1,10 +1,9 @@
 <div class="primaryContainer bgContainer1">
-    <h2 class="text-2xl font-semibold text-center mt-5">One On One</h2>
-
+    
     <!-- Muestra los datos de la sesión One On One -->
-    <h3 class="text-2xl font-semibold text-center">
-        <%= name %> | <%= meetingDate %>
-    </h3>
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1"><%= name %> | <%= meetingDate %></h2>
+    </div>
 
     <% if (meetingLink) { %>
         <a target="_blank" href="<%= meetingLink %>" class="btnPrimary !block w-fit m-auto mt-5">Google Meet Link</a>

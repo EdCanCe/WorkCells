@@ -17,7 +17,7 @@ module.exports = class OneToOne {
         this.oneOnOneUserIDFK = oneOnOneUserIDFK;
     }
     /*
-     * Funcion que guarda un registro del one to one, con sus datos como id,
+     * Funcion que guarda un registro del One To One, con sus datos como id,
      * generado con uuid, expectedTime, meetingDate, meetingLink, oneOnOneUserIDFK
      */
     save() {
@@ -36,7 +36,7 @@ module.exports = class OneToOne {
     }
 
     /*
-     * Recolecta toda la informacion de una sesion one to one, con limite de 10
+     * Recolecta toda la informacion de una sesion One To One, con limite de 10
      *
      * @returns todos los registros de sesiones
      */
