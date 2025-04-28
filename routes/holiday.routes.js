@@ -35,7 +35,7 @@ router.get("/", isAuth, holidayController.getHolidays);
 
 router.get("/search", isAuth, holidayController.listPaginated);
 
-router.get("/searc/template", isAuth, holidayController.listTemplatePaginated);
+router.get("/search/template", isAuth, holidayController.listTemplatePaginated);
 
 router.get("/add", isAuth, holidayPrivilege, holidayController.getHolidaysAdd);
 
