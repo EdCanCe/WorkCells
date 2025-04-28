@@ -8,6 +8,12 @@ const holidayPrivilege = require("../util/holidayPrivilege/holidayPrivilege");
 router.get("/check/:usedHolidayID", isAuth, holidayController.getCheckHoliday);
 
 router.get(
+    "check/:templateHolidayID",
+    isAuth,
+    holidayController.getCheckTemplateHoliday
+);
+
+router.get(
     "/check/modify/:usedHolidayID",
     isAuth,
     holidayController.getHolidayModify

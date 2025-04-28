@@ -2,10 +2,16 @@ const { error } = require("console");
 const Holiday = require("../models/holiday.model");
 const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
-const title = 'Holidays';
+const title = "Holidays";
 
 exports.getHolidays = (request, response, next) => {
     response.render("usedHoliday", {
+        ...sessionVars(request, title),
+    });
+};
+
+exports.getCheckTemplateHoliday = (request, response, next) => {
+    response.render("templateHoliday", {
         ...sessionVars(request, title),
     });
 };
