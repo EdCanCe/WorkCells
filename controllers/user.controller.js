@@ -1,10 +1,11 @@
 const Usuario = require("../models/user.model");
 const sessionVars = require('../util/sessionVars');
+const title = '';
 
 // Renderiza la vista de login
 exports.get_login = (request, response, next) => {
     response.render("login.ejs", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -16,7 +17,7 @@ exports.post_login = (request, response, next) => {
     Usuario.fetchOne(email)
         .then(([rows]) => {
             if (rows.length === 0) {
-                request.session.warning = "Usuario y/o contraseña incorrectos";
+                request.session.warning = "User and/or password incorrect";
                 return response.redirect("/login");
             }
 
@@ -26,42 +27,47 @@ exports.post_login = (request, response, next) => {
             bycrypt.compare(password, user.passwd).then((doMatch)=>{
                 if(doMatch){
                     request.session.workStatus = user.workStatus; 
-                request.session.isLoggedIn = true;
-                request.session.mail = email;
-                request.session.userID = user.userID;
-                request.session.role = user.role;
+                    request.session.isLoggedIn = true;
+                    request.session.mail = email;
+                    request.session.userID = user.userID;
+                    request.session.role = user.role;
+                    request.session.passwdFlag = user.passwdFlag;
 
-                console.log("role: ", request.session.role);
-
-                // Obtener privilegios del usuario
-                return Usuario.getPrivilegios(user.mail)
-                    .then(([privilegios]) => {
-                        request.session.privilegios = privilegios;
-                        if(request.session.workStatus === 1){
-                            return request.session.save(() =>
-                                response.redirect("/home")
-                            );
-                    }
-                    request.session.warning =
-                            "Tu cuenta esta inactiva";
-                        response.redirect("/login");
-
-                    })
-                    .catch((error) => {
-                        console.error("Error al obtener privilegios:", error);
+                    // Obtener privilegios del usuario
+                    return Usuario.getPrivilegios(user.mail)
+                        .then(([privilegios]) => {
+                            request.session.privilegios = privilegios;
+                            if(request.session.workStatus === 1){
+                                if (request.session.passwdFlag === 1) {
+                                    return request.session.save(() =>
+                                        response.redirect("/home")
+                                    );
+                                } else {
+                                    return request.session.save(() =>
+                                        response.redirect("/employee/me/changePassword")
+                                    );
+                                }
+                        }
                         request.session.warning =
-                            "Hubo un problema con el servidor";
-                        response.redirect("/login");
-                    });
-                }else {
-                    request.session.warning = "Usuario y/o contraseña incorrectos";
+                                "Tu cuenta esta inactiva";
+                            response.redirect("/login");
+
+                        })
+                        .catch((error) => {
+                            console.error("Error al obtener privilegios:", error);
+                            request.session.warning =
+                                "There was a problem with the database";
+                            response.redirect("/login");
+                        });
+                } else {
+                    request.session.warning = "User and/or password incorrect";
                     return response.redirect("/login");
                 }
             })
         })
         .catch((error) => {
             console.error("Error al buscar el usuario:", error);
-            request.session.warning = "Hubo un problema con el servidor";
+            request.session.warning = "There was a problem with the database";
             response.redirect("/login");
         });
 };

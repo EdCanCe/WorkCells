@@ -1,7 +1,6 @@
+<% if(isLoggedIn && title !== '') { %>
 <div id="navBar" class="bgNav h-screen w-fit relative">
-    <div
-        class="bgNavTwo border-b-1 h-[60px] w-full navItem"
-    >
+    <div class="bgNavTwo border-b-1 h-[60px] w-full navItem">
         <a
             href="/"
             class="bgNavHead flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %> toggleText"
@@ -20,30 +19,21 @@
     </div>
 
     <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
-    <a
-    href="/myProfile"
-    class="bgNavOne w-full h-[60px] p-3 navItem"
->
-    <img
-        src="/icons/myprofile.svg"
-        class="navIcon z-10 inline-block aspect-square h-full scale-75"
-    />
-    <div
-        class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-    >
-        <span class="font-medium inline-block ml-2 whitespace-nowrap"
-            >Profile</span
+    <a href="/employee/me" class="bgNavOne w-full h-[60px] p-3 navItem">
+        <img
+            src="/icons/myprofile.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
-    </div>
-</a>
-    
-    
-    
-    
-    <a
-        href="/calendar"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Profile</span
+            >
+        </div>
+    </a>
+
+    <a href="/calendar" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/calendar.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -56,11 +46,8 @@
             >
         </div>
     </a>
-
-    <a
-        href="/department"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <% if (role === 'Department Leader' || role === 'Manager') { %>
+    <a href="/department" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/department.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -68,16 +55,15 @@
         <div
             class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
         >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Departments</span
-            >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap">
+                <% if (role === 'Department Leader') { %> My Department <% }
+                else { %> Departments <% } %>
+            </span>
         </div>
     </a>
+    <% } %>
 
-    <a
-        href="/vacation"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <a href="/vacation" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/vacation.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -91,10 +77,7 @@
         </div>
     </a>
 
-    <a
-        href="/absence"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <a href="/absence" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/absence.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -108,10 +91,7 @@
         </div>
     </a>
 
-    <a
-        href="/holiday"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <a href="/holiday" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/holiday.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -125,10 +105,7 @@
         </div>
     </a>
 
-    <a
-        href="/oneToOne"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <a href="/oneToOne" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/onetoone.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -141,11 +118,8 @@
             >
         </div>
     </a>
-
-    <a
-        href="/fault"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <% if (role === 'Manager') { %>
+    <a href="/fault" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/faults.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -158,11 +132,8 @@
             >
         </div>
     </a>
-
-    <a
-        href="/employee"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <% } %> <% if (role === 'Manager') { %>
+    <a href="/employee" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/employee.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -175,11 +146,8 @@
             >
         </div>
     </a>
-
-    <a
-        href="/reports"
-        class="bgNavOne w-full h-[60px] p-3 navItem"
-    >
+    <% } %> <% if (role === 'Manager') { %>
+    <a href="/reports" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/report.svg"
             class="navIcon z-10 inline-block aspect-square h-full scale-75"
@@ -192,7 +160,7 @@
             >
         </div>
     </a>
-
+    <% } %>
     <a
         href="/logout"
         class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-0"
@@ -213,3 +181,4 @@
     <a class="block p-3"></a>
 </div>
 <script src="/javascript/navBarFunctionality.js"></script>
+<% } %>

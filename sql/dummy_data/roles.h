@@ -12,6 +12,7 @@ class Role {
     public:
         Role(string);
         string getId();
+        string getTitle();
         void print();
 };
 
@@ -26,6 +27,10 @@ string Role::getId(){
     return id;
 }
 
+string Role::getTitle() {
+    return title;
+}
+
 void Role::print() {
     cout << "INSERT INTO role(roleID, title) values('" << id << "', '" << title << "'); \n";
 }
@@ -33,7 +38,7 @@ void Role::print() {
 void createRoles(){
     roles.push_back(Role("Colaborator"));
     roles.push_back(Role("Department Leader"));
-    roles.push_back(Role("Human Resources"));
+    roles.push_back(Role("Manager"));
 }
 
 #endif

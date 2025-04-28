@@ -43,6 +43,7 @@ CREATE TABLE enterprise (
 CREATE TABLE department (
     departmentID VARCHAR(40) NOT NULL PRIMARY KEY,
     title VARCHAR(60) NOT NULL,
+    flag BOOLEAN DEFAULT '1',
     enterpriseIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT enterpriseIDFK FOREIGN KEY (enterpriseIDFK) REFERENCES enterprise(enterpriseID)
 );
@@ -59,6 +60,7 @@ CREATE TABLE user (
     zipCode MEDIUMINT NOT NULL,
     houseNumber VARCHAR(13) NOT NULL,
     streetName VARCHAR(100),
+    phoneNumber VARCHAR(15),
     colony VARCHAR(100),
     workModality TINYINT NOT NULL,
     workStatus BOOLEAN NOT NULL,
@@ -67,8 +69,15 @@ CREATE TABLE user (
     countryUserIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT countryUserIDFK FOREIGN KEY (countryUserIDFK) REFERENCES country(countryID),
     prioritaryDepartmentIDFK VARCHAR(40),
-    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID)
+    CONSTRAINT prioritaryDepartmentIDFK FOREIGN KEY (prioritaryDepartmentIDFK) REFERENCES department(departmentID) ON DELETE SET NULL
 );
+
+ALTER TABLE department 
+ADD departmentLeaderIDFK VARCHAR(40);
+
+ALTER TABLE department 
+ADD CONSTRAINT departmentLeaderIDFK 
+FOREIGN KEY (departmentLeaderIDFK) REFERENCES user(userID);
 
 CREATE TABLE workStatus (
     workStatusID VARCHAR(40) NOT NULL PRIMARY KEY,
@@ -78,12 +87,13 @@ CREATE TABLE workStatus (
     CONSTRAINT userStatusIDFK FOREIGN KEY (userStatusIDFK) REFERENCES user(userID)
 );
 
+/**
 CREATE TABLE userDepartment (
     departmentIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
     userIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID)
-);
+);*/
 
 CREATE TABLE vacation (
     vacationID VARCHAR(40) NOT NULL PRIMARY KEY,
@@ -142,7 +152,7 @@ CREATE TABLE oneOnOneMeasurable (
 );
 
 CREATE TABLE oneOnOneMeasure (
-    evaluation VARCHAR(40) NOT NULL,
+    evaluation int NOT NULL,
     measureOneOnOneIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT measureOneOnOneIDFK FOREIGN KEY (measureOneOnOneIDFK) REFERENCES oneOnOne(oneOnOneID),
     measurableIDFK VARCHAR(40) NOT NULL,

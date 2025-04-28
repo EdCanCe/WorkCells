@@ -1,8 +1,9 @@
 const sessionVars = require('../util/sessionVars');
+const title = 'Home';
 
 exports.getHomepage = (request, response, next) => {
     response.render('homepage', {
-        ...sessionVars(request),
+        ...sessionVars(request, title, 'home.pdf'),
     });
 };
 

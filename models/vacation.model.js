@@ -1,10 +1,9 @@
-const db = require('../util/database');
-
+const db = require("../util/database");
 
 module.exports = class Vacation {
     /**
      * Constructor de una solicitud de vacaciones.
-     * 
+     *
      * @param text userID       El ID del usuario.
      * @param text startDate    La fecha de inicio.
      * @param text endDate      La fecha de final.
@@ -23,7 +22,7 @@ module.exports = class Vacation {
      */
     save() {
         const saveQuery =
-            'INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )';
+            "INSERT INTO vacation(vacationID, vacationUserIDFK, startDate, endDate, reason) VALUES (UUID(), ? , ? , ? , ? )";
         return db
             .execute(saveQuery, [
                 this.userID,
@@ -32,7 +31,7 @@ module.exports = class Vacation {
                 this.reason,
             ])
             .catch((error) => {
-                console.error('Error al añadir vacación:', error.message);
+                console.error("Error al añadir vacación:", error.message);
                 throw error;
             });
     }
@@ -45,18 +44,10 @@ module.exports = class Vacation {
   v.startDate, 
   v.endDate, 
   v.leaderStatus
-FROM vacation v, user u
+FROM vacation v, user u, department d
 WHERE v.vacationUserIDFK = u.userID
-AND u.userID IN (
-  -- Subconsulta: Usuarios del mismo departamento del líder
-  SELECT ud.userIDFK
-  FROM userDepartment ud
-  WHERE ud.departmentIDFK IN (
-    -- Subconsulta: Departamento del líder
-    SELECT departmentIDFK
-    FROM userDepartment, user
-    WHERE userIDFK = ?
-    
+AND u.prioritaryDepartmentIDFK = d.departmentID
+AND d.departmentLeaderIDFK = ?
   )
 );`,
             [userID]
@@ -80,7 +71,7 @@ AND u.userID IN (
         );
     }
 
-    static updateVacation(vacationId, startDate, endDate, reason) {    
+    static updateVacation(vacationId, startDate, endDate, reason) {
         return db.execute(
             `UPDATE vacation
              SET startDate = ?, endDate = ?, reason = ?
@@ -88,7 +79,6 @@ AND u.userID IN (
             [startDate, endDate, reason, vacationId]
         );
     }
-    
 
     static fetchAllWithNames(userID) {
         return db.execute(
@@ -102,23 +92,17 @@ AND u.userID IN (
                 v.leaderStatus,
                 v.hrStatus,
                 v.vacationID
-            FROM vacation v, user u
+            FROM vacation v, user u, department d
             WHERE v.vacationUserIDFK = u.userID 
-            AND u.userID IN (
-                SELECT ud.userIDFK
-                FROM userDepartment ud
-                WHERE ud.departmentIDFK IN (
-                    SELECT departmentIDFK
-                    FROM userDepartment, user
-                    WHERE userIDFK = ?
-                )
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.departmentLeaderIDFK = ?
             );`,
             [userID]
         );
     }
-    
+
     static fetchPaginated(limit, offset, userRole, userId) {
-        if (userRole === 'Human Resources') {
+        if (userRole === "Manager") {
             // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2)
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
@@ -129,7 +113,7 @@ AND u.userID IN (
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
             );
-        } else if (userRole === 'Department Leader') {
+        } else if (userRole === "Department Leader") {
             // Líder: Ver solo solicitudes pendientes de su departamento donde leaderStatus = 2
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
@@ -151,7 +135,7 @@ AND u.userID IN (
     }
 
     static fetchAllPaginated(limit, offset, userRole, userId) {
-        if (userRole === 'Human Resources') {
+        if (userRole === "Manager") {
             // RRHH: Ver todas las solicitudes pendientes para RRHH (hrStatus = 2)
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
@@ -162,7 +146,7 @@ AND u.userID IN (
                 LIMIT ? OFFSET ?`,
                 [limit, offset]
             );
-        } else if (userRole === 'Department Leader') {
+        } else if (userRole === "Department Leader") {
             // Líder: Ver solo solicitudes pendientes de su departamento donde leaderStatus = 2
             return db.execute(
                 `SELECT v.*, u.birthName, u.surname 
@@ -182,23 +166,17 @@ AND u.userID IN (
             return Promise.resolve([[]]);
         }
     }
-    
+
     static fetchDepartmentPaginated(leaderID, limit, offset) {
         return db.execute(
             `SELECT v.*, u.birthName, u.surname 
-            FROM vacation AS v
-            JOIN user AS u ON u.userID = v.vacationUserIDFK
-            WHERE v.leaderStatus = 2 AND v.hrStatus = 2
-            AND u.userID IN (
-                SELECT ud.userIDFK
-                FROM userDepartment ud
-                WHERE ud.departmentIDFK IN (
-                    SELECT departmentIDFK
-                    FROM userDepartment
-                    WHERE userIDFK = ?
-                )
-            )
-            ORDER BY v.startDate DESC
+            FROM vacation v, user u, department d
+            WHERE u.userID = v.vacationUserIDFK 
+            AND v.leaderStatus = 2 
+            AND v.hrStatus = 2
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.departmentLeaderIDFK = ?
+            ORDER BY v.startDate DESC;
             LIMIT ? OFFSET ?`,
             [leaderID, limit, offset]
         );
@@ -213,9 +191,18 @@ AND u.userID IN (
         );
     }
 
+    static fetchOneEmployee(vacationUserID) {
+        return db.execute(
+            `SELECT *
+            FROM user
+            WHERE userID = ?`,
+            [vacationUserID]
+        );
+    }
+
     static fetchAllVacation(userID) {
         return db.execute(
-            `SELECT v.vacationID,v.reason,v.startDate, v.endDate,
+            `SELECT v.vacationID, v.reason, v.startDate, v.endDate,
             v.leaderStatus, v.hrStatus 
             FROM vacation v
             WHERE vacationUserIDFK = ?`,
@@ -225,92 +212,150 @@ AND u.userID IN (
 
     static updateStatusLeader(vacationId, status) {
         return db.execute(
-            'UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?',
+            "UPDATE vacation SET leaderStatus = ? WHERE vacationID = ?",
             [status, vacationId]
         );
     }
 
     static updateStatusHR(vacationId, status) {
         return db.execute(
-            'UPDATE vacation SET hrStatus = ? WHERE vacationID = ?',
+            "UPDATE vacation SET hrStatus = ? WHERE vacationID = ?",
             [status, vacationId]
         );
     }
 
     /**
      * Regresa las vacaciones entre 2 fechas para un usuario.
-     * 
+     *
      * @param string startDate  La fecha inicial
-     * @param string endDate    La fecha final 
+     * @param string endDate    La fecha final
      * @param string userID     El usuario al que le pertenecen las vacaciones
      * @returns Las vacaciones en esas fechass
      */
     static fetchByDateType(startDate, endDate, userID) {
-        return db.execute(`
+        return db.execute(
+            `
             (SELECT * FROM vacation WHERE startDate BETWEEN ? AND ? AND vacationUserIDFK = ? AND hrStatus * leaderStatus != 0) UNION (SELECT * FROM vacation WHERE endDate BETWEEN ? AND ? AND vacationUserIDFK = ? AND hrStatus * leaderStatus != 0)`,
             [startDate, endDate, userID, startDate, endDate, userID]
         );
     }
 
     static deleteVacation(vacationID) {
-        return db.execute(
-            'DELETE FROM vacation WHERE vacationID = ?',
-            [vacationID]
-        );
+        return db.execute("DELETE FROM vacation WHERE vacationID = ?", [
+            vacationID,
+        ]);
     }
 
     /**
      * Regresa las vacaciones que el usuario ha tenido en el periodo actual
-     * 
-     * @param string userID El usuario del cuál se verificarán sus vacaciones 
+     *
+     * @param string userID El usuario del cuál se verificarán sus vacaciones
      * @returns Las vacaciones del usuario en el periodo actual
      */
     static fetchVacationsInPeriod(userID) {
-        return db.execute(`
-SELECT 
-    v.startDate, 
-    v.endDate, 
-    v.leaderStatus, 
-    d.startDate AS mapStart, 
-    d.endDate AS mapEnd
-FROM 
-    (
+        return db.execute(
+            `
         SELECT 
-            STR_TO_DATE(CONCAT_WS('-', 
-                IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) ,
-                d.startMonth, 
-                d.startDay
-            ), '%Y-%m-%d') AS startDate,
-            STR_TO_DATE(CONCAT_WS('-', 
-                IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) ,
-                d.startMonth, 
-                d.startDay
-            ), '%Y-%m-%d') AS endDate
+            v.startDate, 
+            v.endDate, 
+            v.leaderStatus, 
+            d.startDate AS mapStart, 
+            d.endDate AS mapEnd
         FROM 
             (
                 SELECT 
-                    MONTH(w.startDate) AS startMonth, 
-                    DAY(w.startDate) AS startDay,
-                    STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS startDate,
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS endDate
                 FROM 
-                    user u
-                    JOIN workStatus w ON u.userID = w.userStatusIDFK
-                WHERE 
-                    u.userID = ?
-                GROUP BY u.userID
-                LIMIT 1
+                    (
+                        SELECT 
+                            MONTH(w.startDate) AS startMonth, 
+                            DAY(w.startDate) AS startDay,
+                            STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+                        FROM 
+                            user u
+                            JOIN workStatus w ON u.userID = w.userStatusIDFK
+                        WHERE 
+                            u.userID = ?
+                        GROUP BY u.userID
+                        LIMIT 1
+                    ) AS d
             ) AS d
-    ) AS d
-LEFT JOIN vacation v 
-    ON v.startDate BETWEEN d.startDate AND d.endDate 
-    AND v.vacationUserIDFK = ?
-    AND v.hrStatus * v.leaderStatus != 0;
+        LEFT JOIN vacation v 
+            ON v.startDate BETWEEN d.startDate AND d.endDate 
+            AND v.vacationUserIDFK = ?
+            AND v.hrStatus * v.leaderStatus != 0;
 `,
-        [userID, userID]);
+            [userID, userID]
+        );
     }
 
-    static getUserID(vacationID){
-        return db.execute(`SELECT vacationUserIDFK FROM vacation WHERE vacationID = ?;`, [vacationID]);
+    /**
+     * Regresa las solicitudes que el usuario ha solicitado en el periodo actual
+     *
+     * @param string userID El usuario del cuál se verificarán sus solicitudes
+     * @returns Las solicitudes del usuario en el periodo actual
+     */
+    static fetchRequestsInPeriod(userID) {
+        return db.execute(
+            `
+        SELECT 
+            v.vacationID,
+            v.startDate, 
+            v.endDate, 
+            v.reason,
+            v.leaderStatus, 
+            v.hrStatus,
+            d.startDate AS mapStart, 
+            d.endDate AS mapEnd
+        FROM 
+            (
+                SELECT 
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE)-1, YEAR(CURRENT_DATE)) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS startDate,
+                    STR_TO_DATE(CONCAT_WS('-', 
+                        IF(givenDate > CURRENT_DATE, YEAR(CURRENT_DATE), YEAR(CURRENT_DATE)+1) ,
+                        d.startMonth, 
+                        d.startDay
+                    ), '%Y-%m-%d') AS endDate
+                FROM 
+                    (
+                        SELECT 
+                            MONTH(w.startDate) AS startMonth, 
+                            DAY(w.startDate) AS startDay,
+                            STR_TO_DATE(CONCAT_WS('-', YEAR(CURRENT_DATE), MONTH(w.startDate), DAY(w.startDate)), '%Y-%m-%d') AS givenDate
+                        FROM 
+                            user u
+                            JOIN workStatus w ON u.userID = w.userStatusIDFK
+                        WHERE 
+                            u.userID = ?
+                        GROUP BY u.userID
+                        LIMIT 1
+                    ) AS d
+            ) AS d
+        LEFT JOIN vacation v 
+            ON v.startDate BETWEEN d.startDate AND d.endDate 
+            AND v.vacationUserIDFK = ?;
+`,
+            [userID, userID]
+        );
     }
-    
-}
+
+    static getUserID(vacationID) {
+        return db.execute(
+            `SELECT vacationUserIDFK FROM vacation WHERE vacationID = ?;`,
+            [vacationID]
+        );
+    }
+};

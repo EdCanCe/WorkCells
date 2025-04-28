@@ -13,6 +13,7 @@ module.exports = class Employee {
         houseNumber,
         streetName,
         colony,
+        phoneNumber,
         workModality,
         userRoleIDFK,
         countryUserIDFK,
@@ -27,6 +28,7 @@ module.exports = class Employee {
         this.houseNumber = houseNumber;
         this.streetName = streetName;
         this.colony = colony;
+        this.phoneNumber = phoneNumber;
         this.workModality = workModality;
         this.userRoleIDFK = userRoleIDFK;
         this.countryUserIDFK = countryUserIDFK;
@@ -73,9 +75,9 @@ module.exports = class Employee {
                 const query = `
                 INSERT INTO user(
                     userID, curp, rfc, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, 
-                    streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
+                    streetName, colony, phoneNumber, workModality, workStatus, userRoleIDFK, countryUserIDFK, prioritaryDepartmentIDFK
                 ) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
                 return bcrypt
                     .hash(passwd, 12)
@@ -93,6 +95,7 @@ module.exports = class Employee {
                             this.houseNumber,
                             this.streetName,
                             this.colony,
+                            this.phoneNumber,
                             this.workModality,
                             workStatus,
                             this.userRoleIDFK,
@@ -120,6 +123,19 @@ module.exports = class Employee {
         return db.execute(`SELECT d.departmentID, d.title AS departmentTitle, e.title AS enterpriseTitle 
                         FROM department d, enterprise e 
                         WHERE d.enterpriseIDFK = e.enterpriseID;`);
+    }
+
+    static fetchAllDataUser(userID) {
+        return db.execute(
+            `SELECT *, c.title as country, r.title as role, d.title as department, e.title as enterprise
+            FROM user u, country c, role r, department d, enterprise e
+            WHERE u.countryUserIDFK = c.countryID
+            AND u.userRoleIDFK = r.roleID
+            AND u.prioritaryDepartmentIDFK = d.departmentID
+            AND d.enterpriseIDFK = e.enterpriseID
+            AND u.userID = ?`,
+            [userID]
+        );
     }
 
     // Obtener el país por ID
@@ -239,6 +255,26 @@ module.exports = class Employee {
         );
     };
 
+    // Actualizar contraseña para usuarios existentes
+    static updatePassword(userID, newPassword) {
+        return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
+            return db.execute("UPDATE user SET passwd = ? WHERE userID = ?", [
+                hashedPassword,
+                userID,
+            ]);
+        });
+    }
+
+    // Actualizar contraseña para usuarios que entran por primera vez
+    static updatePasswordFirstTime(userID, newPassword) {
+        return bcrypt.hash(newPassword, 12).then((hashedPassword) => {
+            return db.execute(
+                "UPDATE user SET passwd = ?, passwdFlag = 1 WHERE userID = ?",
+                [hashedPassword, userID]
+            );
+        });
+    }
+
     static countFilteredEmployees(query = "", filter = "all") {
         let sql = `
             SELECT COUNT(*) AS total
@@ -275,12 +311,17 @@ module.exports = class Employee {
         houseNumber,
         streetName,
         colony,
+        phoneNumber,
         workModality,
         userRoleIDFK,
         countryUserIDFK,
         prioritaryDepartmentIDFK,
         workStatus
     ) {
+        //Verifica que los campos de curp y rfc no esten nulos
+        curp = curp && curp.trim() !== "" ? curp.toUpperCase() : null;
+        rfc = rfc && rfc.trim() !== "" ? rfc.toUpperCase() : null;
+
         const checkUserQuery = `SELECT userID 
                                 FROM user 
                                 WHERE userID != ? 
@@ -290,7 +331,7 @@ module.exports = class Employee {
                                 (mail = ? AND mail IS NOT NULL));`;
 
         return db
-            .execute(checkUserQuery, [curp, rfc, mail, userID])
+            .execute(checkUserQuery, [userID, curp, rfc, mail])
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(
@@ -301,7 +342,7 @@ module.exports = class Employee {
                 return db.execute(
                     `UPDATE user
                     SET curp = ?, rfc = ?, birthName = ?, surname = ?, mail = ?, zipCode = ?, 
-                    houseNumber = ?, streetName = ?, colony = ?, workModality = ?, userRoleIDFK = ?, 
+                    houseNumber = ?, streetName = ?, colony = ?, phoneNumber = ?, workModality = ?, userRoleIDFK = ?, 
                     countryUserIDFK = ?, prioritaryDepartmentIDFK = ?, workStatus = ?
                     WHERE userID = ?;`,
                     [
@@ -314,6 +355,7 @@ module.exports = class Employee {
                         houseNumber,
                         streetName,
                         colony,
+                        phoneNumber,
                         workModality,
                         userRoleIDFK,
                         countryUserIDFK,
@@ -323,5 +365,49 @@ module.exports = class Employee {
                     ]
                 );
             });
+    }
+
+    static getOwnFaults(userID) {
+        return db.execute(
+            `SELECT f.*, fm.mediaLink, u.birthName, u.surname
+            FROM fault f
+            JOIN user u ON f.faultUserIDFK = u.userID
+            LEFT JOIN faultMedia fm ON f.faultID = fm.faultIDFK
+            WHERE u.userID = ?
+            GROUP BY f.faultID
+            ORDER BY f.doneDate DESC`,
+            [userID]
+        );
+    }
+
+    /**
+     * Obtiene todos los usuarios junto con su rol y departamento
+     *
+     * @returns Los datos de los usuarios
+     */
+    static fetchAllUserRoles() {
+        return db.execute(`SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
+        FROM user u
+        JOIN role r ON u.userRoleIDFK = r.roleID
+        LEFT JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
+        LEFT JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID`);
+    }
+
+    /**
+     * Obtiene los datos de los empleados en un departamento
+     *
+     * @param string departmentID      El ID del departamento.
+     * @returns Los datos de los empleados.
+     */
+    static fetchAllUsersByDepartment(departmentID) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, r.title as role, d.title as department, e.title as enterprise
+        FROM user u
+        JOIN role r ON u.userRoleIDFK = r.roleID
+        JOIN department d ON u.prioritaryDepartmentIDFK = d.departmentID
+        JOIN enterprise e ON d.enterpriseIDFK = e.enterpriseID
+        AND d.departmentID = ?`,
+            [departmentID]
+        );
     }
 };

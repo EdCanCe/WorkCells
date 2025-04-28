@@ -1,4 +1,4 @@
-@startuml CU019 - Líder consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
+@startuml CU19 - Líder consulta solicitudes de vacaciones de colaborador - Diagrama de actividad
 
 |__Líder__|
 start

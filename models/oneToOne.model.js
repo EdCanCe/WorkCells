@@ -17,7 +17,7 @@ module.exports = class OneToOne {
         this.oneOnOneUserIDFK = oneOnOneUserIDFK;
     }
     /*
-     * Funcion que guarda un registro del one to one, con sus datos como id,
+     * Funcion que guarda un registro del One To One, con sus datos como id,
      * generado con uuid, expectedTime, meetingDate, meetingLink, oneOnOneUserIDFK
      */
     save() {
@@ -36,7 +36,7 @@ module.exports = class OneToOne {
     }
 
     /*
-     * Recolecta toda la informacion de una sesion one to one, con limite de 10
+     * Recolecta toda la informacion de una sesion One To One, con limite de 10
      *
      * @returns todos los registros de sesiones
      */
@@ -80,7 +80,7 @@ module.exports = class OneToOne {
      */
     static fetchByDateTypeHR(startDate, endDate) {
         return db.execute(
-            "SELECT * FROM oneOnOne WHERE meetingDate BETWEEN ? AND ?",
+            "SELECT * FROM oneOnOne, user WHERE meetingDate BETWEEN ? AND ? AND oneOnOneUserIDFK = userID ORDER BY meetingDate ASC",
             [startDate, endDate]
         );
     }
@@ -126,6 +126,36 @@ module.exports = class OneToOne {
         );
     }
 
+    /*
+     * Funcion que obtiene informacion de los usuarios, su rol y tambien la fecha
+     * y hora de sus propias sesiones one on one
+     *
+     * @returns informacion sus propias sesiones
+     *
+     */
+    static getOwnSessions(userID) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
+            o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            WHERE u.userID = ?
+            ORDER BY o.meetingDate DESC`,
+            [userID]
+        );
+    }
+
+    static getOwnSessionsPaginated(userID, limit, offset) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
+            o.expectedTime FROM user u JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            WHERE u.userID = ?
+            ORDER BY o.meetingDate DESC
+            LIMIT ? OFFSET ?`,
+            [userID, limit, offset]
+        );
+    }
+
     static getAllSessionsPaginated(limit, offset) {
         return db.execute(
             `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.oneOnOneID, o.meetingDate, 
@@ -145,6 +175,34 @@ module.exports = class OneToOne {
             WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
             ORDER BY o.meetingDate DESC`,
             [`%${query}%`, `%${query}%`]
+        );
+    }
+
+    static searchByID(query, userID) {
+        return db.execute(
+            `SELECT u.userID, u.birthName, u.surname, u.mail, r.title, o.meetingDate, 
+            o.oneOnOneID, o.expectedTime FROM user u 
+            JOIN role r ON u.userRoleIDFK = r.roleID
+            JOIN oneOnOne o ON u.userID = o.oneOnOneUserIDFK 
+            WHERE(u.birthName LIKE ? OR u.surname LIKE ?)
+            AND u.userID = ?
+            ORDER BY o.meetingDate DESC`,
+            [`%${query}%`, `%${query}%`, userID]
+        );
+    }
+
+    static getAllWorkers(userID) {
+        return db.execute(
+            `SELECT u.birthName, u.surname, u.mail, d.title as 'department', 
+                e.title as 'company'
+            FROM user u
+            JOIN department d
+                ON u.prioritaryDepartmentIDFK = d.departmentID
+            JOIN enterprise e
+                ON d.enterpriseIDFK = e.enterpriseID
+            WHERE u.userID NOT IN (?)
+            ORDER BY u.birthName ASC`,
+            [userID]
         );
     }
 };

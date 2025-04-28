@@ -1,0 +1,95 @@
+.navIcon {
+    @apply dark:invert;
+}
+
+.bgNav {
+    @apply border-r-[1px]
+           bg-(--lightColorNavBase) border-(--lightColorNavOne)
+           dark:bg-(--darkColorNavBase) dark:border-(--darkColorNavOne);
+}
+
+.bgNavOne {
+    @apply hover:bg-(--lightColorNavOne)
+           dark:hover:bg-(--darkColorNavOne);
+}
+
+.bgNavTwo {
+    @apply bg-(--lightColorNavTwo) border-(--lightColorNavOne)
+           dark:bg-(--darkColorNavTwo) dark:border-(--darkColorNavOne);
+}
+
+.bgNavHead {
+    @apply hover:bg-neutral-500
+           dark:hover:bg-neutral-600;
+}
+
+.bgStatusInfo {
+    @apply bg-sky-400 text-sky-900
+           dark:bg-sky-900 dark:text-sky-400;
+}
+
+.bgStatusBarInfo {
+    @apply bg-sky-600
+           dark:bg-sky-950;
+}
+
+.bgStatusWarning {
+    @apply bg-yellow-400 text-yellow-900
+           dark:bg-yellow-900 dark:text-yellow-400;
+}
+
+.bgStatusBarWarning {
+    @apply bg-yellow-600
+           dark:bg-yellow-950;
+}
+
+.bgStatusAlert {
+    @apply font-bold
+           bg-rose-400 text-rose-900
+           dark:bg-rose-900 dark:text-rose-400;
+}
+
+.bgStatusBarAlert {
+    @apply bg-rose-500
+           dark:bg-rose-950;
+}
+
+.bgBase {
+    @apply bg-(--lightColorBase) text-(--darkColorBase)
+           dark:bg-(--darkColorBase) dark:text-(--lightColorBase);
+}
+
+.bgContainer1 {
+    
+}
+
+.bgPrimary {
+    @apply bg-(--lightBtnPrimary)
+           dark:bg-(--darkBtnPrimary);
+}
+
+.bgPrimaryLowOpacity {
+    @apply bg-(--lightBtnPrimaryLowOpacity)
+           dark:bg-(--darkBtnPrimaryLowOpacity);
+}
+
+.bgTitle {
+    @apply bg-(--darkColorNavBase) border-(--darkColorNavOne);
+}
+
+.invertText {
+    @apply text-(--lightColorBase)
+           dark:text-(--darkColorBase);
+}
+
+.textSuccess {
+    @apply text-green-500;
+}
+
+.textWarning {
+    @apply text-yellow-500;
+}
+
+.textDanger {
+    @apply text-red-500;
+}

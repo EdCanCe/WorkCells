@@ -1,86 +1,112 @@
-<div class="flex">
-    <!-- Navbar -->
-    <aside class="w-64"></aside>
+<script>addBackButton('/');</script>
+<div class="primaryContainer bgContainer1">
 
-    <!-- Contenido principal -->
-    <div class="flex-1 p-6">
-        <!-- Descripción y botón -->
-        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">
-                    All Departments
-                </h2>
-                <a
-                    href="/department/add"
-                    class="btnPrimary"
-                >
-                    Add Department
-                </a>
-            </div>
-        </div>
-
-        <!-- Recuadros de departamentos -->
-        <div class="space-y-6">
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">Human Resources</h3>
-                    <p class="text-lg">Department of HR</p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
-
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">IT</h3>
-                    <p class="text-lg">
-                        Department of IT and Software Development
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
-
-            <div class="bg-neutral-700/25 shadow-md rounded-lg p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-semibold">Marketing</h3>
-                    <p class="text-lg">
-                        Department of marketing and PR
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <a
-                        href="/department/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                    <a
-                        href=""
-                        class="btnPrimary"
-                        >Delete</a
-                    >
-                </div>
-            </div>
+    <div class="titleContainer">
+        <h2 class="title">All Departments</h2>
+        <div class="flex gap-1 centerItems">
+            <a class="btnPrimary center m-2" href="/department/add">Add department</a>
         </div>
     </div>
+
+    <% if (role == 'Manager') { %>
+    <div class="flex justify-center w-full">
+        <div
+            class="shadow-md rounded-lg p-4 flex items-center relative content w-full max-w-2xl"
+        >
+            <img
+                src="/icons/search.svg"
+                alt="search"
+                class="navIcon posSearch"
+            />
+
+            <input
+                id="search"
+                name="search"
+                type="text"
+                placeholder="Search by name..."
+                class="input"
+            />
+        </div>
+    </div>
+    <% } %>
+
+    <div
+        class="flex flex-col items-center justify-start"
+        id="departmentContainer"
+    ></div>
+
+    <div class="endButtonsContainer">
+        <button id="prevPage" class="btnPrimary">Previous</button>
+        <button id="nextPage" class="btnPrimary">Next</button>
+    </div>
 </div>
+
+<script>
+    let currentPage = 1;
+    let currentQuery = "";
+
+    async function LoadDepartments(page, query = "") {
+        const response = await fetch(
+            `/department/search?page=${page}&query=${encodeURIComponent(query)}`
+        );
+        const payload = await response.json();
+        const data = payload.rows || [];
+
+        let container = "";
+
+        if (data.length === 0) {
+            container += `<p>There´s no departments </p>`;
+        } else {
+            data.forEach((dept) => {
+                container += `<div class="w-[90%] bg-neutral-700/25 shadow-md rounded-2xl p-6 mb-4 flex">
+                    <div class="w-4/5 pr-6 flex flex-col justify-center">
+                <h2 class="text-2xl font-semibold mb-2">${dept.title}</h2>
+                <p class="mb-1">
+                <span class="font-medium">Status:</span>`;
+
+                if (dept.status === 1) {
+                    container += `<span class="textSuccess"> Active </span>`;
+                } else {
+                    container += `<span class="textWarning"> Inactive </span>`;
+                }
+
+                container += `</p>
+                    <p><span class="font-medium">Company:</span> ${dept.enterprise}</p>
+                    </div>
+                    <div class="w-1/5 flex flex-col items-end justify-center gap-2 text-center">`;
+                container += `<a href="/department/${dept.departmentID}"
+                    class="btnPrimary">
+                    View</a>
+                    <a href="/department/${dept.departmentID}/modify"
+                    class="btnPrimary">
+                    Update</a>
+                    </div>
+                    </div>`;
+            });
+        }
+        document.getElementById("departmentContainer").innerHTML = container;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            LoadDepartments(currentPage);
+        }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        LoadDepartments(currentPage);
+    });
+
+    document
+        .getElementById("search")
+        .addEventListener("input", async (event) => {
+            currentQuery = event.target.value;
+            currentPage = 1;
+            LoadDepartments(currentPage, currentQuery);
+        });
+
+    // Cargar la primera página al iniciar
+    LoadDepartments(currentPage);
+</script>

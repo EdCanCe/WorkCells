@@ -1,0 +1,48 @@
+@startuml CU25 - Superadmin elimina departamento - Diagrama de secuencia
+actor Navegador
+boundary "deparment.routes" as Routes
+boundary "deparment.view" as View
+control "deparment.controller" as Controller
+entity "deparment.model" as Model
+database "myPhpAdmin" as DB
+
+autonumber
+
+activate Navegador
+Navegador -> Routes : GET /department/check
+deactivate Navegador
+
+activate Routes
+Routes -> Controller : getCheckDepartment
+deactivate Routes
+
+activate Controller
+Controller -> View : checkOneDpmt
+deactivate Controller
+
+activate View
+View -> Navegador : HTML
+deactivate View
+
+activate Navegador
+Navegador -> Navegador : deleteDepartmentConfirmation
+Navegador -> Routes : POST /department/delete/:departmentID
+deactivate Navegador
+
+activate Routes
+Routes -> Controller : postDeleteDepartment
+deactivate Routes
+
+activate Controller
+Controller ->> Model : deleteDepartment(departmentID)
+activate Model
+Model ->> DB : db.execute(\"UPDATE department \nSET flag = 0 \nWHERE departmentID = ?", \n[absenceId]);
+activate DB
+DB -> Model : result
+deactivate DB
+Model ->> Controller : result
+deactivate Model
+Controller -> Navegador : redirect("/department")
+activate Navegador
+
+@enduml

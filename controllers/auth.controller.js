@@ -1,3 +1,4 @@
+const { request } = require("http");
 const Usuario = require("../models/user.model");
 const passport = require("passport");
 require("../util/google-auth.js");
@@ -13,11 +14,11 @@ exports.getGoogleCallback = passport.authenticate("google",
 exports.getGoogleRedirect = (request, response, next) => {
     console.log(request.user);
     const email = request.user.emails[0].value;
-
+    
     Usuario.fetchOne(email)
         .then(([rows]) => {
             if (rows.length === 0) {
-                request.session.warning = "Usuario y/o contraseña incorrectos";
+                request.session.warning = "User and/or password incorrect";
                 return response.redirect("/login");
             }
 
@@ -27,6 +28,7 @@ exports.getGoogleRedirect = (request, response, next) => {
             request.session.mail = email;
             request.session.userID = user.userID;
             request.session.role = user.role;
+            request.session.passwdFlag = user.passwdFlag;
 
             console.log("UserID from session:", request.session.userID);
             console.log("Valor de user.mail:", request.session.mail);

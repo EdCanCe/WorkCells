@@ -64,7 +64,7 @@ deactivate MySQL
 Vacation -->> Controller: rows
 deactivate Vacation
 
-alt request.role == "Human Resources"
+alt request.role == "Manager"
     Controller ->> OneToOne: fetchByDateType(startDate, endDate, request.session.userID)
     activate OneToOne
     OneToOne ->> MySQL: execute(...)

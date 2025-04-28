@@ -23,4 +23,19 @@ module.exports = class FaultMedia {
             );
         });
     }
+
+    static clear(faultID) {
+        return db.execute(
+            `DELETE FROM faultMedia WHERE faultID = ?;`,
+            [faultID]);
+    }
+
+    static getOwner(mediaLink) {
+        return db.execute(`
+            SELECT userID
+            FROM fault f, faultMedia fm, user u
+            WHERE fm.faultIDFK = f.faultID
+            AND f.faultUserIDFK = u.userID
+            AND fm.mediaLink = ?`, [mediaLink]);
+    }
 };

@@ -1,6 +1,10 @@
 const Employee = require("../models/employee.model");
+const Department = require("../models/department.model");
 const sessionVars = require("../util/sessionVars");
 const WorkStatus = require("../models/workStatus.model");
+const bcrypt = require("bcryptjs");
+const openProfile = require("../util/openProfile");
+const title = "Employees";
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -11,7 +15,7 @@ exports.getAdd = (request, response, next) => {
         .then(([[countries], [roles], [departments]]) => {
             // Limpiar el mensaje después de usarlo
             response.render("employeeAdd", {
-                ...sessionVars(request), // Variables de la sesión
+                ...sessionVars(request, title), // Variables de la sesión
                 employees: countries, // Lista de países
                 roles: roles, // Lista de roles
                 departments: departments, // Lista de departamentos
@@ -39,6 +43,7 @@ exports.postAdd = (request, response, next) => {
         request.body.houseNumber,
         request.body.streetName,
         request.body.colony,
+        request.body.phoneNumber,
         request.body.workModality,
         request.body.userRoleIDFK,
         request.body.countryUserIDFK,
@@ -102,10 +107,10 @@ exports.getModify = (request, response, next) => {
                         const department = employeeDepartment[0] || null;
 
                         response.render("employeeCheckModify", {
-                            ...sessionVars(request),
+                            ...sessionVars(request, title),
                             employee: employee,
                             country: country, // País específico del empleado
-                            role: role, // Rol específico del empleado
+                            roleUser: role, // Rol específico del empleado
                             department: department, // Departamento específico del empleado
                             countries: countries[0], // Lista completa de países
                             roles: roles[0], // Lista completa de roles
@@ -139,6 +144,7 @@ exports.postModify = (request, response, next) => {
     const houseNumber = request.body.houseNumber;
     const streetName = request.body.streetName;
     const colony = request.body.colony;
+    const phoneNumber = request.body.phoneNumber;
     const countryUserIDFK = request.body.countryUserIDFK;
     const workModality = request.body.workModality;
     const userRoleIDFK = request.body.userRoleIDFK;
@@ -157,6 +163,7 @@ exports.postModify = (request, response, next) => {
         houseNumber,
         streetName,
         colony,
+        phoneNumber,
         countryUserIDFK,
         workModality,
         userRoleIDFK,
@@ -178,6 +185,7 @@ exports.postModify = (request, response, next) => {
         houseNumber,
         streetName,
         colony,
+        phoneNumber,
         workModality,
         userRoleIDFK,
         countryUserIDFK,
@@ -188,6 +196,8 @@ exports.postModify = (request, response, next) => {
             let dateOfDeactivation = null;
             if (workStatus === "0") {
                 dateOfDeactivation = new Date();
+                console.log(dateOfDeactivation);
+                return WorkStatus.updateEndDate(userID, dateOfDeactivation);
             }
 
             if (dateOfDeactivation) {
@@ -208,62 +218,50 @@ exports.postModify = (request, response, next) => {
         });
 };
 
-exports.getCheck = (request, response, next) => {
-    const userID = request.params.id;
+exports.getProfile = (request, response, next) => {
+    // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
+    const userID =
+        request.params.userID === undefined
+            ? request.session.userID
+            : request.params.userID;
 
-    Employee.fetchUser(userID)
-        .then(([userData]) => {
-            if (!userData || userData.length === 0) {
-                request.session.info = "Empleado no encontrado.";
-                return response.redirect("/employee");
+    // En caso de haber no usuario en params, marca que el perfil es propio
+    const isOwn = userID === request.session.userID;
+
+    console.log(isOwn ? "Soy dueño" : "No soy dueño");
+
+    // Si es dueño de su propio perfil, mandar a renderizar
+    if (isOwn) {
+        return openProfile(request, response, userID, isOwn);
+    }
+
+    // Si es SuperAdmin, mandar a renderizar
+    if (request.session.role === "Manager") {
+        return openProfile(request, response, userID, isOwn);
+    }
+
+    // Significa que es un líder de departamento
+    Department.getLeaderDepartment(userID)
+        .then(([rows]) => {
+            // En caso que el líder del colaborador sea el usuario, renderiza el perfil
+            if (rows[0].userID === request.session.userID) {
+                return openProfile(request, response, userID, isOwn);
             }
 
-            const employee = userData[0];
-            // Obtener datos adicionales (país, rol y departamento)
-            Promise.all([
-                Employee.fetchCountryByID(employee.countryUserIDFK),
-                Employee.fetchRoleByID(employee.userRoleIDFK),
-                Employee.fetchDepartmentByID(employee.prioritaryDepartmentIDFK),
-            ])
-                .then(([countries, roles, departments]) => {
-                    const country = countries[0] ? countries[0][0] : null; // Accede al primer objeto dentro del primer array
-                    const role = roles[0] ? roles[0][0] : null;
-                    const department = departments[0]
-                        ? departments[0][0]
-                        : null;
-
-                    // Renderizar la vista con todos los datos
-                    response.render("employeeCheck", {
-                        ...sessionVars(request),
-                        employee: employee,
-                        country: country,
-                        role: role,
-                        department: department,
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error al obtener catálogos:", error);
-                    request.session.info =
-                        "Error al cargar información del empleado.";
-                    response.redirect("/employee");
-                });
+            // Como es return arriba, si no es líder manda el error:
+            request.session.info =
+                "You have no permission to view this profile";
+            response.redirect("/error");
         })
-        .catch((error) => {
-            console.error("Error al obtener los datos del empleado:", error);
-            request.session.info = "Error al obtener datos del empleado.";
-            response.redirect("/employee");
+        .catch(() => {
+            request.session.info = "The user has no leader department";
+            response.redirect("/error");
         });
-};
-
-exports.getMe = (request, response, next) => {
-    response.render("employeeMe", {
-        ...sessionVars(request),
-    });
 };
 
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
-        ...sessionVars(request),
+        ...sessionVars(request, title),
     });
 };
 
@@ -303,4 +301,167 @@ exports.getSearch = (request, response, next) => {
                 .status(500)
                 .json({ error: "Error en la búsqueda/paginación" });
         });
+};
+
+exports.getChangePassword = (request, response, next) => {
+    response.render("employeeChangePassword", {
+        ...sessionVars(request, title),
+    });
+};
+
+exports.postChangePassword = (request, response, next) => {
+    const userID = request.session.userID;
+    const newPassword = request.body.newPassword;
+    const confirmNewPassword = request.body.confirmNewPassword;
+
+    // console.log("Procesando cambio de contraseña para ID:", userID);
+
+    // Verificar que las contraseñas coinciden
+    if (newPassword !== confirmNewPassword) {
+        request.session.warning = "Las contraseñas no coinciden.";
+        return response.redirect("/employee/me/changePassword");
+    }
+
+    // Validar la fortaleza de la contraseña en el servidor
+    const specialCharacters = /[!"#$%&/()\=?¡+*{}\[\];:,.|°]/;
+    const upperCharacters = /[A-Z]/;
+    const numericCharacters = /\d/;
+
+    if (!upperCharacters.test(newPassword)) {
+        request.session.warning =
+            "La contraseña debe contener al menos una letra mayúscula.";
+        return response.redirect("/employee/me/changePassword");
+    }
+
+    if (!specialCharacters.test(newPassword)) {
+        request.session.warning =
+            "La contraseña debe contener al menos un carácter especial.";
+        return response.redirect("/employee/me/changePassword");
+    }
+
+    if (!numericCharacters.test(newPassword)) {
+        request.session.warning =
+            "La contraseña debe contener al menos un número.";
+        return response.redirect("/employee/me/changePassword");
+    }
+
+    if (newPassword.length <= 8) {
+        request.session.warning =
+            "La contraseña debe tener más de 8 caracteres.";
+        return response.redirect("/employee/me/changePassword");
+    }
+
+    // Crear una función async para manejar el flujo de promesas de manera más clara
+    const processPasswordChange = async () => {
+        try {
+            // Obtener los datos del usuario
+            const [userData] = await Employee.fetchUser(userID);
+
+            if (!userData || userData.length === 0) {
+                console.error("Usuario no encontrado:", userID);
+                request.session.warning = "Usuario no encontrado.";
+                return response.redirect("/employee/me/changePassword");
+            }
+
+            const user = userData[0];
+            console.log("Usuario encontrado, passwdFlag:", user.passwdFlag);
+
+            // Si es usuario con contraseña ya cambiada previamente
+            if (user.passwdFlag == 1) {
+                const currentPassword = request.body.currentPassword;
+
+                if (!currentPassword) {
+                    request.session.warning =
+                        "Se requiere la contraseña actual.";
+                    return response.redirect("/employee/me/changePassword");
+                }
+
+                // Verificar la contraseña actual
+                const isMatch = await bcrypt.compare(
+                    currentPassword,
+                    user.passwd
+                );
+                if (!isMatch) {
+                    request.session.warning =
+                        "La contraseña actual es incorrecta.";
+                    return response.redirect("/employee/me/changePassword");
+                }
+
+                // Verificar que la nueva contraseña sea diferente
+                const isSamePassword = await bcrypt.compare(
+                    newPassword,
+                    user.passwd
+                );
+                if (isSamePassword) {
+                    request.session.warning =
+                        "La nueva contraseña debe ser diferente a la actual.";
+                    return response.redirect("/employee/me/changePassword");
+                }
+
+                // Actualizar la contraseña
+                await Employee.updatePassword(userID, newPassword);
+            } else {
+                // Para usuarios que hacen su primer cambio de contraseña
+                console.log("Actualizando contraseña por primera vez...");
+                await Employee.updatePasswordFirstTime(userID, newPassword);
+            }
+
+            console.log("Contraseña actualizada con éxito para ID:", userID);
+            request.session.info = "Contraseña actualizada correctamente.";
+            request.session.passwdFlag = 1;
+            return response.redirect("/employee/me");
+        } catch (error) {
+            console.error("Error al cambiar la contraseña:", error);
+            request.session.warning =
+                "Error al cambiar la contraseña: " + error.message;
+            return response.redirect("/employee/me/changePassword");
+        }
+    };
+
+    // Ejecutar la función async
+    processPasswordChange().catch((error) => {
+        console.error("Error en processPasswordChange:", error);
+        // En caso de que haya un error no manejado y no se haya enviado respuesta aún
+        if (!response.headersSent) {
+            request.session.warning =
+                "Error inesperado al cambiar la contraseña.";
+            return response.redirect("/employee/me/changePassword");
+        }
+    });
+};
+
+exports.getEmployeeFaults = (request, response, next) => {
+    // Dependiendo de si hay usuario en el params, obtiene el usuario de params o session
+    const userID =
+        request.params.userID === undefined
+            ? request.session.userID
+            : request.params.userID;
+
+    // Si no es el dueño de las faltas ni es SuperAdmin, no tiene permisos
+    if (
+        userID !== request.session.userID &&
+        request.session.role !== "Manager"
+    ) {
+        request.session.alert = "You have no permission to view this";
+        response.redirect("/error");
+    }
+
+    // Renderiza las faltas del usuario
+    Employee.getOwnFaults(userID)
+        .then(([faults, fieldData]) => {
+            console.log(faults);
+            response.render("employeeFaults", {
+                ...sessionVars(request, title),
+                faults: faults,
+                employeeID: userID,
+            });
+        })
+        .catch((err) => {
+            console.error("Error obtaining the faults:", err);
+        });
+};
+
+exports.getMyProfile = (request, response, next) => {
+    const userID = request.session.userID;
+    response.send("entraste");
 };

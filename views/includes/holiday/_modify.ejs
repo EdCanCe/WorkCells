@@ -1,29 +1,59 @@
-<div class="flex">
-    <aside class="w-64"></aside>
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">Holidays</h2>
-                <p class="text-lg">
-                    Here you will be able to modify a holiday and set it whenever you want
-                </p>
-            </div>
-        </div>
+<script>addBackButton(document.referrer);</script>
+<div class="primaryContainer bgContainer1">
+    
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Update used holiday</h2>
     </div>
 
-    <div class="p-6">
-        <div class="bg-neutral-700/25 shadow-md rounded-lg mb-6">
-            <div class="p-6">
-                <div class="bg-neutral-800/50 p-6 rounded-lg mb-4">
-                    <h3 class="text-xl font-semibold mb-4">Specific Holiday</h3>
-                    <p class="text-lg mb-4">Check a specific holiday</p>
-                    <a
-                        href="/holiday/check"
-                        class="btnPrimary"
-                        >Check</a
-                    >
-                </div>
+    <form
+        action="/holiday/check/<%=holiday.usedHolidayID %>"
+        method="POST"
+    >
+        <input
+            type="hidden"
+            name="_csrf"
+            value="<%= csrfToken %>"
+        />
+
+        <div>
+            <div>
+                <label
+                    for="usedTemplateHolidayIDFK"
+                    class="label"
+                >
+                    Holiday Name:
+                </label>
+                <input
+                    type="text"
+                    readonly
+                    value="<%= holiday.title%>"
+                    class="input"
+                    disabled
+                />
+            </div>
+
+            <div>
+                <label
+                    for="usedDate"
+                    class="label"
+                >
+                    Celebration Date:
+                </label>
+                <input
+                    type="date"
+                    id="usedDate"
+                    name="usedDate"
+                    class="input"
+                    required
+                    min="<%= new Date().getFullYear() %>-01-01"
+                    max="<%= new Date().getFullYear() %>-12-31"
+                    value="<%= holiday.usedDate.toISOString().split('T')[0] %>"
+                />
             </div>
         </div>
-    </div>
+
+        <div class="endButtonsContainer">
+            <button type="submit" class="btnPrimary">Update used holiday</button>
+        </div>
+    </form>
 </div>

@@ -1,78 +1,74 @@
-<div class="flex-1 p-6">
-    <div class="max-w-7xl mx-auto">
-        <div class="bg-neutral-700/25 shadow-lg rounded-lg">
-            <div class="p-6">
-                <h2 class="text-2xl font-semibold mb-4">Vacation Requests</h2>
-            </div>
-            <div class="p-6">
-                <div class="flex justify-end mb-4">
-                    <a href="/vacation/requests/all" class="btnPrimary">
-                        All requests
-                    </a>
-                </div>
-                <div class="overflow-x-auto bg-neutral-700/25 p-4 rounded-lg shadow">
-                    <% if (vacations.length === 0) { %>
-                    <div class="no-requests-container p-6 bg-neutral-800 rounded-lg shadow-lg">
-                        <p class="text-center text-gray-400 text-xl">No vacation requests available.</p>
-                    </div>
-                    <% } else { %>
-                    <table id="vacations-table" class="min-w-full table-auto">
-                        <thead class="bg-neutral-800">
-                            <tr>
-                                <th class="px-4 py-2 text-left">Full name</th>
-                                <th class="px-4 py-2 text-left">Reason</th>
-                                <th class="px-4 py-2 text-left">Start Date</th>
-                                <th class="px-4 py-2 text-left">End Date</th>
-                                <th class="px-4 py-2 text-left">Duration</th>
-                                <th class="px-4 py-2 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% vacations.forEach(vacation => { %>
-                            <tr class="border-b hover:bg-neutral-800">
-                                <td class="px-4 py-2"><%= vacation.birthName + " " + vacation.surname %></td>
-                                <td class="px-4 py-2"><%= vacation.reason %></td>
-                                <td class="px-4 py-2"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                                <td class="px-4 py-2"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
-                                <td class="px-4 py-2 total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
-                                <td class="px-4 py-2">
-                                    <% if (role === "Human Resources") { %>
-                                        <% if (vacation.hrStatus === 1) { %>
-                                            <div class="text-green-500 text-center font-semibold">Approved</div>
-                                        <% } else if (vacation.hrStatus === 0) { %>
-                                            <div class="text-red-500 text-center font-semibold">Denied</div>
-                                        <% } else { %>
-                                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                                <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                                <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                            </div>
-                                        <% } %>
-                                    <% } else if (role === "Department Leader") { %>
-                                        <% if (vacation.leaderStatus === 1) { %>
-                                            <div class="text-green-500 text-center font-semibold">Approved</div>
-                                        <% } else if (vacation.leaderStatus === 0) { %>
-                                            <div class="text-red-500 text-center font-semibold">Denied</div>
-                                        <% } else if (vacation.leaderStatus === 2) { %>
-                                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                                <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
-                                                <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
-                                            </div>
-                                        <% } %>
-                                    <% } %>
-                                </td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
-                    <% } %>
-                </div>
+<script>addBackButton('/vacation');</script>
+<div class="fullContainer bgContainer1">
+    <div>
+        <div class="titleContainer">
+            <h2 class="title">Vacations requests</h2>
+            <div class="flex gap-1 centerItems">
+                <a href="/vacation/requests/all" class="btnPrimary">All requests</a>
             </div>
         </div>
-        <div class="pagination-controls mt-4 mb-4 flex justify-between">
-            <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
-            <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
+        <div>
+            <table id="vacations-table" class="tContainer">
+                <thead class="tHead">
+                    <tr>
+                        <th class="hRow">Full name</th>
+                        <th class="hRow">Reason</th>
+                        <th class="hRow">Start Date</th>
+                        <th class="hRow">End Date</th>
+                        <th class="hRow">Duration</th>
+                        <th class="hRow">Actions</th>
+                    </tr>
+                </thead>
+                <% if (vacations.length === 0) { %>
+                    <tr>
+                        <td colspan="6" class="dataless">
+                            There are no faults
+                        </td>
+                    </tr>
+                <% } else { %>
+                <tbody class="tBody">
+                    <% vacations.forEach(vacation => { %>
+                    <tr class="tRow">
+                        <td class="tContent"><%= vacation.birthName + " " + vacation.surname %></td>
+                        <td class="tContent"><%= vacation.reason %></td>
+                        <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
+                        <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                        <td class="tContent total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
+                        <td class="tContent">
+                            <% if (role === "Manager") { %>
+                                <% if (vacation.hrStatus === 1) { %>
+                                    <div class="textSuccess text-center font-semibold">Approved</div>
+                                <% } else if (vacation.hrStatus === 0) { %>
+                                    <div class="textDanger text-center font-semibold">Denied</div>
+                                <% } else { %>
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
+                                    </div>
+                                <% } %>
+                            <% } else if (role === "Department Leader") { %>
+                                <% if (vacation.leaderStatus === 1) { %>
+                                    <div class="textSuccess text-center font-semibold">Approved</div>
+                                <% } else if (vacation.leaderStatus === 0) { %>
+                                    <div class="textDanger text-center font-semibold">Denied</div>
+                                <% } else if (vacation.leaderStatus === 2) { %>
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                        <button class="btnSuccess approve-btn" data-url="/vacation/requests/approve/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Approve</button>
+                                        <button class="btnDanger deny-btn" data-url="/vacation/requests/deny/<%= vacation.vacationID %>" data-csrf="<%= csrfToken %>">Deny</button>
+                                    </div>
+                                <% } %>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% } %>
         </div>
-        <a href="/vacation" class="btnPrimary">Back</a>
+    </div>
+    <div class="endButtonsContainer">
+        <button id="prev-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Previous</button>
+        <button id="next-button" class="btnPrimary" <%= vacations.length === 0 ? 'disabled' : '' %>>Next</button>
     </div>
 </div>
 
@@ -159,18 +155,18 @@
         // If we have data, make sure we have a table
         if (!document.getElementById("vacations-table")) {
             tableContainer.innerHTML = `
-                <table id="vacations-table" class="min-w-full table-auto">
-                    <thead class="bg-neutral-800">
+                <table id="vacations-table" class="tContainer">
+                    <thead class="tHead">
                         <tr>
-                            <th class="px-4 py-2 text-left">Full name</th>
-                            <th class="px-4 py-2 text-left">Reason</th>
-                            <th class="px-4 py-2 text-left">Start Date</th>
-                            <th class="px-4 py-2 text-left">End Date</th>
-                            <th class="px-4 py-2 text-left">Duration</th>
-                            <th class="px-4 py-2 text-center">Actions</th>
+                            <th class="hRow">Full name</th>
+                            <th class="hRow">Reason</th>
+                            <th class="hRow">Start Date</th>
+                            <th class="hRow">End Date</th>
+                            <th class="hRow">Duration</th>
+                            <th class="hRow">Actions</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="tBody"></tbody>
                 </table>`;
         }
         
@@ -184,12 +180,12 @@
             let actionCell = "";
             
             // Dentro de la función updateTable, en la parte donde se crea actionCell:
-            if (role === "Human Resources") {
+            if (role === "Manager") {
                 // Verificar si la solicitud ya fue procesada por RRHH
                 if (vacation.hrStatus === 1) {
-                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                    actionCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (vacation.hrStatus === 0) {
-                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                    actionCell = `<div class="textDanger text-center font-semibold">Denied</div>`;
                 } else {
                     // RRHH: Siempre mostrar botones, independientemente del estado del líder
                     actionCell = `
@@ -201,9 +197,9 @@
             } else if (role === "Department Leader") {
                 // Verificar si la solicitud ya fue procesada por Líder
                 if (vacation.leaderStatus === 1) {
-                    actionCell = `<div class="text-green-500 text-center font-semibold">Approved</div>`;
+                    actionCell = `<div class="textSuccess text-center font-semibold">Approved</div>`;
                 } else if (vacation.leaderStatus === 0) {
-                    actionCell = `<div class="text-red-500 text-center font-semibold">Denied</div>`;
+                    actionCell = `<div class="textDanger text-center font-semibold">Denied</div>`;
                 } else if (vacation.leaderStatus === 2) {
                     // Líder: Solicitud pendiente de aprobación
                     actionCell = `
@@ -215,15 +211,15 @@
             }
 
             const row = document.createElement("tr");
-            row.className = "border-b hover:bg-neutral-800";
+            row.className = "tRow";
             
             row.innerHTML = `
-                <td class="px-4 py-2">${vacation.birthName} ${vacation.surname}</td>
-                <td class="px-4 py-2">${vacation.reason}</td>
-                <td class="px-4 py-2">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
-                <td class="px-4 py-2">${totalDays}</td>
-                <td class="px-4 py-2">${actionCell}</td>
+                <td class="tContent">${vacation.birthName} ${vacation.surname}</td>
+                <td class="tContent">${vacation.reason}</td>
+                <td class="tContent">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${totalDays}</td>
+                <td class="tContent">${actionCell}</td>
             `;
             
             tbody.appendChild(row);

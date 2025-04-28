@@ -1,22 +1,34 @@
 const express = require("express");
 const router = express.Router();
 
-const employeeContrllers = require("../controllers/employee.controller");
+const employeeControllers = require("../controllers/employee.controller");
 const isAuth = require("../util/is-auth");
 const employeePrivilege = require("../util/employeePrivilege/employeePrivilege");
 
-router.get("/add", isAuth, employeePrivilege, employeeContrllers.getAdd);
-router.post("/", isAuth, employeePrivilege, employeeContrllers.postAdd);
+router.get(
+    "/me/faults",
+    isAuth,
+    employeeControllers.getEmployeeFaults
+);
+router.get("/:userID/faults", isAuth, employeeControllers.getEmployeeFaults);
+router.get("/add", isAuth, employeePrivilege, employeeControllers.getAdd);
+router.post("/", isAuth, employeePrivilege, employeeControllers.postAdd);
+router.get("/me/changePassword", isAuth, employeeControllers.getChangePassword);
+router.post(
+    "/me/changePassword",
+    isAuth,
+    employeeControllers.postChangePassword
+);
 router.get(
     "/:id/modify",
     isAuth,
     employeePrivilege,
-    employeeContrllers.getModify
+    employeeControllers.getModify
 );
-router.post("/:id", isAuth, employeePrivilege, employeeContrllers.postModify);
-router.get("/search", isAuth, employeePrivilege, employeeContrllers.getSearch);
-router.get("/me", isAuth, employeePrivilege, employeeContrllers.getMe);
-router.get("/:id", isAuth, employeePrivilege, employeeContrllers.getCheck);
-router.get("/", isAuth, employeePrivilege, employeeContrllers.getRoot);
+router.post("/:id", isAuth, employeePrivilege, employeeControllers.postModify);
+router.get("/search", isAuth, employeePrivilege, employeeControllers.getSearch);
+router.get("/me", isAuth, employeeControllers.getProfile);
+router.get("/:userID", isAuth, employeeControllers.getProfile);
+router.get("/", isAuth, employeePrivilege, employeeControllers.getRoot);
 
 module.exports = router;

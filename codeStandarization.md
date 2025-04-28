@@ -36,11 +36,10 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
 1. [Uso de etiquetas](#uso-de-etiquetas)
 
-
 ## Objetos:
  - Al añadir funciones dentro de un objeto, no definir que es una función.
  
-    ``````js
+    ```js
     // mal
     const obj = {
         valor: 1,
@@ -58,11 +57,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
             return obj.valor + valor;
         },
     };
-    ``````
+    ```
 
  - Al añadirle atributos al objeto, si tiene el mismo nombre que la variable, no repetirlo, solo abreviarlo.
 
-    ``````js
+    ```js
     const nombre = 'Juan Pérez';
 
     // mal
@@ -74,11 +73,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     const obj = {
         nombre,
     };
-    ``````
+    ```
 
  - Al añadir atributos abreviados a un objeto, ponerlos al inicio de la declaración del mismo.
 
-    ``````js
+    ```js
     const nombre = 'Juan';
     const apellido = 'Pérez';
 
@@ -103,17 +102,17 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 ## Arreglos:
  - Al declarar arreglos, solo marcarlo con corchetes.
 
-    ``````js
+    ```js
     // mal
     const elementos = new Array();
 
     // bien
     const elementos = [];
-    ``````
+    ```
 
  - Para añadirle nuevos elementos al arreglos usar push.
 
-    ``````js
+    ```js
     const elementos = [];
 
     // mal
@@ -121,11 +120,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     // bien
     elementos.push('elemento123');
-    ``````
+    ```
 
  - Para copiar arreglos, usar `...`.
 
-    ``````js
+    ```js
     // mal
     const lon = elementos.length;
     const conCopia = [];
@@ -136,11 +135,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     // bien
     const conCopia = [...elementos];
-    ``````
+    ```
 
  - Solo si un arreglo tiene múltiples líneas, agregar saltos de líneas en los corchetes de inicio y cierre.
 
-    ``````js
+    ```js
     // mal
     const elementos = [
         [10, 9], [5, 4], [1, 0],
@@ -157,13 +156,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
         'elemento 1',
         'elemento 2',
     ];
-    ``````
+    ```
 
 ## Strings:
 
  - Usa comillas simples para strings.
 
-    ``````js
+    ```js
     // mal
     const texto = "texto";
 
@@ -172,11 +171,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     // bien
     const texto = 'texto';
-    ``````
+    ```
 
  - En caso de querer añadir variables a la string, usar plantillas literales.
 
-    ``````js
+    ```js
     // mal
     const miNombre = (nombre, apellido) => {
         return 'Mi nombre es ' + nombre + ' ' + apellido;
@@ -186,13 +185,36 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     const miNombre = (nombre, apellido) => {
         return `Mi nombre es ${nombre} ${apellido}`;
     }
-    ``````
+    ```
+
+ - En caso de tener una string muy larga, se puede separar mientras se conserve la identación original.
+
+    ```js
+    // mal
+    function funcion() {
+        const texto = 'este es un texto muy muy largo que si lo sigo leyendo se me va hacer muy difícil leerlo completo.';
+    }
+
+    // mal
+    function funcion() {
+        const texto = `este es un texto muy muy largo 
+    que si lo sigo leyendo se me va 
+    hacer muy difícil leerlo completo.`;
+    }
+
+    // bien
+    function funcion() {
+        const texto = `este es un texto muy muy largo 
+        que si lo sigo leyendo se me va 
+        hacer muy difícil leerlo completo.`;
+    }
+    ```
 
 ## Funciones:
 
  - Envés de asignarle valores a variables que no se hayan pasado como atributo, asignarles un valor por defecto en la declaración de la función.
 
-    ``````js
+    ```js
     // mal
     function funcion (elementos) {
         elementos = elementos || {};
@@ -211,11 +233,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     function funcion (elementos = {}) {
         // ...
     }
-    ``````
+    ```
 
  - Poner los atributos por defecto al final de los parámetros.
 
-    ``````js
+    ```js
     // mal
     function funcion (nombre, edad = 18, apellido) {
         // ...
@@ -225,11 +247,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     function funcion (nombre, apellido, edad = 18) {
         // ...
     }
-    ``````
+    ```
 
  - Usar espacios para separar los paréntesis de las llaves.
 
-    ``````js
+    ```js
     // mal
     function funcion(){
         // ...
@@ -239,13 +261,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     function funcion() {
         // ...
     }
-    ``````
+    ```
 
 ## Funciones de flecha:
 
  - Cuando se ocupe usar una función anónima, usar funciones de flecha.
 
-    ``````js
+    ```js
     // mal
     arreglo.forEach(function (elemento) {
         // ...
@@ -255,11 +277,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     arreglo.forEach((elemento) => {
         // ...
     });
-    ``````
+    ```
 
  - Siempre añadir paréntesis a los parámetros usados.
 
-    ``````js
+    ```js
     // mal
     const saludar = persona => {
         console.log(persona);
@@ -269,13 +291,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     const saludar = (persona) => {
         console.log(persona);
     };
-    ``````
+    ```
 
 ## Variables:
 
  - Por nada del mundo usar `var`; en caso de que se quiera tener una variable que pueda cambiar de valor en un futuro usar `let`, pero en caso de ser posible usar `const`.
 
-    ``````js
+    ```js
     // mal
     var a = 6;
     a = 10;
@@ -284,11 +306,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     let a = 6;
     a = 10;
     const b = a + 4:
-    ``````
+    ```
 
  - Agrupa todos los `const`, y posteriormente los `let`.
 
-    ``````js
+    ```js
     // mal
     let a = 10;
     const b = 15;
@@ -300,11 +322,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     const d = 25;
     let a = 10;
     let c = 20;
-    ``````
+    ```
 
  - Declara las variables donde las ocupes, pero en un lugar razonable.
     
-    ``````js
+    ```js
     // mal
     const mayorEdad = (edad) => {
         const nombre = getNombre(edad);
@@ -329,11 +351,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
         return false;
     };
-    ``````
+    ```
 
  - No asignes variables en cadena.
 
-    ``````js
+    ```js
     // mal
     let a;
     let b;
@@ -343,13 +365,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     let a = 10;
     let b = a;
     let c = a;
-    ``````
+    ```
 
 ## Declaraciones de control:
 
  - Separar los paréntesis de la palabra reservada y las llaves con espacio.
 
-    ``````js
+    ```js
     // mal
     if(esVerdad()){
         // ...
@@ -359,13 +381,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     if (esVerdad()) {
         // ...
     }
-    ``````
+    ```
 
  - Separar cada condición con espacios.
 
  - Si tus declaraciones de control terminan siendo muy largas, separarlo en varias líneas, y asegúrate de que inicien con su operador lógico y se separen las condiciones del inicio y cierre de la declaración.
 
-    ``````js
+    ```js
     // mal
     if ( condUno() && condDos() && condTres() ) {
         // ...
@@ -395,7 +417,7 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     ) {
         // ...
     }
-    ``````
+    ```
 
 ## Operadores de comparación:
 
@@ -403,7 +425,7 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
  - Abrevia los valores o funciones booleanas, pero se explícito con cadenas y números.
 
-    ``````js
+    ```js
     // mal
     if (esVerdarero() === true) {
         // ...
@@ -423,11 +445,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     if (nombre !== '') {
         // ...
     }
-    ``````
+    ```
 
  - Los operadores ternarios deben de ser escritos en una sola línea.
 
-    ``````js
+    ```js
     // mal
     const valorFinal = valor1 > valor2
     ? valor1
@@ -435,23 +457,23 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     // bien
     const valorFinal = valor1 > valor2 ? valor1 : valor2; 
-    ``````
+    ```
 
 ## Comentarios:
 
  - Inicia cada comentario con un espacio para que sea fácil de leer.
 
-    ``````js
+    ```js
     // mal
     //esto es mi comentario
 
     // bien
     // esto es mi comentario
-    ``````
+    ```
 
  - Utiliza `/** ... **/` para comentarios de varias líneas.
 
-    ``````js
+    ```js
     // mal
     // Voy a hacer varios comentarios
     // Comentario 1
@@ -463,11 +485,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
      * Comentario 1
      * Comentario 2
     */
-    ``````
+    ```
 
  - Utiliza `//` para comentarios de una sola línea. Pon una línea vacía antes del comentario a menos de que sea la primer línea del bloque.
 
-    ``````js
+    ```js
     // mal
     if (esVerdadero) {
 
@@ -485,13 +507,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
         // Le pongo un valor
         const uno = 1;
     }
-    ``````
+    ```
 
 ## Espacios en blanco:
 
  - Utiliza 4 espacios por cada tabulación.
 
-    ``````js
+    ```js
     // mal
     if (esVerdadero()) {
       if (esVerdadero()) {
@@ -509,11 +531,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
             }
         }
     }
-    ``````
+    ```
 
  - Al asignarle un valor a una variable, separar con espacios cada valor y operador.
 
-    ``````js
+    ```js
     // mal
     const suma=10+20+30;
 
@@ -522,11 +544,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     // bien
     const suma = 10 + 20 + 30;
-    ``````
+    ```
 
  - Si se llama una función después de otra, declararla en la siguiente línea con una tabulación.
 
-    ``````js
+    ```js
     // mal
     document.getElementById('id').classList.add('class');
 
@@ -534,11 +556,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
      document.getElementById('id')
         .classList
         .add('class');
-    ``````
+    ```
 
  - Deja una línea en blanco al término de cada bloque.
 
-    ``````js
+    ```js
     // mal
     if (esVerdadero()) {
         // ...
@@ -555,13 +577,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     if (esFalso()) {
         // ...
     }
-    ``````
+    ```
 
 ## Comas:
 
  - Al tener varios elementos en diferentes líneas, poner coma al final de todas las líneas (también la final).
 
-    ``````js
+    ```js
     // mal
     const persona = {
         nombre: 'Juan'
@@ -582,13 +604,13 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
         apellido: 'Pérez',
         edad: 18,
     }
-    ``````
+    ```
 
 ## Convención de nombres:
 
  - No crees nombres de una sola letra, sé más descriptivo.
 
-    ``````js
+    ```js
     // mal
     const q = '...';
     const a = [];
@@ -598,11 +620,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     const querie = '...';
     const array = [];
     const valor = 0;
-    ``````
+    ```
 
  - Usa camelCase al nombrar archivos, objetos, funciones, variables, etc.
 
-    ``````js
+    ```js
     // mal
     const UnaVariable = 10;
     
@@ -611,11 +633,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     // bien
     const unaVariable = 10;
-    ``````
+    ```
 
  - Usa PascalCase al nombrar la creación de clases.
 
-    ``````js
+    ```js
     // mal
     class modeloObjeto {
         // ...
@@ -625,24 +647,24 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     class ModeloObjeto {
         // ...
     }
-    ``````
+    ```
 
  - Usa SCREAMING_SNAKE_CASE al nombrar las variables del `.env`.
 
-    ``````js
+    ```js
     // mal
     apiKey = ...
     api_key = ...
 
     // bien
     API_KEY = ...
-    ``````
+    ```
 
 ## Llamadas a base de datos:
 
  - Al usar 2 o menos funciones que interactúen con la base de datos, hacerlo con `.then`.
 
-    ``````js
+    ```js
     // mal
     exports.getRoot = async (request, response, next) => {
         try {
@@ -663,11 +685,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
                     })
             })
     };
-    ``````
+    ```
 
  - Al usar 3 o más funciones que interactúen con la base de datos, hacerlo con una función asíncrona.
 
-    ``````js
+    ```js
     // mal
     exports.getRoot = (request, response, next) => {
         tabla1.fetchByID('...')
@@ -701,7 +723,7 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
  - Si la etiqueta solo tiene un atributo adentro hacerlo de una lína.
 
-    ``````html
+    ```html
     <!-- mal -->
     <a 
         href='/otra'
@@ -711,11 +733,11 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
 
     <!-- bien -->
     <a href='/otra'>Enlace</a>
-    ``````
+    ```
 
  - Si la etiqueta tiene varios atributos adentro, separarlos por cada línea e incluir el inicio y cierre de la etiqueta únicos en su línea.
 
-    ``````html
+    ```html
     <!-- mal -->
     <a href='/otra' class='button'>Enlace</a>
 
@@ -726,4 +748,4 @@ Los lenguajes que adoptarán éstas convenciones de codificación serán:
     >
         Enlace
     </a>
-    ``````
+    ```
