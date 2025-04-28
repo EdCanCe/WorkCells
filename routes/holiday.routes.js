@@ -37,12 +37,7 @@ router.get("/search", isAuth, holidayController.listPaginated);
 
 router.get("/add", isAuth, holidayPrivilege, holidayController.getHolidaysAdd);
 
-router.get(
-    "/add/template",
-    isAuth,
-    holidayController,
-    holidayController.getTemplateHolidayAdd
-);
+router.get("/add/template", isAuth, holidayController.getTemplateHolidayAdd);
 
 router.post("/add", isAuth, holidayController.postHolidaysAdd);
 
