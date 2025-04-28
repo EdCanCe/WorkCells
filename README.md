@@ -102,9 +102,12 @@ Para poder obtener la llave que permita el funcionamiento de esta API se tienen 
 
 1. Entrar a este [enlace](https://www.geoapify.com/get-started-with-maps-api/).
 1. Crear una cuenta dentro del sitio de Geoapify.
+![enlace](image-6.png)
 1. Entrar a este [enlace](https://myprojects.geoapify.com/projects).
 1. Crear un nuevo proyecto e ingresar el nombre del mismo. Presionar en _"Ok"_ y esperar a que nos redireccionen.
+![alt text](image-7.png)
 1. En la parte de arriba de la página dirá _"API Keys"_, dentro de este apartado estará nuestra llave, por lo que la guardaremos. _(Guardar el token, ya que posteriormente se ingresará al archivo `.env`)_
+![alt text](image-8.png)
 
 _Para más información, se puede acceder directamente a la [documentación de la API de Geoapify](https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/)_.
 
