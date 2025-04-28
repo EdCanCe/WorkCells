@@ -67,7 +67,7 @@
                         .getAttribute("content");
 
                     const res = await fetch(
-                        `/holiday/check/delete/${usedHolidayID}`,
+                        `/holiday/template/check/delete/${usedHolidayID}`,
                         {
                             method: "POST",
                             headers: {
@@ -88,7 +88,7 @@
                         },
                     });
                     // Puedes redirigir de vuelta al listado:
-                    window.location.href = "/holiday/used";
+                    window.location.href = "/holiday/template";
                 } catch (err) {
                     await Swal.fire({
                         title: "Error",
