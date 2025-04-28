@@ -18,7 +18,7 @@ module.exports = class Holiday {
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(
-                        "El dia feriado que deseas agregar ya fue agregado en este año."
+                        "The holiday you wish to add has already been added this year."
                     );
                 }
 
@@ -30,7 +30,7 @@ module.exports = class Holiday {
                 ]);
             })
             .catch((error) => {
-                console.error("Error al guardar el usuario:", error.message);
+                console.error("Error in saving the holiday:", error.message);
                 throw error;
             });
     }
@@ -95,7 +95,7 @@ module.exports = class Holiday {
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(
-                        "La fecha que deseas asignar ya está ocupada por otro feriado."
+                        "The date you wish to assign is already occupied by another holiday."
                     );
                 }
 
@@ -104,7 +104,7 @@ module.exports = class Holiday {
                 return db.execute(query, [newDate, usedHolidayID]);
             })
             .catch((error) => {
-                console.error("Error al actualizar el feriado:", error.message);
+                console.error("Error updating the holiday:", error.message);
                 throw error;
             });
     }

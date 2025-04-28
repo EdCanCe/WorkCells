@@ -18,7 +18,7 @@ module.exports = class Template {
             .then(([rows]) => {
                 if (rows.length > 0) {
                     throw new Error(
-                        "El dia feriado que deseas agregar ya fue agregado con anterioridad."
+                        "The holiday you wish to add has already been added."
                     );
                 }
                 const query = `INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) VALUES( ?, ?, ?)`;
@@ -29,10 +29,7 @@ module.exports = class Template {
                 ]);
             })
             .catch((error) => {
-                console.error(
-                    "Error al guardar el el dia feriado:",
-                    error.message
-                );
+                console.error("Error in saving the holiday:", error.message);
                 throw error;
             });
     }
