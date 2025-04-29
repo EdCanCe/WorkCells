@@ -179,21 +179,23 @@ Ahora, ocupamos crear nuestras credenciales, por lo que corremos la configuraci�
 sudo mysql_secure_installation
 ```
 
-Ahora crearemos nuestro usuario en la base de datos, por lo que corremos el script siguiente para acceder a nuestro gestor de base de datos:
+Ahora crearemos levantamos nuestra base de datos, por lo que corremos el script siguiente para acceder a nuestro gestor de base de datos:
 
 ```bash
 sudo mariadb
 ```
 
+Cargaremos algunos datos iniciales, por lo que, aún dentro de mariadb, vamos a copiar los contenidos de [este archivo](/sql/loadDB.sql) en la terminal. Al final presionamos enter.
+
 Dentro de mariadb crearemos nuestro usuario con un comando parecido:
 
 ```sql
-CREATE USER 'usuario'@'%' IDENTIFIED BY '[LA CONTRASEÑA DE TU ELECCION]'; -- crea el usuario
-GRANT ALL PRIVILEGES ON *.* TO 'usuario'@'%' WITH GRANT OPTION; -- le da permisos de edición
+CREATE USER '[TU USUARIO]'@'%' IDENTIFIED BY '[LA CONTRASEÑA DE TU ELECCION]'; -- crea el usuario
+GRANT ALL PRIVILEGES ON *.* TO '[TU USUARIO]'@'%' WITH GRANT OPTION; -- le da permisos de edición
 FLUSH PRIVILEGES;
 ```
 
-Posteriormente se crea la base de datos y cargaremos algunos datos iniciales, por lo que, aún dentro de mariadb, vamos a copiar los contenidos de [este archivo](/sql/createDB.sql) en la terminal. Al final presionamos enter, y escribimos `exit` para salir de mariadb.
+Escribimos `exit` para salir de mariadb.
 
 Teniendo la base de datos levantada, se ocuparía habilitar el puerto para que se pueda acceder.
 
@@ -452,3 +454,58 @@ Dependiendo del tipo de conexión que quisiéramos tener, se ocupa modificar el 
     ```bash
     sudo systemctl restart nginx # aplica los cambios en la configuración
     ```
+
+#### Levantar PhpMyAdmin (opcional)
+
+Primeramente instalar paquetes necesarios:
+
+```bash
+sudo apt update
+sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php8.2-fpm-y
+```
+
+Luego se tienen que habilitar las extensiones de php:
+
+```bash
+sudo phpenmod mbstring
+sudo systemctl restart php7.*-fpm  # Asegúrate de que coincida con tu versión de PHP
+```
+
+Se crea el enlace simbólico de la carpeta de phpMyAdmin:
+
+```bash
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+```
+
+Ya solo faltaría modificar nginx para aceptar la ruta con:
+
+```bash
+sudo nano/etc/nginx/sites-available/default
+```
+
+Y añadir:
+
+```nginx
+    location /phpmyadmin {
+        alias /usr/share/phpmyadmin/;
+        index index.php index.html index.htm;
+
+        location ~ ^/phpmyadmin/(.+\.php)$ {
+            alias /usr/share/phpmyadmin/$1;
+            include fastcgi-params;
+            fastcgi_pass unix:/run/php/php7.X-fpm.sock;  # Cambia "7.X" por tu versión de PHP
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME /usr/share/phpmyadmin/$1;
+        }
+
+        location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+            alias /usr/share/phpmyadmin/$1;
+        }
+    }
+```
+
+Y faltaría reiniciar nginx para actualizar los cambios:
+
+```bash
+sudo systemctl restart nginx
+```
