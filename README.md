@@ -49,6 +49,7 @@ Para poder desplegar `WorkCells` correctamente, se tienen que cumplir con los si
     -   [Llenado del archivo .env](#llenado-del-archivo-env)
     -   [Ejecutar aplicación de forma persistente](#ejecutar-aplicación-de-forma-persistente)
     -   [Uso de proxy](#uso-de-proxy)
+    -   [Levantar phpMyAdmin(opcional)](#levantar-phpmyadmin-opcional)
 
 ### Obtención de API KEYS:
 
@@ -485,7 +486,7 @@ Dependiendo del tipo de conexión que quisiéramos tener, se ocupa modificar el 
     sudo systemctl restart nginx # aplica los cambios en la configuración
     ```
 
-#### Levantar PhpMyAdmin (opcional)
+#### Levantar phpMyAdmin (opcional)
 
 Primeramente instalar paquetes necesarios:
 
@@ -498,7 +499,7 @@ Luego se tienen que habilitar las extensiones de php:
 
 ```bash
 sudo phpenmod mbstring
-sudo systemctl restart php7.*-fpm  # Asegúrate de que coincida con tu versión de PHP
+sudo systemctl restart php8.2-fpm
 ```
 
 Se crea el enlace simbólico de la carpeta de phpMyAdmin:
