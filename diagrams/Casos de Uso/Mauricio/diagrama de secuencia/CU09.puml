@@ -16,11 +16,14 @@ deactivate Navegador
 
 ' La ruta redirige a la vista del formulario
 activate Routes
-Routes -> Controller : changePassword
+Routes -> Controller : changePassword(request, response)
 deactivate Routes
 activate Controller
 
-Controller -> Navegador : HTML
+Controller -> View : response.renderChangePassword()
+deactivate Controller
+activate View
+View -> Navegador : HTML
 deactivate Controller
 deactivate View
 activate Navegador
@@ -32,22 +35,22 @@ deactivate Navegador
 activate Controller
 Controller -> Controller : validatePassword(newPassword)
 alt La contraseña no es segura
-    Controller -> View : renderChangePassword(error="Contraseña no segura")
+    Controller -> View : response.renderChangePassword(error="Contraseña no segura")
     activate View
     View -> Navegador : HTML
     deactivate View
 end
 ' La contraseña es segura
 ' Se aplica el hash internamente antes de actualizar la contraseña en la base de datos.
-Controller -> Model : updatePassword(newPassword, userID)
+Controller ->> Model : updatePassword(newPassword, userID)
 activate Model
-Model -> DB : db.execute("UPDATE user\nSET passwd = ? ,\npasswdFlag = ture\nWHERE userID = ?",\n[newPassword, userID])
+Model ->> DB : db.execute("UPDATE user\nSET passwd = ? ,\npasswdFlag = ture\nWHERE userID = ?",\n[newPassword, userID])
 deactivate Model
 activate DB
-DB -> Controller : success(status=True)
+DB -->> Controller : success(status=True)
 deactivate DB
 deactivate View
-Controller -> Navegador : redirect(home)
+Controller -> Navegador : response.redirect(home)
 deactivate Controller
 activate Navegador
 
