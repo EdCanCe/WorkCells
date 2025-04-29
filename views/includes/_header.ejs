@@ -33,7 +33,9 @@
         class="noMargin bgBase max-w-screen-xl max-h-screen overflow-hidden"
     >
         <div class="noMargin w-screen h-screen max-h-screen flex flex-row">
+            <% if (passwdFlag === 1) {  %>
             <%- include('_navbar') %>
+            <% } %>
 
             <!-- Div donde estará el contenido principal -->
             <div class="flex flex-col w-full h-screen max-h-screen overflow-auto noMargin">

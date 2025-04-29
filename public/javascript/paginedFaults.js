@@ -70,7 +70,6 @@ let currentPage = 1;
         loadFaltas(
           currentPage,
           document.getElementById("search").value,
-          document.getElementById("filterSelect").value
         );
       }
     });
@@ -81,7 +80,6 @@ let currentPage = 1;
       loadFaltas(
         currentPage,
         document.getElementById("search").value,
-        document.getElementById("filterSelect").value
       );
     });
   
@@ -91,17 +89,5 @@ let currentPage = 1;
       loadFaltas(
         currentPage,
         event.target.value,
-        document.getElementById("filterSelect").value
-      );
-    });
-  
-
-    // Evento para filtro
-    document.getElementById("filterSelect").addEventListener("change", (event) => {
-      currentPage = 1;
-      loadFaltas(
-        currentPage,
-        document.getElementById("search").value,
-        event.target.value
       );
     });
