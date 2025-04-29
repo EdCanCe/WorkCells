@@ -19,20 +19,6 @@
     </div>
 
     <!-- La clase toggleText permite hacer que el texto aparezca y desaparezca -->
-    <a href="/employee/me" class="bgNavOne w-full h-[60px] p-3 navItem">
-        <img
-            src="/icons/myprofile.svg"
-            class="navIcon z-10 inline-block aspect-square h-full scale-75"
-        />
-        <div
-            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
-        >
-            <span class="font-medium inline-block ml-2 whitespace-nowrap"
-                >Profile</span
-            >
-        </div>
-    </a>
-
     <a href="/calendar" class="bgNavOne w-full h-[60px] p-3 navItem">
         <img
             src="/icons/calendar.svg"
@@ -161,6 +147,21 @@
         </div>
     </a>
     <% } %>
+
+    <a href="/employee/me" class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-15">
+        <img
+            src="/icons/myprofile.svg"
+            class="navIcon z-10 inline-block aspect-square h-full scale-75"
+        />
+        <div
+            class="toggleText flex h-full items-center overflow-hidden <%= navIsOpen == true ? 'opacity-100 w-32' : 'opacity-0 w-0' %>"
+        >
+            <span class="font-medium inline-block ml-2 whitespace-nowrap"
+                >Profile</span
+            >
+        </div>
+    </a>
+
     <a
         href="/logout"
         class="bgNavOne w-full h-[60px] p-3 navItem absolute bottom-0"

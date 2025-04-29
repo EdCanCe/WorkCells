@@ -1,0 +1,49 @@
+<script>
+    addBackButton(document.referrer);
+</script>
+<div class="primaryContainer bgContainer1">
+    <div class="titleContainer">
+        <h2 class="title text-center flex-1">Update Template Holiday</h2>
+    </div>
+
+    <form
+        action="/holiday/template/check/<%=holiday.templateHolidayID %>"
+        method="POST"
+    >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div>
+            <div>
+                <label for="title" class="label"> Holiday Name: </label>
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    class="input bg-neutral-700/50 border border-neutral-600/50 p-3 rounded-md w-full"
+                    value="<%= holiday.title%>"
+                    required
+                />
+            </div>
+
+            <div>
+                <label for="holidayDate" class="label">
+                    Celebration Date:
+                </label>
+                <input
+                    type="date"
+                    id="holidayDate"
+                    name="holidayDate"
+                    class="input"
+                    required
+                    value="<%= holiday.holidayDate.toISOString().split('T')[0] %>"
+                />
+            </div>
+        </div>
+
+        <div class="endButtonsContainer">
+            <button type="submit" class="btnPrimary">
+                Update Template Holiday
+            </button>
+        </div>
+    </form>
+</div>

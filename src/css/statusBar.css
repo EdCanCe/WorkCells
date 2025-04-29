@@ -1,5 +1,5 @@
 .status {
-    @apply z-20 fixed top-0 left-0 w-[calc(100%-60px)] h-0 m-0 pb-0 rounded-lg overflow-hidden text-nowrap;
+    @apply z-20 fixed top-0 left-0 w-[calc(80%-60px)] h-0 mx-[calc(10%+30px)] pb-0 rounded-lg overflow-hidden text-nowrap;
 }
 
 .statusText {

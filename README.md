@@ -49,6 +49,7 @@ Para poder desplegar `WorkCells` correctamente, se tienen que cumplir con los si
     -   [Llenado del archivo .env](#llenado-del-archivo-env)
     -   [Ejecutar aplicación de forma persistente](#ejecutar-aplicación-de-forma-persistente)
     -   [Uso de proxy](#uso-de-proxy)
+    -   [Levantar phpMyAdmin(opcional)](#levantar-phpmyadmin-opcional)
 
 ### Obtención de API KEYS:
 
@@ -206,21 +207,23 @@ Ahora, ocupamos crear nuestras credenciales, por lo que corremos la configuraci�
 sudo mysql_secure_installation
 ```
 
-Ahora crearemos nuestro usuario en la base de datos, por lo que corremos el script siguiente para acceder a nuestro gestor de base de datos:
+Ahora crearemos levantamos nuestra base de datos, por lo que corremos el script siguiente para acceder a nuestro gestor de base de datos:
 
 ```bash
 sudo mariadb
 ```
 
+Cargaremos algunos datos iniciales, por lo que, aún dentro de mariadb, vamos a copiar los contenidos de [este archivo](/sql/loadDB.sql) en la terminal. Al final presionamos enter.
+
 Dentro de mariadb crearemos nuestro usuario con un comando parecido:
 
 ```sql
-CREATE USER 'usuario'@'%' IDENTIFIED BY '[LA CONTRASEÑA DE TU ELECCION]'; -- crea el usuario
-GRANT ALL PRIVILEGES ON *.* TO 'usuario'@'%' WITH GRANT OPTION; -- le da permisos de edición
+CREATE USER '[TU USUARIO]'@'%' IDENTIFIED BY '[LA CONTRASEÑA DE TU ELECCION]'; -- crea el usuario
+GRANT ALL PRIVILEGES ON *.* TO '[TU USUARIO]'@'%' WITH GRANT OPTION; -- le da permisos de edición
 FLUSH PRIVILEGES;
 ```
 
-Posteriormente se crea la base de datos y cargaremos algunos datos iniciales, por lo que, aún dentro de mariadb, vamos a copiar los contenidos de [este archivo](/sql/createDB.sql) en la terminal. Al final presionamos enter, y escribimos `exit` para salir de mariadb.
+Escribimos `exit` para salir de mariadb.
 
 Teniendo la base de datos levantada, se ocuparía habilitar el puerto para que se pueda acceder.
 
@@ -482,3 +485,99 @@ Dependiendo del tipo de conexión que quisiéramos tener, se ocupa modificar el 
     ```bash
     sudo systemctl restart nginx # aplica los cambios en la configuración
     ```
+
+#### Levantar phpMyAdmin (opcional)
+
+Primeramente instalar paquetes necesarios:
+
+```bash
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt update
+sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php8.2 php8.2-mbstring php8.2-fpm php8.2-mysql -y
+```
+
+Luego se tienen que habilitar las extensiones de php:
+
+```bash
+sudo phpenmod mbstring
+sudo systemctl enable --now php8.2-fpm
+sudo systemctl restart php8.2-fpm
+```
+
+Se crea el enlace simbólico de la carpeta de phpMyAdmin:
+
+```bash
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+```
+
+Ya solo faltaría modificar nginx para aceptar la ruta con:
+
+```bash
+sudo nano /etc/nginx/sites-available/default
+```
+
+Y añadir:
+
+```nginx
+    location /phpmyadmin {
+        alias /usr/share/phpmyadmin/;
+        index index.php index.html index.htm;
+
+        location ~ ^/phpmyadmin/(.+\.php)$ {
+            alias /usr/share/phpmyadmin/$1;
+            include fastcgi-params;
+            fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME /usr/share/phpmyadmin/$1;
+        }
+
+        location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+            alias /usr/share/phpmyadmin/$1;
+        }
+    }
+```
+
+Luego habilitamos los parámetros de nginx al correr éste comando:
+
+```bash
+sudo nano /etc/nginx/fastcgi-params
+```
+
+E introducir esto adentro:
+
+```nginx
+fastcgi_param  QUERY_STRING       $query_string;
+fastcgi_param  REQUEST_METHOD     $request_method;
+fastcgi_param  CONTENT_TYPE       $content_type;
+fastcgi_param  CONTENT_LENGTH     $content_length;
+
+fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+fastcgi_param  SCRIPT_NAME        $fastcgi_script_name;
+fastcgi_param  REQUEST_URI        $request_uri;
+fastcgi_param  DOCUMENT_URI       $document_uri;
+fastcgi_param  DOCUMENT_ROOT      $document_root;
+fastcgi_param  SERVER_PROTOCOL    $server_protocol;
+
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+fastcgi_param  REMOTE_ADDR        $remote_addr;
+fastcgi_param  REMOTE_PORT        $remote_port;
+fastcgi_param  SERVER_ADDR        $server_addr;
+fastcgi_param  SERVER_PORT        $server_port;
+fastcgi_param  SERVER_NAME        $server_name;
+
+# PHP only:
+fastcgi_param  SCRIPT_FILENAME    $request_filename;
+
+# Prevents URIs with the front controller from being passed to PHP.
+fastcgi_param  PATH_INFO          $fastcgi_path_info;
+fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
+```
+
+Y faltaría reiniciar nginx para actualizar los cambios:
+
+```bash
+sudo systemctl restart nginx
+```
