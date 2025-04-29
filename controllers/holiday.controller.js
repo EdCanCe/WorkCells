@@ -11,10 +11,32 @@ exports.getHolidays = (request, response, next) => {
     });
 };
 
-exports.getCheckTemplateHoliday = (request, response, next) => {
-    response.render("templateHoliday", {
+exports.getTemplateHoliday = (request, response, next) => {
+    response.render("templateHolidayList", {
         ...sessionVars(request, title),
     });
+};
+
+exports.getCheckTemplateHoliday = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+
+    Template.fetchOneTemplateHoliday(templateHolidayID)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                return response.status(404).send("Template Holiday not found.");
+            }
+
+            const holiday = rows[0];
+            response.render("templateHolidayCheck", {
+                ...sessionVars(request, title),
+                holiday,
+                csrfToken: request.csrfToken(),
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response.status(500).send("Error in obtaining holiday data.");
+        });
 };
 
 exports.getHolidaysAdd = (request, response, next) => {
@@ -91,10 +113,27 @@ exports.getUsedHoliday = (request, response, next) => {
 
 exports.listPaginated = (request, response) => {
     const page = parseInt(request.query.page, 10) || 1;
-    const limit = 10;
+    const limit = 6;
     const offset = (page - 1) * limit;
 
     Holiday.getHolidayPaginated(limit, offset)
+        .then(([rows]) => {
+            response.json(rows);
+        })
+        .catch((err) => {
+            console.error(err);
+            response
+                .status(500)
+                .json({ error: "Error al obtener los días registrados." });
+        });
+};
+
+exports.listTemplatePaginated = (request, response) => {
+    const page = parseInt(request.query.page, 10) || 1;
+    const limit = 6;
+    const offset = (page - 1) * limit;
+
+    Template.getTemplateHolidayPaginated(limit, offset)
         .then(([rows]) => {
             response.json(rows);
         })
@@ -128,6 +167,56 @@ exports.getHolidayModify = (request, response, next) => {
             response
                 .status(500)
                 .send("Error al cargar el formulario de modificación.");
+        });
+};
+
+exports.getTemplateHolidayModify = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+
+    Template.fetchOneTemplateHoliday(templateHolidayID)
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                request.session.info = "Holiday not found";
+                return response.redirect("/holiday/template");
+            }
+
+            const holiday = rows[0];
+            console.log(rows);
+            response.render("templateHolidayModify", {
+                ...sessionVars(request, title),
+                holiday,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            response
+                .status(500)
+                .send("Error al cargar el formulario de modificación.");
+        });
+};
+
+exports.postTemplateHolidayModify = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+    const title = request.body.title;
+    const holidayDate = request.body.holidayDate;
+
+    console.log("Datos recibidos en POST:", {
+        templateHolidayID,
+        holidayDate,
+        title,
+    });
+
+    Template.updateDate(title, holidayDate, templateHolidayID)
+        .then(() => {
+            request.session.info = "Template holiday updated correctly.";
+            response.redirect(`/holiday/template/check/${templateHolidayID}`);
+        })
+        .catch((error) => {
+            console.error(error);
+            request.session.info = "Error when modifying the holiday.";
+            response.redirect(
+                `/holiday/template/check/modify/${templateHolidayID}`
+            );
         });
 };
 
@@ -186,6 +275,19 @@ exports.postHolidayDelete = (request, response, next) => {
         })
         .catch((error) => {
             console.error("Error al eliminar el feriado:", error.message);
+            response.status(500).json({ success: false, error: error.message });
+        });
+};
+
+exports.postTemplateHolidayDelete = (request, response, next) => {
+    const templateHolidayID = request.params.templateHolidayID;
+
+    Template.deleteTemplateHoliday(templateHolidayID)
+        .then(() => {
+            response.status(200).json({ success: true });
+        })
+        .catch((error) => {
+            console.error("Error in eliminating the holiday:", error.message);
             response.status(500).json({ success: false, error: error.message });
         });
 };

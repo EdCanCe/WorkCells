@@ -1,6 +1,7 @@
-<script>addBackButton('/holiday');</script>
+<script>
+    addBackButton("/holiday");
+</script>
 <div class="primaryContainer bgContainer1">
-
     <div class="titleContainer">
         <h2 class="title text-center flex-1">Used holiday details</h2>
     </div>
@@ -11,9 +12,8 @@
     </p>
     <p>
         <span class="bold">Date:</span>
-        <%= new Date(holiday.usedDate)
-        .toLocaleDateString('es-MX', { weekday: 'long', year:
-        'numeric', month: 'long', day: 'numeric' }) %>
+        <%= new Date(holiday.usedDate) .toLocaleDateString('es-MX', { weekday:
+        'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
     </p>
 
     <div class="endButtonsContainer">
@@ -53,7 +53,7 @@
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 customClass: {
-                    popup: 'sweetAlerts normal'
+                    popup: "sweetAlerts normal",
                 },
                 showCancelButton: true,
                 confirmButtonText: "Yes, delete it",
@@ -84,7 +84,7 @@
                         title: "Deleted",
                         text: "The holiday was deleted correctly.",
                         customClass: {
-                            popup: 'sweetAlerts normal'
+                            popup: "sweetAlerts normal",
                         },
                     });
                     // Puedes redirigir de vuelta al listado:
@@ -94,7 +94,7 @@
                         title: "Error",
                         text: "The holiday couldn't be deleted.",
                         customClass: {
-                            popup: 'sweetAlerts normal'
+                            popup: "sweetAlerts normal",
                         },
                     });
                 }
