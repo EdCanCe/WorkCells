@@ -494,13 +494,14 @@ Primeramente instalar paquetes necesarios:
 sudo apt install software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
-sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php8.2-fpm -y
+sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php.2 php8.2-fpm php8.2-mysql -y
 ```
 
 Luego se tienen que habilitar las extensiones de php:
 
 ```bash
 sudo phpenmod mbstring
+sudo systemctl enable --now php8.2-fpm
 sudo systemctl restart php8.2-fpm
 ```
 
@@ -526,7 +527,7 @@ Y añadir:
         location ~ ^/phpmyadmin/(.+\.php)$ {
             alias /usr/share/phpmyadmin/$1;
             include fastcgi-params;
-            fastcgi_pass unix:/run/php/php7.X-fpm.sock;  # Cambia "7.X" por tu versión de PHP
+            fastcgi_pass unix:/run/php/php8.2-fpm.sock;
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME /usr/share/phpmyadmin/$1;
         }
@@ -545,7 +546,7 @@ sudo nano /etc/nginx/fastcgi-params
 
 E introducir esto adentro:
 
-```bash
+```nginx
 fastcgi_param  QUERY_STRING       $query_string;
 fastcgi_param  REQUEST_METHOD     $request_method;
 fastcgi_param  CONTENT_TYPE       $content_type;
