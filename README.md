@@ -484,3 +484,58 @@ Dependiendo del tipo de conexión que quisiéramos tener, se ocupa modificar el 
     ```bash
     sudo systemctl restart nginx # aplica los cambios en la configuración
     ```
+
+#### Levantar PhpMyAdmin (opcional)
+
+Primeramente instalar paquetes necesarios:
+
+```bash
+sudo apt update
+sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php8.2-fpm-y
+```
+
+Luego se tienen que habilitar las extensiones de php:
+
+```bash
+sudo phpenmod mbstring
+sudo systemctl restart php7.*-fpm  # Asegúrate de que coincida con tu versión de PHP
+```
+
+Se crea el enlace simbólico de la carpeta de phpMyAdmin:
+
+```bash
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+```
+
+Ya solo faltaría modificar nginx para aceptar la ruta con:
+
+```bash
+sudo nano/etc/nginx/sites-available/default
+```
+
+Y añadir:
+
+```nginx
+    location /phpmyadmin {
+        alias /usr/share/phpmyadmin/;
+        index index.php index.html index.htm;
+
+        location ~ ^/phpmyadmin/(.+\.php)$ {
+            alias /usr/share/phpmyadmin/$1;
+            include fastcgi-params;
+            fastcgi_pass unix:/run/php/php7.X-fpm.sock;  # Cambia "7.X" por tu versión de PHP
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME /usr/share/phpmyadmin/$1;
+        }
+
+        location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+            alias /usr/share/phpmyadmin/$1;
+        }
+    }
+```
+
+Y faltaría reiniciar nginx para actualizar los cambios:
+
+```bash
+sudo systemctl restart nginx
+```
