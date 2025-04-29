@@ -331,9 +331,6 @@
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
-  .mt-\[-3px\] {
-    margin-top: -3px;
-  }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
@@ -738,9 +735,6 @@
   .border-neutral-700 {
     border-color: var(--color-neutral-700);
   }
-  .border-neutral-950\/40 {
-    border-color: color-mix(in oklab, var(--color-neutral-950) 40%, transparent);
-  }
   .border-red-700 {
     border-color: var(--color-red-700);
   }
@@ -776,9 +770,6 @@
   }
   .bg-neutral-800\/50 {
     background-color: color-mix(in oklab, var(--color-neutral-800) 50%, transparent);
-  }
-  .bg-neutral-950\/20 {
-    background-color: color-mix(in oklab, var(--color-neutral-950) 20%, transparent);
   }
   .bg-purple-500 {
     background-color: var(--color-purple-500);
@@ -1004,13 +995,6 @@
       }
     }
   }
-  .hover\:bg-neutral-950\/40 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: color-mix(in oklab, var(--color-neutral-950) 40%, transparent);
-      }
-    }
-  }
   .hover\:underline {
     &:hover {
       @media (hover: hover) {
@@ -1195,51 +1179,51 @@
 @keyframes statusContainer {
   0% {
     height: 0px;
-    margin: 0px 30px;
+    margin-top: 0;
     padding-top: 0;
   }
-  5% {
+  15% {
     height: 53px;
-    margin: 30px 30px;
+    margin-top: 50px;
     padding-top: 13px;
   }
-  95% {
+  85% {
     height: 53px;
-    margin: 30px 30px;
+    margin-top: 50px;
     padding-top: 13px;
   }
   100% {
     height: 0px;
-    margin: 0px 30px;
+    margin-top: 0px;
     padding-top: 0;
   }
 }
 .statusContainerAnimate {
-  animation: statusContainer 7s linear forwards;
+  animation: statusContainer 7s ease-in-out forwards;
 }
 @keyframes statusContainerAnimateHide {
   0% {
     height: 53px;
-    margin: 30px 30px;
+    margin-top: 50px;
     padding-top: 13px;
   }
   100% {
     height: 0px;
-    margin: 0px 30px;
+    margin-top: 0px;
     padding-top: 0;
   }
 }
 .statusContainerAnimateHide {
-  animation: statusContainerAnimateHide 0.35s linear forwards;
+  animation: statusContainerAnimateHide 0.5s linear forwards;
 }
 @keyframes statusBar {
   0% {
     width: 100%;
   }
-  5% {
+  15% {
     width: 100%;
   }
-  95% {
+  85% {
     width: 0;
   }
 }
@@ -1629,6 +1613,8 @@
 }
 .btnHeader {
   position: absolute;
+  top: 10px;
+  right: calc(var(--spacing) * 6);
   display: flex !important;
   height: calc(var(--spacing) * 8);
   width: calc(var(--spacing) * 8);
@@ -1636,16 +1622,23 @@
   border-radius: calc(infinity * 1px) !important;
   border-style: var(--tw-border-style);
   border-width: 1px;
+  border-color: color-mix(in oklab, var(--color-neutral-950) 40%, transparent);
+  background-color: color-mix(in oklab, var(--color-neutral-950) 20%, transparent);
   padding: calc(var(--spacing) * 0) !important;
+  &:hover {
+    @media (hover: hover) {
+      background-color: color-mix(in oklab, var(--color-neutral-950) 40%, transparent);
+    }
+  }
 }
 .status {
   position: fixed;
   top: calc(var(--spacing) * 0);
   left: calc(var(--spacing) * 0);
   z-index: 20;
-  margin: calc(var(--spacing) * 0);
+  margin-inline: calc(10% + 30px);
   height: calc(var(--spacing) * 0);
-  width: calc(100% - 60px);
+  width: calc(80% - 60px);
   overflow: hidden;
   border-radius: var(--radius-lg);
   padding-bottom: calc(var(--spacing) * 0);

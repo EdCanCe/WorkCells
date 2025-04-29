@@ -494,7 +494,7 @@ Primeramente instalar paquetes necesarios:
 sudo apt install software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
-sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php.2 php8.2-fpm php8.2-mysql -y
+sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php8.2 php8.2-mbstring php8.2-fpm php8.2-mysql -y
 ```
 
 Luego se tienen que habilitar las extensiones de php:
