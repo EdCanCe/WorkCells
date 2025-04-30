@@ -66,11 +66,11 @@ exports.getRoot = (request, response, next) => {
     const sqlStartDate = formatDate.forSql(preSqlStartDate);
     const sqlEndDate = formatDate.forSql(preSqlEndDate);
 
-    console.log("Start, End, preStart, endStart: ");
-    console.log(startDate, endDate);
+    // console.log("Start, End, preStart, endStart: ");
+    // console.log(startDate, endDate);
 
-    //console.log(preSqlStartDate, preSqlEndDate);
-    console.log(sqlStartDate, sqlEndDate);
+    // //console.log(preSqlStartDate, preSqlEndDate);
+    // console.log(sqlStartDate, sqlEndDate);
 
     response.render("calendar", {
         ...sessionVars(request, title, pdfName),
@@ -110,7 +110,7 @@ exports.getFetch = (request, response, next) => {
 
     // Obtiene la fecha actual
     const today = new Date(request.params.date);
-    console.log(today);
+    // console.log(today);
     let startDate, endDate;
 
     // Vista mensual
@@ -140,12 +140,12 @@ exports.getFetch = (request, response, next) => {
     const sqlStartDate = formatDate.forSql(preSqlStartDate);
     const sqlEndDate = formatDate.forSql(preSqlEndDate);
 
-    console.log("Start, End, preStart, endStart: ");
-    console.log(startDate, endDate);
+    // console.log("Start, End, preStart, endStart: ");
+    // console.log(startDate, endDate);
 
-    //console.log(preSqlStartDate, preSqlEndDate);
-    console.log(sqlStartDate, sqlEndDate);
-    console.log("Intento id?", request.session.userID);
+    // //console.log(preSqlStartDate, preSqlEndDate);
+    // console.log(sqlStartDate, sqlEndDate);
+    // console.log("Intento id?", request.session.userID);
 
     Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
         .then(([rows, fieldData]) => {

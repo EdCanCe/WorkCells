@@ -138,7 +138,7 @@ ORDER BY startDate DESC`);
                 JOIN user AS u ON u.userID = a.absenceUserIDFK
                 JOIN role AS r ON r.roleID = u.userRoleIDFK
                 JOIN user AS leader ON leader.userID = ?
-                JOIN absenceMedia as am ON a.absenceID = am.absenceIDFK
+                LEFT JOIN absenceMedia as am ON a.absenceID = am.absenceIDFK
                 WHERE a.leaderStatus = 2
                 AND u.prioritaryDepartmentIDFK = leader.prioritaryDepartmentIDFK
                 ORDER BY a.startDate DESC

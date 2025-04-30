@@ -9,11 +9,6 @@ const isAuth = require("../util/is-auth");
 router.get("/check", isAuth, departmentController.getCheckDepartment);
 router.get("/:departmentID/modify", isAuth, departmentController.getModifyDepartment);
 router.post("/:departmentID/modify", isAuth, departmentController.postModifyDepartment);
-router.post(
-    "/delete/:departmentID",
-    isAuth,
-    departmentController.postDeleteDeparment
-);
 router.get("/add", isAuth, departmentPrivilege, departmentController.getAddDepartment);
 router.post("/add", isAuth, departmentPrivilege, departmentController.postAddDepartment);
 router.get("/search", isAuth, departmentController.getDepartmentsPaginated);
