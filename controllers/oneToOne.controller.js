@@ -189,9 +189,9 @@ exports.getOneToOneCheck = (request, response, next) => {
                         Measurable.fetchBySessionData(
                             request.params.sessionID
                         ).then(([measures]) => {
-                            console.log(rows[0]);
-                            console.log(answers[0]);
-                            console.log[measures[0]];
+                            // console.log(rows[0]);
+                            // console.log(answers[0]);
+                            // console.log[measures[0]];
                             response.render("oneToOneCheck", {
                                 ...sessionVars(request, title, pdfName),
                                 answers,

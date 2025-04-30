@@ -229,7 +229,7 @@ exports.postAddVacation = (request, response, next) => {
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
 
-    console.log("Fecha inicio", startDate);
+    // console.log("Fecha inicio", startDate);
 
     // En caso de que la fecha de inicio sea posterior a la final
     if (new Date(startDate) > new Date(endDate)) {
@@ -275,13 +275,13 @@ exports.postAddVacation = (request, response, next) => {
             let nonusableDays = 0;
             daysMap.forEach((day, key) => {
                 // Verifica si el día es festivo o fin de semana
-                console.log(
-                    `${key} => ${
-                        ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"][
-                            day.dayType
-                        ]
-                    } | holiday: ${day.holiday} | dayNumber: ${day.dayType}`
-                );
+                // console.log(
+                //     `${key} => ${
+                //         ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"][
+                //             day.dayType
+                //         ]
+                //     } | holiday: ${day.holiday} | dayNumber: ${day.dayType}`
+                // );
                 if (day.holiday == 1 || day.dayType == 5 || day.dayType == 6) {
                     nonusableDays += 1;
                 }
@@ -292,8 +292,8 @@ exports.postAddVacation = (request, response, next) => {
                 Number(new Date(endDate)) - Number(new Date(startDate));
             const requestDays =
                 Math.ceil(dateDiff / (1000 * 60 * 60 * 24)) + 1 - nonusableDays;
-            console.log("requested: ", requestDays);
-            console.log("nonusable: ", nonusableDays);
+            // console.log("requested: ", requestDays);
+            // console.log("nonusable: ", nonusableDays);
 
             // En caso de que el usuario haya solicitado más días de los que tiene disponibles
             if (requestDays > request.session.availableDays) {

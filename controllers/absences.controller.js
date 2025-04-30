@@ -219,7 +219,7 @@ exports.getAllRequests = (request, response, next) => {
     const limit = 10;
     const offset = 0;
     let fetchPromise;
-    console.log(userId);
+    // console.log(userId);
     if (userRole === "Manager" || userRole === "Department Leader") {
         // Usar el método fetchPaginated actualizado que maneja ambos roles
         fetchPromise = Absence.fetchAllPaginated(
@@ -239,7 +239,7 @@ exports.getAllRequests = (request, response, next) => {
                 absences: rows,
                 role: userRole,
             });
-            console.log(rows);
+            // console.log(rows);
         })
         .catch((error) => {
             console.error(error);
@@ -289,7 +289,7 @@ exports.getRequestsPaginated = (request, response, next) => {
 };
 
 exports.postAdd = (request, response, next) => {
-    console.log(request.body);
+    // console.log(request.body);
     const absence = new Absence(
         request.body.startDate,
         request.body.endDate,
@@ -313,7 +313,7 @@ exports.postAdd = (request, response, next) => {
             response.redirect("/absence");
         })
         .catch((err) => {
-            console.log(err);
+            // console.log(err);
             response.send(500);
         });
 };

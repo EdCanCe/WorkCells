@@ -217,9 +217,6 @@ exports.getCheckDepartment = (request, response, next) => {
     });
 };
 
-exports.postDeleteDeparment = (request, response, next) => {
-    console.log(request.session);
-};
 
 exports.getModifyDepartment = async (request, response, next) => {
     try {
