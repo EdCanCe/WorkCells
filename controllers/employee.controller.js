@@ -238,7 +238,6 @@ exports.getProfile = (request, response, next) => {
     if (request.session.role === "Manager") {
         return openProfile(request, response, userID, isOwn);
     }
-
     // Significa que es un líder de departamento
     Department.getLeaderDepartment(userID)
         .then(([rows]) => {
