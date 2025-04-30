@@ -207,13 +207,13 @@ exports.postModify = (request, response, next) => {
         })
         .then(() => {
             // Si la actualización fue exitosa, redirigir al usuario
-            request.session.info = "Empleado modificado con éxito.";
+            request.session.info = "Correct Employee Update";
             response.redirect(`/employee/${userID}`);
         })
         .catch((error) => {
             console.error("Error al modificar empleado:", error);
             request.session.info =
-                error.message || "Error al modificar el empleado.";
+                error.message || "Error to modify the employee";
             response.redirect(`/employee/${userID}/modify`);
         });
 };
@@ -318,7 +318,7 @@ exports.postChangePassword = (request, response, next) => {
 
     // Verificar que las contraseñas coinciden
     if (newPassword !== confirmNewPassword) {
-        request.session.warning = "Las contraseñas no coinciden.";
+        request.session.warning = "The passwords do not match.";
         return response.redirect("/employee/me/changePassword");
     }
 
@@ -329,25 +329,25 @@ exports.postChangePassword = (request, response, next) => {
 
     if (!upperCharacters.test(newPassword)) {
         request.session.warning =
-            "La contraseña debe contener al menos una letra mayúscula.";
+            "The password must contain at least one capital letter.";
         return response.redirect("/employee/me/changePassword");
     }
 
     if (!specialCharacters.test(newPassword)) {
         request.session.warning =
-            "La contraseña debe contener al menos un carácter especial.";
+            "The password must contain at least one special character.";
         return response.redirect("/employee/me/changePassword");
     }
 
     if (!numericCharacters.test(newPassword)) {
         request.session.warning =
-            "La contraseña debe contener al menos un número.";
+            "The password must contain at least one number.";
         return response.redirect("/employee/me/changePassword");
     }
 
     if (newPassword.length <= 8) {
         request.session.warning =
-            "La contraseña debe tener más de 8 caracteres.";
+            "The password must contain a minimum of 8 characters.";
         return response.redirect("/employee/me/changePassword");
     }
 
@@ -359,7 +359,7 @@ exports.postChangePassword = (request, response, next) => {
 
             if (!userData || userData.length === 0) {
                 console.error("Usuario no encontrado:", userID);
-                request.session.warning = "Usuario no encontrado.";
+                request.session.warning = "User not found";
                 return response.redirect("/employee/me/changePassword");
             }
 
@@ -372,7 +372,7 @@ exports.postChangePassword = (request, response, next) => {
 
                 if (!currentPassword) {
                     request.session.warning =
-                        "Se requiere la contraseña actual.";
+                        "The current password is required.";
                     return response.redirect("/employee/me/changePassword");
                 }
 
@@ -383,7 +383,7 @@ exports.postChangePassword = (request, response, next) => {
                 );
                 if (!isMatch) {
                     request.session.warning =
-                        "La contraseña actual es incorrecta.";
+                        "The current password is incorrect.";
                     return response.redirect("/employee/me/changePassword");
                 }
 
@@ -394,7 +394,7 @@ exports.postChangePassword = (request, response, next) => {
                 );
                 if (isSamePassword) {
                     request.session.warning =
-                        "La nueva contraseña debe ser diferente a la actual.";
+                        "The new password must be different from the current one.";
                     return response.redirect("/employee/me/changePassword");
                 }
 
@@ -407,13 +407,13 @@ exports.postChangePassword = (request, response, next) => {
             }
 
             console.log("Contraseña actualizada con éxito para ID:", userID);
-            request.session.info = "Contraseña actualizada correctamente.";
+            request.session.info = "Password updated successfully.";
             request.session.passwdFlag = 1;
             return response.redirect("/employee/me");
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
             request.session.warning =
-                "Error al cambiar la contraseña: " + error.message;
+                "Error changing the password: " + error.message;
             return response.redirect("/employee/me/changePassword");
         }
     };
@@ -424,7 +424,7 @@ exports.postChangePassword = (request, response, next) => {
         // En caso de que haya un error no manejado y no se haya enviado respuesta aún
         if (!response.headersSent) {
             request.session.warning =
-                "Error inesperado al cambiar la contraseña.";
+                "Unexpected error while changing the password.";
             return response.redirect("/employee/me/changePassword");
         }
     });
