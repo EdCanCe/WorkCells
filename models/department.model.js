@@ -55,10 +55,12 @@ module.exports = class Department {
 
     static getLeaderDepartment(userID) {
         return db.execute(
-            `SELECT u.prioritaryDepartmentIDFK, d.title, d.departmentLeaderIDFK userID
-            FROM user u 
+            `SELECT u.prioritaryDepartmentIDFK, d.title, d.departmentLeaderIDFK userID, e.title as enterprise
+            FROM user u
             JOIN department d 
                 ON u.prioritaryDepartmentIDFK = d.departmentID
+            JOIN enterprise e 
+                ON d.enterpriseIDFK = e.enterpriseID
             WHERE u.userID = ?`,
             [userID]
         );

@@ -2,10 +2,11 @@ const Fault = require("../models/faults.model");
 const FaultMedia = require("../models/faultsMedia.model");
 const sessionVars = require("../util/sessionVars");
 const title = 'Faults';
+const pdfName = "fault";
 
 exports.getAdd = (request, response, next) => {
     response.render("faultsAdd", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -47,7 +48,7 @@ exports.postAdd = (request, response, next) => {
 exports.getCheck = (request, response, next) => {
     Fault.fetchByID(request.params.faultID).then(([rows]) => {
         response.render("checkFault", {
-            ...sessionVars(request, title),
+            ...sessionVars(request, title, pdfName),
             fault: rows[0],
         });
     });
@@ -57,7 +58,7 @@ exports.getRoot = (request, response, next) => {
     Fault.fetchAll()
         .then(([rows, fieldData]) => {
             response.render("faults", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 fault: rows,
             });
         })

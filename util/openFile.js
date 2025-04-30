@@ -8,12 +8,12 @@ const sessionVars = require("./sessionVars");
  * @param {*} request   La request de la página
  * @param {*} response  La response de la página
  */
-module.exports = (request, response) => {
+module.exports = (request, response, isManual = false) => {
     // Obtiene el archivo a visualizar
     const fileName = request.params.mediaLink;
 
     // Obtiene la dirección del archivo
-    const directory = path.join(__dirname, "..", "uploads");
+    const directory = path.join(__dirname, "..", isManual ? "docs" : "uploads");
 
     // Obtiene el archivo
     const file = path.join(directory, fileName);

@@ -5,6 +5,7 @@ const Holiday = require("../models/holiday.model");
 const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
 const title = "Calendar";
+const pdfName = "calendar";
 
 exports.getRoot = (request, response, next) => {
     // Obtiene los días de inicio y final de la semana
@@ -72,7 +73,7 @@ exports.getRoot = (request, response, next) => {
     console.log(sqlStartDate, sqlEndDate);
 
     response.render("calendar", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
         isMonthView,
         today: formatDate.forSql(today),
         weekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
