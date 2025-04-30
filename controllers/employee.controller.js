@@ -63,13 +63,13 @@ exports.postAdd = (request, response, next) => {
         })
         .then(() => {
             // Si la inserción fue exitosa, redirigir con mensaje
-            request.session.info = "Empleado creado correctamente.";
+            request.session.info = "Employee created successfully.";
             response.redirect("/employee");
         })
         .catch((error) => {
             console.error("Error al registrar el empleado:", error.message);
             request.session.info =
-                error.message || "Error al registrar el empleado.";
+                error.message || "Error registering the employee.";
             response.redirect("/employee/add");
         });
 };
@@ -80,7 +80,7 @@ exports.getModify = (request, response, next) => {
     Employee.fetchUser(userID)
         .then(([userData]) => {
             if (!userData || userData.length === 0) {
-                request.session.info = "Empleado no encontrado.";
+                request.session.info = "Employee not found.";
                 return response.redirect("/employee");
             }
 
@@ -122,13 +122,13 @@ exports.getModify = (request, response, next) => {
                 .catch((error) => {
                     console.error("Error al obtener catálogos:", error);
                     request.session.info =
-                        "Error al cargar información del empleado.";
+                        "Error loading employee information.";
                     response.redirect("/employee");
                 });
         })
         .catch((error) => {
             console.error("Error al obtener los datos del empleado:", error);
-            request.session.info = "Error al obtener datos del empleado.";
+            request.session.info = "Error getting the employee data.";
             response.redirect("/employee");
         });
 };
