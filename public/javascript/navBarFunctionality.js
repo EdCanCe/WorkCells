@@ -2,7 +2,7 @@ const navToggle = document.getElementById("openAndCloseNav");
 const navBar = document.getElementById("navBar");
 const navText = document.querySelectorAll(".toggleText");
 const navIcons = document.querySelectorAll(".navIcon");
-const finalWidth = "w-32";
+const finalWidth = "w-36";
 
 // Inicializa en caso de que no esté definida
 document.cookie = `navOpened=${getCookieByName("navOpened") == "0" ? "0" : "1"}; max-age=${

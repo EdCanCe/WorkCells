@@ -4,16 +4,17 @@ const Template = require("../models/templateHoliday.model");
 const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
 const title = "Holidays";
+const pdfName = "holiday";
 
 exports.getHolidays = (request, response, next) => {
     response.render("usedHoliday", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
 exports.getTemplateHoliday = (request, response, next) => {
     response.render("templateHolidayList", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -28,7 +29,7 @@ exports.getCheckTemplateHoliday = (request, response, next) => {
 
             const holiday = rows[0];
             response.render("templateHolidayCheck", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 holiday,
                 csrfToken: request.csrfToken(),
             });
@@ -42,7 +43,7 @@ exports.getCheckTemplateHoliday = (request, response, next) => {
 exports.getHolidaysAdd = (request, response, next) => {
     Holiday.fetchAll().then(([rows]) => {
         response.render("holidayAdd", {
-            ...sessionVars(request, title),
+            ...sessionVars(request, title, pdfName),
             holidays: rows,
         });
     });
@@ -50,7 +51,7 @@ exports.getHolidaysAdd = (request, response, next) => {
 
 exports.getTemplateHolidayAdd = (request, response, next) => {
     response.render("templateHolidayAdd", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -75,7 +76,7 @@ exports.postHolidaysAdd = (request, response, next) => {
 };
 
 exports.postTemplateHolidayAdd = (request, response, next) => {
-    const template = new Template(request.body.holidayDate, request.body.title);
+    const template = new Template(request.body.holidayDate, request.body.title, pdfName);
     console.log(request.body);
     template
         .save()
@@ -93,7 +94,7 @@ exports.postTemplateHolidayAdd = (request, response, next) => {
 
 exports.getHoliday = (request, response, next) => {
     response.render("holidayCheck", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -101,7 +102,7 @@ exports.getUsedHoliday = (request, response, next) => {
     Holiday.fetchUsedHoliday()
         .then(([rows, fieldData]) => {
             response.render("usedHoliday", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 holidays: rows,
             });
         })
@@ -158,7 +159,7 @@ exports.getHolidayModify = (request, response, next) => {
             const holiday = rows[0];
             console.log(rows);
             response.render("holidayModify", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 holiday,
             });
         })
@@ -183,7 +184,7 @@ exports.getTemplateHolidayModify = (request, response, next) => {
             const holiday = rows[0];
             console.log(rows);
             response.render("templateHolidayModify", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 holiday,
             });
         })
@@ -253,7 +254,7 @@ exports.getCheckHoliday = (request, response, next) => {
 
             const holiday = rows[0];
             response.render("checkUsedHoliday", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 holiday,
                 csrfToken: request.csrfToken(),
             });

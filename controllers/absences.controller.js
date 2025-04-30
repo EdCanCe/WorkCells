@@ -3,15 +3,16 @@ const AbsenceMedia = require("../models/absenceMedia.model");
 const sessionVars = require("../util/sessionVars");
 const { sendTemplateMessage } = require("../util/whatsAppMessages");
 const title = "Absences";
+const pdfName = "absences";
 
 exports.getCheck = (request, response, next) => {
     response.render("absence_check", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
 exports.getAdd = (request, response, next) => {
-    response.render("absencesAdd", { ...sessionVars(request, title) });
+    response.render("absencesAdd", { ...sessionVars(request, title, pdfName) });
 };
 
 exports.postRequestApprove = async (request, response, next) => {
@@ -202,7 +203,7 @@ exports.getRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render("absenceRequests", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 absences: rows,
                 role: userRole,
             });
@@ -234,7 +235,7 @@ exports.getAllRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render("absenceAllRequests", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 absences: rows,
                 role: userRole,
             });
@@ -323,7 +324,7 @@ exports.getRoot = (request, response, next) => {
             // console.log(fieldData);
             // console.log(rows);
             response.render("absencesList", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 absences: rows,
             });
         })

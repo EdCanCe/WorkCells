@@ -5,6 +5,7 @@ const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
 const { sendTemplateMessage } = require("../util/whatsAppMessages");
 const title = "Vacations";
+const pdfName = "vacation";
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -24,7 +25,7 @@ exports.getRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render("vacationRequests", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacations: rows,
                 role: userRole,
             });
@@ -56,7 +57,7 @@ exports.getAllRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render("vacationAllRequests", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacations: rows,
                 role: userRole,
             });
@@ -202,7 +203,7 @@ exports.getAddVacation = (request, response, next) => {
                     endDateTextAux.setDate(endDateTextAux.getDate() - 1);
 
                     response.render("addVacation", {
-                        ...sessionVars(request, title),
+                        ...sessionVars(request, title, pdfName),
                         availableDays,
                         startDate: `${startDateTextAux.getFullYear()}-${String(
                             startDateTextAux.getMonth() + 1
@@ -344,7 +345,7 @@ exports.getCheckVacation = (request, response, next) => {
             const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos extremos
 
             response.render("checkVacation", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacation: selectedVacation,
                 requestedDays: totalDays,
             });
@@ -468,7 +469,7 @@ exports.getModifyVacation = async (request, response, next) => {
         const availableDays = baseDays - totalUsedDays;
 
         response.render("modifyVacation", {
-            ...sessionVars(request, title),
+            ...sessionVars(request, title, pdfName),
             vacation: selectedVacation,
             availableDays,
         });
@@ -490,7 +491,7 @@ exports.updateVacation = async (request, response, next) => {
                 return response.status(404).send("Vacation not found.");
             }
             return response.render("modifyVacation", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacation: rows[0],
                 availableDays: request.session.availableDays || 0,
             });
@@ -930,7 +931,7 @@ exports.getRoot = (request, response, next) => {
                 );
 
                 response.render("ownVacation", {
-                    ...sessionVars(request, title),
+                    ...sessionVars(request, title, pdfName),
                     usedVacations,
                     approvedRequests,
                     pendingRequests,

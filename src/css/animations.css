@@ -5,19 +5,19 @@
 @keyframes statusContainer {
     0% {
         height: 0px;
-        margin-top: 0;
+        margin-top: 33.5px;
         padding-top: 0;
     }
 
     15% {
         height: 53px;
-        margin-top: 50px;
+        margin-top: 33.5px;
         padding-top: 13px;
     }
 
     85% {
         height: 53px;
-        margin-top: 50px;
+        margin-top: 0;
         padding-top: 13px;
     }
 
@@ -35,7 +35,7 @@
 @keyframes statusContainerAnimateHide {
     0% {
         height: 53px;
-        margin-top: 50px;
+        margin-top: 33.5px;
         padding-top: 13px;
     }
 

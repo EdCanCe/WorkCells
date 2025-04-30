@@ -5,6 +5,7 @@ const WorkStatus = require("../models/workStatus.model");
 const bcrypt = require("bcryptjs");
 const openProfile = require("../util/openProfile");
 const title = "Employees";
+const pdfName = "employee";
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -15,7 +16,7 @@ exports.getAdd = (request, response, next) => {
         .then(([[countries], [roles], [departments]]) => {
             // Limpiar el mensaje después de usarlo
             response.render("employeeAdd", {
-                ...sessionVars(request, title), // Variables de la sesión
+                ...sessionVars(request, title, pdfName), // Variables de la sesión
                 employees: countries, // Lista de países
                 roles: roles, // Lista de roles
                 departments: departments, // Lista de departamentos
@@ -107,7 +108,7 @@ exports.getModify = (request, response, next) => {
                         const department = employeeDepartment[0] || null;
 
                         response.render("employeeCheckModify", {
-                            ...sessionVars(request, title),
+                            ...sessionVars(request, title, pdfName),
                             employee: employee,
                             country: country, // País específico del empleado
                             roleUser: role, // Rol específico del empleado
@@ -207,13 +208,13 @@ exports.postModify = (request, response, next) => {
         })
         .then(() => {
             // Si la actualización fue exitosa, redirigir al usuario
-            request.session.info = "Empleado modificado con éxito.";
+            request.session.info = "Employee edited successfully.";
             response.redirect(`/employee/${userID}`);
         })
         .catch((error) => {
-            console.error("Error al modificar empleado:", error);
+            console.error("There was an error editing the employee", error);
             request.session.info =
-                error.message || "Error al modificar el empleado.";
+                error.message || "Error editing the employee.";
             response.redirect(`/employee/${userID}/modify`);
         });
 };
@@ -227,8 +228,6 @@ exports.getProfile = (request, response, next) => {
 
     // En caso de haber no usuario en params, marca que el perfil es propio
     const isOwn = userID === request.session.userID;
-
-    console.log(isOwn ? "Soy dueño" : "No soy dueño");
 
     // Si es dueño de su propio perfil, mandar a renderizar
     if (isOwn) {
@@ -261,7 +260,7 @@ exports.getProfile = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -305,7 +304,7 @@ exports.getSearch = (request, response, next) => {
 
 exports.getChangePassword = (request, response, next) => {
     response.render("employeeChangePassword", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -451,7 +450,7 @@ exports.getEmployeeFaults = (request, response, next) => {
         .then(([faults, fieldData]) => {
             console.log(faults);
             response.render("employeeFaults", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 faults: faults,
                 employeeID: userID,
             });
