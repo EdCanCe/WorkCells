@@ -1,14 +1,22 @@
-<script>addBackButton('/');</script>
+<script>
+    addBackButton("/");
+</script>
 <div class="fullContainer bgContainer1">
-
     <div class="titleContainer">
-        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">List of all holidays</h2>
+        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">
+            List of all holidays
+        </h2>
         <% if (role === 'Manager') { %>
-            <div class="flex gap-1 centerItems">
-                <div class="flex justify-end mb-4">
-                    <a href="/holiday/add" class="btnPrimary">Add used holiday</a>
-                </div>
+        <div class="flex gap-1 centerItems">
+            <div class="flex justify-end mb-4">
+                <a href="/holiday/template" class="btnPrimary"
+                    >View Template Holiday</a
+                >
             </div>
+            <div class="flex justify-end mb-4">
+                <a href="/holiday/add" class="btnPrimary">Add used holiday</a>
+            </div>
+        </div>
         <% } %>
     </div>
 
