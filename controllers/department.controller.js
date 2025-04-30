@@ -4,6 +4,7 @@ const Enterprise = require("../models/enterprise.model");
 const Employee = require("../models/employee.model");
 const { create } = require("domain");
 const title = "Departments";
+const pdfName = "departments";
 
 exports.getDepartments = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -26,8 +27,8 @@ exports.getDepartments = (request, response, next) => {
             .then(([rows, fieldData]) => {
                 //console.log(rows);
                 response.render("leaderDepartmentList", {
-                    ...sessionVars(request, title),
-                    department: departmentData,
+                    ...sessionVars(request, title, pdfName),
+                    department: departmentData[0],
                     rows: rows,
                 });
             })
@@ -41,7 +42,7 @@ exports.getDepartments = (request, response, next) => {
         Department.getAllDepartments()
             .then(([rows, fieldData]) => {
                 response.render("checkDepartment", {
-                    ...sessionVars(request, title),
+                    ...sessionVars(request, title, pdfName),
                     rows: rows,
                 });
             })
@@ -64,7 +65,7 @@ exports.getEmployees = (req, res, next) => {
             }
 
             res.render("RHDepartmentList", {
-                ...sessionVars(req, title),
+                ...sessionVars(req, title, pdfName),
                 department: deptRows[0], // un objeto { departmentID, title }
                 employees: empRows, // array de empleados
             });
@@ -169,7 +170,7 @@ exports.getAddDepartment = (request, response, next) => {
             );
 
             response.render("addDepartment", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 enterprises,
                 collaborators,
                 leaders,
@@ -212,7 +213,7 @@ exports.postAddDepartment = (request, response, next) => {
 
 exports.getCheckDepartment = (request, response, next) => {
     response.render("checkOneDpmt", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -259,7 +260,7 @@ exports.getModifyDepartment = async (request, response, next) => {
         );
 
         response.render("modifyDepartment", {
-            ...sessionVars(request, title),
+            ...sessionVars(request, title, pdfName),
             departmentCollaborators,
             enterprises,
             collaborators,

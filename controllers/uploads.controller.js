@@ -59,3 +59,7 @@ exports.getFaultFile = (request, response, next) => {
             response.redirect("/error");
         });
 };
+
+exports.getManualfile = (request, response, next) => {
+    openFile(request, response, true)
+};

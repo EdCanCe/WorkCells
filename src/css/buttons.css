@@ -23,5 +23,5 @@
 }
 
 .btnHeader {
-    @apply !flex w-8 h-8 absolute top-[10px] right-6 !rounded-full !p-0 border-1 bg-neutral-950/20 hover:bg-neutral-950/40 border-neutral-950/40 cursor-pointer;
+    @apply !flex w-8 h-8 absolute !rounded-full !p-0 border-1 cursor-pointer;
 }
