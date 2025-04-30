@@ -72,7 +72,7 @@ const getCoords = (street, houseNum, colony, zipCode, city, state, country) => {
     }).then((result) => {
         return result.json();
     }).then((data) => {
-        console.log(data);
+        // console.log(data);
 
         // Verifica que si haya datos
         if (data[0].lat === undefined) {

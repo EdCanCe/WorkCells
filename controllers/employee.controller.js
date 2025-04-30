@@ -29,7 +29,7 @@ exports.getAdd = (request, response, next) => {
 };
 
 exports.postAdd = (request, response, next) => {
-    console.log("Datos del formulario:", request.body); // Depuración aquí
+    // console.log("Datos del formulario:", request.body); // Depuración aquí
 
     const curp = request.body.curp;
 
@@ -55,7 +55,7 @@ exports.postAdd = (request, response, next) => {
     employee
         .save()
         .then((userID) => {
-            console.log("Empleado creado con ID:", userID);
+            // console.log("Empleado creado con ID:", userID);
 
             // Crear y guardar el estado de trabajo asociado al usuario
             const workStatus = new WorkStatus(new Date(), null, userID);
@@ -172,7 +172,7 @@ exports.postModify = (request, response, next) => {
         workStatus,
     };
 
-    console.log("Campos antes de llamar a updateEmployee:", updatedEmployee);
+    // console.log("Campos antes de llamar a updateEmployee:", updatedEmployee);
 
     // Llamada a la función de actualización en la base de datos
     Employee.updateEmployee(
@@ -197,7 +197,7 @@ exports.postModify = (request, response, next) => {
             let dateOfDeactivation = null;
             if (workStatus === "0") {
                 dateOfDeactivation = new Date();
-                console.log(dateOfDeactivation);
+                // console.log(dateOfDeactivation);
                 return WorkStatus.updateEndDate(userID, dateOfDeactivation);
             }
 
@@ -362,7 +362,7 @@ exports.postChangePassword = (request, response, next) => {
             }
 
             const user = userData[0];
-            console.log("Usuario encontrado, passwdFlag:", user.passwdFlag);
+            // console.log("Usuario encontrado, passwdFlag:", user.passwdFlag);
 
             // Si es usuario con contraseña ya cambiada previamente
             if (user.passwdFlag == 1) {
@@ -400,11 +400,11 @@ exports.postChangePassword = (request, response, next) => {
                 await Employee.updatePassword(userID, newPassword);
             } else {
                 // Para usuarios que hacen su primer cambio de contraseña
-                console.log("Actualizando contraseña por primera vez...");
+                // console.log("Actualizando contraseña por primera vez...");
                 await Employee.updatePasswordFirstTime(userID, newPassword);
             }
 
-            console.log("Contraseña actualizada con éxito para ID:", userID);
+            // console.log("Contraseña actualizada con éxito para ID:", userID);
             request.session.info = "Password updated successfully.";
             request.session.passwdFlag = 1;
             return response.redirect("/employee/me");
@@ -447,7 +447,7 @@ exports.getEmployeeFaults = (request, response, next) => {
     // Renderiza las faltas del usuario
     Employee.getOwnFaults(userID)
         .then(([faults, fieldData]) => {
-            console.log(faults);
+            // console.log(faults);
             response.render("employeeFaults", {
                 ...sessionVars(request, title, pdfName),
                 faults: faults,

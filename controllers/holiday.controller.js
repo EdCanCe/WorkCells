@@ -60,7 +60,7 @@ exports.postHolidaysAdd = (request, response, next) => {
         request.body.usedDate,
         request.body.usedTemplateHolidayIDFK
     );
-    console.log(request.body);
+    // console.log(request.body);
     holiday
         .save()
         .then(() => {
@@ -77,7 +77,7 @@ exports.postHolidaysAdd = (request, response, next) => {
 
 exports.postTemplateHolidayAdd = (request, response, next) => {
     const template = new Template(request.body.holidayDate, request.body.title, pdfName);
-    console.log(request.body);
+    // console.log(request.body);
     template
         .save()
         .then(() => {
@@ -157,7 +157,7 @@ exports.getHolidayModify = (request, response, next) => {
             }
 
             const holiday = rows[0];
-            console.log(rows);
+            // console.log(rows);
             response.render("holidayModify", {
                 ...sessionVars(request, title, pdfName),
                 holiday,
@@ -182,7 +182,7 @@ exports.getTemplateHolidayModify = (request, response, next) => {
             }
 
             const holiday = rows[0];
-            console.log(rows);
+            // console.log(rows);
             response.render("templateHolidayModify", {
                 ...sessionVars(request, title, pdfName),
                 holiday,
@@ -201,11 +201,11 @@ exports.postTemplateHolidayModify = (request, response, next) => {
     const title = request.body.title;
     const holidayDate = request.body.holidayDate;
 
-    console.log("Datos recibidos en POST:", {
-        templateHolidayID,
-        holidayDate,
-        title,
-    });
+    // console.log("Datos recibidos en POST:", {
+    //     templateHolidayID,
+    //     holidayDate,
+    //     title,
+    // });
 
     Template.updateDate(title, holidayDate, templateHolidayID)
         .then(() => {
@@ -225,10 +225,10 @@ exports.postHolidayModify = (request, response, next) => {
     const usedHolidayID = request.params.usedHolidayID;
     const usedDate = request.body.usedDate;
 
-    console.log("Datos recibidos en POST:", {
-        usedHolidayID,
-        usedDate,
-    });
+    // console.log("Datos recibidos en POST:", {
+    //     usedHolidayID,
+    //     usedDate,
+    // });
 
     Holiday.updateDate(usedHolidayID, usedDate)
         .then(() => {

@@ -187,7 +187,7 @@
             extraPx -
             (isMonthView ? 30 : 0);
 
-        console.log(usedHeight);
+        // console.log(usedHeight);
 
         childs.forEach((child) => {
             child.style.height = `${usedHeight}px`;
@@ -380,9 +380,9 @@
         // Convertir el valor de la cookie a booleano
         const isMonthView = typeOfRender.content === "true";
         const thisDate = new Date(currentDate.content);
-        console.log(currentDate.content);
+        // console.log(currentDate.content);
 
-        console.log(isMonthView);
+        // console.log(isMonthView);
 
         if (navigation === "prev") {
             if (isMonthView) {
