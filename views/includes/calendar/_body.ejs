@@ -268,8 +268,7 @@
                 ${day.events.absences
                     .map(
                         (absence) =>
-                            `<a
-                        href="/absence/${absence.absenceID}"
+                            `<p
                         class="
                             absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500
                             ${
@@ -284,7 +283,7 @@
                             }
                     ">
                         Absence
-                    </a>`
+                    </p>`
                     )
                     .join("")}
 
