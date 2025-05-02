@@ -129,6 +129,8 @@ document.getElementById('department').addEventListener('change', async (e) => {
   const deptID = e.target.value;
   const url = deptID ? `/reports/oneOnOne/${deptID}` : `/reports/oneOnOne`;
 
+  console.log(url);
+
   try {
     const res = await fetch(url, { headers: { Accept: 'application/json' } });
     // Desestructuramos sólo las métricas
