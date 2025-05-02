@@ -1,9 +1,12 @@
+<script>
+    addBackButton("/holiday/template");
+</script>
 <div class="primaryContainer bgContainer1">
     <div class="titleContainer">
         <h2 class="title text-center flex-1">Add Template Holiday</h2>
     </div>
 
-    <form action="/holiday/add/template" method="POST">
+    <form action="/holiday/template/add" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
 
         <div class="flex space-x-6 mb-4">

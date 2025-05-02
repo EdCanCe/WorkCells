@@ -46,20 +46,11 @@ const showStatus = (status, text) => {
 document.querySelectorAll('.closingStatus').forEach((element) => {
     element.addEventListener('click', () => {
         const container = element.parentElement.parentElement;
-        const bar = container.lastElementChild.firstElementChild;
-
-        console.log("Aaa");
 
         // Anima el borrado
         container.classList.add("statusContainerAnimateHide");
         
         // Borra la animación de entrada
         container.classList.remove("statusContainerAnimate");
-        
-        // En el momento que la animación termine, quita la clase
-        container.addEventListener("animationend", () => {
-            bar.classList.remove("statusBarAnimate");
-            container.classList.remove("statusContainerAnimateHide");
-        });
     })
 });

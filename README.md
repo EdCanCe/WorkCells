@@ -31,6 +31,10 @@ Enlace al video: [Presionar aquí](https://drive.google.com/file/d/12XiT6-eZ0QDH
 
 Enlace a su carpeta: [Presionar aquí](https://github.com/EdCanCe/WorkCells/tree/main/avances/avance5)
 
+### Avance 6:
+
+Enlace a su carpeta: [Presionar aquí](https://github.com/EdCanCe/WorkCells/tree/main/avances/avance6)
+
 ## Guía de despliegue:
 
 Para poder desplegar `WorkCells` correctamente, se tienen que cumplir con los siguientes puntos:
@@ -49,6 +53,7 @@ Para poder desplegar `WorkCells` correctamente, se tienen que cumplir con los si
     -   [Llenado del archivo .env](#llenado-del-archivo-env)
     -   [Ejecutar aplicación de forma persistente](#ejecutar-aplicación-de-forma-persistente)
     -   [Uso de proxy](#uso-de-proxy)
+    -   [Levantar phpMyAdmin(opcional)](#levantar-phpmyadmin-opcional)
 
 ### Obtención de API KEYS:
 
@@ -68,11 +73,11 @@ Para poder obtener la llave que permita el funcionamiento de esta API se tienen 
 1. Una vez configurados, ahora tenemos que crear nuestra App desde Developer Meta.
 1. Seleccionamos la opción de WhatsApp.
 1. Configuramos un número de prueba.
-    ![Configuración de número de pruebas](WhatsApp-01.png)
+    ![Configuración de número de pruebas](imgs/WhatsApp-01.png)
 1. Ahora, en Business Meta, en el panel principal, configuramos una plantilla de mensaje para enviar por WhatsApp.
-    ![Configuración de plantilla de mensaje](WhatsApp-02.png)
+    ![Configuración de plantilla de mensaje](imgs/WhatsApp-02.png)
 1. En esta parte, también configuramos y guardamos nuestro token permanente. Para esto, nos debemos de ir a la configuración de la empresa > Usuarios del Sistema > Generar Token. _(Guardar el token, ya que posteriormente se ingresará al archivo `.env`)_
-    ![Configuración de plantilla de mensaje](WhatsApp-03.png)
+    ![Configuración de plantilla de mensaje](imgs/WhatsApp-03.png)
 
 En la aplicación actualmente sólo funciona con un número de prueba, independientemente del empleado; siempre se manda al mismo número. Esto ya que para poder mandar a más números, se necesita agregar un método de pago dentro de Business Meta.
 
@@ -84,18 +89,18 @@ Para poder obtener la llave que permita el funcionamiento de esta API se tienen 
 
 1. Entrar a este [enlace](https://console.cloud.google.com/projectselector2/apis/credentials?supportedpurview=project&allowsmanagementprojects=true&authuser=1).
 1. Iniciar sesión y seguir los pasos hasta tener acceso a la ventana principal de Google credentials.
-   ![Pantalla de credenciales de Google API](image.png)
+   ![Pantalla de credenciales de Google API](imgs/image.png)
 1. Ingresar a la sección de credenciales y dar click en crear credenciales.
-   ![Menú de credenciales](image-1.png)
+   ![Menú de credenciales](imgs/image-1.png)
 1. Aparecerá un desplegable con varias opciones, sin embargo, la que nos interesa es la opción de _"ID de cliente de OAuth"_.
 1. Aparecerá un formulario pidiendo información general de la app. Primero aparece el tipo de aplicación, en este caso _"Aplicación Web"_, después pide el nombre, el cual es únicamente para identificar las credenciales propias, así que no es relevante. Se optó por poner el nombre de la app _"Workcells"_, pero puede elegir el que usted crea conveniente.
-   ![Datos basicos de la aplicación](image-2.png)
+   ![Datos basicos de la aplicación](imgs/image-2.png)
 1. En este mismo formulario está la sección de "URIs de redireccionamiento autorizados". Aquí se agregan las rutas a donde queremos mandar los usuarios si la autentificación con Google fue exitosa. Aquí agregamos lo siguiente: https://mi.dominio.com/google/callback _(Cambiando [mi.dominio.com]() por su dominio)_
-   ![URIS de redireccionamento actualizado](image-3.png)
+   ![URIS de redireccionamento actualizado](imgs/image-3.png)
 1. Hacer click en el botón de continuar.
 1. Aparecerá una nueva ventana, en la parte derecha de ésta estará una sección de información adicional. Aquí le prestaremos especial atención a las variables de ID del cliente `CLIENT_ID` y secreto del cliente `CLIENT_SECRET`. _(Guardamos ambos tokens, ya que posteriormente se ingresarán al archivo `.env`)_
-   ![Información adicional del cliente](image-4.png)
-   ![Secreto del cliente](image-5.png)
+   ![Información adicional del cliente](imgs/image-4.png)
+   ![Secreto del cliente](imgs/image-5.png)
 
 _Para más información, se puede acceder directamente a la [documentación de Google Auth](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://developers.google.com/identity/protocols/oauth2%3Fhl%3Des-419&ved=2ahUKEwiK-ZrTrfqMAxXeO0QIHa1mF-EQFnoECCEQAQ&usg=AOvVaw3qAmVBwVd0lG6Hs3Z05_-y)_.
 
@@ -105,12 +110,12 @@ Para poder obtener la llave que permita el funcionamiento de esta API se tienen 
 
 1. Entrar a este [enlace](https://www.geoapify.com/get-started-with-maps-api/).
 1. Crear una cuenta dentro del sitio de Geoapify.
-![enlace](image-6.png)
+![enlace](imgs/image-6.png)
 1. Entrar a este [enlace](https://myprojects.geoapify.com/projects).
 1. Crear un nuevo proyecto e ingresar el nombre del mismo. Presionar en _"Ok"_ y esperar a que nos redireccionen.
-![alt text](image-7.png)
+![alt text](imgs/image-7.png)
 1. En la parte de arriba de la página dirá _"API Keys"_, dentro de este apartado estará nuestra llave, por lo que la guardaremos. _(Guardar el token, ya que posteriormente se ingresará al archivo `.env`)_
-![alt text](image-8.png)
+![alt text](imgs/image-8.png)
 
 _Para más información, se puede acceder directamente a la [documentación de la API de Geoapify](https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/)_.
 
@@ -151,6 +156,7 @@ Una vez con el servidor en nuestras manos, tendremos que seguir una serie de com
 -   [Llenado del archivo .env](#llenado-del-archivo-env)
 -   [Ejecutar aplicación de forma persistente](#ejecutar-aplicación-de-forma-persistente)
 -   [Uso de proxy](#uso-de-proxy)
+-   [Levantar phpMyAdmin(opcional)](#levantar-phpmyadmin-opcional)
 
 #### Instalación de paquetes necesarios:
 
@@ -206,21 +212,23 @@ Ahora, ocupamos crear nuestras credenciales, por lo que corremos la configuraci�
 sudo mysql_secure_installation
 ```
 
-Ahora crearemos nuestro usuario en la base de datos, por lo que corremos el script siguiente para acceder a nuestro gestor de base de datos:
+Ahora crearemos levantamos nuestra base de datos, por lo que corremos el script siguiente para acceder a nuestro gestor de base de datos:
 
 ```bash
 sudo mariadb
 ```
 
+Cargaremos algunos datos iniciales, por lo que, aún dentro de mariadb, vamos a copiar los contenidos de [este archivo](/sql/loadDB.sql) en la terminal. Al final presionamos enter.
+
 Dentro de mariadb crearemos nuestro usuario con un comando parecido:
 
 ```sql
-CREATE USER 'usuario'@'%' IDENTIFIED BY '[LA CONTRASEÑA DE TU ELECCION]'; -- crea el usuario
-GRANT ALL PRIVILEGES ON *.* TO 'usuario'@'%' WITH GRANT OPTION; -- le da permisos de edición
+CREATE USER '[TU USUARIO]'@'%' IDENTIFIED BY '[LA CONTRASEÑA DE TU ELECCION]'; -- crea el usuario
+GRANT ALL PRIVILEGES ON *.* TO '[TU USUARIO]'@'%' WITH GRANT OPTION; -- le da permisos de edición
 FLUSH PRIVILEGES;
 ```
 
-Posteriormente se crea la base de datos y cargaremos algunos datos iniciales, por lo que, aún dentro de mariadb, vamos a copiar los contenidos de [este archivo](/sql/createDB.sql) en la terminal. Al final presionamos enter, y escribimos `exit` para salir de mariadb.
+Escribimos `exit` para salir de mariadb.
 
 Teniendo la base de datos levantada, se ocuparía habilitar el puerto para que se pueda acceder.
 
@@ -250,12 +258,12 @@ sudo ufw allow 3306/tcp
 
 El archivo `.env` contiene información sensible, por esa razón no se subió al repositorio. Sin embargo, es necesario para la ejecución de nuestro programa. Es debido a esto que se tiene que crear manualmente.
 
-Para crear el archivo, dentro de la carpeta de `workcells` ejecutamos el comando `touch .env` para crear el archivo, y con nuestro editor de texto de preferencia le añadimos lo siguiente:
+Para crear el archivo, dentro de la carpeta de `workcells` ejecutamos el comando `touch .env` para crear el archivo, y con nuestro editor de texto de preferencia le añadimos lo siguiente (aquí utilizaremos los tokens creados enteriormente):
 
 ```
 GEOLOCATION_API_KEY=[TU TOKEN DE GEOAPIFY]
 CLIENT_ID=[TU TOKEN DE CLIENT ID DE GOOGLE AUTH]
-CLIENT_SECRET=[TU TOKEN DE CLIENT SECRET DE GOOGLE AUTH]
+CLIENT_SECRET=[UNA CADENA SEGURA PARA UTILIZAR SESSION]
 WHATSAPP_VERSION=[LA VERSION DE WHATSAPP A USAR]
 WHATSAPP_PHONE_NUMBER_ID=[EL ID DEL NÚMERO DE WHATSAPP]
 NUMBER_TEST=[NÚMERO DE TELÉFONO DE PRUEBA]
@@ -264,6 +272,8 @@ DATABASEIP=[LA IP DE TU SERVIDOR]
 DATABASEUSER=[EL USUARIO DE TU BASE DE DATOS]
 DATABASEDB=workcells
 DATABASEPW=[LA CONTRASEÑA DE TU BASE DE DATOS]
+RUNNINGPORT=3008
+RUNNINGURL=[TU DOMINIO/DIRECCIÓN IP]
 ```
 
 #### Ejecutar aplicación de forma persistente:
@@ -482,3 +492,99 @@ Dependiendo del tipo de conexión que quisiéramos tener, se ocupa modificar el 
     ```bash
     sudo systemctl restart nginx # aplica los cambios en la configuración
     ```
+
+#### Levantar phpMyAdmin (opcional)
+
+Primeramente instalar paquetes necesarios:
+
+```bash
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt update
+sudo apt install phpmyadmin php-mbstring php-zip php-gd php-json php-curl php-mysql php8.2 php8.2-mbstring php8.2-fpm php8.2-mysql -y
+```
+
+Luego se tienen que habilitar las extensiones de php:
+
+```bash
+sudo phpenmod mbstring
+sudo systemctl enable --now php8.2-fpm
+sudo systemctl restart php8.2-fpm
+```
+
+Se crea el enlace simbólico de la carpeta de phpMyAdmin:
+
+```bash
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+```
+
+Ya solo faltaría modificar nginx para aceptar la ruta con:
+
+```bash
+sudo nano /etc/nginx/sites-available/default
+```
+
+Y añadir:
+
+```nginx
+    location /phpmyadmin {
+        alias /usr/share/phpmyadmin/;
+        index index.php index.html index.htm;
+
+        location ~ ^/phpmyadmin/(.+\.php)$ {
+            alias /usr/share/phpmyadmin/$1;
+            include fastcgi-params;
+            fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME /usr/share/phpmyadmin/$1;
+        }
+
+        location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+            alias /usr/share/phpmyadmin/$1;
+        }
+    }
+```
+
+Luego habilitamos los parámetros de nginx al correr éste comando:
+
+```bash
+sudo nano /etc/nginx/fastcgi-params
+```
+
+E introducir esto adentro:
+
+```nginx
+fastcgi_param  QUERY_STRING       $query_string;
+fastcgi_param  REQUEST_METHOD     $request_method;
+fastcgi_param  CONTENT_TYPE       $content_type;
+fastcgi_param  CONTENT_LENGTH     $content_length;
+
+fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+fastcgi_param  SCRIPT_NAME        $fastcgi_script_name;
+fastcgi_param  REQUEST_URI        $request_uri;
+fastcgi_param  DOCUMENT_URI       $document_uri;
+fastcgi_param  DOCUMENT_ROOT      $document_root;
+fastcgi_param  SERVER_PROTOCOL    $server_protocol;
+
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+fastcgi_param  REMOTE_ADDR        $remote_addr;
+fastcgi_param  REMOTE_PORT        $remote_port;
+fastcgi_param  SERVER_ADDR        $server_addr;
+fastcgi_param  SERVER_PORT        $server_port;
+fastcgi_param  SERVER_NAME        $server_name;
+
+# PHP only:
+fastcgi_param  SCRIPT_FILENAME    $request_filename;
+
+# Prevents URIs with the front controller from being passed to PHP.
+fastcgi_param  PATH_INFO          $fastcgi_path_info;
+fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
+```
+
+Y faltaría reiniciar nginx para actualizar los cambios:
+
+```bash
+sudo systemctl restart nginx
+```

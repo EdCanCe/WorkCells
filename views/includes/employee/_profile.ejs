@@ -1,16 +1,24 @@
-<script>addBackButton('/employee');</script>
+<% if(role == 'Manager') { %>
+<script>
+    addBackButton("/employee");
+</script>
+<% } %> <% if(role == 'Department Leader') %>
+<script>
+    addBackButton("/department");
+</script>
+%>
 <div class="primaryContainer bgContainer1 flex flex-col">
-
     <div class="titleContainer">
-        <h2 class="title text-center flex-1"><%= userData.birthName %> <%= userData.surname %></h2>
+        <h2 class="title text-center flex-1">
+            <%= userData.birthName %> <%= userData.surname %>
+        </h2>
     </div>
 
     <div class="space-y-2 mb-6">
         <p><span class="bold">E-Mail: </span><%= userData.mail %></p>
         <% if( userData.phoneNumber ) { %>
         <p>
-            <span class="bold">Phone number: </span><%=
-            userData.phoneNumber %>
+            <span class="bold">Phone number: </span><%= userData.phoneNumber %>
         </p>
         <% } %> <% if( userData.curp ) { %>
         <p><span class="bold">CURP: </span><%= userData.curp %></p>
@@ -18,13 +26,8 @@
         <p><span class="bold">RFC: </span><%= userData.rfc %></p>
         <% } %>
         <p><span class="bold">Role: </span><%= userData.role %></p>
-        <p>
-            <span class="bold">Department: </span><%= userData.department
-            %>
-        </p>
-        <p>
-            <span class="bold">Company: </span><%= userData.enterprise %>
-        </p>
+        <p><span class="bold">Department: </span><%= userData.department %></p>
+        <p><span class="bold">Company: </span><%= userData.enterprise %></p>
         <p>
             <span class="bold">Adress: </span
             ><span id="address"
@@ -54,14 +57,17 @@
         <!-- Si eres SuperAdmin puedes modificar el usuario -->
         <% if (role === 'Manager') { %>
         <a href="/employee/<%= userData.userID %>/modify" class="btnPrimary">
-            Update employee
+            Edit employee
         </a>
         <% } %>
     </div>
 
     <!-- Contenedor para el mapa -->
     <div class="w-full h-full flex-1 flex centerItems">
-        <div id="map" class="flex justify-center align-middle items-center mt-2 ml-auto mr-auto bg-neutral-500/20 h-64 min-w-[50%] rounded-lg overflow-hidden">
+        <div
+            id="map"
+            class="flex justify-center align-middle items-center mt-2 ml-auto mr-auto bg-neutral-500/20 h-64 min-w-[50%] rounded-lg overflow-hidden"
+        >
             <p class="bold text-2xl glowing">Waiting to obtain adress...</p>
         </div>
     </div>

@@ -20,7 +20,7 @@ app.use(methodOverride("_method"));
 
 app.use(
     session({
-        secret: crypto.randomUUID(),
+        secret: process.env.CLIENT_SECRET,
         resave: false, //La sesión no se guardará en cada petición, sino sólo se guardará si algo cambió
         saveUninitialized: false, //Asegura que no se guarde una sesión para una petición que no lo necesita
         rolling: true,

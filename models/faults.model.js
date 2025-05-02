@@ -14,12 +14,12 @@ class Fault {
       const faultID = uuidv4();
       const checkEmailQuery = `SELECT userID FROM user WHERE LOWER(mail) = LOWER( ? );`
       
-      console.log("Buscando correo:", this.email); // <-- debug
+      // console.log("Buscando correo:", this.email); // <-- debug
 
       return db
         .execute(checkEmailQuery, [this.email])
         .then(([rows]) => {
-          console.log("Resultado de búsqueda:", rows); // <-- debug
+          // console.log("Resultado de búsqueda:", rows); // <-- debug
   
           if (rows.length === 0) {
             throw new Error("El email no está registrado");
@@ -44,8 +44,8 @@ class Fault {
   
 
     delete() {
-        console.log("User delete: ", this.userID);
-        console.log("Fault delete: ", this.faultID);
+        // console.log("User delete: ", this.userID);
+        // console.log("Fault delete: ", this.faultID);
 
         return db.execute(`SELECT faultID FROM fault WHERE faultID = ? AND faultUserIDFK = ?`, [this.faultID, this.userID])
             .then(([rows]) => {

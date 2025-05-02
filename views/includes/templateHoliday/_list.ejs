@@ -1,0 +1,29 @@
+<script>
+    addBackButton("/holiday");
+</script>
+<div class="fullContainer bgContainer1">
+    <div class="titleContainer">
+        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">
+            List of all holidays
+        </h2>
+        <% if (role === 'Manager') { %>
+        <div class="flex gap-1 centerItems">
+            <div class="flex justify-end mb-4">
+                <a href="/holiday/template/add" class="btnPrimary"
+                    >Add Template Holiday</a
+                >
+            </div>
+        </div>
+        <% } %>
+    </div>
+
+    <div class="center !w-full">
+        <div id="templateHolidaysTable"></div>
+
+        <div class="endButtonsContainer">
+            <button id="prevBtn" class="btnPrimary">Previous</button>
+            <button id="nextBtn" class="btnPrimary ml-2">Next</button>
+        </div>
+    </div>
+</div>
+<script src="/javascript/paginedTemplateHoliday.js"></script>

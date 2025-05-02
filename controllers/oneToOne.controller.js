@@ -6,6 +6,7 @@ const Measure = require("../models/measure.model");
 const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
 const title = "One To One";
+const pdfName = "oneToOne";
 
 exports.getOneToOne = (request, response, next) => {
     const role = request.session.role;
@@ -15,14 +16,14 @@ exports.getOneToOne = (request, response, next) => {
         OneToOne.getOwnSessions(userID)
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
-                    ...sessionVars(request, title),
+                    ...sessionVars(request, title, pdfName),
                     sessions: rows,
                     role: role,
                 });
             })
             .catch((err) => {
                 console.error(
-                    "Error en la promesa de usuarios y sesiones ",
+                    "There was an error in the user and session promise",
                     err
                 );
             });
@@ -32,14 +33,14 @@ exports.getOneToOne = (request, response, next) => {
         OneToOne.getAllSessions()
             .then(([rows, fieldData]) => {
                 response.render("oneToOneCheckAll", {
-                    ...sessionVars(request, title),
+                    ...sessionVars(request, title, pdfName),
                     sessions: rows,
                     role: role,
                 });
             })
             .catch((err) => {
                 console.error(
-                    "Error en la promesa de usuarios y sesiones ",
+                    "There was an error in the user and session promise ",
                     err
                 );
             });
@@ -51,7 +52,7 @@ exports.getOneToOneSchedule = (request, response, next) => {
         .then(([rows, fieldData]) => {
             //console.log(rows);
             response.render("oneToOneAdd", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 workers: rows,
             });
         })
@@ -65,7 +66,7 @@ exports.postOneToOneSchedule = (request, response, next) => {
         .then(([rows]) => {
             if (rows.length === 0) {
                 request.session.alert =
-                    "El correo ingresado no se encuentra registrado.";
+                    "The given email was not found.";
                 return response.redirect("/oneToOne/schedule");
             }
             // Si el usuario está registrado, se obtiene su ID
@@ -80,13 +81,13 @@ exports.postOneToOneSchedule = (request, response, next) => {
             );
 
             return meeting.save().then(() => {
-                request.session.info = `Sesión de One To One para el ${meetingDate} con ${request.body.name} creada`;
+                request.session.info = `One to One session on ${meetingDate} with ${request.body.name} created successfully!`;
                 response.redirect("/oneToOne");
             });
         })
         .catch((err) => {
             console.error(err);
-            response.status(500).send("Error interno del servidor");
+            response.status(500).send("Server internal error");
         });
 };
 
@@ -106,7 +107,7 @@ exports.getOneToOneFill = (request, response, next) => {
                 Measurable.fetchAll().then(([measurables]) => {
                     // Renderiza el formulario para llenar los datos
                     response.render("oneToOneFill", {
-                        ...sessionVars(request, title),
+                        ...sessionVars(request, title, pdfName),
                         questions,
                         measurables,
                         name: `${rows[0].birthName} ${rows[0].surname}`,
@@ -178,7 +179,7 @@ exports.getOneToOneCheck = (request, response, next) => {
                     // En caso de que no haya respuestas, indica que no está llenado
                     if (answers.length === 0) {
                         response.render("oneToOneCheck", {
-                            ...sessionVars(request, title),
+                            ...sessionVars(request, title, pdfName),
                             isFilled: "0",
                             sessionData: rows[0],
                             sessionID: request.params.sessionID,
@@ -188,11 +189,11 @@ exports.getOneToOneCheck = (request, response, next) => {
                         Measurable.fetchBySessionData(
                             request.params.sessionID
                         ).then(([measures]) => {
-                            console.log(rows[0]);
-                            console.log(answers[0]);
-                            console.log[measures[0]];
+                            // console.log(rows[0]);
+                            // console.log(answers[0]);
+                            // console.log[measures[0]];
                             response.render("oneToOneCheck", {
-                                ...sessionVars(request, title),
+                                ...sessionVars(request, title, pdfName),
                                 answers,
                                 measures,
                                 isFilled: "1",
@@ -250,10 +251,10 @@ exports.getSearchAll = (request, response, next) => {
             response.json({ rows, page, query });
         })
         .catch((error) => {
-            console.error("Error en la búsqueda/paginación:", error);
+            console.error("There was an error in the search:", error);
             response
                 .status(500)
-                .json({ error: "Error en la búsqueda/paginación" });
+                .json({ error: "There was an error in the search" });
         });
 };
 
@@ -273,9 +274,9 @@ exports.getSearchOwn = (request, response, next) => {
             response.json({ rows, page, query });
         })
         .catch((error) => {
-            console.error("Error en la búsqueda/paginación:", error);
+            console.error("There was an error in the search:", error);
             response
                 .status(500)
-                .json({ error: "Error en la búsqueda/paginación" });
+                .json({ error: "There was an error in the search" });
         });
 };

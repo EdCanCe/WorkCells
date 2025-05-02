@@ -8,7 +8,7 @@ const holidayPrivilege = require("../util/holidayPrivilege/holidayPrivilege");
 router.get("/check/:usedHolidayID", isAuth, holidayController.getCheckHoliday);
 
 router.get(
-    "check/:templateHolidayID",
+    "/template/check/:templateHolidayID",
     isAuth,
     holidayController.getCheckTemplateHoliday
 );
@@ -19,10 +19,22 @@ router.get(
     holidayController.getHolidayModify
 );
 
+router.get(
+    "/template/check/modify/:templateHolidayID",
+    isAuth,
+    holidayController.getTemplateHolidayModify
+);
+
 router.post(
     "/check/delete/:usedHolidayID",
     isAuth,
     holidayController.postHolidayDelete
+);
+
+router.post(
+    "/template/check/delete/:templateHolidayID",
+    isAuth,
+    holidayController.postTemplateHolidayDelete
 );
 
 router.post(
@@ -31,17 +43,27 @@ router.post(
     holidayController.postHolidayModify
 );
 
+router.post(
+    "/template/check/:templateHolidayID",
+    isAuth,
+    holidayController.postTemplateHolidayModify
+);
+
 router.get("/", isAuth, holidayController.getHolidays);
+
+router.get("/template", isAuth, holidayController.getTemplateHoliday);
 
 router.get("/search", isAuth, holidayController.listPaginated);
 
+router.get("/template/search", isAuth, holidayController.listTemplatePaginated);
+
 router.get("/add", isAuth, holidayPrivilege, holidayController.getHolidaysAdd);
 
-router.get("/add/template", isAuth, holidayController.getTemplateHolidayAdd);
+router.get("/template/add", isAuth, holidayController.getTemplateHolidayAdd);
 
 router.post("/add", isAuth, holidayController.postHolidaysAdd);
 
-router.post("/add/template", isAuth, holidayController.postTemplateHolidayAdd);
+router.post("/template/add", isAuth, holidayController.postTemplateHolidayAdd);
 
 router.get("/used", isAuth, holidayController.getUsedHoliday); // Ver feriados usados
 

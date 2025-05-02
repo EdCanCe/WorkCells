@@ -1,14 +1,22 @@
-<script>addBackButton('/');</script>
+<script>
+    addBackButton("/");
+</script>
 <div class="fullContainer bgContainer1">
-
     <div class="titleContainer">
-        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">List of all holidays</h2>
+        <h2 class="title <%= role !== 'Manager' ? 'text-center flex-1' : '' %>">
+            List of all holidays
+        </h2>
         <% if (role === 'Manager') { %>
-            <div class="flex gap-1 centerItems">
-                <div class="flex justify-end mb-4">
-                    <a href="/holiday/add" class="btnPrimary">Add used holiday</a>
-                </div>
+        <div class="flex gap-1 centerItems">
+            <div class="flex justify-end mb-4">
+                <a href="/holiday/template" class="btnPrimary"
+                    >View Template Holiday</a
+                >
             </div>
+            <div class="flex justify-end mb-4">
+                <a href="/holiday/add" class="btnPrimary">Add used holiday</a>
+            </div>
+        </div>
         <% } %>
     </div>
 
@@ -21,4 +29,64 @@
         </div>
     </div>
 </div>
-<script src="/javascript/paginedHoliday.js"></script>
+<script>
+    let currentPage = 1;
+
+async function loadHolidays(page) {
+  const res = await fetch(`/holiday/search?page=${page}`);
+  const data = await res.json();
+
+  let table = `
+    <table class="tContainer">
+      <thead class="tHead">
+        <tr>
+          <th class="hRow">Holidays</th>
+          <th class="hRow">Date</th>
+          <% if (role === 'Manager') { %>
+          <th class="hRow">View One</th>
+          <% } %>
+        </tr>
+      </thead>
+      <tbody class="tBody">
+  `;
+
+  if (data.length === 0) {
+    table += `<tr><td colspan="3" class="dataless">There´s no more holidays</td></tr>`;
+  } else {
+    data.forEach((holiday) => {
+      table += `
+        <tr class="tRow">
+          <td class="tContent">${holiday.nombre}</td>
+          <td class="tContent">${new Date(holiday.fecha).toLocaleDateString(
+            "es-MX",
+            { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+          )}</td>
+          <td class="tContent">
+          <% if (role === 'Manager') { %>
+            <a href="/holiday/check/${holiday.usedHolidayID}" class="btnPrimary">View</a>
+            <% } %>
+          </td>
+        </tr>
+      `;
+    });    
+  }
+
+  table += `</tbody></table>`;
+  document.getElementById("holidaysTable").innerHTML = table;
+}
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+  currentPage++;
+  loadHolidays(currentPage);
+});
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    loadHolidays(currentPage);
+  }
+});
+
+// Carga inicial
+loadHolidays(currentPage);
+</script>

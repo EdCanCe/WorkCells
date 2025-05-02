@@ -3,7 +3,7 @@ const title = 'Home';
 
 exports.getHomepage = (request, response, next) => {
     response.render('homepage', {
-        ...sessionVars(request, title, 'home.pdf'),
+        ...sessionVars(request, title),
     });
 };
 

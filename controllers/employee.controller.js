@@ -5,6 +5,7 @@ const WorkStatus = require("../models/workStatus.model");
 const bcrypt = require("bcryptjs");
 const openProfile = require("../util/openProfile");
 const title = "Employees";
+const pdfName = "employee";
 
 exports.getAdd = (request, response, next) => {
     Promise.all([
@@ -15,20 +16,20 @@ exports.getAdd = (request, response, next) => {
         .then(([[countries], [roles], [departments]]) => {
             // Limpiar el mensaje después de usarlo
             response.render("employeeAdd", {
-                ...sessionVars(request, title), // Variables de la sesión
+                ...sessionVars(request, title, pdfName), // Variables de la sesión
                 employees: countries, // Lista de países
                 roles: roles, // Lista de roles
                 departments: departments, // Lista de departamentos
             });
         })
         .catch((error) => {
-            console.error("Error al obtener datos:", error);
+            console.error("There was an error obtaining the data:", error);
             response.status(500).send("Error al cargar la página");
         });
 };
 
 exports.postAdd = (request, response, next) => {
-    console.log("Datos del formulario:", request.body); // Depuración aquí
+    // console.log("Datos del formulario:", request.body); // Depuración aquí
 
     const curp = request.body.curp;
 
@@ -54,7 +55,7 @@ exports.postAdd = (request, response, next) => {
     employee
         .save()
         .then((userID) => {
-            console.log("Empleado creado con ID:", userID);
+            // console.log("Empleado creado con ID:", userID);
 
             // Crear y guardar el estado de trabajo asociado al usuario
             const workStatus = new WorkStatus(new Date(), null, userID);
@@ -62,13 +63,13 @@ exports.postAdd = (request, response, next) => {
         })
         .then(() => {
             // Si la inserción fue exitosa, redirigir con mensaje
-            request.session.info = "Empleado creado correctamente.";
+            request.session.info = "Employee created successfully.";
             response.redirect("/employee");
         })
         .catch((error) => {
-            console.error("Error al registrar el empleado:", error.message);
+            console.error("There was an error registering the employee:", error.message);
             request.session.info =
-                error.message || "Error al registrar el empleado.";
+                error.message || "Error registering the employee.";
             response.redirect("/employee/add");
         });
 };
@@ -79,7 +80,7 @@ exports.getModify = (request, response, next) => {
     Employee.fetchUser(userID)
         .then(([userData]) => {
             if (!userData || userData.length === 0) {
-                request.session.info = "Empleado no encontrado.";
+                request.session.info = "Employee not found.";
                 return response.redirect("/employee");
             }
 
@@ -107,7 +108,7 @@ exports.getModify = (request, response, next) => {
                         const department = employeeDepartment[0] || null;
 
                         response.render("employeeCheckModify", {
-                            ...sessionVars(request, title),
+                            ...sessionVars(request, title, pdfName),
                             employee: employee,
                             country: country, // País específico del empleado
                             roleUser: role, // Rol específico del empleado
@@ -121,13 +122,13 @@ exports.getModify = (request, response, next) => {
                 .catch((error) => {
                     console.error("Error al obtener catálogos:", error);
                     request.session.info =
-                        "Error al cargar información del empleado.";
+                        "Error loading employee information.";
                     response.redirect("/employee");
                 });
         })
         .catch((error) => {
-            console.error("Error al obtener los datos del empleado:", error);
-            request.session.info = "Error al obtener datos del empleado.";
+            console.error("There was an error fetching the employee data:", error);
+            request.session.info = "Error getting the employee data.";
             response.redirect("/employee");
         });
 };
@@ -171,7 +172,7 @@ exports.postModify = (request, response, next) => {
         workStatus,
     };
 
-    console.log("Campos antes de llamar a updateEmployee:", updatedEmployee);
+    // console.log("Campos antes de llamar a updateEmployee:", updatedEmployee);
 
     // Llamada a la función de actualización en la base de datos
     Employee.updateEmployee(
@@ -196,7 +197,7 @@ exports.postModify = (request, response, next) => {
             let dateOfDeactivation = null;
             if (workStatus === "0") {
                 dateOfDeactivation = new Date();
-                console.log(dateOfDeactivation);
+                // console.log(dateOfDeactivation);
                 return WorkStatus.updateEndDate(userID, dateOfDeactivation);
             }
 
@@ -207,13 +208,13 @@ exports.postModify = (request, response, next) => {
         })
         .then(() => {
             // Si la actualización fue exitosa, redirigir al usuario
-            request.session.info = "Empleado modificado con éxito.";
+            request.session.info = "Employee edited successfully.";
             response.redirect(`/employee/${userID}`);
         })
         .catch((error) => {
-            console.error("Error al modificar empleado:", error);
+            console.error("There was an error editing the employee", error);
             request.session.info =
-                error.message || "Error al modificar el empleado.";
+                error.message || "Error editing the employee.";
             response.redirect(`/employee/${userID}/modify`);
         });
 };
@@ -228,8 +229,6 @@ exports.getProfile = (request, response, next) => {
     // En caso de haber no usuario en params, marca que el perfil es propio
     const isOwn = userID === request.session.userID;
 
-    console.log(isOwn ? "Soy dueño" : "No soy dueño");
-
     // Si es dueño de su propio perfil, mandar a renderizar
     if (isOwn) {
         return openProfile(request, response, userID, isOwn);
@@ -239,7 +238,6 @@ exports.getProfile = (request, response, next) => {
     if (request.session.role === "Manager") {
         return openProfile(request, response, userID, isOwn);
     }
-
     // Significa que es un líder de departamento
     Department.getLeaderDepartment(userID)
         .then(([rows]) => {
@@ -261,7 +259,7 @@ exports.getProfile = (request, response, next) => {
 
 exports.getRoot = (request, response, next) => {
     response.render("employee", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -296,16 +294,16 @@ exports.getSearch = (request, response, next) => {
             response.json({ employees, page, query, filter, totalCount });
         })
         .catch((error) => {
-            console.error("Error en la búsqueda/paginación:", error);
+            console.error("There was an error in the search:", error);
             response
                 .status(500)
-                .json({ error: "Error en la búsqueda/paginación" });
+                .json({ error: "There was an error in the search" });
         });
 };
 
 exports.getChangePassword = (request, response, next) => {
     response.render("employeeChangePassword", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
@@ -318,7 +316,7 @@ exports.postChangePassword = (request, response, next) => {
 
     // Verificar que las contraseñas coinciden
     if (newPassword !== confirmNewPassword) {
-        request.session.warning = "Las contraseñas no coinciden.";
+        request.session.warning = "The passwords do not match.";
         return response.redirect("/employee/me/changePassword");
     }
 
@@ -329,25 +327,25 @@ exports.postChangePassword = (request, response, next) => {
 
     if (!upperCharacters.test(newPassword)) {
         request.session.warning =
-            "La contraseña debe contener al menos una letra mayúscula.";
+            "The password must contain at least one capital letter.";
         return response.redirect("/employee/me/changePassword");
     }
 
     if (!specialCharacters.test(newPassword)) {
         request.session.warning =
-            "La contraseña debe contener al menos un carácter especial.";
+            "The password must contain at least one special character.";
         return response.redirect("/employee/me/changePassword");
     }
 
     if (!numericCharacters.test(newPassword)) {
         request.session.warning =
-            "La contraseña debe contener al menos un número.";
+            "The password must contain at least one number.";
         return response.redirect("/employee/me/changePassword");
     }
 
     if (newPassword.length <= 8) {
         request.session.warning =
-            "La contraseña debe tener más de 8 caracteres.";
+            "The password must contain a minimum of 8 characters.";
         return response.redirect("/employee/me/changePassword");
     }
 
@@ -359,12 +357,12 @@ exports.postChangePassword = (request, response, next) => {
 
             if (!userData || userData.length === 0) {
                 console.error("Usuario no encontrado:", userID);
-                request.session.warning = "Usuario no encontrado.";
+                request.session.warning = "User not found";
                 return response.redirect("/employee/me/changePassword");
             }
 
             const user = userData[0];
-            console.log("Usuario encontrado, passwdFlag:", user.passwdFlag);
+            // console.log("Usuario encontrado, passwdFlag:", user.passwdFlag);
 
             // Si es usuario con contraseña ya cambiada previamente
             if (user.passwdFlag == 1) {
@@ -372,7 +370,7 @@ exports.postChangePassword = (request, response, next) => {
 
                 if (!currentPassword) {
                     request.session.warning =
-                        "Se requiere la contraseña actual.";
+                        "The current password is required.";
                     return response.redirect("/employee/me/changePassword");
                 }
 
@@ -383,7 +381,7 @@ exports.postChangePassword = (request, response, next) => {
                 );
                 if (!isMatch) {
                     request.session.warning =
-                        "La contraseña actual es incorrecta.";
+                        "The current password is incorrect.";
                     return response.redirect("/employee/me/changePassword");
                 }
 
@@ -394,7 +392,7 @@ exports.postChangePassword = (request, response, next) => {
                 );
                 if (isSamePassword) {
                     request.session.warning =
-                        "La nueva contraseña debe ser diferente a la actual.";
+                        "The new password must be different from the current one.";
                     return response.redirect("/employee/me/changePassword");
                 }
 
@@ -402,18 +400,18 @@ exports.postChangePassword = (request, response, next) => {
                 await Employee.updatePassword(userID, newPassword);
             } else {
                 // Para usuarios que hacen su primer cambio de contraseña
-                console.log("Actualizando contraseña por primera vez...");
+                // console.log("Actualizando contraseña por primera vez...");
                 await Employee.updatePasswordFirstTime(userID, newPassword);
             }
 
-            console.log("Contraseña actualizada con éxito para ID:", userID);
-            request.session.info = "Contraseña actualizada correctamente.";
+            // console.log("Contraseña actualizada con éxito para ID:", userID);
+            request.session.info = "Password updated successfully.";
             request.session.passwdFlag = 1;
             return response.redirect("/employee/me");
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
             request.session.warning =
-                "Error al cambiar la contraseña: " + error.message;
+                "Error changing the password: " + error.message;
             return response.redirect("/employee/me/changePassword");
         }
     };
@@ -424,7 +422,7 @@ exports.postChangePassword = (request, response, next) => {
         // En caso de que haya un error no manejado y no se haya enviado respuesta aún
         if (!response.headersSent) {
             request.session.warning =
-                "Error inesperado al cambiar la contraseña.";
+                "Unexpected error while changing the password.";
             return response.redirect("/employee/me/changePassword");
         }
     });
@@ -449,9 +447,9 @@ exports.getEmployeeFaults = (request, response, next) => {
     // Renderiza las faltas del usuario
     Employee.getOwnFaults(userID)
         .then(([faults, fieldData]) => {
-            console.log(faults);
+            // console.log(faults);
             response.render("employeeFaults", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 faults: faults,
                 employeeID: userID,
             });

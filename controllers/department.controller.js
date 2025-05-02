@@ -4,6 +4,7 @@ const Enterprise = require("../models/enterprise.model");
 const Employee = require("../models/employee.model");
 const { create } = require("domain");
 const title = "Departments";
+const pdfName = "departments";
 
 exports.getDepartments = (request, response, next) => {
     const role = sessionVars(request).role;
@@ -26,14 +27,14 @@ exports.getDepartments = (request, response, next) => {
             .then(([rows, fieldData]) => {
                 //console.log(rows);
                 response.render("leaderDepartmentList", {
-                    ...sessionVars(request, title),
-                    department: departmentData,
+                    ...sessionVars(request, title, pdfName),
+                    department: departmentData[0],
                     rows: rows,
                 });
             })
             .catch((err) => {
                 console.log(err);
-                response.status(500).send("Error del servidor");
+                response.status(500).send("There was an error in the server.");
             });
     }
     // vista del superadmin
@@ -41,7 +42,7 @@ exports.getDepartments = (request, response, next) => {
         Department.getAllDepartments()
             .then(([rows, fieldData]) => {
                 response.render("checkDepartment", {
-                    ...sessionVars(request, title),
+                    ...sessionVars(request, title, pdfName),
                     rows: rows,
                 });
             })
@@ -64,7 +65,7 @@ exports.getEmployees = (req, res, next) => {
             }
 
             res.render("RHDepartmentList", {
-                ...sessionVars(req, title),
+                ...sessionVars(req, title, pdfName),
                 department: deptRows[0], // un objeto { departmentID, title }
                 employees: empRows, // array de empleados
             });
@@ -97,7 +98,7 @@ exports.getPaginatedEmployeesRH = (request, response, next) => {
             console.log(err);
             response
                 .status(500)
-                .json({ err: "Error al obtener los colaboradores" });
+                .json({ err: "There was an error trying to fetch the employees." });
         });
 };
 
@@ -127,7 +128,7 @@ exports.getEmployeesPaginated = async (request, response, next) => {
             console.log(err);
             response
                 .status(500)
-                .json({ err: "Error al obtener los colaboradores" });
+                .json({ err: "There was an error trying to fetch the employees." });
         });
 };
 
@@ -149,7 +150,7 @@ exports.getDepartmentsPaginated = async (request, response, next) => {
             console.log(err);
             response
                 .status(500)
-                .json({ err: "Error al obtener los departamentos" });
+                .json({ err: "There was an error trying to fetch the departments." });
         });
 };
 
@@ -169,7 +170,7 @@ exports.getAddDepartment = (request, response, next) => {
             );
 
             response.render("addDepartment", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 enterprises,
                 collaborators,
                 leaders,
@@ -212,13 +213,10 @@ exports.postAddDepartment = (request, response, next) => {
 
 exports.getCheckDepartment = (request, response, next) => {
     response.render("checkOneDpmt", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
     });
 };
 
-exports.postDeleteDeparment = (request, response, next) => {
-    console.log(request.session);
-};
 
 exports.getModifyDepartment = async (request, response, next) => {
     try {
@@ -259,7 +257,7 @@ exports.getModifyDepartment = async (request, response, next) => {
         );
 
         response.render("modifyDepartment", {
-            ...sessionVars(request, title),
+            ...sessionVars(request, title, pdfName),
             departmentCollaborators,
             enterprises,
             collaborators,

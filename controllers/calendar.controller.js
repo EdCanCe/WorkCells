@@ -5,6 +5,7 @@ const Holiday = require("../models/holiday.model");
 const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
 const title = "Calendar";
+const pdfName = "calendar";
 
 exports.getRoot = (request, response, next) => {
     // Obtiene los días de inicio y final de la semana
@@ -65,14 +66,14 @@ exports.getRoot = (request, response, next) => {
     const sqlStartDate = formatDate.forSql(preSqlStartDate);
     const sqlEndDate = formatDate.forSql(preSqlEndDate);
 
-    console.log("Start, End, preStart, endStart: ");
-    console.log(startDate, endDate);
+    // console.log("Start, End, preStart, endStart: ");
+    // console.log(startDate, endDate);
 
-    //console.log(preSqlStartDate, preSqlEndDate);
-    console.log(sqlStartDate, sqlEndDate);
+    // //console.log(preSqlStartDate, preSqlEndDate);
+    // console.log(sqlStartDate, sqlEndDate);
 
     response.render("calendar", {
-        ...sessionVars(request, title),
+        ...sessionVars(request, title, pdfName),
         isMonthView,
         today: formatDate.forSql(today),
         weekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -109,7 +110,7 @@ exports.getFetch = (request, response, next) => {
 
     // Obtiene la fecha actual
     const today = new Date(request.params.date);
-    console.log(today);
+    // console.log(today);
     let startDate, endDate;
 
     // Vista mensual
@@ -139,12 +140,12 @@ exports.getFetch = (request, response, next) => {
     const sqlStartDate = formatDate.forSql(preSqlStartDate);
     const sqlEndDate = formatDate.forSql(preSqlEndDate);
 
-    console.log("Start, End, preStart, endStart: ");
-    console.log(startDate, endDate);
+    // console.log("Start, End, preStart, endStart: ");
+    // console.log(startDate, endDate);
 
-    //console.log(preSqlStartDate, preSqlEndDate);
-    console.log(sqlStartDate, sqlEndDate);
-    console.log("Intento id?", request.session.userID);
+    // //console.log(preSqlStartDate, preSqlEndDate);
+    // console.log(sqlStartDate, sqlEndDate);
+    // console.log("Intento id?", request.session.userID);
 
     Holiday.fetchByDateType(sqlStartDate, sqlEndDate)
         .then(([rows, fieldData]) => {
@@ -371,23 +372,23 @@ exports.getFetch = (request, response, next) => {
                                     console.error(error);
                                     response
                                         .status(500)
-                                        .send("Error al obtener los datos. 1");
+                                        .send("There was an error trying to get the data. 1");
                                 });
                         })
                         .catch((error) => {
                             console.error(error);
                             response
                                 .status(500)
-                                .send("Error al obtener los datos. 2");
+                                .send("There was an error trying to get the data. 2");
                         });
                 })
                 .catch((error) => {
                     console.error(error);
-                    response.status(500).send("Error al obtener los datos. 3");
+                    response.status(500).send("There was an error trying to get the data. 3");
                 });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos. 4");
+            response.status(500).send("There was an error trying to get the data. 4");
         });
 };

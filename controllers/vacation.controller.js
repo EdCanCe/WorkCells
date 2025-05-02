@@ -5,6 +5,7 @@ const formatDate = require("../util/formatDate");
 const sessionVars = require("../util/sessionVars");
 const { sendTemplateMessage } = require("../util/whatsAppMessages");
 const title = "Vacations";
+const pdfName = "vacation";
 
 exports.getRequests = (request, response, next) => {
     const userId = request.session.userID;
@@ -24,14 +25,14 @@ exports.getRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render("vacationRequests", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacations: rows,
                 role: userRole,
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -56,14 +57,14 @@ exports.getAllRequests = (request, response, next) => {
     fetchPromise
         .then(([rows]) => {
             response.render("vacationAllRequests", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacations: rows,
                 role: userRole,
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -101,7 +102,7 @@ exports.getRequestsPaginated = (request, response, next) => {
             console.error("Error fetching paginated requests:", error);
             response.status(500).json({
                 success: false,
-                message: `Error al cargar las solicitudes: ${error.message}`,
+                message: `There was an error loading the requests: ${error.message}`,
             });
         });
 };
@@ -202,7 +203,7 @@ exports.getAddVacation = (request, response, next) => {
                     endDateTextAux.setDate(endDateTextAux.getDate() - 1);
 
                     response.render("addVacation", {
-                        ...sessionVars(request, title),
+                        ...sessionVars(request, title, pdfName),
                         availableDays,
                         startDate: `${startDateTextAux.getFullYear()}-${String(
                             startDateTextAux.getMonth() + 1
@@ -220,7 +221,7 @@ exports.getAddVacation = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -228,7 +229,7 @@ exports.postAddVacation = (request, response, next) => {
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
 
-    console.log("Fecha inicio", startDate);
+    // console.log("Fecha inicio", startDate);
 
     // En caso de que la fecha de inicio sea posterior a la final
     if (new Date(startDate) > new Date(endDate)) {
@@ -274,13 +275,13 @@ exports.postAddVacation = (request, response, next) => {
             let nonusableDays = 0;
             daysMap.forEach((day, key) => {
                 // Verifica si el día es festivo o fin de semana
-                console.log(
-                    `${key} => ${
-                        ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"][
-                            day.dayType
-                        ]
-                    } | holiday: ${day.holiday} | dayNumber: ${day.dayType}`
-                );
+                // console.log(
+                //     `${key} => ${
+                //         ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"][
+                //             day.dayType
+                //         ]
+                //     } | holiday: ${day.holiday} | dayNumber: ${day.dayType}`
+                // );
                 if (day.holiday == 1 || day.dayType == 5 || day.dayType == 6) {
                     nonusableDays += 1;
                 }
@@ -291,8 +292,8 @@ exports.postAddVacation = (request, response, next) => {
                 Number(new Date(endDate)) - Number(new Date(startDate));
             const requestDays =
                 Math.ceil(dateDiff / (1000 * 60 * 60 * 24)) + 1 - nonusableDays;
-            console.log("requested: ", requestDays);
-            console.log("nonusable: ", nonusableDays);
+            // console.log("requested: ", requestDays);
+            // console.log("nonusable: ", nonusableDays);
 
             // En caso de que el usuario haya solicitado más días de los que tiene disponibles
             if (requestDays > request.session.availableDays) {
@@ -332,7 +333,7 @@ exports.getCheckVacation = (request, response, next) => {
             if (rows.length === 0) {
                 return response
                     .status(404)
-                    .send("Solicitud de vacaciones no encontrada.");
+                    .send("Vacation request not found.");
             }
 
             const selectedVacation = rows[0];
@@ -344,14 +345,14 @@ exports.getCheckVacation = (request, response, next) => {
             const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir ambos extremos
 
             response.render("checkVacation", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacation: selectedVacation,
                 requestedDays: totalDays,
             });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -468,13 +469,13 @@ exports.getModifyVacation = async (request, response, next) => {
         const availableDays = baseDays - totalUsedDays;
 
         response.render("modifyVacation", {
-            ...sessionVars(request, title),
+            ...sessionVars(request, title, pdfName),
             vacation: selectedVacation,
             availableDays,
         });
     } catch (error) {
         console.error("Error al obtener la vacación:", error);
-        response.status(500).send("Error interno del servidor.");
+        response.status(500).send("Server internal error.");
     }
 };
 
@@ -490,13 +491,13 @@ exports.updateVacation = async (request, response, next) => {
                 return response.status(404).send("Vacation not found.");
             }
             return response.render("modifyVacation", {
-                ...sessionVars(request, title),
+                ...sessionVars(request, title, pdfName),
                 vacation: rows[0],
                 availableDays: request.session.availableDays || 0,
             });
         } catch (error) {
             console.error(error);
-            return response.status(500).send("Error interno del servidor.");
+            return response.status(500).send("Server internal error.");
         }
     }
 
@@ -611,7 +612,7 @@ exports.updateVacation = async (request, response, next) => {
 
         const [originalVacationRows] = await Vacation.fetchOne(vacationId);
         if (!originalVacationRows || originalVacationRows.length === 0) {
-            request.session.alert = "Vacación no encontrada.";
+            request.session.alert = "Vacation request not found.";
             return response.redirect("/vacation/history");
         }
 
@@ -671,7 +672,7 @@ exports.updateVacation = async (request, response, next) => {
             return response.redirect("/vacation");
         } catch (fetchError) {
             console.error(fetchError);
-            return response.status(500).send("Error interno del servidor.");
+            return response.status(500).send("Server internal error.");
         }
     }
 };
@@ -685,7 +686,7 @@ exports.postRequestApprove = async (request, response, next) => {
         if (vacationRows.length === 0) {
             return response.status(404).json({
                 success: false,
-                message: "Solicitud no encontrada",
+                message: "Vacation request not found",
             });
         }
 
@@ -719,7 +720,7 @@ exports.postRequestApprove = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else if (userRole === "Department Leader") {
@@ -741,25 +742,25 @@ exports.postRequestApprove = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: "Rol no autorizado",
+                message: "Unauthorized role",
             });
         }
 
         return response.status(200).json({
             success: true,
-            message: "Solicitud aprobada exitosamente",
+            message: "Request approved successfully",
         });
     } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || "Error al procesar la solicitud",
+            message: error.message || "There was an error processing the request",
         });
     }
 };
@@ -774,7 +775,7 @@ exports.postRequestDeny = async (request, response, next) => {
         if (vacationRows.length === 0) {
             return response.status(404).json({
                 success: false,
-                message: "Solicitud no encontrada",
+                message: "Vacation request not found",
             });
         }
 
@@ -806,7 +807,7 @@ exports.postRequestDeny = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else if (userRole === "Department Leader") {
@@ -828,25 +829,25 @@ exports.postRequestDeny = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: "Rol no autorizado",
+                message: "Unauthorized role",
             });
         }
 
         return response.status(200).json({
             success: true,
-            message: "Solicitud aprobada exitosamente",
+            message: "Request approved successfully",
         });
     } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || "Error al procesar la solicitud",
+            message: error.message || "There was an error processing the request",
         });
     }
 };
@@ -861,7 +862,7 @@ exports.PostDeleteVacation = (request, response, next) => {
                 Vacation.deleteVacation(vacationId).then(() => {
                     response
                         .status(200)
-                        .json({ message: "Solicitud eliminada correctamente" });
+                        .json({ message: "Request deleted successfully" });
                 });
             } else {
                 console.error(
@@ -869,7 +870,7 @@ exports.PostDeleteVacation = (request, response, next) => {
                     error
                 );
                 response.status(500).json({
-                    message: "Error al eliminar la solicitud, no eres el dueño",
+                    message: "Request could not be deleted",
                 });
             }
         })
@@ -877,7 +878,7 @@ exports.PostDeleteVacation = (request, response, next) => {
             console.error("Error al eliminar solicitud:", error);
             response
                 .status(500)
-                .json({ message: "Error al eliminar la solicitud" });
+                .json({ message: "Request could not be deleted" });
         });
 };
 
@@ -930,7 +931,7 @@ exports.getRoot = (request, response, next) => {
                 );
 
                 response.render("ownVacation", {
-                    ...sessionVars(request, title),
+                    ...sessionVars(request, title, pdfName),
                     usedVacations,
                     approvedRequests,
                     pendingRequests,
@@ -940,6 +941,6 @@ exports.getRoot = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };

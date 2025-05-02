@@ -244,6 +244,9 @@
   .top-8\.5 {
     top: calc(var(--spacing) * 8.5);
   }
+  .top-\[10px\] {
+    top: 10px;
+  }
   .right-0 {
     right: calc(var(--spacing) * 0);
   }
@@ -253,6 +256,9 @@
   .right-4 {
     right: calc(var(--spacing) * 4);
   }
+  .right-6 {
+    right: calc(var(--spacing) * 6);
+  }
   .right-10 {
     right: calc(var(--spacing) * 10);
   }
@@ -261,6 +267,9 @@
   }
   .bottom-2 {
     bottom: calc(var(--spacing) * 2);
+  }
+  .bottom-15 {
+    bottom: calc(var(--spacing) * 15);
   }
   .left-0 {
     left: calc(var(--spacing) * 0);
@@ -331,11 +340,11 @@
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
-  .mt-\[-3px\] {
-    margin-top: -3px;
-  }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
+  }
+  .mr-6 {
+    margin-right: calc(var(--spacing) * 6);
   }
   .mr-auto {
     margin-right: auto;
@@ -488,8 +497,8 @@
   .w-20 {
     width: calc(var(--spacing) * 20);
   }
-  .w-32 {
-    width: calc(var(--spacing) * 32);
+  .w-36 {
+    width: calc(var(--spacing) * 36);
   }
   .w-40 {
     width: calc(var(--spacing) * 40);
@@ -871,6 +880,10 @@
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
   }
+  .text-3xl {
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
+  }
   .text-4xl {
     font-size: var(--text-4xl);
     line-height: var(--tw-leading, var(--text-4xl--line-height));
@@ -1053,6 +1066,11 @@
       gap: calc(var(--spacing) * 4);
     }
   }
+  .md\:w-5\/6 {
+    @media (width >= 48rem) {
+      width: calc(5/6 * 100%);
+    }
+  }
   .md\:w-full {
     @media (width >= 48rem) {
       width: 100%;
@@ -1066,6 +1084,16 @@
   .md\:grid-cols-3 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .lg\:w-3\/4 {
+    @media (width >= 64rem) {
+      width: calc(3/4 * 100%);
+    }
+  }
+  .xl\:w-2\/3 {
+    @media (width >= 80rem) {
+      width: calc(2/3 * 100%);
     }
   }
   .dark\:block {
@@ -1173,51 +1201,51 @@
 @keyframes statusContainer {
   0% {
     height: 0px;
-    margin: 0px 30px;
+    margin-top: 33.5px;
     padding-top: 0;
   }
-  5% {
+  15% {
     height: 53px;
-    margin: 30px 30px;
+    margin-top: 33.5px;
     padding-top: 13px;
   }
-  95% {
+  85% {
     height: 53px;
-    margin: 30px 30px;
+    margin-top: 33.5px;
     padding-top: 13px;
   }
   100% {
     height: 0px;
-    margin: 0px 30px;
+    margin-top: 0px;
     padding-top: 0;
   }
 }
 .statusContainerAnimate {
-  animation: statusContainer 7s linear forwards;
+  animation: statusContainer 7s ease-in-out forwards;
 }
 @keyframes statusContainerAnimateHide {
   0% {
     height: 53px;
-    margin: 30px 30px;
+    margin-top: 33.5px;
     padding-top: 13px;
   }
   100% {
     height: 0px;
-    margin: 0px 30px;
+    margin-top: 0px;
     padding-top: 0;
   }
 }
 .statusContainerAnimateHide {
-  animation: statusContainerAnimateHide 0.35s linear forwards;
+  animation: statusContainerAnimateHide 0.5s linear forwards;
 }
 @keyframes statusBar {
   0% {
     width: 100%;
   }
-  5% {
+  15% {
     width: 100%;
   }
-  95% {
+  85% {
     width: 0;
   }
 }
@@ -1621,9 +1649,9 @@
   top: calc(var(--spacing) * 0);
   left: calc(var(--spacing) * 0);
   z-index: 20;
-  margin: calc(var(--spacing) * 0);
+  margin-inline: calc(10% + 30px);
   height: calc(var(--spacing) * 0);
-  width: calc(100% - 60px);
+  width: calc(80% - 60px);
   overflow: hidden;
   border-radius: var(--radius-lg);
   padding-bottom: calc(var(--spacing) * 0);

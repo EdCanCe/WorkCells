@@ -1,4 +1,4 @@
-<script>addBackButton('/');</script>
+<script>addBackButton(document.referrer);</script>
 <div
     id="realArea"
     class="fullContainer flex flex-col max-h-[calc(100vh-60px)] !overflow-hidden"
@@ -187,7 +187,7 @@
             extraPx -
             (isMonthView ? 30 : 0);
 
-        console.log(usedHeight);
+        // console.log(usedHeight);
 
         childs.forEach((child) => {
             child.style.height = `${usedHeight}px`;
@@ -268,8 +268,7 @@
                 ${day.events.absences
                     .map(
                         (absence) =>
-                            `<a
-                        href="/absence/${absence.absenceID}"
+                            `<p
                         class="
                             absence-event block w-full text-xs mb-1 p-1 rounded text-white bg-red-500
                             ${
@@ -284,7 +283,7 @@
                             }
                     ">
                         Absence
-                    </a>`
+                    </p>`
                     )
                     .join("")}
 
@@ -294,7 +293,7 @@
                             `<p
                         class="holiday-event block w-full text-xs mb-1 p-1 rounded text-white bg-green-500"
                     >
-                        ${holiday.title || "Feriado"}
+                        ${holiday.title || "Holiday"}
                     </p>`
                     )
                     .join("")}
@@ -380,9 +379,9 @@
         // Convertir el valor de la cookie a booleano
         const isMonthView = typeOfRender.content === "true";
         const thisDate = new Date(currentDate.content);
-        console.log(currentDate.content);
+        // console.log(currentDate.content);
 
-        console.log(isMonthView);
+        // console.log(isMonthView);
 
         if (navigation === "prev") {
             if (isMonthView) {

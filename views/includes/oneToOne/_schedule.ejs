@@ -1,4 +1,4 @@
-<script>addBackButton('/oneToOne');</script>
+<script>addBackButton(document.referrer);</script>
 <div class="primaryContainer bgContainer1">
 
     <div class="titleContainer">
@@ -136,7 +136,7 @@
 
     meetLinkInput.oninvalid = function (event) {
         event.target.setCustomValidity(
-            "Por favor, ingresa un enlace válido de Google Meet, por ejemplo: https://meet.google.com/wpt-ahuf-tuk"
+            "Please, add a Google Meet valid link. For example: https://meet.google.com/wpt-ahuf-tuk"
         );
     };
 

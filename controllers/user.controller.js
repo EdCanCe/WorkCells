@@ -36,6 +36,7 @@ exports.post_login = (request, response, next) => {
                     // Obtener privilegios del usuario
                     return Usuario.getPrivilegios(user.mail)
                         .then(([privilegios]) => {
+                            console.log("privilegios", privilegios);
                             request.session.privilegios = privilegios;
                             if(request.session.workStatus === 1){
                                 if (request.session.passwdFlag === 1) {
@@ -49,7 +50,7 @@ exports.post_login = (request, response, next) => {
                                 }
                         }
                         request.session.warning =
-                                "Tu cuenta esta inactiva";
+                                "Your account is no longer active.";
                             response.redirect("/login");
 
                         })
