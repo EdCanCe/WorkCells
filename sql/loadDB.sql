@@ -414,3 +414,14 @@ INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('5cd87
 INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('70e76f3d-108c-4a4c-a54a-fdee69bf5bde', 'Independence Day', '2025-09-16'); 
 INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('bf959730-f3b4-4a2d-82b5-f45e1d9ae6e7', 'Revolution Day', '2025-10-20'); 
 INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('aabd5f17-8c07-453c-a462-36bc97719061', 'Christmas', '2025-12-25'); 
+
+INSERT INTO oneOnOneQuestion(questionID, question) VALUES('bf332f1f-d788-49ea-9dfb-2ea24bb01135', '¿Cuál va a ser tu meta del mes?'); 
+INSERT INTO oneOnOneQuestion(questionID, question) VALUES('a8cf4653-43d9-42eb-8438-1352957ca4c4', '¿Qué vamos hacer para cumplir las metas?'); 
+INSERT INTO oneOnOneQuestion(questionID, question) VALUES('f5e7306a-26a4-4a6c-b7f2-dc7e2a5b5c0c', '¿Estás preocupado, decepcionado o estresado?'); 
+INSERT INTO oneOnOneQuestion(questionID, question) VALUES('3bc4fe7d-699e-43f9-995e-0d3801f59dcd', '¿A quién quiero reconocer en la semana?'); 
+
+INSERT INTO oneOnOneMeasurable(measurableID, summary) VALUES('a3401a6b-0dd9-4ba1-8f22-0481d3ee1721', 'Reconocimiento: El colaborador se siente poco valorado por sus compañeros'); 
+INSERT INTO oneOnOneMeasurable(measurableID, summary) VALUES('b17b32fb-4139-4363-9e29-027b711d64d8', 'Reconocimiento: El colaborador se siente poco valorado por sus compañeros'); 
+INSERT INTO oneOnOneMeasurable(measurableID, summary) VALUES('5c880ecb-5277-4ea3-85ee-b3d6cbbf9762', 'Reconocimiento: El colaborador se siente altamente valorado por sus compañeros'); 
+INSERT INTO oneOnOneMeasurable(measurableID, summary) VALUES('752bc861-3707-4136-af7e-0f4eab76e5d4', 'Salud fisica El colaborador menciona tener una salud fisica un poco mala'); 
+INSERT INTO oneOnOneMeasurable(measurableID, summary) VALUES('76cab43c-0109-47ec-a34c-14df491b247a', 'Salud fisica El colaborador menciona tener una salud fisica un poco mala'); 

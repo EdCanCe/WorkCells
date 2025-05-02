@@ -31,8 +31,8 @@
                         <tr class="tRow">
                             <td class="tContent"><%= absence.birthName + " " + absence.surname %></td>
                             <td class="tContent"><%= absence.reason %></td>
-                            <td class="tContent"><%= new Date(absence.startDate).toLocaleDateString('es-MX') %></td>
-                            <td class="tContent"><%= new Date(absence.endDate).toLocaleDateString('es-MX') %></td>
+                            <td class="tContent"><%= new Date(absence.startDate).toLocaleDateString('en-MX') %></td>
+                            <td class="tContent"><%= new Date(absence.endDate).toLocaleDateString('en-MX') %></td>
                             <td class="tContent total-days" data-start-date="<%= absence.startDate %>" data-end-date="<%= absence.endDate %>"></td>
                             <% if (role === "Department Leader") { %>
                             <td class="tContent text-center">
@@ -149,8 +149,8 @@
             <tr class="tRow">
                 <td class="tContent">${absence.birthName} ${absence.surname}</td>
                 <td class="tContent">${absence.reason}</td>
-                <td class="tContent">${new Date(absence.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="tContent">${new Date(absence.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(absence.startDate).toLocaleDateString('en-MX')}</td>
+                <td class="tContent">${new Date(absence.endDate).toLocaleDateString('en-MX')}</td>
                 <td class="tContent">${totalDays}</td>
             </tr>`;
                 

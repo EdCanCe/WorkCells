@@ -24,7 +24,7 @@ async function loadHolidays(page) {
         <tr class="tRow">
           <td class="tContent">${template.nombre}</td>
           <td class="tContent">${new Date(template.fecha).toLocaleDateString(
-              "es-MX",
+              "en-MX",
               {
                   weekday: "long",
                   year: "numeric",

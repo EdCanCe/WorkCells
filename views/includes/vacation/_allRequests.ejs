@@ -27,8 +27,8 @@
                         <tr class="tRow">
                             <td class="tContent"><%= vacation.birthName + " " + vacation.surname %></td>
                             <td class="tContent"><%= vacation.reason %></td>
-                            <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                            <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                            <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('en-MX') %></td>
+                            <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('en-MX') %></td>
                             <td class="tContent total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                             <% if (role === "Department Leader") { %>
                             <td class="tContent">
@@ -144,8 +144,8 @@
                 <tr class="tRow">
                 <td class="tContent">${vac.birthName} ${vac.surname}</td>
                 <td class="tContent">${vac.reason}</td>
-                <td class="tContent">${new Date(vac.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="tContent">${new Date(vac.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(vac.startDate).toLocaleDateString('en-MX')}</td>
+                <td class="tContent">${new Date(vac.endDate).toLocaleDateString('en-MX')}</td>
                 <td class="tContent">${totalDays}</td>
                 </tr>`;
 

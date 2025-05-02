@@ -31,10 +31,10 @@
                         <td class="tContent"><%= ab.title %></td>
                         <td class="tContent">
                             <%= new
-                            Date(ab.startDate).toLocaleDateString('es-MX') %>
+                            Date(ab.startDate).toLocaleDateString('en-MX') %>
                         </td>
                         <td class="tContent">
-                            <%= new Date(ab.endDate).toLocaleDateString('es-MX')
+                            <%= new Date(ab.endDate).toLocaleDateString('en-MX')
                             %>
                         </td>
                         <td
@@ -283,10 +283,10 @@
                 <td class="tContent">${absence.title}</td>
                 <td class="tContent">${new Date(
                     absence.startDate
-                ).toLocaleDateString("es-MX")}</td>
+                ).toLocaleDateString('en-MX')}</td>
                 <td class="tContent">${new Date(
                     absence.endDate
-                ).toLocaleDateString("es-MX")}</td>
+                ).toLocaleDateString('en-MX')}</td>
                 <td class="tContent">${totalDays}</td>
                 <td class="tContent">${absence.reason}</td>
                 <td class="tContent">

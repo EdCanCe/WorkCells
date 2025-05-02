@@ -31,8 +31,8 @@
                     <tr class="tRow">
                         <td class="tContent"><%= vacation.birthName + " " + vacation.surname %></td>
                         <td class="tContent"><%= vacation.reason %></td>
-                        <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('es-MX') %></td>
-                        <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('es-MX') %></td>
+                        <td class="tContent"><%= new Date(vacation.startDate).toLocaleDateString('en-MX') %></td>
+                        <td class="tContent"><%= new Date(vacation.endDate).toLocaleDateString('en-MX') %></td>
                         <td class="tContent total-days" data-start-date="<%= vacation.startDate %>" data-end-date="<%= vacation.endDate %>"></td>
                         <td class="tContent">
                             <% if (role === "Manager") { %>
@@ -216,8 +216,8 @@
             row.innerHTML = `
                 <td class="tContent">${vacation.birthName} ${vacation.surname}</td>
                 <td class="tContent">${vacation.reason}</td>
-                <td class="tContent">${new Date(vacation.startDate).toLocaleDateString("es-MX")}</td>
-                <td class="tContent">${new Date(vacation.endDate).toLocaleDateString("es-MX")}</td>
+                <td class="tContent">${new Date(vacation.startDate).toLocaleDateString('en-MX')}</td>
+                <td class="tContent">${new Date(vacation.endDate).toLocaleDateString('en-MX')}</td>
                 <td class="tContent">${totalDays}</td>
                 <td class="tContent">${actionCell}</td>
             `;

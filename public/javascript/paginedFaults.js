@@ -40,7 +40,7 @@ let currentPage = 1;
               <td class="tContent">${falta.nombre}</td>
               <td class="tContent">${falta.correo}</td>
               <td class="tContent">
-                ${new Date(falta.fecha_falta).toLocaleDateString("es-MX")}
+                ${new Date(falta.fecha_falta).toLocaleDateString('en-MX')}
               </td>
               <td class="tContent">${falta.num_faltas}</td>
               <td class="tContent"><a href="/employee/${falta.faultUserIDFK}/faults" class="btnPrimary">View</a></td>
