@@ -76,13 +76,17 @@ exports.postHolidaysAdd = (request, response, next) => {
 };
 
 exports.postTemplateHolidayAdd = (request, response, next) => {
-    const template = new Template(request.body.holidayDate, request.body.title, pdfName);
+    const template = new Template(
+        request.body.holidayDate,
+        request.body.title,
+        pdfName
+    );
     // console.log(request.body);
     template
         .save()
         .then(() => {
             request.session.info = "Holiday registered correctly.";
-            response.redirect("/holiday");
+            response.redirect("/holiday/template");
         })
         .catch((error) => {
             console.error(error);
@@ -108,7 +112,9 @@ exports.getUsedHoliday = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("There was an error fetching the holidays.");
+            response
+                .status(500)
+                .send("There was an error fetching the holidays.");
         });
 };
 
@@ -232,8 +238,7 @@ exports.postHolidayModify = (request, response, next) => {
 
     Holiday.updateDate(usedHolidayID, usedDate)
         .then(() => {
-            request.session.info =
-                "Holiday date updated correctly.";
+            request.session.info = "Holiday date updated correctly.";
             response.redirect(`/holiday/check/${usedHolidayID}`);
         })
         .catch((error) => {
