@@ -47,6 +47,10 @@
                     </thead>
                     <tbody class="tBody" id="vacationTableBody">
                         <!-- History -->
+                        <% if ((usedVacations.length + approvedRequests.length + pendingRequests.length + deniedRequests.length) === 0) { %>
+                            <tr><td colspan="6" class="dataless">There´s no vacations</td></tr>
+                        <% } %>
+
                         <% usedVacations.forEach(vacation => { %>
                         <tr class="tRow" data-status="history">
                             <td class="tContent"><%= vacation.reason %></td>

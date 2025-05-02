@@ -37,7 +37,7 @@
                 id="Date"
                 name="doneDate"
                 class="input"
-                value="<%= fault.Date%>"
+                value="<%= doneDate %>"
                 required
             />
         </div>
@@ -45,7 +45,7 @@
         <!-- Campo para subir archivos -->
         <div>
             <label class="label">
-                Evidence (optional):
+                Evidence:
             </label>
             <input
                 id="faultEvidenceInput"
@@ -53,6 +53,7 @@
                 type="file"
                 name="evidence"
                 accept=".jpg, .png, .docx, .jpeg, .pdf"
+                required
             />
         </div>
 

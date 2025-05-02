@@ -20,7 +20,7 @@
 
 /*Etiqueta: <table>*/
 .tContainer{
-    @apply min-w-full divide-y divide-neutral-200 text-center
+    @apply mx-auto min-w-full divide-y divide-neutral-200 text-center
 }
 /*Etiqueta: <thead>*/
 .tHead{
