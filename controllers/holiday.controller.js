@@ -4,7 +4,8 @@ const Template = require("../models/templateHoliday.model");
 const sessionVars = require("../util/sessionVars");
 const { response } = require("express");
 const title = "Holidays";
-const pdfName = "holiday";
+const pdfName = "usedHoliday";
+const pdfNameTemplate = "templateHoliday";
 
 exports.getHolidays = (request, response, next) => {
     response.render("usedHoliday", {
@@ -14,7 +15,7 @@ exports.getHolidays = (request, response, next) => {
 
 exports.getTemplateHoliday = (request, response, next) => {
     response.render("templateHolidayList", {
-        ...sessionVars(request, title, pdfName),
+        ...sessionVars(request, title, pdfNameTemplate),
     });
 };
 
@@ -29,7 +30,7 @@ exports.getCheckTemplateHoliday = (request, response, next) => {
 
             const holiday = rows[0];
             response.render("templateHolidayCheck", {
-                ...sessionVars(request, title, pdfName),
+                ...sessionVars(request, title, pdfNameTemplate),
                 holiday,
                 csrfToken: request.csrfToken(),
             });
@@ -51,7 +52,7 @@ exports.getHolidaysAdd = (request, response, next) => {
 
 exports.getTemplateHolidayAdd = (request, response, next) => {
     response.render("templateHolidayAdd", {
-        ...sessionVars(request, title, pdfName),
+        ...sessionVars(request, title, pdfNameTemplate),
     });
 };
 
@@ -76,7 +77,7 @@ exports.postHolidaysAdd = (request, response, next) => {
 };
 
 exports.postTemplateHolidayAdd = (request, response, next) => {
-    const template = new Template(request.body.holidayDate, request.body.title, pdfName);
+    const template = new Template(request.body.holidayDate, request.body.title);
     // console.log(request.body);
     template
         .save()
@@ -184,7 +185,7 @@ exports.getTemplateHolidayModify = (request, response, next) => {
             const holiday = rows[0];
             // console.log(rows);
             response.render("templateHolidayModify", {
-                ...sessionVars(request, title, pdfName),
+                ...sessionVars(request, title, pdfNameTemplate),
                 holiday,
             });
         })

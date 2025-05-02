@@ -1,6 +1,6 @@
-CREATE DATABASE workcellsi;
+CREATE DATABASE workcells;
 
-USE workcellsi;
+USE workcells;
 
 
 CREATE TABLE templateHoliday (
@@ -90,14 +90,6 @@ CREATE TABLE workStatus (
     userStatusIDFK VARCHAR(40) NOT NULL,
     CONSTRAINT userStatusIDFK FOREIGN KEY (userStatusIDFK) REFERENCES user(userID)
 );
-
-/**
-CREATE TABLE userDepartment (
-    departmentIDFK VARCHAR(40) NOT NULL,
-    CONSTRAINT departmentIDFK FOREIGN KEY (departmentIDFK) REFERENCES department(departmentID),
-    userIDFK VARCHAR(40) NOT NULL,
-    CONSTRAINT userIDFK FOREIGN KEY (userIDFK) REFERENCES user(userID)
-);*/
 
 CREATE TABLE vacation (
     vacationID VARCHAR(40) NOT NULL PRIMARY KEY,
@@ -245,13 +237,13 @@ BEGIN
 END $$
 DELIMITER ;
 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('7b7b8f4d-95e7-47b5-8e27-2153ced83bbd', 'New Year', '2025-01-01'); 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('a35ed5a5-071f-44ae-a1ef-c47e0fca4115', 'Constitution Day', '2025-02-05'); 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('63c9975d-eb4f-4802-b683-0e835304828a', 'Benito Juárez Birthday', '2025-03-21'); 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('5cd87c79-34a5-4c45-8c23-49872cd118d0', 'Labor Day', '2025-05-01'); 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('70e76f3d-108c-4a4c-a54a-fdee69bf5bde', 'Independence Day', '2025-09-16'); 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('bf959730-f3b4-4a2d-82b5-f45e1d9ae6e7', 'Revolution Day', '2025-10-20'); 
-INSERT INTO templateHoliday(templateHolidayID, holidayDate, title) values('aabd5f17-8c07-453c-a462-36bc97719061', 'Christmas', '2025-12-25'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('7b7b8f4d-95e7-47b5-8e27-2153ced83bbd', 'New Year', '2025-01-01'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('a35ed5a5-071f-44ae-a1ef-c47e0fca4115', 'Constitution Day', '2025-02-05'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('63c9975d-eb4f-4802-b683-0e835304828a', 'Benito Juárez Birthday', '2025-03-21'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('5cd87c79-34a5-4c45-8c23-49872cd118d0', 'Labor Day', '2025-05-01'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('70e76f3d-108c-4a4c-a54a-fdee69bf5bde', 'Independence Day', '2025-09-16'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('bf959730-f3b4-4a2d-82b5-f45e1d9ae6e7', 'Revolution Day', '2025-10-20'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('aabd5f17-8c07-453c-a462-36bc97719061', 'Christmas', '2025-12-25'); 
 
 INSERT INTO privilege(privilegeID, title, summary) values('f767ac50-7874-4894-9819-9debe3008d6b', 'Colaborador consulta ausencias', 'Colaborador consulta ausencias'); 
 INSERT INTO privilege(privilegeID, title, summary) values('aefcbfa4-d93f-4d75-92cd-5b25da30b9ae', 'Colaborador consulta calendario', 'Colaborador consulta calendario'); 
@@ -414,3 +406,11 @@ INSERT INTO department(departmentID, enterpriseIDFK, title) values('4d949540-a6f
 INSERT INTO user(userID, birthName, surname, mail, passwd, passwdFlag, zipCode, houseNumber, streetName, colony, workModality, workStatus, userRoleIDFK, countryUserIDFK) VALUES('ca6644c4-66c9-46df-884f-20ed37f3e0e6', 'Admin', 'Admin', 'theFirstAdmin@nuclea.solutions', '$2b$12$c.Zj5/1PciYqJbFcH3VxKOLhAbozT4Zcvb6zq4ofNo5h9KBk1fO.y', FALSE, 44610, '1118 2', 'Mar Mediterráneo', 'Country Club', 1, TRUE, '43fe7d1c-5907-4076-a16d-8d50106596a2', '11bdc0d0-ca12-447b-a043-959dfd25c3d5');
 UPDATE user SET prioritaryDepartmentIDFK = 'e78396d7-1be6-42f9-8f3e-ce7bcc81581d' WHERE userID = 'ca6644c4-66c9-46df-884f-20ed37f3e0e6'; 
 INSERT INTO workStatus(workStatusID, startDate,endDate, userStatusIDFK) VALUES('05be5aa4-19ab-40c1-8083-65ee7858706f', '2000-01-01', '2099-12-12', 'ca6644c4-66c9-46df-884f-20ed37f3e0e6'); 
+
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('7b7b8f4d-95e7-47b5-8e27-2153ced83bbd', 'New Year', '2025-01-01'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('a35ed5a5-071f-44ae-a1ef-c47e0fca4115', 'Constitution Day', '2025-02-05'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('63c9975d-eb4f-4802-b683-0e835304828a', 'Benito Juárez Birthday', '2025-03-21'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('5cd87c79-34a5-4c45-8c23-49872cd118d0', 'Labor Day', '2025-05-01'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('70e76f3d-108c-4a4c-a54a-fdee69bf5bde', 'Independence Day', '2025-09-16'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('bf959730-f3b4-4a2d-82b5-f45e1d9ae6e7', 'Revolution Day', '2025-10-20'); 
+INSERT INTO templateHoliday(templateHolidayID, title, holidayDate) values('aabd5f17-8c07-453c-a462-36bc97719061', 'Christmas', '2025-12-25'); 
