@@ -372,23 +372,23 @@ exports.getFetch = (request, response, next) => {
                                     console.error(error);
                                     response
                                         .status(500)
-                                        .send("Error al obtener los datos. 1");
+                                        .send("There was an error trying to get the data. 1");
                                 });
                         })
                         .catch((error) => {
                             console.error(error);
                             response
                                 .status(500)
-                                .send("Error al obtener los datos. 2");
+                                .send("There was an error trying to get the data. 2");
                         });
                 })
                 .catch((error) => {
                     console.error(error);
-                    response.status(500).send("Error al obtener los datos. 3");
+                    response.status(500).send("There was an error trying to get the data. 3");
                 });
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos. 4");
+            response.status(500).send("There was an error trying to get the data. 4");
         });
 };

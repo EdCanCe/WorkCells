@@ -64,7 +64,7 @@ exports.getRoot = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error); // Mejor manejo de error
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -140,7 +140,7 @@ exports.UpdateFault = (req, res, next) => {
         })
         .catch((err) => {
             console.error(err);
-            req.session.warning = "Error al actualizar datos.";
+            req.session.warning = "There was an updating the data.";
             res.status(500).redirect("/fault");
         });
 };

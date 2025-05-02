@@ -178,14 +178,14 @@
         const response = await fetch(endpoint);
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || "Error en la respuesta del servidor");
+            throw new Error(errorData.message || "There was an error on the server");
         }           
         const data = await response.json();
         currentPage = page;
         updateTable(data);
     } catch (error) {
         console.error("Error en loadPage:", error);
-        alert("Error al cargar las solicitudes. Por favor, intente nuevamente.");
+        alert("There was an error loading the requests. Por favor, intente nuevamente.");
     } finally {
         isLoading = false;
     }
