@@ -1450,6 +1450,7 @@
   justify-content: center;
 }
 .tContainer {
+  margin-inline: auto;
   min-width: 100%;
   :where(& > :not(:last-child)) {
     --tw-divide-y-reverse: 0;

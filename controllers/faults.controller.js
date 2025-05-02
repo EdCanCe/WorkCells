@@ -1,6 +1,7 @@
 const Fault = require("../models/faults.model");
 const FaultMedia = require("../models/faultsMedia.model");
 const sessionVars = require("../util/sessionVars");
+const formatDate = require("../util/formatDate");
 const title = 'Faults';
 const pdfName = "fault";
 
@@ -50,6 +51,7 @@ exports.getCheck = (request, response, next) => {
         response.render("checkFault", {
             ...sessionVars(request, title, pdfName),
             fault: rows[0],
+            doneDate: formatDate.forSql(rows[0].doneDate),
         });
     });
 };
