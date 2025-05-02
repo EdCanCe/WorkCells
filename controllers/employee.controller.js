@@ -23,7 +23,7 @@ exports.getAdd = (request, response, next) => {
             });
         })
         .catch((error) => {
-            console.error("Error al obtener datos:", error);
+            console.error("There was an error obtaining the data:", error);
             response.status(500).send("Error al cargar la página");
         });
 };
@@ -67,7 +67,7 @@ exports.postAdd = (request, response, next) => {
             response.redirect("/employee");
         })
         .catch((error) => {
-            console.error("Error al registrar el empleado:", error.message);
+            console.error("There was an error registering the employee:", error.message);
             request.session.info =
                 error.message || "Error registering the employee.";
             response.redirect("/employee/add");
@@ -127,7 +127,7 @@ exports.getModify = (request, response, next) => {
                 });
         })
         .catch((error) => {
-            console.error("Error al obtener los datos del empleado:", error);
+            console.error("There was an error fetching the employee data:", error);
             request.session.info = "Error getting the employee data.";
             response.redirect("/employee");
         });
@@ -294,10 +294,10 @@ exports.getSearch = (request, response, next) => {
             response.json({ employees, page, query, filter, totalCount });
         })
         .catch((error) => {
-            console.error("Error en la búsqueda/paginación:", error);
+            console.error("There was an error in the search:", error);
             response
                 .status(500)
-                .json({ error: "Error en la búsqueda/paginación" });
+                .json({ error: "There was an error in the search" });
         });
 };
 

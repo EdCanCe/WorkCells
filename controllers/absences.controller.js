@@ -24,7 +24,7 @@ exports.postRequestApprove = async (request, response, next) => {
         if (absenceRows.length === 0) {
             return response.status(404).json({
                 success: false,
-                message: "Solicitud no encontrada",
+                message: "Request not found.",
             });
         }
         const [employeeRows] = await Absence.fetchOneEmployee(
@@ -55,7 +55,7 @@ exports.postRequestApprove = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else if (userRole === "Department Leader") {
@@ -77,24 +77,24 @@ exports.postRequestApprove = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: "Rol no autorizado",
+                message: "Unauthorized role",
             });
         }
         return response.status(200).json({
             success: true,
-            message: "Solicitud aprobada exitosamente",
+            message: "Request approved successfully",
         });
     } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || "Error al procesar la solicitud",
+            message: error.message || "There was an error processing the request",
         });
     }
 };
@@ -108,7 +108,7 @@ exports.postRequestDeny = async (request, response, next) => {
         if (absenceRows.length === 0) {
             return response.status(404).json({
                 success: false,
-                message: "Solicitud no encontrada",
+                message: "Vacation request not found",
             });
         }
         const [employeeRows] = await Absence.fetchOneEmployee(
@@ -140,7 +140,7 @@ exports.postRequestDeny = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else if (userRole === "Department Leader") {
@@ -162,24 +162,24 @@ exports.postRequestDeny = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: "Rol no autorizado",
+                message: "Unauthorized role",
             });
         }
         return response.status(200).json({
             success: true,
-            message: "Solicitud aprobada exitosamente",
+            message: "Request approved successfully",
         });
     } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || "Error al procesar la solicitud",
+            message: error.message || "There was an error processing the request",
         });
     }
 };
@@ -209,7 +209,7 @@ exports.getRequests = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -243,7 +243,7 @@ exports.getAllRequests = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -283,7 +283,7 @@ exports.getRequestsPaginated = (request, response, next) => {
             console.error("Error fetching paginated requests:", error);
             response.status(500).json({
                 success: false,
-                message: `Error al cargar las solicitudes: ${error.message}`,
+                message: `There was an error loading the requests: ${error.message}`,
             });
         });
 };
@@ -348,6 +348,6 @@ exports.getListPaginated = async (request, response, next) => {
         response.json(rows);
     } catch (error) {
         console.log(error);
-        response.status(500).json({ error: "Error al obtener las faltas" });
+        response.status(500).json({ error: "Error obtaining the absences." });
     }
 };

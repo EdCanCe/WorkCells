@@ -64,13 +64,13 @@ exports.postHolidaysAdd = (request, response, next) => {
     holiday
         .save()
         .then(() => {
-            request.session.info = "Dia Feriado registrado correctamente.";
+            request.session.info = "Holiday registered correctly.";
             response.redirect("/holiday");
         })
         .catch((error) => {
             console.error(error);
             request.session.info =
-                error.message || "Error al registrar dia feriado.";
+                error.message || "There was an error registrering the holiday.";
             response.redirect("/holiday/add");
         });
 };
@@ -108,7 +108,7 @@ exports.getUsedHoliday = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los días feriados.");
+            response.status(500).send("There was an error fetching the holidays.");
         });
 };
 
@@ -125,7 +125,7 @@ exports.listPaginated = (request, response) => {
             console.error(err);
             response
                 .status(500)
-                .json({ error: "Error al obtener los días registrados." });
+                .json({ error: "There was an error fetching the holidays." });
         });
 };
 
@@ -142,7 +142,7 @@ exports.listTemplatePaginated = (request, response) => {
             console.error(err);
             response
                 .status(500)
-                .json({ error: "Error al obtener los días registrados." });
+                .json({ error: "There was an error fetching the holidays." });
         });
 };
 
@@ -167,7 +167,7 @@ exports.getHolidayModify = (request, response, next) => {
             console.error(error);
             response
                 .status(500)
-                .send("Error al cargar el formulario de modificación.");
+                .send("There was an error while loading the uptading form.");
         });
 };
 
@@ -192,7 +192,7 @@ exports.getTemplateHolidayModify = (request, response, next) => {
             console.error(error);
             response
                 .status(500)
-                .send("Error al cargar el formulario de modificación.");
+                .send("There was an error while loading the uptading form.");
         });
 };
 
@@ -233,12 +233,12 @@ exports.postHolidayModify = (request, response, next) => {
     Holiday.updateDate(usedHolidayID, usedDate)
         .then(() => {
             request.session.info =
-                "Fecha del feriado actualizada correctamente.";
+                "Holiday date updated correctly.";
             response.redirect(`/holiday/check/${usedHolidayID}`);
         })
         .catch((error) => {
             console.error(error);
-            request.session.info = "Error al modificar el feriado.";
+            request.session.info = "There was an error updating the holiday.";
             response.redirect(`/holiday/check/modify/${usedHolidayID}`);
         });
 };
@@ -249,7 +249,7 @@ exports.getCheckHoliday = (request, response, next) => {
     Holiday.fetchOneUsedHoliday(usedHolidayID)
         .then(([rows]) => {
             if (rows.length === 0) {
-                return response.status(404).send("Feriado no encontrado.");
+                return response.status(404).send("Holiday not found.");
             }
 
             const holiday = rows[0];
@@ -263,7 +263,7 @@ exports.getCheckHoliday = (request, response, next) => {
             console.error(error);
             response
                 .status(500)
-                .send("Error al obtener los datos del feriado.");
+                .send("There was an error fetching the holiday data.");
         });
 };
 
@@ -275,7 +275,7 @@ exports.postHolidayDelete = (request, response, next) => {
             response.status(200).json({ success: true });
         })
         .catch((error) => {
-            console.error("Error al eliminar el feriado:", error.message);
+            console.error("Error in eliminating the holiday:", error.message);
             response.status(500).json({ success: false, error: error.message });
         });
 };

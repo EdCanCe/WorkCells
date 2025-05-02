@@ -115,7 +115,7 @@
                 
                 if (!response.ok) {
                     const err = await response.json();
-                    throw new Error(err.message || "Error en la operación");
+                    throw new Error(err.message || "Error on the operation");
                 }
                 
                 // Reemplazar los botones con mensaje de Approved/Denied
@@ -124,8 +124,8 @@
                 
                 // No recargamos la página para mantener la solicitud visible
             } catch (err) {
-                console.error("Error al procesar la solicitud:", err);
-                alert(err.message || "Error al procesar la solicitud. Intente nuevamente.");
+                console.error("There was an error processing the request:", err);
+                alert(err.message || "There was an error processing the request. Try again.");
                 
                 // Restaurar el texto original y habilitar botones
                 this.textContent = originalText;
@@ -241,7 +241,7 @@
             const response = await fetch(`/vacation/requests/paginated?page=${page}`);
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Error en la respuesta del servidor");
+                throw new Error(errorData.message || "Error on the server.");
             }
             // console.log("response", response);            
             const data = await response.json();
@@ -249,7 +249,7 @@
             updateTable(data);
         } catch (error) {
             console.error("Error en loadPage:", error);
-            alert("Error al cargar las solicitudes. Por favor, intente nuevamente.");
+            alert("There was an error loading the requests. Try again.");
         } finally {
             isLoading = false;
         }

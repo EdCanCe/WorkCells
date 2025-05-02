@@ -34,7 +34,7 @@ exports.getDepartments = (request, response, next) => {
             })
             .catch((err) => {
                 console.log(err);
-                response.status(500).send("Error del servidor");
+                response.status(500).send("There was an error in the server.");
             });
     }
     // vista del superadmin
@@ -98,7 +98,7 @@ exports.getPaginatedEmployeesRH = (request, response, next) => {
             console.log(err);
             response
                 .status(500)
-                .json({ err: "Error al obtener los colaboradores" });
+                .json({ err: "There was an error trying to fetch the employees." });
         });
 };
 
@@ -128,7 +128,7 @@ exports.getEmployeesPaginated = async (request, response, next) => {
             console.log(err);
             response
                 .status(500)
-                .json({ err: "Error al obtener los colaboradores" });
+                .json({ err: "There was an error trying to fetch the employees." });
         });
 };
 
@@ -150,7 +150,7 @@ exports.getDepartmentsPaginated = async (request, response, next) => {
             console.log(err);
             response
                 .status(500)
-                .json({ err: "Error al obtener los departamentos" });
+                .json({ err: "There was an error trying to fetch the departments." });
         });
 };
 

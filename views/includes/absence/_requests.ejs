@@ -174,7 +174,7 @@
                         if (!response.ok) {
                             const err = await response.json();
                             throw new Error(
-                                err.message || "Error en la operación"
+                                err.message || "There was an error on the operation."
                             );
                         }
 
@@ -188,10 +188,10 @@
 
                         // No recargamos la página para mantener la solicitud visible
                     } catch (err) {
-                        console.error("Error al procesar la solicitud:", err);
+                        console.error("There was an error processing the request:", err);
                         alert(
                             err.message ||
-                                "Error al procesar la solicitud. Intente nuevamente."
+                                "There was an error processing the request. Try again."
                         );
 
                         // Restaurar el texto original y habilitar botones
@@ -328,7 +328,7 @@
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(
-                    errorData.message || "Error en la respuesta del servidor"
+                    errorData.message || "There was an error on the server"
                 );
             }
             // console.log("response", response);
@@ -338,7 +338,7 @@
         } catch (error) {
             console.error("Error en loadPage:", error);
             alert(
-                "Error al cargar las solicitudes. Por favor, intente nuevamente."
+                "There was an error loading the requests. Try again."
             );
         } finally {
             isLoading = false;

@@ -32,7 +32,7 @@ exports.getRequests = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -64,7 +64,7 @@ exports.getAllRequests = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -102,7 +102,7 @@ exports.getRequestsPaginated = (request, response, next) => {
             console.error("Error fetching paginated requests:", error);
             response.status(500).json({
                 success: false,
-                message: `Error al cargar las solicitudes: ${error.message}`,
+                message: `There was an error loading the requests: ${error.message}`,
             });
         });
 };
@@ -221,7 +221,7 @@ exports.getAddVacation = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -333,7 +333,7 @@ exports.getCheckVacation = (request, response, next) => {
             if (rows.length === 0) {
                 return response
                     .status(404)
-                    .send("Solicitud de vacaciones no encontrada.");
+                    .send("Vacation request not found.");
             }
 
             const selectedVacation = rows[0];
@@ -352,7 +352,7 @@ exports.getCheckVacation = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
 
@@ -475,7 +475,7 @@ exports.getModifyVacation = async (request, response, next) => {
         });
     } catch (error) {
         console.error("Error al obtener la vacación:", error);
-        response.status(500).send("Error interno del servidor.");
+        response.status(500).send("Server internal error.");
     }
 };
 
@@ -497,7 +497,7 @@ exports.updateVacation = async (request, response, next) => {
             });
         } catch (error) {
             console.error(error);
-            return response.status(500).send("Error interno del servidor.");
+            return response.status(500).send("Server internal error.");
         }
     }
 
@@ -612,7 +612,7 @@ exports.updateVacation = async (request, response, next) => {
 
         const [originalVacationRows] = await Vacation.fetchOne(vacationId);
         if (!originalVacationRows || originalVacationRows.length === 0) {
-            request.session.alert = "Vacación no encontrada.";
+            request.session.alert = "Vacation request not found.";
             return response.redirect("/vacation/history");
         }
 
@@ -672,7 +672,7 @@ exports.updateVacation = async (request, response, next) => {
             return response.redirect("/vacation");
         } catch (fetchError) {
             console.error(fetchError);
-            return response.status(500).send("Error interno del servidor.");
+            return response.status(500).send("Server internal error.");
         }
     }
 };
@@ -686,7 +686,7 @@ exports.postRequestApprove = async (request, response, next) => {
         if (vacationRows.length === 0) {
             return response.status(404).json({
                 success: false,
-                message: "Solicitud no encontrada",
+                message: "Vacation request not found",
             });
         }
 
@@ -720,7 +720,7 @@ exports.postRequestApprove = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else if (userRole === "Department Leader") {
@@ -742,25 +742,25 @@ exports.postRequestApprove = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: "Rol no autorizado",
+                message: "Unauthorized role",
             });
         }
 
         return response.status(200).json({
             success: true,
-            message: "Solicitud aprobada exitosamente",
+            message: "Request approved successfully",
         });
     } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || "Error al procesar la solicitud",
+            message: error.message || "There was an error processing the request",
         });
     }
 };
@@ -775,7 +775,7 @@ exports.postRequestDeny = async (request, response, next) => {
         if (vacationRows.length === 0) {
             return response.status(404).json({
                 success: false,
-                message: "Solicitud no encontrada",
+                message: "Vacation request not found",
             });
         }
 
@@ -807,7 +807,7 @@ exports.postRequestDeny = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else if (userRole === "Department Leader") {
@@ -829,25 +829,25 @@ exports.postRequestDeny = async (request, response, next) => {
                 );
                 return response.status(500).json({
                     success: false,
-                    message: error.message || "Error al procesar la solicitud",
+                    message: error.message || "There was an error processing the request",
                 });
             }
         } else {
             return response.status(403).json({
                 success: false,
-                message: "Rol no autorizado",
+                message: "Unauthorized role",
             });
         }
 
         return response.status(200).json({
             success: true,
-            message: "Solicitud aprobada exitosamente",
+            message: "Request approved successfully",
         });
     } catch (error) {
         console.error(error);
         return response.status(500).json({
             success: false,
-            message: error.message || "Error al procesar la solicitud",
+            message: error.message || "There was an error processing the request",
         });
     }
 };
@@ -862,7 +862,7 @@ exports.PostDeleteVacation = (request, response, next) => {
                 Vacation.deleteVacation(vacationId).then(() => {
                     response
                         .status(200)
-                        .json({ message: "Solicitud eliminada correctamente" });
+                        .json({ message: "Request deleted successfully" });
                 });
             } else {
                 console.error(
@@ -870,7 +870,7 @@ exports.PostDeleteVacation = (request, response, next) => {
                     error
                 );
                 response.status(500).json({
-                    message: "Error al eliminar la solicitud, no eres el dueño",
+                    message: "Request could not be deleted",
                 });
             }
         })
@@ -878,7 +878,7 @@ exports.PostDeleteVacation = (request, response, next) => {
             console.error("Error al eliminar solicitud:", error);
             response
                 .status(500)
-                .json({ message: "Error al eliminar la solicitud" });
+                .json({ message: "Request could not be deleted" });
         });
 };
 
@@ -941,6 +941,6 @@ exports.getRoot = (request, response, next) => {
         })
         .catch((error) => {
             console.error(error);
-            response.status(500).send("Error al obtener los datos.");
+            response.status(500).send("There was an error trying to get the data.");
         });
 };
