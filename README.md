@@ -31,6 +31,10 @@ Enlace al video: [Presionar aquí](https://drive.google.com/file/d/12XiT6-eZ0QDH
 
 Enlace a su carpeta: [Presionar aquí](https://github.com/EdCanCe/WorkCells/tree/main/avances/avance5)
 
+### Avance 6:
+
+Enlace a su carpeta: [Presionar aquí](https://github.com/EdCanCe/WorkCells/tree/main/avances/avance6)
+
 ## Guía de despliegue:
 
 Para poder desplegar `WorkCells` correctamente, se tienen que cumplir con los siguientes puntos:
